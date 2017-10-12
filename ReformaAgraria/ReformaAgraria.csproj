@@ -21,7 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\components\event.ts" />
     <None Remove="ClientApp\app\components\home.ts" />
+    <None Remove="ClientApp\app\components\sidenav.ts" />
+    <None Remove="ClientApp\app\services\data.ts" />
+    <None Remove="ClientApp\app\services\shared.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,8 +34,13 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\app.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\event.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\header.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\home.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\sidenav.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\data.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\shared.ts" />
+    <TypeScriptCompile Include="ClientApp\app\templates\sidenav.html" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

@@ -4,9 +4,13 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
+import { SidenavComponent } from './components/sidenav';
 import { HomeComponent } from './components/home';
+import { EventComponent } from './components/event';
+import { VillageComponent } from './components/village';
 
-declare var window: any;
+import { DataService } from './services/data';
+import { SharedService } from './services/shared';
 
 import 'bootstrap';
 import './styles/app.less';
@@ -15,15 +19,23 @@ import './styles/app.less';
     declarations: [
         AppComponent,
         HeaderComponent,
-        HomeComponent
+        SidenavComponent,
+        HomeComponent,
+        EventComponent, 
+        VillageComponent
     ],
     imports: [
         HttpModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
+            { path: 'event', component: EventComponent },
             { path: '**', redirectTo: 'home' }
         ])
+    ],
+    providers: [
+        DataService,
+        SharedService
     ]
 })
 export class AppModuleShared {

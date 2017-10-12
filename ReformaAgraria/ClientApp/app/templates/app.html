@@ -1,55 +1,8 @@
 ﻿<ra-header></ra-header>
 
 <div class="container-fluid">
-    <div class="row">
-        <!--start nav sidebar-->
-        <nav class="col-sm-3 col-md-2 d-none d-sm-block sidebar bg-dark">
-            <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsSide" aria-controls="navbarsSide" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <ul class="nav nav-pills flex-column">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#"><span class="oi oi-bar-chart" aria-hidden="true"></span>Dashboard<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="oi oi-calendar" aria-hidden="true"></span>Agenda</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="oi oi-people" aria-hidden="true"></span>Tim Kerja</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="oi oi-map" aria-hidden="true"></span>Peta</a>
-                </li>
-            </ul>
-
-            <ul class="nav nav-pills flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="oi oi-task" aria-hidden="true"></span>Permasalahan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="oi oi-list" aria-hidden="true"></span>Pustaka</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="oi oi-document" aria-hidden="true"></span>Laporan pertemuan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Another nav item</a>
-                </li>
-            </ul>
-            <ul class="nav nav-pills flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Nav item again</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">One more nav</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Another nav item</a>
-                </li>
-            </ul>
-        </nav>
-        <!--end nav sidebar-->
+    <div class="row">      
+        <ra-sidenav></ra-sidenav>
         <!--start main class-->
         <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
             <div class="container body-content">

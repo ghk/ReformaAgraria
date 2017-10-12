@@ -8,9 +8,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     constructor() { }
 
-    ngOnInit(): void {
-
+    ngOnInit(): void {      
     }
+
 
     ngOnDestroy(): void {
 
