@@ -21,7 +21,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\components\home.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Docs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\components\app.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\header.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\home.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

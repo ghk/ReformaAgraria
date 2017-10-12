@@ -3,9 +3,10 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const AotPlugin = require('@ngtools/webpack').AotPlugin;
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = (env) => {
-    // Configuration in common to both client-side and server-side bundles
+    // Configuration in common to both client-side and server-side bundles    
     const isDevBuild = !(env && env.prod);
     const sharedConfig = {
         stats: { modules: false },
@@ -20,11 +21,16 @@ module.exports = (env) => {
                 { test: /\.ts$/, include: /ClientApp/, use: isDevBuild ? ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] : '@ngtools/webpack' },
                 { test: /\.html$/, use: 'html-loader?minimize=false' },
                 { test: /\.css$/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize'] },
-                { test: /\.less$/, loaders: ['to-string-loader', 'css-loader', 'less-loader'] },
-                { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
+                { test: /\.less$/, include: /ClientApp/, loader: ExtractTextPlugin.extract({fallback: 'style-loader', use: 'css-loader!less-loader'}) },
+                { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' },
+                { test: /\.(png|woff|woff2|eot|otf|ttf|svg)(\?|$)/, use: 'url-loader?limit=100000' }
             ]
         },
-        plugins: [new CheckerPlugin()]
+        plugins: [
+            new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery', Popper: 'popper.js' }),
+            new CheckerPlugin(),
+            new ExtractTextPlugin('styles.css')
+        ]
     };
 
     // Configuration for client-side bundle suitable for running in browsers
@@ -42,7 +48,7 @@ module.exports = (env) => {
             new webpack.SourceMapDevToolPlugin({
                 filename: '[file].map', // Remove this line if you prefer inline source maps
                 moduleFilenameTemplate: path.relative(clientBundleOutputDir, '[resourcePath]') // Point sourcemap entries to the original file locations on disk
-            })
+            })            
         ] : [
             // Plugins that apply in production builds only
             new webpack.optimize.UglifyJsPlugin(),

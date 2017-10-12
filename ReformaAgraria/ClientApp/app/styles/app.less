@@ -1,0 +1,194 @@
+﻿@import 'vendor.less';
+
+/*
+ * Base structure
+ */
+
+
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+
+body {
+    padding-top: 3.5rem;
+    font-family: roboto;
+    background-color: #EEEEEE;
+}
+
+section {
+}
+
+/*
+ * Typography
+ */
+
+h1 {
+    margin-bottom: 20px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #eee;
+}
+
+h4 {
+}
+
+/*list group*/
+
+.list-group .list-group-item {
+    border-left: none;
+    border-right: none;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Scrollable contents if viewport is shorter than content. */
+    border-right: 1px solid #eee;
+}
+
+
+/* Sidebar navigation */
+
+.sidebar {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar .nav {
+    margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+    width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+    margin-left: 0;
+}
+
+.sidebar .nav-link {
+    border-radius: 0;
+}
+
+.nav .nav-item {
+}
+
+.nav .nav-item .nav-link {
+    color: azure;
+    font-size: 14px;
+    font-style: normal;
+}
+
+.agenda_kegiatan img {
+    width: 215px;
+}
+
+/*
+ * Navbar
+ */
+
+.navbar {
+    background-color: #2196F3;
+    box-shadow: 12px 0px 8px;
+}
+
+.navbar-brand {
+    float: left;
+}
+
+.nav-item .nav-link img {
+    color: white;
+    margin-right: 1.5rem;
+    object-position: center;
+    margin-bottom: 2px;
+}
+
+.nav-link .oi {
+    margin-right: 1em;
+}
+
+.breadcrumb {
+}
+
+.breadcrumb .breadcrumb-item {
+}
+
+.card {
+    box-shadow: 0px 3px 6px #C3C3C3;
+    list-style: none;
+}
+
+.kartu {
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+
+/*
+ * Dashboard
+ */
+
+.material-icons {
+    margin-right: 1.5rem;
+    object-position: center;
+    color: rgba(255, 255, 255, 1);
+}
+
+/*
+ *  Tabel batas desa warna icon dan spec
+ */
+
+.tabel_batas_desa .verifikasi {
+    color: #078D4A;
+    margin: auto;
+}
+
+.tabel_batas_desa .verifikasi .oi {
+    color: #078D4A;
+    margin: auto;
+}
+
+.tabel_batas_desa .penetapan {
+    color: #004BC3;
+    margin: auto;
+}
+
+.tabel_batas_desa .penetapan .oi {
+    color: #004BC3;
+    margin: auto;
+}
+
+/*header map*/
+
+.kartu_map img {
+    margin-top: 0.5rem;
+}
+
+.kartu_map .button {
+    float: right;
+}
+
+/*Listgroup*/
+
+.list-group {
+    padding: 15px 20px 15px 15px;
+}
+
+/* Placeholders */
+
+.placeholders {
+    padding-bottom: 3rem;
+}
+
+.placeholder img {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
