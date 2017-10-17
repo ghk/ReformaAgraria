@@ -23,7 +23,6 @@ namespace ReformaAgraria.Controllers
     {
         private readonly ReformaAgrariaDbContext _context;
         private readonly UserManager<ReformaAgrariaUser> _userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
         private readonly SignInManager<ReformaAgrariaUser> _signInManager;
         private readonly ILogger _logger;
         private readonly TokenAuthOption _tokenOptions;
@@ -98,18 +97,17 @@ namespace ReformaAgraria.Controllers
                         ClaimType = "external",
                         ClaimValue = "true"
                     });
+                    user.Claims.Add(new IdentityUserClaim<string>
+                    {
+                        ClaimType = ClaimTypes.Role,
+                        ClaimValue = "User"
+                    });
 
                     var result = await _userManager.CreateAsync(user, model.PasswordHash);
                     if (result.Succeeded)
                     {
-                        var roleResult = await _userManager.AddToRoleAsync(user, "User");
-                        if (roleResult.Succeeded)
-                        {
-                            transaction.Commit();
-                            return Ok();
-                        }
-
-                        return BadRequest();
+                        transaction.Commit();
+                        return Ok();
                     }
                     return BadRequest();
                 }
@@ -122,13 +120,11 @@ namespace ReformaAgraria.Controllers
             
         }
 
-        //
         // POST: /Account/LogOff
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            _logger.LogInformation(4, "User logged out.");
             return Ok();
         }
 
