@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ReformaAgraria.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "Bearer")]
     public class SampleDataController : Controller
     {
         private static string[] Summaries = new[]
@@ -14,7 +16,7 @@ namespace ReformaAgraria.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        [HttpGet("[action]")]
+        [HttpGet("forecast")]
         public IEnumerable<WeatherForecast> WeatherForecasts()
         {
             var rng = new Random();

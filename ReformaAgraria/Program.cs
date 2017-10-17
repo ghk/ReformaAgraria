@@ -7,8 +7,9 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ReformaAgraria.Data;
+
 using Microsoft.Extensions.DependencyInjection;
+using ReformaAgraria.Models;
 
 namespace ReformaAgraria
 {
@@ -21,16 +22,8 @@ namespace ReformaAgraria
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                try
-                {
-                    var context = services.GetRequiredService<ReformaAgrariaDataContext>();
-                    DbInitializer.Initialize(context);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex.Message);
-                }
+
+                DbInitializer.InitializeAsync(services).Wait();
             }
 
             host.Run();

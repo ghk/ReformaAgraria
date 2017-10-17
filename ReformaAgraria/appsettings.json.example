@@ -1,4 +1,7 @@
-﻿{
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=10.10.10.107;Port=5094;Database=reforma_agraria;User Id=postgres;Password=postgres"
+  },
   "Logging": {
     "IncludeScopes": false,
     "Debug": {
@@ -15,5 +18,8 @@
         "Microsoft": "Information"
       }
     }
+  },
+  "Security": {
+    "SecretKey": "microvac"
   }
 }
