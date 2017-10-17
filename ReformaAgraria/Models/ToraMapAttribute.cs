@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReformaAgraria.Models
 {
@@ -26,7 +22,7 @@ namespace ReformaAgraria.Models
 
         public double Size { get; set; }
 
-        public StageOfToraSettingProcess StageOfToraSettingProcess { get; set; }
+        public ToraSettingProcessStage ToraSettingProcessStage { get; set; }
 
         public Status BorderSettingStatus { get; set; }
 

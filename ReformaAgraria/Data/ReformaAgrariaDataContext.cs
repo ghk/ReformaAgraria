@@ -17,13 +17,14 @@ namespace ReformaAgraria.Data
         public DbSet<Region> Region { get; set; }
         public DbSet<VillageMapAttribute> VillageMapAttribute { get; set; }
         public DbSet<ToraMapAttribute> ToraMapAttribute { get; set; }
-        public DbSet<WorkCalendar> WorkCalendar { get; set; }
+        public DbSet<Event> WorkCalendar { get; set; }
         public DbSet<PoliciesDocuments> PoliciesDocuments { get; set; }
-        public DbSet<MeetingReport> MeetingReport { get; set; }
-        public DbSet<ObjectSubjectTora> ObjectSubjectTora { get; set; }
+        public DbSet<MeetingMinutes> MeetingReport { get; set; }
+        public DbSet<ToraObject> ToraObject { get; set; }
+        public DbSet<ToraSubject> ToraSubject { get; set; }
         public DbSet<ToraSubmission> ToraSubmission { get; set; }
-        public DbSet<ProposalOfActDocumentCheckList> ProposalOfActDocumentCheckList { get; set; }
-        public DbSet<ProfileOfVillage> ProfileOfVillage { get; set; }
+        public DbSet<ActProposalDocumentCheckList> ProposalOfActDocumentCheckList { get; set; }
+        public DbSet<VillageProfile> ProfileOfVillage { get; set; }
         public DbSet<TipologyOfAgrarianProblem> TipologyOfAgrarianProblem { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,13 +32,14 @@ namespace ReformaAgraria.Data
             modelBuilder.Entity<Region>().ToTable("Region");
             modelBuilder.Entity<VillageMapAttribute>().ToTable("VillageMapAttribute");
             modelBuilder.Entity<ToraMapAttribute>().ToTable("ToraMapAttribute");
-            modelBuilder.Entity<WorkCalendar>().ToTable("WorkCalendar");
+            modelBuilder.Entity<Event>().ToTable("WorkCalendar");
             modelBuilder.Entity<PoliciesDocuments>().ToTable("PoliciesDocuments");
-            modelBuilder.Entity<MeetingReport>().ToTable("MeetingReport");
-            modelBuilder.Entity<ObjectSubjectTora>().ToTable("ObjectSubjectTora");
+            modelBuilder.Entity<MeetingMinutes>().ToTable("MeetingReport");
+            modelBuilder.Entity<ToraObject>().ToTable("ToraObject");
+            modelBuilder.Entity<ToraSubject>().ToTable("ToraSubject");
             modelBuilder.Entity<ToraSubmission>().ToTable("ToraSubmission");
-            modelBuilder.Entity<ProposalOfActDocumentCheckList>().ToTable("ProposalOfActDocumentCheckList");
-            modelBuilder.Entity<ProfileOfVillage>().ToTable("ProfileOfVillage");
+            modelBuilder.Entity<ActProposalDocumentCheckList>().ToTable("ProposalOfActDocumentCheckList");
+            modelBuilder.Entity<VillageProfile>().ToTable("ProfileOfVillage");
             modelBuilder.Entity<TipologyOfAgrarianProblem>().ToTable("TipologyOfAgrarianProblem");
 
         }
