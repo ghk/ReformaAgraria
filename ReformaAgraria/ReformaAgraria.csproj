@@ -23,9 +23,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\MeetingReport.cs" />
+    <Compile Remove="Models\ObjectSubjectTora.cs" />
+    <Compile Remove="Models\ProfileOfVillage.cs" />
+    <Compile Remove="Models\ProposalOfActDocumentCheckList.cs" />
+    <Compile Remove="Models\ReformaAgrariaDataContext.cs" />
+    <Compile Remove="Models\StageOfBorderSettingProcess.cs" />
+    <Compile Remove="Models\StageOfToraSettingProcess.cs" />
+    <Compile Remove="Models\TypeOfLand.cs" />
+    <Compile Remove="Models\WorkCalendar.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\app\components\alert.service.ts" />
     <None Remove="ClientApp\app\components\event.ts" />
     <None Remove="ClientApp\app\components\home.ts" />
     <None Remove="ClientApp\app\components\sidenav.ts" />
+    <None Remove="ClientApp\app\components\user.ts" />
     <None Remove="ClientApp\app\services\data.ts" />
     <None Remove="ClientApp\app\services\shared.ts" />
   </ItemGroup>

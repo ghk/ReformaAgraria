@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReformaAgraria.Models
 {
-    public class WorkCalendar
+    public class Event
     {
-        public WorkCalendar()
+        public Event()
         {
 
         }
@@ -17,13 +14,13 @@ namespace ReformaAgraria.Models
         [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
+        public int Id { get; set; }
         
-        public string TitleOfActivity { get; set; }
+        public string ActivityTitle { get; set; }
 
-        public string AgendaOfActivity { get; set; }
+        public string ActivityAgenda { get; set; }
 
-        public RegionType ImplementationOfActivity { get; set; }
+        public RegionType ActivityImplementation { get; set; }
 
         public string Place { get; set; }
 

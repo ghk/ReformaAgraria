@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReformaAgraria.Models
 {
@@ -19,7 +16,7 @@ namespace ReformaAgraria.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
         
-        public string TitleOfDocument { get; set; }
+        public string DocumentTitle { get; set; }
                 
         public string Attachment { get; set; }
         

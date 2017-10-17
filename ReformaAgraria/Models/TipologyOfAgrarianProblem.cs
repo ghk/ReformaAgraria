@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReformaAgraria.Models
 {
@@ -42,27 +39,27 @@ namespace ReformaAgraria.Models
 
         public bool ObjectDataCheckList { get; set; }
 
-        public bool HistoryOfLandTenureDataCheckList { get; set; }
+        public bool LandTenureHistoryDataCheckList { get; set; }
 
-        public string CoordinateOfLocation { get; set; }
+        public string LocationCoordinate { get; set; }
 
         public int ContactPerson { get; set; }
 
-        public TypeOfLand TypeOfLand { get; set; }
+        public LandType LandType { get; set; }
 
-        public double SizeOfHabitation { get; set; }
+        public double HabitationSize { get; set; }
 
-        public double SizeOfPaddyField { get; set; }
+        public double PaddyFieldSize { get; set; }
 
-        public double SizeOfGarden { get; set; }
+        public double GardenSize { get; set; }
 
-        public double SizeOFField { get; set; }
+        public double FieldSize { get; set; }
 
-        public double SizeOfFarm { get; set; }
+        public double FarmSize { get; set; }
 
-        public double SizeOfForest { get; set; }
+        public double ForestSize { get; set; }
 
-        public double SizeOfMere { get; set; }
+        public double MereSize { get; set; }
 
         public DateTime DateCreated { get; set; }
 

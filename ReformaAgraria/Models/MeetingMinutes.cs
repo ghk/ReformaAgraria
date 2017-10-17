@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReformaAgraria.Models
 {
-    public class MeetingReport
+    public class MeetingMinutes
     {
-        public MeetingReport()
+        public MeetingMinutes()
         {
 
         }
@@ -18,25 +16,20 @@ namespace ReformaAgraria.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
+
+        [ForeignKey("Event")]
+        public int fkEventId { get; set; }
+
+        public string ResultDescription { get; set; }
         
-        public string NameOfActivity { get; set; }
-        
-        public DateTime Date { get; set; }
-        
-        public string Place { get; set; }
-        
-        public RegionType LevelOfMeeting { get; set; }
-        
-        public string AgendaOfDiscussion { get; set; }
-        
-        public string DescriptionOfResult { get; set; }
-        
-        public string ListOfParticipants { get; set; }
+        public List<string> MeetingAttendees { get; set; }
         
         public string Attachment { get; set; }
         
         public DateTime DateCreated { get; set; }
 
         public DateTime DateModified { get; set; }
+
+        public virtual Event Event { get; set; }
     }
 }
