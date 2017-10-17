@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ReformaAgraria.Models;
+using ReformaAgraria.Models.ViewModels;
 using ReformaAgraria.Security;
 using System.Transactions;
 
@@ -45,9 +46,9 @@ namespace ReformaAgraria.Controllers
         // [ValidateAntiForgeryToken]
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] ReformaAgrariaUser model)
+        public async Task<IActionResult> Login([FromBody] ReformaAgrariaLogin model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.PasswordHash, isPersistent: true, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, isPersistent: true, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
@@ -86,13 +87,13 @@ namespace ReformaAgraria.Controllers
         // POST: /Account/register
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] ReformaAgrariaUser model)
+        public async Task<IActionResult> Register([FromBody] ReformaAgrariaLogin model)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var user = new ReformaAgrariaUser { UserName = model.UserName, Email = model.Email };
+                    var user = new ReformaAgrariaUser { UserName = model.UserName };
                     user.Claims.Add(new IdentityUserClaim<string>
                     {
                         ClaimType = "external",
@@ -104,13 +105,13 @@ namespace ReformaAgraria.Controllers
                         ClaimValue = "User"
                     });
 
-                    var result = await _userManager.CreateAsync(user, model.PasswordHash);
+                    var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
                         transaction.Commit();
                         return Ok();
                     }
-                    return BadRequest();
+                    return BadRequest(result.Errors);
                 }
                 catch (Exception ex)
                 {

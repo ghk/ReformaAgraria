@@ -12,7 +12,6 @@ import { AccountService } from '../services/account';
 
 export class RegisterComponent {
     model: any = {};
-    loading = false;
 
     constructor(
         private router: Router,
@@ -20,7 +19,6 @@ export class RegisterComponent {
         private alertService: AlertService) { }
 
     register() {
-        this.loading = true;
         this.accountService.register(this.model)
             .subscribe(
                 data => {
@@ -29,7 +27,6 @@ export class RegisterComponent {
                 },
                 error => {
                     this.alertService.error(error);
-                    this.loading = false;
                 });
     }
 }
