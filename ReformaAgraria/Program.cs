@@ -18,12 +18,17 @@ namespace ReformaAgraria
         {
             var host = BuildWebHost(args);
 
-            using (var scope = host.Services.CreateScope())
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var isDevelopment = environment == EnvironmentName.Development;
+            if (isDevelopment)
             {
-                var services = scope.ServiceProvider;
-                DbInitializer.InitializeAsync(services).Wait();
+                using (var scope = host.Services.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+                    DbInitializer.InitializeAsync(services).Wait();
+                }
             }
-
+            
             host.Run();
         }
 

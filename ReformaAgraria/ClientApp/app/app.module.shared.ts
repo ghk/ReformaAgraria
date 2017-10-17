@@ -13,7 +13,7 @@ import { DataService } from './services/data';
 import { SharedService } from './services/shared';
 
 import 'bootstrap';
-import './styles/app.less';
+import './styles/app.scss';
 
 @NgModule({
     declarations: [

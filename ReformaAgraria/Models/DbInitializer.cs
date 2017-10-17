@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace ReformaAgraria.Models
 {
@@ -12,17 +13,8 @@ namespace ReformaAgraria.Models
         {
             var context = serviceProvider.GetService<ReformaAgrariaDbContext>();
             var userManager = serviceProvider.GetService<UserManager<ReformaAgrariaUser>>();
-            var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
 
             context.Database.EnsureCreated();
-
-            string[] roles = new string[] { "Administrator", "User" };
-
-            foreach(var role in roles)
-            {
-                if (!context.Roles.Any(r => r.Name == role))
-                    await roleManager.CreateAsync(new IdentityRole(role));
-            }
 
             if (context.Users.Any(r => r.UserName == "admin")) return;
 
@@ -31,7 +23,10 @@ namespace ReformaAgraria.Models
             string email = "admin@admin.com";
             string password = "admin";
             var result = await userManager.CreateAsync(new ReformaAgrariaUser { UserName = user, Email = email, EmailConfirmed = true }, password);
-            await userManager.AddToRoleAsync(await userManager.FindByNameAsync(user), "Administrator");
+
+            var newUser = await userManager.FindByNameAsync(user);
+            if (!context.UserClaims.Any(r => r.ClaimType == ClaimTypes.Role && r.ClaimValue == "Administrator"))
+                await userManager.AddClaimAsync(newUser, new Claim(ClaimTypes.Role, "Administrator"));
         }
            
     }
