@@ -8,7 +8,7 @@ namespace ReformaAgraria.Security
         public string Audience { get; set; } = "MyAudience";
         public string Issuer { get; set; } = "MyIssuer";
 
-        public static TimeSpan ExpiresSpan { get; } = TimeSpan.FromMinutes(60);
+        public static TimeSpan ExpiresSpan { get; } = TimeSpan.FromDays(7);
         public static string TokenType { get; } = "Bearer";
 
         /// <summary>
