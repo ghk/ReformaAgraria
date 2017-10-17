@@ -1,19 +1,18 @@
 ﻿import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { AlertService } from '../services/index';
+import { AlertService } from '../services/alert';
 
 @Component({
-    moduleId: module.id,
-    selector: 'alert',
-    templateUrl: 'alert.html'
+    selector: 'ra-alert',
+    templateUrl: '../templates/alert.html'
 })
 
 export class AlertComponent implements OnDestroy {
     private subscription: Subscription;
     message: any;
 
-    constructor(private alertService: AlertService) { 
+    constructor(private alertService: AlertService) {
         // subscribe to alert messages
         this.subscription = alertService.getMessage().subscribe(message => { this.message = message; });
     }

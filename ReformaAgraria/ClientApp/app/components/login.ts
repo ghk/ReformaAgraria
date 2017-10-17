@@ -1,7 +1,8 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { AlertService, AuthenticationService } from '../services/index';
+import { AlertService } from '../services/alert';
+import { AccountService } from '../services/account';
 
 @Component({
     moduleId: 'ra-login',
@@ -10,34 +11,31 @@ import { AlertService, AuthenticationService } from '../services/index';
 
 export class LoginComponent implements OnInit {
     model: any = {};
-    loading = false;
     returnUrl: string;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService,
-        private alertService: AlertService) { }
+        private accountService: AccountService,
+        private alertService: AlertService
+    ) { }
 
     ngOnInit() {
         // reset login status
-        this.authenticationService.logout();
-
+        this.accountService.logout();
         // get return url from route parameters or default to '/'
-        console.log('disini');
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
     login() {
-        this.loading = true;
-        this.authenticationService.login(this.model.username, this.model.password)
+        this.accountService.login(this.model.username, this.model.password)
             .subscribe(
                 data => {
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
-                    this.alertService.error(error);
-                    this.loading = false;
+                    console.log(error);
+                    this.alertService.error(error.Message);
                 });
     }
 }

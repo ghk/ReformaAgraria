@@ -1,4 +1,7 @@
 ﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { AccountService } from '../services/account'; 
 
 @Component({
     selector: 'ra-header',
@@ -6,14 +9,21 @@
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
-    constructor() { }
+    constructor(
+        private router: Router,
+        private accountService: AccountService
+    ) { }
 
     ngOnInit(): void {
 
     }
 
     ngOnDestroy(): void {
+    }
 
+    logout(): void {
+        this.accountService.logout().subscribe();
+        this.router.navigateByUrl('/login');
     }
 
 }

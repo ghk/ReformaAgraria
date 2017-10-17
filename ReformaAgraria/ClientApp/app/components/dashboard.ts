@@ -1,10 +1,10 @@
 ﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
-    selector: 'ra-home',
-    templateUrl: '../templates/home.html',
+    selector: 'ra-dashboard',
+    templateUrl: '../templates/dashboard.html',
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy {
 
     constructor() { }
 
