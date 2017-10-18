@@ -8,8 +8,11 @@ import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
 import { SidenavComponent } from './components/sidenav';
 import { DashboardComponent } from './components/dashboard';
+import { BreadcrumbComponent } from './components/breadcrumb';
 import { EventComponent } from './components/event';
 import { VillageComponent } from './components/village'; 
+import { TeamComponent } from './components/team';
+import { VillageBorderComponent } from './components/village-border';
 import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
 import { RegisterComponent } from './components/register';
@@ -30,8 +33,11 @@ import './styles/app.scss';
         HeaderComponent,
         SidenavComponent,
         DashboardComponent,
+        BreadcrumbComponent,
         EventComponent, 
         VillageComponent,
+        TeamComponent,
+        VillageBorderComponent,
         AlertComponent,
         LoginComponent,
         RegisterComponent
