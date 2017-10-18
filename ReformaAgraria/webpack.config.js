@@ -18,7 +18,8 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                { test: /\.ts$/, include: /ClientApp/, use: isDevBuild ? ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] : '@ngtools/webpack' },
+                //{ test: /\.ts$/, include: /ClientApp/, use: isDevBuild ? ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] : '@ngtools/webpack' },
+                { test: /\.ts$/, include: /ClientApp/, use: ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] },
                 { test: /\.html$/, use: 'html-loader?minimize=false' },
                 { test: /\.css$/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize'] },
                 { test: /\.scss/, include: /ClientApp/, loader: ExtractTextPlugin.extract({fallback: 'style-loader', use: 'css-loader!sass-loader'}) },
@@ -51,12 +52,12 @@ module.exports = (env) => {
             })            
         ] : [
             // Plugins that apply in production builds only
-            new webpack.optimize.UglifyJsPlugin(),
-            new AotPlugin({
-                tsConfigPath: './tsconfig.json',
-                entryModule: path.join(__dirname, 'ClientApp/app/app.module.browser#AppModule'),
-                exclude: ['./**/*.server.ts']
-            })
+            new webpack.optimize.UglifyJsPlugin()
+            //new AotPlugin({
+            //    tsConfigPath: './tsconfig.json',
+            //    entryModule: path.join(__dirname, 'ClientApp/app/app.module.browser#AppModule'),
+            //    exclude: ['./**/*.server.ts']
+            //})
         ])
     });
 
@@ -73,11 +74,11 @@ module.exports = (env) => {
             })
         ].concat(isDevBuild ? [] : [
             // Plugins that apply in production builds only
-            new AotPlugin({
-                tsConfigPath: './tsconfig.json',
-                entryModule: path.join(__dirname, 'ClientApp/app/app.module.server#AppModule'),
-                exclude: ['./**/*.browser.ts']
-            })
+            //new AotPlugin({
+            //    tsConfigPath: './tsconfig.json',
+            //    entryModule: path.join(__dirname, 'ClientApp/app/app.module.server#AppModule'),
+            //    exclude: ['./**/*.browser.ts']
+            //})
         ]),
         output: {
             libraryTarget: 'commonjs',
