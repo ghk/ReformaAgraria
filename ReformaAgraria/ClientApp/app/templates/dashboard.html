@@ -3,21 +3,26 @@
     <div class="row">
         <ra-sidenav></ra-sidenav>
         <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
-            <ra-breadcrumb></ra-breadcrumb>
-            <div class="row">
-                <div class="col-md-8 col-sm-12 kartu">
-                    <ra-event></ra-event>
+            <div class="container body-content">
+                <ra-event></ra-event>
+                <ra-village></ra-village>
+                <hr/>
+                <ra-breadcrumb></ra-breadcrumb>
+                <div class="row">
+                    <div class="col-md-8 col-sm-12 kartu">
+                        <ra-event></ra-event>
+                    </div>
+                    <div class="col-md-4 col-sm-12 kartu sejarah_desa">
+                        <ra-village></ra-village>
+                    </div>
+                    <div class="col-md-12 col-sm-12 kartu tim_kerja_desa">
+                        <ra-team></ra-team>
+                    </div>
+                    <div class="col-md-12 col-sm-12 kartu tabel_batas_desa">
+                        <ra-village-border></ra-village-border>
+                    </div>
+                    <hr />
                 </div>
-                <div class="col-md-4 col-sm-12 kartu sejarah_desa">
-                    <ra-village></ra-village>
-                </div>
-                <div class="col-md-12 col-sm-12 kartu tim_kerja_desa">
-                    <ra-team></ra-team>
-                </div>
-                <div class="col-md-12 col-sm-12 kartu tabel_batas_desa">
-                    <ra-village-border></ra-village-border>
-                </div>
-                <hr />
             </div>
         </main>
     </div>
