@@ -4,20 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class VillageProfile
+    public class VillageProfile: BaseEntity<int>
     {
-        public VillageProfile()
-        {
+        public VillageProfile() { }
 
-        }
-
-        [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        [ForeignKey("Region")]
-        public int fkRegionId { get; set; }
+        public override int Id { get; set; }
 
         public string History { get; set; }
                 
@@ -25,10 +18,9 @@ namespace ReformaAgraria.Models
                 
         public string TenurialCondition { get; set; }
         
-        public DateTime DateCreated { get; set; }
+        public string FkRegionId { get; set; }
 
-        public DateTime DateModified { get; set; }
-
-        public virtual Region Region { get; set; }
+        [ForeignKey("FkRegionId")]
+        public Region Region { get; set; }
     }
 }

@@ -1,33 +1,28 @@
-﻿using System;
+﻿using MicrovacWebCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class Region
+    public class Region: BaseEntity<string>
     {
-        public Region()
-        {
-
-        }
+        public Region() { }
         
-        [Required]
         [Key]
-        public int RegionId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public override string Id { get; set; }
 
         [Required]
         public string Name { get; set; }
 
-        [Required]
         public RegionType Type { get; set; }
-        
-        [ForeignKey("Parent")]
-        public int? fkParentId { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public bool IsKelurahan { get; set; }
 
-        public DateTime DateModified { get; set; }
+        public int? FkParentId { get; set; }
 
-        public virtual Region Parent { get; set; }
+        [ForeignKey("FkParentId")]
+        public Region Parent { get; set; }
     }
 }

@@ -4,23 +4,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class Event
+    public class Event: BaseEntity<int>
     {
-        public Event()
-        {
-
-        }
+        public Event() { }
         
-        [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public override int Id { get; set; }
         
-        public string ActivityTitle { get; set; }
+        public string Title { get; set; }
 
-        public string ActivityAgenda { get; set; }
+        public string Agenda { get; set; }
 
-        public RegionType ActivityImplementation { get; set; }
+        public RegionType RegionType { get; set; }
 
         public string Place { get; set; }
 
@@ -29,9 +25,5 @@ namespace ReformaAgraria.Models
         public DateTime EndDate { get; set; }
 
         public string Notes { get; set; }
-        
-        public DateTime DateCreated { get; set; }
-
-        public DateTime DateModified { get; set; }
     }
 }

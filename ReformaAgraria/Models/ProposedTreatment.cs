@@ -3,9 +3,9 @@ namespace ReformaAgraria.Models
 {
     public enum ProposedTreatment
     {
-        RELEASE_OF_FOREST_AREA = 0,
-        CUSTOMARY_FOREST = 1,
-        REDISTRIBUTION_OF_LAND = 2,
-        LEGALISATION_OF_ASSETS = 3
+        ReleaseOfForestArea = 0,
+        CustomaryForest = 1,
+        RedistributionOfLand = 2,
+        LegalizationOfAssets = 3
     }
 }

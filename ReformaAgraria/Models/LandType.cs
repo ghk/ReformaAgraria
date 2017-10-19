@@ -3,9 +3,9 @@ namespace ReformaAgraria.Models
 {
     public enum LandType
     {
-        FLAT = 0,
-        SLOPING = 1,
-        HILL = 2,
-        MOUNTAIN = 3
+        Flat = 0,
+        Sloping = 1,
+        Hill = 2,
+        Mountain = 3
     }
 }

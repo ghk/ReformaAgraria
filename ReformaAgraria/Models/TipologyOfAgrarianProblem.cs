@@ -4,34 +4,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class TipologyOfAgrarianProblem
+    public class TipologyOfAgrarianProblem: BaseEntity<int>
     {
-        public TipologyOfAgrarianProblem()
-        {
+        public TipologyOfAgrarianProblem() { }
 
-        }
-
-        [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        [ForeignKey("Region")]
-        public int fkRegionId { get; set; }
+        public override int Id { get; set; }
 
         public int TotalFamily { get; set; }
 
         public int TotalPeople { get; set; }
 
-        public double Size { get; set; }
+        public decimal Size { get; set; }
 
         public string MainProblem { get; set; }
 
         public Codefication Codefication { get; set; }
 
         public ProposedTreatment ProposedTreatment { get; set; }
-
-        public double ProposedSize { get; set; }
 
         public bool IndividualSubjectDataCheckList { get; set; }
 
@@ -40,32 +31,36 @@ namespace ReformaAgraria.Models
         public bool ObjectDataCheckList { get; set; }
 
         public bool LandTenureHistoryDataCheckList { get; set; }
-
-        public string LocationCoordinate { get; set; }
-
-        public int ContactPerson { get; set; }
+        
+        public string ContactPerson { get; set; }
 
         public LandType LandType { get; set; }
 
-        public double HabitationSize { get; set; }
+        public decimal ProposedSize { get; set; }
 
-        public double PaddyFieldSize { get; set; }
+        public decimal HabitationSize { get; set; }
 
-        public double GardenSize { get; set; }
+        public decimal PaddyFieldSize { get; set; }
 
-        public double FieldSize { get; set; }
+        public decimal GardenSize { get; set; }
 
-        public double FarmSize { get; set; }
+        public decimal FieldSize { get; set; }
 
-        public double ForestSize { get; set; }
+        public decimal FarmSize { get; set; }
 
-        public double MereSize { get; set; }
+        public decimal ForestSize { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public decimal MereSize { get; set; }
+        
+        public int? FkCoordinateId { get; set; }
 
-        public DateTime DateModified { get; set; }
+        [ForeignKey("FkCoordinateId")]
+        public Coordinate Coordinate { get; set; }
 
-        public virtual Region Region { get; set; }
+        public string FkRegionId { get; set; }
+
+        [ForeignKey("FkRegionId")]
+        public Region Region { get; set; }
 
     }
 }
