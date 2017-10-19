@@ -36,6 +36,13 @@ h4 {
     border-right: none;
 }
 
+/* Login image properti*/
+.image-login-style {
+    width: 180px;
+    padding-bottom: 20px;
+    padding-top: 30px;
+}
+
 /*
  * Sidebar
  */
@@ -46,7 +53,7 @@ h4 {
     bottom: 0;
     left: 0;
     z-index: 1000;
-    padding: 20px;
+    padding: 20px 0;
     overflow-x: hidden;
     overflow-y: auto;
     /* Scrollable contents if viewport is shorter than content. */
@@ -56,11 +63,6 @@ h4 {
 
 /* Sidebar navigation */
 
-.sidebar {
-    padding-left: 0;
-    padding-right: 0;
-}
-
 .sidebar .nav {
     margin-bottom: 20px;
 }
@@ -69,7 +71,7 @@ h4 {
     width: 100%;
 }
 
-.sidebar .nav-item + .nav-item {
+.sidebar .nav-item .nav-item {
     margin-left: 0;
 }
 
@@ -80,11 +82,20 @@ h4 {
 .nav .nav-item {
 }
 
-.nav .nav-item .nav-link {
-    color: azure;
-    font-size: 14px;
+.sidebar .nav .nav-item .nav-link {
+    color: rgba(255,255,255,.5);
+    font-size: 14px;        
     font-style: normal;
 }
+
+.sidebar .nav .nav-item .active {
+    color: #FFF;   
+}
+
+.sidebar .nav .nav-item .nav-link:hover {
+    color: #e5e5e5;   
+}
+
 
 .agenda_kegiatan img {
     width: 215px;
@@ -95,7 +106,7 @@ h4 {
  */
 
 .navbar {
-    background-color: #2196F3;
+    background-color: #1976d2;
     box-shadow: 12px 0px 8px;
 }
 
