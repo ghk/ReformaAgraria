@@ -9,10 +9,12 @@
 
 body {
     padding-top: 3.5rem;
-    background-color: #EEEEEE;
+    font-family: roboto;
+    background-color: #EEEEEE; 
 }
 
 section {
+
 }
 
 /*
@@ -26,6 +28,7 @@ h1 {
 }
 
 h4 {
+
 }
 
 /*list group*/
@@ -68,7 +71,7 @@ h4 {
     width: 100%;
 }
 
-.sidebar .nav-item + .nav-item {
+.sidebar .nav-item+.nav-item {
     margin-left: 0;
 }
 
@@ -77,13 +80,23 @@ h4 {
 }
 
 .nav .nav-item {
+    
 }
 
 .nav .nav-item .nav-link {
-    color: azure;
-    font-size: 14px;
+    color: rgba(255,255,255,.5);
+    font-size: 14px;        
     font-style: normal;
 }
+
+.nav .nav-item .active {
+    color: #FFF;   
+}
+
+.nav .nav-item .nav-link:hover {
+    color: #e5e5e5;   
+}
+
 
 .agenda_kegiatan img {
     width: 215px;
@@ -99,7 +112,7 @@ h4 {
 }
 
 .navbar-brand {
-    float: left;
+    float: left;    
 }
 
 .nav-item .nav-link img {
@@ -114,9 +127,11 @@ h4 {
 }
 
 .breadcrumb {
+    
 }
 
 .breadcrumb .breadcrumb-item {
+    
 }
 
 .card {
@@ -169,7 +184,7 @@ h4 {
 
 .kartu_map img {
     margin-top: 0.5rem;
-}
+} 
 
 .kartu_map .button {
     float: right;
@@ -190,4 +205,21 @@ h4 {
 .placeholder img {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
+}
+
+@media(max-width:980px){
+    #navbarsMenu {
+        display: none;
+    }
+}
+
+/*indikator dashboard permasalahan agraria*/
+
+.centered {
+    position: absolute;
+    color: azure;
+    font-size: 50px;
+    top: 62%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
