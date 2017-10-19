@@ -10,10 +10,11 @@
 body {
     padding-top: 3.5rem;
     font-family: roboto;
-    background-color: #EEEEEE;
+    background-color: #EEEEEE; 
 }
 
 section {
+
 }
 
 /*
@@ -27,6 +28,7 @@ h1 {
 }
 
 h4 {
+
 }
 
 /*list group*/
@@ -80,6 +82,7 @@ h4 {
 }
 
 .nav .nav-item {
+    
 }
 
 .sidebar .nav .nav-item .nav-link {
@@ -111,7 +114,7 @@ h4 {
 }
 
 .navbar-brand {
-    float: left;
+    float: left;    
 }
 
 .nav-item .nav-link img {
@@ -126,9 +129,11 @@ h4 {
 }
 
 .breadcrumb {
+    
 }
 
 .breadcrumb .breadcrumb-item {
+    
 }
 
 .card {
@@ -181,7 +186,7 @@ h4 {
 
 .kartu_map img {
     margin-top: 0.5rem;
-}
+} 
 
 .kartu_map .button {
     float: right;
@@ -202,4 +207,21 @@ h4 {
 .placeholder img {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
+}
+
+@media(max-width:980px){
+    #navbarsMenu {
+        display: none;
+    }
+}
+
+/*indikator dashboard permasalahan agraria*/
+
+.centered {
+    position: absolute;
+    color: azure;
+    font-size: 50px;
+    top: 62%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

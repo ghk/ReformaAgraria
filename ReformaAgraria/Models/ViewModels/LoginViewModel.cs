@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ReformaAgraria.Models.ViewModels
 {
-    public class ReformaAgrariaLogin
+    public class LoginViewModel
     {
         public string UserName { get; set; }
         public string Password { get; set; }
