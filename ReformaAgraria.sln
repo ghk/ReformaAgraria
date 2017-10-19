@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReformaAgraria", "ReformaAgraria\ReformaAgraria.csproj", "{B4B6D5CD-3B9D-49B6-81BF-DF387FBBD5DB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicrovacWebCore", "MicrovacWebCore\MicrovacWebCore.csproj", "{D18F857B-FD91-46B1-A6F6-C46E4A5EE058}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B4B6D5CD-3B9D-49B6-81BF-DF387FBBD5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4B6D5CD-3B9D-49B6-81BF-DF387FBBD5DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4B6D5CD-3B9D-49B6-81BF-DF387FBBD5DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D18F857B-FD91-46B1-A6F6-C46E4A5EE058}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D18F857B-FD91-46B1-A6F6-C46E4A5EE058}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D18F857B-FD91-46B1-A6F6-C46E4A5EE058}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D18F857B-FD91-46B1-A6F6-C46E4A5EE058}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

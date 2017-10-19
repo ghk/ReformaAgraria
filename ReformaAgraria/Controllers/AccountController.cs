@@ -46,7 +46,7 @@ namespace ReformaAgraria.Controllers
         // [ValidateAntiForgeryToken]
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] ReformaAgrariaLogin model)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, isPersistent: true, lockoutOnFailure: false);
 
@@ -87,7 +87,7 @@ namespace ReformaAgraria.Controllers
         // POST: /Account/register
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] ReformaAgrariaLogin model)
+        public async Task<IActionResult> Register([FromBody] LoginViewModel model)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
