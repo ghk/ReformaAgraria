@@ -20,7 +20,7 @@ namespace ReformaAgraria.Models
 
         public bool IsKelurahan { get; set; }
 
-        public int? FkParentId { get; set; }
+        public string FkParentId { get; set; }
 
         [ForeignKey("FkParentId")]
         public Region Parent { get; set; }
