@@ -36,6 +36,90 @@
     <TypeScriptCompile Include="ClientApp\app\components\alert.ts" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="ClientApp\app\models\ActProposalDocumentCheckList.ts">
+      <CustomToolNamespace>Models\ActProposalDocumentCheckList.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\BaseEntity.ts">
+      <CustomToolNamespace>Models\BaseEntity.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\BorderSettingProcessStage.ts">
+      <CustomToolNamespace>Models\BorderSettingProcessStage.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\Codefication.ts">
+      <CustomToolNamespace>Models\Codefication.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\Coordinate.ts">
+      <CustomToolNamespace>Models\Coordinate.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\EducationalAttainment.ts">
+      <CustomToolNamespace>Models\EducationalAttainment.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\Event.ts">
+      <CustomToolNamespace>Models\Event.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\Gender.ts">
+      <CustomToolNamespace>Models\Gender.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\LandStatus.ts">
+      <CustomToolNamespace>Models\LandStatus.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\LandType.ts">
+      <CustomToolNamespace>Models\LandType.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\MaritalStatus.ts">
+      <CustomToolNamespace>Models\MaritalStatus.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\MeetingAttendee.ts">
+      <CustomToolNamespace>Models\MeetingAttendee.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\MeetingMinute.ts">
+      <CustomToolNamespace>Models\MeetingMinute.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\PoliciesDocument.ts">
+      <CustomToolNamespace>Models\PoliciesDocument.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\ProposedTreatment.ts">
+      <CustomToolNamespace>Models\ProposedTreatment.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\Region.ts">
+      <CustomToolNamespace>Models\Region.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\RegionalStatus.ts">
+      <CustomToolNamespace>Models\RegionalStatus.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\RegionType.ts">
+      <CustomToolNamespace>Models\RegionType.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\Status.ts">
+      <CustomToolNamespace>Models\Status.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\TipologyOfAgrarianProblem.ts">
+      <CustomToolNamespace>Models\TipologyOfAgrarianProblem.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\ToraMapAttribute.ts">
+      <CustomToolNamespace>Models\ToraMapAttribute.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\ToraObject.ts">
+      <CustomToolNamespace>Models\ToraObject.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\ToraSettingProcessStage.ts">
+      <CustomToolNamespace>Models\ToraSettingProcessStage.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\ToraSubject.ts">
+      <CustomToolNamespace>Models\ToraSubject.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\ToraSubmission.ts">
+      <CustomToolNamespace>Models\ToraSubmission.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\VillageMapAttribute.ts">
+      <CustomToolNamespace>Models\VillageMapAttribute.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\VillageProfile.ts">
+      <CustomToolNamespace>Models\VillageProfile.cs</CustomToolNamespace>
+    </None>
+  </ItemGroup>
+
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
