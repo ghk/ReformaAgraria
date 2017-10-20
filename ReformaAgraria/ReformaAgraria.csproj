@@ -25,6 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\components\region.ts" />
+    <None Remove="ClientApp\app\services\region.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Docs\" />
   </ItemGroup>
 
@@ -34,6 +39,8 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\alert.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\region.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\region.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
