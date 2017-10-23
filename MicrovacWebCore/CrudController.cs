@@ -7,8 +7,8 @@ using System.Reflection;
 
 namespace MicrovacWebCore
 {
-    public class CrudController<TModel, TId>: ReadOnlyController<TModel, TId>
-        where TModel: class, IModel<TId>, new()
+    public class CrudController<TModel, TId> : ReadOnlyController<TModel, TId>
+        where TModel : class, IModel<TId>, new()
     {
 
         protected List<Expression<Func<TModel, Object>>> PostFields =
@@ -17,8 +17,9 @@ namespace MicrovacWebCore
         protected List<Expression<Func<TModel, Object>>> PutFields =
             new List<Expression<Func<TModel, object>>>();
 
-        public CrudController(DbContext dbContext): base(dbContext) { }
+        public CrudController(DbContext dbContext) : base(dbContext) { }
 
+        [HttpDelete("{id}")]
         public virtual void Delete(TId id)
         {
             var model = new TModel { Id = id };            
@@ -26,6 +27,7 @@ namespace MicrovacWebCore
             dbContext.SaveChanges();
         }
 
+        [HttpPost]
         public virtual TId Post([FromBody] TModel model)
         {
             if (PostFields != null)
@@ -43,6 +45,7 @@ namespace MicrovacWebCore
             return model.Id;
         }
 
+        [HttpPut("{id}")]
         public virtual TId Put([FromBody] TModel model)
         {
             if (PutFields != null)

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MicrovacWebCore
-{
+{    
     public class ModelController<TModel, TId> : ControllerBase
         where TModel : class, IModel<TId>, new()
     {

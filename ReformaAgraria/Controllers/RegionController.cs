@@ -9,10 +9,11 @@ using ReformaAgraria.Models;
 
 namespace ReformaAgraria.Controllers
 {
-    [Produces("application/json")]
-    [Route("api/Region")]
+    [Produces("application/json")]    
+    [Route("api/[controller]")]
     public class RegionController : ReadOnlyController<Region, string>
     {
         public RegionController(ReformaAgrariaDbContext dbContext): base(dbContext) { }
+
     }
 }
