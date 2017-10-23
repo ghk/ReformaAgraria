@@ -51,7 +51,6 @@ export class AccountService {
     }
 
     resetpassword(resetPassword: ResetPassword) {
-        console.log(resetPassword);
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService);
         return this.http.post('/api/account/resetpassword', resetPassword, requestOptions)
             .catch(this.handleError);
