@@ -6,10 +6,12 @@ import { CookieService } from 'ngx-cookie-service';
 import 'rxjs/add/operator/map'
 
 import { User } from '../models/user';
+import { ResetPassword } from '../models/resetPassword';
 import { RequestHelper } from '../helpers/request';
 
 @Injectable()
 export class AccountService {
+
     constructor(
         private http: Http,
         private cookieService: CookieService
@@ -39,6 +41,19 @@ export class AccountService {
     register(user: User) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService);
         return this.http.post('/api/account/register', user, requestOptions)
+            .catch(this.handleError);
+    }
+
+    sendpasswordrecoverylink(user: User) {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService);
+        return this.http.post('/api/account/sendpasswordrecoverylink', user, requestOptions)
+            .catch(this.handleError);
+    }
+
+    resetpassword(resetPassword: ResetPassword) {
+        console.log(resetPassword);
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService);
+        return this.http.post('/api/account/resetpassword', resetPassword, requestOptions)
             .catch(this.handleError);
     }
 

@@ -17,6 +17,8 @@ import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
 import { RegisterComponent } from './components/register';
 import { RegionComponent } from './components/region';
+import { ForgotPasswordComponent } from './components/forgotpassword';
+import { ResetPasswordComponent } from './components/resetpassword';
 
 import { DataService } from './services/data';
 import { SharedService } from './services/shared';
@@ -43,7 +45,9 @@ import './styles/app.scss';
         AlertComponent,
         LoginComponent,
         RegisterComponent,
-        RegionComponent
+        RegionComponent,
+        ForgotPasswordComponent,
+        ResetPasswordComponent
     ],
     imports: [
         HttpModule,
@@ -56,6 +60,8 @@ import './styles/app.scss';
             { path: 'login', component: LoginComponent },
             { path: 'register', component: RegisterComponent },
             { path: 'region', component: RegionComponent },
+            { path: 'forgotpassword', component: ForgotPasswordComponent },
+            { path: 'resetpassword', component: ResetPasswordComponent },
             { path: '**', redirectTo: 'home'  }
         ])
     ],
