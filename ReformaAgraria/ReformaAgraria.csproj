@@ -25,11 +25,27 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\environments\environment.prod.ts" />
+    <None Remove="ClientApp\environments\environment.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Docs\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MicrovacWebCore\MicrovacWebCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\environments\environment.prod.ts" />
+    <TypeScriptCompile Include="ClientApp\environments\environment.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ClientApp\app\services\gen\region.ts">
+      <CustomToolNamespace>Controllers\RegionController.cs</CustomToolNamespace>
+    </None>
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

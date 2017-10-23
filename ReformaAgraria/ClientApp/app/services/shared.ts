@@ -2,8 +2,23 @@
 import { Response } from '@angular/http';
 import { Observable } from 'rxjs';
 
+declare var ENV: string;
+var ENVIRONMENT = require('../../environments/environment.ts')['environment'];
+if ('Production' === ENV)
+    ENVIRONMENT = require('../../environments/environment.prod.ts')['environment'];
+
 @Injectable()
 export class SharedService {
+
+    private _environment: any;
+
+    constructor() {
+        this._environment = ENVIRONMENT;
+    }
+
+    public getEnvironment() {        
+        return this._environment;
+    }
 
     private handleError(error: Response | any) {
         let errMsg: string;
