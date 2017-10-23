@@ -3,21 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class ActProposalDocumentCheckList
+    public class ActProposalDocumentCheckList: BaseEntity<int>
     {
-        public ActProposalDocumentCheckList()
-        {
+        public ActProposalDocumentCheckList() { }
 
-        }
-
-        [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        [ForeignKey("Region")]
-        public int fkRegionId { get; set; }
-
+        public override int Id { get; set; }
+                
         public bool ProposalFromCommunityList { get; set; }
 
         public bool ToraObjectList { get; set; }
@@ -38,7 +31,10 @@ namespace ReformaAgraria.Models
 
         public bool PsSubjectAndCustomaryForestList { get; set; }
 
-        public virtual Region Region { get; set; }
+        public string fkRegionId { get; set; }
+
+        [ForeignKey("FkRegionId")]
+        public Region Region { get; set; }
 
     }
 }

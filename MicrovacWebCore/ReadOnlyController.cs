@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace MicrovacWebCore
 
         protected bool AllowGetAll = true;
 
+        [HttpGet]
         public virtual IList<TModel> GetAll()
         {
             if (!AllowGetAll)
@@ -37,7 +39,8 @@ namespace MicrovacWebCore
             return exp.ToList();
         }
 
-        public virtual long GetCount()
+        [HttpGet("/count")]
+        public virtual long Count()
         {
             IQueryable<TModel> exp = dbSet;
             exp = ApplyQuery(exp);
@@ -45,6 +48,7 @@ namespace MicrovacWebCore
             return result;
         }
 
+        [HttpGet("{id}")]
         public virtual TModel Get(TId id)
         {
             IQueryable<TModel> exp = null;
@@ -70,9 +74,9 @@ namespace MicrovacWebCore
 
         protected virtual IQueryable<TModel> ApplyPageAndSort(IQueryable<TModel> query)
         {
-            var pageBegin = GetQueryString<int>("PageBegin", 1);
-            var pageLength = GetQueryString<int>("PageLength", 0);
-            var sortFields = GetQueryString<string>("SortFields", IdField);
+            var pageBegin = GetQueryString<int>("page", 1);
+            var pageLength = GetQueryString<int>("perPage", 0);
+            var sortFields = GetQueryString<string>("sort", IdField);
             
             query = Sort(query, sortFields);
             query = Page(query, pageBegin, pageLength);

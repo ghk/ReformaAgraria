@@ -4,22 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class ToraSubmission
+    public class ToraSubmission: BaseEntity<int>
     {
-        public ToraSubmission()
-        {
-
-        }
+        public ToraSubmission() { }
         
-        [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
+        public override int Id { get; set; }
         
         public string Attachment { get; set; }
-        
-        public DateTime DateCreated { get; set; }
-
-        public DateTime DateModified { get; set; }
     }
 }

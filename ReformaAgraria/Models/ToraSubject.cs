@@ -4,21 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class ToraSubject
+    public class ToraSubject: BaseEntity<int>
     {
-        public ToraSubject()
-        {
-
-        }
+        public ToraSubject() { }
         
-        [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
+        public override int Id { get; set; }
 
-        [ForeignKey("ToraObject")]
-        public int fkToraObjectId { get; set; }
-        
         public string Name { get; set; }
        
         public MaritalStatus MaritalStatus { get; set; }
@@ -37,12 +30,15 @@ namespace ReformaAgraria.Models
 
         public string LandLocation { get; set; }
 
-        public double Size { get; set; }
+        public decimal Size { get; set; }
 
         public string PlantTypes { get; set; }
 
         public string Notes { get; set; }
 
-        public virtual ToraObject ToraObject { get; set; }
+        public int FkToraObjectId { get; set; }
+
+        [ForeignKey("FkToraObjectId")]
+        public ToraObject ToraObject { get; set; }
     }
 }

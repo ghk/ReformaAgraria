@@ -3,8 +3,8 @@ namespace ReformaAgraria.Models
 {
     public enum MaritalStatus
     {
-        SINGLE = 0,
-        MARRIED = 1,
-        DIVORCED = 2
+        Single = 0,
+        Married = 1,
+        Divorced = 2
     }
 }

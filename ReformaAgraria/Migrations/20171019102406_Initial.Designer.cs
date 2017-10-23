@@ -11,7 +11,7 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    [Migration("20171016063448_Initial")]
+    [Migration("20171019102406_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -128,160 +128,150 @@ namespace ReformaAgraria.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ReformaAgraria.Models.MeetingReport", b =>
+            modelBuilder.Entity("ReformaAgraria.Models.ActProposalDocumentCheckList", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AgendaOfDiscussion");
+                    b.Property<DateTime?>("DateCreated");
 
-                    b.Property<string>("Attachment");
+                    b.Property<DateTime?>("DateModified");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<string>("FkRegionId");
 
-                    b.Property<DateTime>("DateCreated");
+                    b.Property<bool>("ProposalFromCommunityList");
 
-                    b.Property<DateTime>("DateModified");
+                    b.Property<bool>("PsObjectAndCustomaryForestList");
 
-                    b.Property<string>("DescriptionOfResult");
+                    b.Property<bool>("PsObjectAndCustomaryForestMap");
 
-                    b.Property<int>("LevelOfMeeting");
+                    b.Property<bool>("PsSubjectAndCustomaryForestList");
 
-                    b.Property<string>("ListOfParticipants");
+                    b.Property<bool>("ToraObjectForestAreaList");
 
-                    b.Property<string>("NameOfActivity");
+                    b.Property<bool>("ToraObjectForestAreaMap");
+
+                    b.Property<bool>("ToraObjectList");
+
+                    b.Property<bool>("ToraObjectMap");
+
+                    b.Property<bool>("ToraSubjectForestAreaList");
+
+                    b.Property<bool>("ToraSubjectList");
+
+                    b.Property<string>("fkRegionId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FkRegionId");
+
+                    b.ToTable("ProposalOfActDocumentCheckList");
+                });
+
+            modelBuilder.Entity("ReformaAgraria.Models.Coordinate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateCreated");
+
+                    b.Property<DateTime?>("DateModified");
+
+                    b.Property<decimal>("Latitude");
+
+                    b.Property<decimal>("Longitude");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Coordinate");
+                });
+
+            modelBuilder.Entity("ReformaAgraria.Models.Event", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Agenda");
+
+                    b.Property<DateTime?>("DateCreated");
+
+                    b.Property<DateTime?>("DateModified");
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<string>("Notes");
 
                     b.Property<string>("Place");
 
+                    b.Property<int>("RegionType");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<string>("Title");
+
                     b.HasKey("Id");
+
+                    b.ToTable("WorkCalendar");
+                });
+
+            modelBuilder.Entity("ReformaAgraria.Models.MeetingAttendee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateCreated");
+
+                    b.Property<DateTime?>("DateModified");
+
+                    b.Property<int?>("MeetingMinuteId");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MeetingMinuteId");
+
+                    b.ToTable("MeetingAttendee");
+                });
+
+            modelBuilder.Entity("ReformaAgraria.Models.MeetingMinute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Attachment");
+
+                    b.Property<DateTime?>("DateCreated");
+
+                    b.Property<DateTime?>("DateModified");
+
+                    b.Property<string>("Description");
+
+                    b.Property<int>("FkEventId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FkEventId");
 
                     b.ToTable("MeetingReport");
                 });
 
-            modelBuilder.Entity("ReformaAgraria.Models.ObjectSubjectTora", b =>
+            modelBuilder.Entity("ReformaAgraria.Models.PoliciesDocument", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Administrative");
-
-                    b.Property<string>("Concession");
-
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<DateTime>("DateModified");
-
-                    b.Property<int>("Field");
-
-                    b.Property<string>("ListOfTenants");
-
-                    b.Property<string>("Livelihood");
-
-                    b.Property<string>("NIK");
-
-                    b.Property<string>("Notes");
-
-                    b.Property<string>("ResumeOfCase");
-
-                    b.Property<double>("Size");
-
-                    b.Property<double>("SizeOfAPL");
-
-                    b.Property<double>("SizeOfHL");
-
-                    b.Property<double>("SizeOfHP");
-
-                    b.Property<double>("SizeOfHPK");
-
-                    b.Property<double>("SizeOfHPT");
-
-                    b.Property<int>("Status");
-
-                    b.Property<string>("Subject");
-
-                    b.Property<int>("fkRegionId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("fkRegionId");
-
-                    b.ToTable("ObjectSubjectTora");
-                });
-
-            modelBuilder.Entity("ReformaAgraria.Models.PoliciesDocuments", b =>
-                {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Attachment");
 
-                    b.Property<DateTime>("DateCreated");
+                    b.Property<DateTime?>("DateCreated");
 
-                    b.Property<DateTime>("DateModified");
+                    b.Property<DateTime?>("DateModified");
 
-                    b.Property<string>("TitleOfDocument");
+                    b.Property<string>("Title");
 
                     b.HasKey("Id");
 
                     b.ToTable("PoliciesDocuments");
-                });
-
-            modelBuilder.Entity("ReformaAgraria.Models.ProfileOfVillage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<DateTime>("DateModified");
-
-                    b.Property<string>("History");
-
-                    b.Property<string>("Potential");
-
-                    b.Property<string>("TenurialCondition");
-
-                    b.Property<int>("fkRegionId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("fkRegionId");
-
-                    b.ToTable("ProfileOfVillage");
-                });
-
-            modelBuilder.Entity("ReformaAgraria.Models.ProposalOfActDocumentCheckList", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("ListOfPsObjectAndCustomaryForest");
-
-                    b.Property<bool>("ListOfPsSubjectAndCustomaryForest");
-
-                    b.Property<bool>("ListOfToraObjectForestArea");
-
-                    b.Property<bool>("ListOfToraSubject");
-
-                    b.Property<bool>("ListOfToraSubjectForestArea");
-
-                    b.Property<bool>("ListProposalFromCommunity");
-
-                    b.Property<bool>("ListToraObject");
-
-                    b.Property<bool>("MapOfPsObjectAndCustomaryForest");
-
-                    b.Property<bool>("MapOfToraObject");
-
-                    b.Property<bool>("MapOfToraObjectForestArea");
-
-                    b.Property<int>("fkRegionId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("fkRegionId");
-
-                    b.ToTable("ProposalOfActDocumentCheckList");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.ReformaAgrariaUser", b =>
@@ -336,23 +326,24 @@ namespace ReformaAgraria.Migrations
 
             modelBuilder.Entity("ReformaAgraria.Models.Region", b =>
                 {
-                    b.Property<int>("RegionId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id");
 
-                    b.Property<DateTime>("DateCreated");
+                    b.Property<DateTime?>("DateCreated");
 
-                    b.Property<DateTime>("DateModified");
+                    b.Property<DateTime?>("DateModified");
+
+                    b.Property<string>("FkParentId");
+
+                    b.Property<bool>("IsKelurahan");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
                     b.Property<int>("Type");
 
-                    b.Property<int?>("fkParentId");
+                    b.HasKey("Id");
 
-                    b.HasKey("RegionId");
-
-                    b.HasIndex("fkParentId");
+                    b.HasIndex("FkParentId");
 
                     b.ToTable("Region");
                 });
@@ -366,53 +357,55 @@ namespace ReformaAgraria.Migrations
 
                     b.Property<bool>("CommunalSubjectDataCheckList");
 
-                    b.Property<int>("ContactPerson");
+                    b.Property<string>("ContactPerson");
 
-                    b.Property<string>("CoordinateOfLocation");
+                    b.Property<DateTime?>("DateCreated");
 
-                    b.Property<DateTime>("DateCreated");
+                    b.Property<DateTime?>("DateModified");
 
-                    b.Property<DateTime>("DateModified");
+                    b.Property<decimal>("FarmSize");
 
-                    b.Property<bool>("HistoryOfLandTenureDataCheckList");
+                    b.Property<decimal>("FieldSize");
+
+                    b.Property<int?>("FkCoordinateId");
+
+                    b.Property<string>("FkRegionId");
+
+                    b.Property<decimal>("ForestSize");
+
+                    b.Property<decimal>("GardenSize");
+
+                    b.Property<decimal>("HabitationSize");
 
                     b.Property<bool>("IndividualSubjectDataCheckList");
 
+                    b.Property<bool>("LandTenureHistoryDataCheckList");
+
+                    b.Property<int>("LandType");
+
                     b.Property<string>("MainProblem");
+
+                    b.Property<decimal>("MereSize");
 
                     b.Property<bool>("ObjectDataCheckList");
 
-                    b.Property<double>("ProposedSize");
+                    b.Property<decimal>("PaddyFieldSize");
+
+                    b.Property<decimal>("ProposedSize");
 
                     b.Property<int>("ProposedTreatment");
 
-                    b.Property<double>("Size");
-
-                    b.Property<double>("SizeOFField");
-
-                    b.Property<double>("SizeOfFarm");
-
-                    b.Property<double>("SizeOfForest");
-
-                    b.Property<double>("SizeOfGarden");
-
-                    b.Property<double>("SizeOfHabitation");
-
-                    b.Property<double>("SizeOfMere");
-
-                    b.Property<double>("SizeOfPaddyField");
+                    b.Property<decimal>("Size");
 
                     b.Property<int>("TotalFamily");
 
                     b.Property<int>("TotalPeople");
 
-                    b.Property<int>("TypeOfLand");
-
-                    b.Property<int>("fkRegionId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("fkRegionId");
+                    b.HasIndex("FkCoordinateId");
+
+                    b.HasIndex("FkRegionId");
 
                     b.ToTable("TipologyOfAgrarianProblem");
                 });
@@ -426,31 +419,113 @@ namespace ReformaAgraria.Migrations
 
                     b.Property<int>("BorderSettingStatus");
 
-                    b.Property<string>("Coordinate");
+                    b.Property<DateTime?>("DateCreated");
 
-                    b.Property<double>("Size");
+                    b.Property<DateTime?>("DateModified");
 
-                    b.Property<int>("StageOfToraSettingProcess");
+                    b.Property<int?>("FkCoordinateId");
 
-                    b.Property<int>("fkRegionId");
+                    b.Property<string>("FkRegionId");
+
+                    b.Property<decimal>("Size");
+
+                    b.Property<int>("ToraSettingProcessStage");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("fkRegionId");
+                    b.HasIndex("FkCoordinateId");
+
+                    b.HasIndex("FkRegionId");
 
                     b.ToTable("ToraMapAttribute");
                 });
 
+            modelBuilder.Entity("ReformaAgraria.Models.ToraObject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateCreated");
+
+                    b.Property<DateTime?>("DateModified");
+
+                    b.Property<string>("FkRegionId");
+
+                    b.Property<int>("LandStatus");
+
+                    b.Property<string>("LandTenureHistory");
+
+                    b.Property<int>("LandType");
+
+                    b.Property<string>("Livelihood");
+
+                    b.Property<int>("ProposedTreatment");
+
+                    b.Property<int>("RegionalStatus");
+
+                    b.Property<decimal>("Size");
+
+                    b.Property<string>("TotalTenants");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FkRegionId");
+
+                    b.ToTable("ToraObject");
+                });
+
+            modelBuilder.Entity("ReformaAgraria.Models.ToraSubject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address");
+
+                    b.Property<int?>("Age");
+
+                    b.Property<DateTime?>("DateCreated");
+
+                    b.Property<DateTime?>("DateModified");
+
+                    b.Property<int>("EducationalAttainment");
+
+                    b.Property<int>("FkToraObjectId");
+
+                    b.Property<int>("Gender");
+
+                    b.Property<string>("LandLocation");
+
+                    b.Property<string>("LandStatus");
+
+                    b.Property<int>("MaritalStatus");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Notes");
+
+                    b.Property<string>("PlantTypes");
+
+                    b.Property<decimal>("Size");
+
+                    b.Property<int>("TotalFamilyMembers");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FkToraObjectId");
+
+                    b.ToTable("ToraSubject");
+                });
+
             modelBuilder.Entity("ReformaAgraria.Models.ToraSubmission", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Attachment");
 
-                    b.Property<DateTime>("DateCreated");
+                    b.Property<DateTime?>("DateCreated");
 
-                    b.Property<DateTime>("DateModified");
+                    b.Property<DateTime?>("DateModified");
 
                     b.HasKey("Id");
 
@@ -464,49 +539,51 @@ namespace ReformaAgraria.Migrations
 
                     b.Property<string>("Attachment");
 
+                    b.Property<int>("BorderSettingProcessStage");
+
                     b.Property<int>("BorderSettingStatus");
 
-                    b.Property<string>("Coordinate");
+                    b.Property<DateTime?>("DateCreated");
 
-                    b.Property<double>("Size");
+                    b.Property<DateTime?>("DateModified");
 
-                    b.Property<int>("StageOfBorderSettingProcess");
+                    b.Property<int?>("FkCoordinateId");
 
-                    b.Property<int>("fkRegionId");
+                    b.Property<string>("FkRegionId");
+
+                    b.Property<decimal>("Size");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("fkRegionId");
+                    b.HasIndex("FkCoordinateId");
+
+                    b.HasIndex("FkRegionId");
 
                     b.ToTable("VillageMapAttribute");
                 });
 
-            modelBuilder.Entity("ReformaAgraria.Models.WorkCalendar", b =>
+            modelBuilder.Entity("ReformaAgraria.Models.VillageProfile", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AgendaOfActivity");
+                    b.Property<DateTime?>("DateCreated");
 
-                    b.Property<DateTime>("DateCreated");
+                    b.Property<DateTime?>("DateModified");
 
-                    b.Property<DateTime>("DateModified");
+                    b.Property<string>("FkRegionId");
 
-                    b.Property<DateTime>("EndDate");
+                    b.Property<string>("History");
 
-                    b.Property<int>("ImplementationOfActivity");
+                    b.Property<string>("Potential");
 
-                    b.Property<string>("Notes");
-
-                    b.Property<string>("Place");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.Property<string>("TitleOfActivity");
+                    b.Property<string>("TenurialCondition");
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkCalendar");
+                    b.HasIndex("FkRegionId");
+
+                    b.ToTable("ProfileOfVillage");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -554,27 +631,25 @@ namespace ReformaAgraria.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ReformaAgraria.Models.ObjectSubjectTora", b =>
+            modelBuilder.Entity("ReformaAgraria.Models.ActProposalDocumentCheckList", b =>
                 {
                     b.HasOne("ReformaAgraria.Models.Region", "Region")
                         .WithMany()
-                        .HasForeignKey("fkRegionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("FkRegionId");
                 });
 
-            modelBuilder.Entity("ReformaAgraria.Models.ProfileOfVillage", b =>
+            modelBuilder.Entity("ReformaAgraria.Models.MeetingAttendee", b =>
                 {
-                    b.HasOne("ReformaAgraria.Models.Region", "Region")
-                        .WithMany()
-                        .HasForeignKey("fkRegionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("ReformaAgraria.Models.MeetingMinute")
+                        .WithMany("MeetingAttendees")
+                        .HasForeignKey("MeetingMinuteId");
                 });
 
-            modelBuilder.Entity("ReformaAgraria.Models.ProposalOfActDocumentCheckList", b =>
+            modelBuilder.Entity("ReformaAgraria.Models.MeetingMinute", b =>
                 {
-                    b.HasOne("ReformaAgraria.Models.Region", "Region")
+                    b.HasOne("ReformaAgraria.Models.Event", "Event")
                         .WithMany()
-                        .HasForeignKey("fkRegionId")
+                        .HasForeignKey("FkEventId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -582,31 +657,62 @@ namespace ReformaAgraria.Migrations
                 {
                     b.HasOne("ReformaAgraria.Models.Region", "Parent")
                         .WithMany()
-                        .HasForeignKey("fkParentId");
+                        .HasForeignKey("FkParentId");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.TipologyOfAgrarianProblem", b =>
                 {
+                    b.HasOne("ReformaAgraria.Models.Coordinate", "Coordinate")
+                        .WithMany()
+                        .HasForeignKey("FkCoordinateId");
+
                     b.HasOne("ReformaAgraria.Models.Region", "Region")
                         .WithMany()
-                        .HasForeignKey("fkRegionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("FkRegionId");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.ToraMapAttribute", b =>
                 {
+                    b.HasOne("ReformaAgraria.Models.Coordinate", "Coordinate")
+                        .WithMany()
+                        .HasForeignKey("FkCoordinateId");
+
                     b.HasOne("ReformaAgraria.Models.Region", "Region")
                         .WithMany()
-                        .HasForeignKey("fkRegionId")
+                        .HasForeignKey("FkRegionId");
+                });
+
+            modelBuilder.Entity("ReformaAgraria.Models.ToraObject", b =>
+                {
+                    b.HasOne("ReformaAgraria.Models.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("FkRegionId");
+                });
+
+            modelBuilder.Entity("ReformaAgraria.Models.ToraSubject", b =>
+                {
+                    b.HasOne("ReformaAgraria.Models.ToraObject", "ToraObject")
+                        .WithMany()
+                        .HasForeignKey("FkToraObjectId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.VillageMapAttribute", b =>
                 {
+                    b.HasOne("ReformaAgraria.Models.Coordinate", "Coordinate")
+                        .WithMany()
+                        .HasForeignKey("FkCoordinateId");
+
                     b.HasOne("ReformaAgraria.Models.Region", "Region")
                         .WithMany()
-                        .HasForeignKey("fkRegionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("FkRegionId");
+                });
+
+            modelBuilder.Entity("ReformaAgraria.Models.VillageProfile", b =>
+                {
+                    b.HasOne("ReformaAgraria.Models.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("FkRegionId");
                 });
 #pragma warning restore 612, 618
         }

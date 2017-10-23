@@ -3,10 +3,10 @@ namespace ReformaAgraria.Models
 {
     public enum RegionType
     {
-        NATIONAL = 0,
-        PROVINCE = 1,
-        REGENCY = 2,
-        DISTRICT = 3,
-        VILLAGE = 4
+        National = 0,
+        Propinsi = 1,
+        Kabupaten = 2,
+        Kecamatan = 3,
+        Desa = 4
     }
 }

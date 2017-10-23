@@ -16,6 +16,7 @@ using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
 using ReformaAgraria.Security;
 using System.Transactions;
+using System.Linq;
 
 namespace ReformaAgraria.Controllers
 {
@@ -48,11 +49,13 @@ namespace ReformaAgraria.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, isPersistent: true, lockoutOnFailure: false);
+            var user = _signInManager.UserManager.Users.Where(u => u.Email == model.Email).FirstOrDefault();
+
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, isPersistent: true, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
-                var claimsUser = await _userManager.FindByNameAsync(model.UserName);
+                var claimsUser = await _userManager.FindByEmailAsync(model.Email);
                 var claims = _userManager.GetClaimsAsync(claimsUser);
                 var id = new ClaimsIdentity(claims.Result);
 
@@ -69,7 +72,7 @@ namespace ReformaAgraria.Controllers
                         expiresIn = TokenAuthOption.ExpiresSpan.TotalSeconds,
                         tokenType = TokenAuthOption.TokenType,                        
                         accessToken = token,
-                        userName = claimsUser.UserName
+                        email = claimsUser.Email
                     }
                 });
             }
@@ -78,7 +81,7 @@ namespace ReformaAgraria.Controllers
                 return BadRequest(new RequestResult
                 {
                     State = RequestState.Failed,
-                    Message = "Username or password is invalid"
+                    Message = "Email or password is invalid"
                 });
             }
         }
@@ -93,7 +96,8 @@ namespace ReformaAgraria.Controllers
             {
                 try
                 {
-                    var user = new ReformaAgrariaUser { UserName = model.UserName };
+
+                    var user = new ReformaAgrariaUser { UserName = model.Email, Email = model.Email };
                     user.Claims.Add(new IdentityUserClaim<string>
                     {
                         ClaimType = "external",

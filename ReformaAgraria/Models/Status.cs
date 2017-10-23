@@ -3,8 +3,8 @@ namespace ReformaAgraria.Models
 {
     public enum Status
     {
-        PROPOSAL = 0,
-        VERIFICATION = 1,
-        ACT = 2
+        Proposal = 0,
+        Verification = 1,
+        Act = 2
     }
 }

@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { ProgressHttpModule } from 'angular-progress-http';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
@@ -24,8 +25,10 @@ import { DataService } from './services/data';
 import { SharedService } from './services/shared';
 import { AlertService } from './services/alert';
 import { AccountService } from './services/account';
-import { AuthGuard } from './services/auth-guard';
+import { AuthGuard } from './services/authGuard';
 import { CookieService } from 'ngx-cookie-service';
+
+import { RegionService } from './services/gen/region';
 
 import 'bootstrap';
 import './styles/app.scss';
@@ -52,6 +55,7 @@ import './styles/app.scss';
         HttpModule,
         BrowserModule,
         FormsModule,
+        ProgressHttpModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: DashboardComponent, canActivate: [AuthGuard] },
@@ -67,7 +71,8 @@ import './styles/app.scss';
         CookieService,
         AccountService,
         AlertService,
-        AuthGuard
+        AuthGuard,
+        RegionService
     ]
 })
 export class AppModuleShared {
