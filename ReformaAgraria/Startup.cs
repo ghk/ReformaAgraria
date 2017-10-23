@@ -50,6 +50,9 @@ namespace ReformaAgraria
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
+                options.User.AllowedUserNameCharacters =
+                          "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
             });
 
             services.Configure<TokenAuthOption>(options =>

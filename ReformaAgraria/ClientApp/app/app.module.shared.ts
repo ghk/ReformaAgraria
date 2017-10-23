@@ -16,6 +16,7 @@ import { VillageBorderComponent } from './components/village-border';
 import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
 import { RegisterComponent } from './components/register';
+import { RegionComponent } from './components/region';
 
 import { DataService } from './services/data';
 import { SharedService } from './services/shared';
@@ -23,6 +24,7 @@ import { AlertService } from './services/alert';
 import { AccountService } from './services/account';
 import { AuthGuard } from './services/authGuard';
 import { CookieService } from 'ngx-cookie-service';
+import { RegionService } from './services/region';
 
 import 'bootstrap';
 import './styles/app.scss';
@@ -40,7 +42,8 @@ import './styles/app.scss';
         VillageBorderComponent,
         AlertComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        RegionComponent
     ],
     imports: [
         HttpModule,
@@ -52,6 +55,7 @@ import './styles/app.scss';
             { path: 'event', component: EventComponent },
             { path: 'login', component: LoginComponent },
             { path: 'register', component: RegisterComponent },
+            { path: 'region', component: RegionComponent },
             { path: '**', redirectTo: 'home'  }
         ])
     ],
@@ -61,7 +65,8 @@ import './styles/app.scss';
         CookieService,
         AccountService,
         AlertService,
-        AuthGuard
+        AuthGuard,
+        RegionService
     ]
 })
 export class AppModuleShared {

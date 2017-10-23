@@ -22,7 +22,7 @@ export class AccountService {
                 let resp = response.json();
                 if (resp && resp.data && resp.data.accessToken) {
                     this.cookieService.set('accessToken', resp.data.accessToken);
-                    this.cookieService.set('currentUser', resp.data.userName);
+                    this.cookieService.set('currentUser', resp.data.email);
                 }
                 return resp.data;
             })

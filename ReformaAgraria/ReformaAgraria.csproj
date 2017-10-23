@@ -25,107 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\app\models\query.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Docs\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MicrovacWebCore\MicrovacWebCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\app\components\alert.ts" />
-    <TypeScriptCompile Include="ClientApp\app\models\query.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="ClientApp\app\models\gen\actProposalDocumentCheckList.ts">
-      <CustomToolNamespace>Models\ActProposalDocumentCheckList.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\baseEntity.ts">
-      <CustomToolNamespace>Models\BaseEntity.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\borderSettingProcessStage.ts">
-      <CustomToolNamespace>Models\BorderSettingProcessStage.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\codefication.ts">
-      <CustomToolNamespace>Models\Codefication.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\coordinate.ts">
-      <CustomToolNamespace>Models\Coordinate.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\educationalAttainment.ts">
-      <CustomToolNamespace>Models\EducationalAttainment.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\event.ts">
-      <CustomToolNamespace>Models\Event.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\gender.ts">
-      <CustomToolNamespace>Models\Gender.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\landStatus.ts">
-      <CustomToolNamespace>Models\LandStatus.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\landType.ts">
-      <CustomToolNamespace>Models\LandType.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\loginViewModel.ts">
-      <CustomToolNamespace>Models\ViewModels\LoginViewModel.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\maritalStatus.ts">
-      <CustomToolNamespace>Models\MaritalStatus.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\meetingAttendee.ts">
-      <CustomToolNamespace>Models\MeetingAttendee.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\meetingMinute.ts">
-      <CustomToolNamespace>Models\MeetingMinute.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\policiesDocument.ts">
-      <CustomToolNamespace>Models\PoliciesDocument.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\proposedTreatment.ts">
-      <CustomToolNamespace>Models\ProposedTreatment.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\region.ts">
-      <CustomToolNamespace>Models\Region.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\regionalStatus.ts">
-      <CustomToolNamespace>Models\RegionalStatus.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\regionType.ts">
-      <CustomToolNamespace>Models\RegionType.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\status.ts">
-      <CustomToolNamespace>Models\Status.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\tipologyOfAgrarianProblem.ts">
-      <CustomToolNamespace>Models\TipologyOfAgrarianProblem.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\toraMapAttribute.ts">
-      <CustomToolNamespace>Models\ToraMapAttribute.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\toraObject.ts">
-      <CustomToolNamespace>Models\ToraObject.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\toraSettingProcessStage.ts">
-      <CustomToolNamespace>Models\ToraSettingProcessStage.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\toraSubject.ts">
-      <CustomToolNamespace>Models\ToraSubject.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\toraSubmission.ts">
-      <CustomToolNamespace>Models\ToraSubmission.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\villageMapAttribute.ts">
-      <CustomToolNamespace>Models\VillageMapAttribute.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\villageProfile.ts">
-      <CustomToolNamespace>Models\VillageProfile.cs</CustomToolNamespace>
-    </None>
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
