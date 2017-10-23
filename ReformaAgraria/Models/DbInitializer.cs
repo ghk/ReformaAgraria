@@ -15,11 +15,11 @@ namespace ReformaAgraria.Models
             var userManager = serviceProvider.GetService<UserManager<ReformaAgrariaUser>>();
 
             context.Database.EnsureCreated();
-
-            if (context.Users.Any(r => r.UserName == "admin")) return;
+            
+            if (context.Users.Any(r => r.UserName == "admin@admin.com")) return;
 
             //Create the default Admin account and apply the Administrator role
-            string user = "admin";
+            string user = "admin@admin.com";
             string email = "admin@admin.com";
             string password = "admin";
             var result = await userManager.CreateAsync(new ReformaAgrariaUser { UserName = user, Email = email, EmailConfirmed = true }, password);
