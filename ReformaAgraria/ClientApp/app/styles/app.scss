@@ -8,13 +8,17 @@
 /* Move down content because we have a fixed navbar that is 3.5rem tall */
 
 body {
-    padding-top: 3.5rem;
-    font-family: roboto;
+    padding-top: 3.3rem;
     background-color: #EEEEEE; 
 }
 
 section {
 
+}
+
+.container {
+    padding-right: 5px;
+    padding-left: 5px;
 }
 
 /*
@@ -34,8 +38,7 @@ h4 {
 /*list group*/
 
 .list-group .list-group-item {
-    border-left: none;
-    border-right: none;
+
 }
 
 /* Login image properti*/
@@ -141,7 +144,7 @@ h4 {
     list-style: none;
 }
 
-.kartu {
+.card-padding {
     padding-bottom: 0.5rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
@@ -162,22 +165,22 @@ h4 {
  *  Tabel batas desa warna icon dan spec
  */
 
-.tabel_batas_desa .verifikasi {
+.village-border-table .verifikasi {
     color: #078D4A;
     margin: auto;
 }
 
-.tabel_batas_desa .verifikasi .oi {
+.village-border-table .verifikasi .oi {
     color: #078D4A;
     margin: auto;
 }
 
-.tabel_batas_desa .penetapan {
+.village-border-table .penetapan {
     color: #004BC3;
     margin: auto;
 }
 
-.tabel_batas_desa .penetapan .oi {
+.village-border-table .penetapan .oi {
     color: #004BC3;
     margin: auto;
 }
@@ -195,7 +198,7 @@ h4 {
 /*Listgroup*/
 
 .list-group {
-    padding: 15px 20px 15px 15px;
+    
 }
 
 /* Placeholders */

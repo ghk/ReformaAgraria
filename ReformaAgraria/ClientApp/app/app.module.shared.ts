@@ -13,6 +13,9 @@ import { EventComponent } from './components/event';
 import { VillageComponent } from './components/village'; 
 import { TeamComponent } from './components/team';
 import { VillageBorderComponent } from './components/village-border';
+import { MapNavigationComponent } from './components/map-navigation';
+import { AgrariaIssuesHeaderComponent } from './components/agraria-issues-header';
+import { AgrariaIssuesListComponent } from './components/agraria-issues-list';
 import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
 import { RegisterComponent } from './components/register';
@@ -38,8 +41,11 @@ import './styles/app.scss';
         VillageComponent,
         TeamComponent,
         VillageBorderComponent,
+        AgrariaIssuesHeaderComponent,
+        AgrariaIssuesListComponent,
         AlertComponent,
         LoginComponent,
+        MapNavigationComponent,
         RegisterComponent
     ],
     imports: [
