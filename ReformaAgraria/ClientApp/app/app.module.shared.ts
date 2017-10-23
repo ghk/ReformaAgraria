@@ -21,7 +21,7 @@ import { DataService } from './services/data';
 import { SharedService } from './services/shared';
 import { AlertService } from './services/alert';
 import { AccountService } from './services/account';
-import { AuthGuard } from './services/auth-guard';
+import { AuthGuard } from './services/authGuard';
 import { CookieService } from 'ngx-cookie-service';
 
 import 'bootstrap';

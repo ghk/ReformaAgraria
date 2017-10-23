@@ -5,7 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 import 'rxjs/add/operator/map'
 
-import { User } from '../models/user';
+import { LoginViewModel as User } from '../models/gen/loginViewModel';
 import { RequestHelper } from '../helpers/request';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class AccountService {
     ) { }
 
     login(user: User) {
-        let requestOptions = RequestHelper.getRequestOptions(this.cookieService);
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         return this.http.post('/api/account/login', user, requestOptions)
             .map(response => {                
                 let resp = response.json();
@@ -37,7 +37,7 @@ export class AccountService {
     }
 
     register(user: User) {
-        let requestOptions = RequestHelper.getRequestOptions(this.cookieService);
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         return this.http.post('/api/account/register', user, requestOptions)
             .catch(this.handleError);
     }
