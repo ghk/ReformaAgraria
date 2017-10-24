@@ -3,7 +3,6 @@
     using System.Text;
 
     static string serviceNamespaces = "ReformaAgraria.Controllers";
-    string ReturnType(Method m) => m.Type.Name == "IHttpActionResult" ? "void" : m.Type.Name;
     string ServiceName(Class c) => c.Name.Replace("Controller", "Service");
 
     Template(Settings settings) 
@@ -40,6 +39,11 @@
         return false;
     }
 
+    bool IsCrudController(Class item) {
+        var inheritance = GetInheritance(item);
+        return inheritance.Any(i => i == "CrudController");
+    }
+
     string GetFirstType(Class item) {
         var type = item.BaseClass.TypeArguments.FirstOrDefault();
         return $"{type}";
@@ -61,7 +65,7 @@ import * as urljoin from 'url-join';
 @Injectable()
 export class $ServiceName {        
 
-    private serverUrl: any;
+    private serverUrl: string;
    
     constructor(
         private http: ProgressHttp,
@@ -96,12 +100,26 @@ export class $ServiceName {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Get(Id: any, progressListener: any): Observable<$GetFirstType> {
+    public Get(id: any, progressListener: any): Observable<$GetFirstType> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, '$GetFirstType', Id),
+            urljoin(this.serverUrl, '$GetFirstType', id),
+            null,
+            progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    $IsCrudController[
+    public Post(model: $GetFirstType, progressListener: any): Observable<number> {
+        let request = RequestHelper.getHttpRequest(
+            this.cookieService,
+            this.http,
+            'POST',
+            urljoin(this.serverUrl, '$GetFirstType'),
+            null,
             null,
             progressListener
         );
@@ -109,6 +127,34 @@ export class $ServiceName {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
+    public Put(model: $GetFirstType, progressListener: any): Observable<number> {
+        let request = RequestHelper.getHttpRequest(
+            this.cookieService,
+            this.http,
+            'Put',
+            urljoin(this.serverUrl, '$GetFirstType'),
+            null,
+            null,
+            progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+
+    public Delete(id: any, progressListener: any): Observable<number> {
+        let request = RequestHelper.getHttpRequest(
+            this.cookieService,
+            this.http,
+            'DELETE',
+            urljoin(this.serverUrl, '$GetFirstType', id),
+            null,
+            null,
+            progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    ]
     private handleError(error: Response | any) {
         let errMsg: string;
         if (error instanceof Response) {
