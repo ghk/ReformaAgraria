@@ -56,6 +56,7 @@
     "karma-jasmine": "1.1.0",
     "karma-webpack": "2.0.3",
     "node-sass": "4.5.3",
+    "popper.js": "^1.12.5",
     "raw-loader": "0.5.1",
     "sass-loader": "6.0.6",
     "style-loader": "1.1.5",
