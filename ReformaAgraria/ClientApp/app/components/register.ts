@@ -6,7 +6,7 @@ import { AccountService } from '../services/account';
 
 
 @Component({
-    moduleId: 'ra-register',
+    selector: 'ra-register',
     templateUrl: '../templates/register.html'
 })
 

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ProgressHttpModule } from 'angular-progress-http';
+import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
@@ -22,6 +23,7 @@ import { LoginComponent } from './components/login';
 import { RegisterComponent } from './components/register';
 import { ForgotPasswordComponent } from './components/forgotPassword';
 import { ResetPasswordComponent } from './components/resetPassword';
+import { UserManagementComponent } from './components/userManagement';
 
 import { DataService } from './services/data';
 import { SharedService } from './services/shared';
@@ -53,13 +55,15 @@ import './styles/app.scss';
         MapNavigationComponent,
         RegisterComponent,
         ForgotPasswordComponent,
-        ResetPasswordComponent
+        ResetPasswordComponent,
+        UserManagementComponent
     ],
     imports: [
         HttpModule,
         BrowserModule,
         FormsModule,
         ProgressHttpModule,
+        CommonModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: DashboardComponent, canActivate: [AuthGuard] },
@@ -70,6 +74,7 @@ import './styles/app.scss';
                     { path: 'register', component: RegisterComponent },
                     { path: 'forgotpassword', component: ForgotPasswordComponent },
                     { path: 'resetpassword', component: ResetPasswordComponent },
+                    { path: 'usermanagement', component: UserManagementComponent }
                 ]
             },
             { path: '**', redirectTo: 'home'  }

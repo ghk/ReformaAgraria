@@ -1,19 +1,22 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { Http, Headers, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { CookieService } from 'ngx-cookie-service';
 
 import 'rxjs/add/operator/map'
+import * as urljoin from 'url-join';
 
 import { ResetPasswordViewModel as ResetPassword } from '../models/gen/resetPasswordViewModel';
 import { LoginViewModel as User } from '../models/gen/loginViewModel';
 import { RequestHelper } from '../helpers/request';
+import { ProgressHttp } from "angular-progress-http";
 
 @Injectable()
 export class AccountService {
     constructor(
         private http: Http,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        private progressHttp: ProgressHttp
     ) { }
 
     login(user: User) {
@@ -53,6 +56,32 @@ export class AccountService {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         return this.http.post('/api/account/resetpassword', resetPassword, requestOptions)
             .catch(this.handleError);
+    }
+
+    getAllUsers() {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        return this.http.get('/api/account/getallusers', requestOptions)
+            .map(res => res.json());
+    }
+
+    deleteUser(email: string) {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        let params = new URLSearchParams();
+        params.append('email', email);
+        requestOptions.params = params;
+        return this.http.delete('/api/account/deleteuser', requestOptions)
+            .map(res => res.json());
+    }
+
+    updateUser(newEmail: string, oldEmail: string) {
+        console.log(newEmail + ', ' + oldEmail);
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        let params = new URLSearchParams();
+        params.append('oldEmail', oldEmail);
+        params.append('newEmail', newEmail);
+        requestOptions.params = params;
+        return this.http.post('/api/account/updateuser', requestOptions)
+            .map(res => res.json());
     }
 
     private handleError(error: Response | any) {

@@ -179,5 +179,45 @@ namespace ReformaAgraria.Controllers
             }
             return BadRequest(result.Errors);
         }
+
+        [HttpGet("getallusers")]
+        public List<string> GetAllUsers()
+        {
+            var users = _context.Users.ToList();
+            var result = new List<string>();
+            foreach (var user in users)
+            {
+                result.Add(user.Email);
+            }
+            return result;
+        }
+
+        [HttpDelete("deleteuser")]
+        public async Task<IActionResult> DeleteUser([FromQuery] string email)
+        {
+            var userDetail = _userManager.FindByEmailAsync(email).Result;
+
+            await _userManager.DeleteAsync(userDetail);
+
+            return Ok();
+        }
+
+        [HttpPost("updateuser")]
+        public async Task<IActionResult> UpdateUser([FromQuery] string newEmail, [FromQuery] string oldEmail)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                var userDetail = _userManager.FindByEmailAsync(oldEmail).Result;
+
+                userDetail.Email = newEmail;
+                userDetail.NormalizedEmail = newEmail.ToUpper();
+                userDetail.UserName = newEmail;
+                userDetail.NormalizedUserName = newEmail.ToUpper();
+                IdentityResult result = await _userManager.UpdateAsync(userDetail);
+                transaction.Commit();
+            }
+
+            return Ok();
+        }
     }
 }
