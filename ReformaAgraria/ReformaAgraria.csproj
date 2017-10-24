@@ -49,6 +49,9 @@
     <None Update="ClientApp\app\models\gen\resetPasswordViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\ResetPasswordViewModel.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\services\gen\event.ts">
+      <CustomToolNamespace>Controllers\EventController.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\services\gen\region.ts">
       <CustomToolNamespace>Controllers\RegionController.cs</CustomToolNamespace>
     </None>

@@ -23,7 +23,6 @@
     "event-source-polyfill": "0.0.11",
     "isomorphic-fetch": "2.2.1",
     "jquery": "3.2.1",
-    "ngx-bootstrap": "^1.9.3",
     "ngx-cookie-service": "^1.0.9",
     "open-iconic": "^1.1.1",
     "popper.js": "^1.12.5",

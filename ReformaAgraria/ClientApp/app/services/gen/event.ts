@@ -5,14 +5,14 @@ import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
-import { Region } from '../../models/gen/region';
+import { Event } from '../../models/gen/event';
 import { RequestHelper } from '../../helpers/request';
 import { SharedService } from '../../services/shared';
 
 import * as urljoin from 'url-join';
 
 @Injectable()
-export class RegionService {        
+export class EventService {        
 
     private serverUrl: string;
    
@@ -23,12 +23,12 @@ export class RegionService {
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     } 
 
-    public GetAll(query: Query, progressListener: any): Observable<Array<Region>> { 
+    public GetAll(query: Query, progressListener: any): Observable<Array<Event>> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, 'region'),
+            urljoin(this.serverUrl, 'event'),
             query,
             progressListener
         );
@@ -41,7 +41,7 @@ export class RegionService {
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, 'region', 'count'),
+            urljoin(this.serverUrl, 'event', 'count'),
             query,
             progressListener
         );
@@ -49,12 +49,54 @@ export class RegionService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Get(id: any, progressListener: any): Observable<Region> {
+    public Get(id: any, progressListener: any): Observable<Event> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, 'region', id),
+            urljoin(this.serverUrl, 'event', id),
+            null,
+            progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public Post(model: Event, progressListener: any): Observable<number> {
+        let request = RequestHelper.getHttpRequest(
+            this.cookieService,
+            this.http,
+            'POST',
+            urljoin(this.serverUrl, 'event'),
+            null,
+            null,
+            progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+
+    public Put(model: Event, progressListener: any): Observable<number> {
+        let request = RequestHelper.getHttpRequest(
+            this.cookieService,
+            this.http,
+            'PUT',
+            urljoin(this.serverUrl, 'event'),
+            null,
+            null,
+            progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+
+    public Delete(id: any, progressListener: any): Observable<number> {
+        let request = RequestHelper.getHttpRequest(
+            this.cookieService,
+            this.http,
+            'DELETE',
+            urljoin(this.serverUrl, 'event', id),
+            null,
             null,
             progressListener
         );

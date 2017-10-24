@@ -49,6 +49,11 @@
         return $"{type}";
     }
 
+    string GetLowerFirstType(Class item) {
+        var type = item.BaseClass.TypeArguments.FirstOrDefault();
+        return $"{type.ToString().ToLower()}";
+    }
+
 }$Classes($ServiceFilter)[import { Injectable } from '@angular/core';
 import { Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -56,7 +61,7 @@ import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
-import { $GetFirstType } from '../../models/gen/$GetFirstType';
+import { $GetFirstType } from '../../models/gen/$GetLowerFirstType';
 import { RequestHelper } from '../../helpers/request';
 import { SharedService } from '../../services/shared';
 
@@ -79,7 +84,7 @@ export class $ServiceName {
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, '$GetFirstType'),
+            urljoin(this.serverUrl, '$GetLowerFirstType'),
             query,
             progressListener
         );
@@ -92,7 +97,7 @@ export class $ServiceName {
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, '$GetFirstType', 'count'),
+            urljoin(this.serverUrl, '$GetLowerFirstType', 'count'),
             query,
             progressListener
         );
@@ -105,7 +110,7 @@ export class $ServiceName {
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, '$GetFirstType', id),
+            urljoin(this.serverUrl, '$GetLowerFirstType', id),
             null,
             progressListener
         );
@@ -118,7 +123,7 @@ export class $ServiceName {
             this.cookieService,
             this.http,
             'POST',
-            urljoin(this.serverUrl, '$GetFirstType'),
+            urljoin(this.serverUrl, '$GetLowerFirstType'),
             null,
             null,
             progressListener
@@ -131,8 +136,8 @@ export class $ServiceName {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
-            'Put',
-            urljoin(this.serverUrl, '$GetFirstType'),
+            'PUT',
+            urljoin(this.serverUrl, '$GetLowerFirstType'),
             null,
             null,
             progressListener
@@ -146,7 +151,7 @@ export class $ServiceName {
             this.cookieService,
             this.http,
             'DELETE',
-            urljoin(this.serverUrl, '$GetFirstType', id),
+            urljoin(this.serverUrl, '$GetLowerFirstType', id),
             null,
             null,
             progressListener
