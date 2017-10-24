@@ -28,7 +28,7 @@ module.exports = (env) => {
             ]
         },
         plugins: [
-            new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery', Popper: 'popper.js' }),
+            new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }),
             new webpack.DefinePlugin({ ENV: isDevBuild ? JSON.stringify('Development') : JSON.stringify('Production') }),
             new CheckerPlugin(),
             new ExtractTextPlugin('styles.css')
