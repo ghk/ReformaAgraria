@@ -168,11 +168,11 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("resetpassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel resetPasswordmodel)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel resetPasswordModel)
         {
-            var user = _userManager.FindByNameAsync(resetPasswordmodel.Email).Result;
+            var user = _userManager.FindByEmailAsync(resetPasswordModel.Email).Result;
 
-            IdentityResult result = _userManager.ResetPasswordAsync(user, resetPasswordmodel.Token, resetPasswordmodel.Password).Result;
+            IdentityResult result = _userManager.ResetPasswordAsync(user, resetPasswordModel.Token, resetPasswordModel.Password).Result;
             if (result.Succeeded)
             {
                 return Ok();

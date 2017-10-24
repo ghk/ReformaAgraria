@@ -6,7 +6,7 @@ import { AccountService } from '../services/account';
 
 
 @Component({
-    moduleId: 'ra-resetpassword',
+    selector: 'ra-reset-password',
     templateUrl: '../templates/resetPassword.html'
 })
 
@@ -28,8 +28,8 @@ export class ResetPasswordComponent {
             });
     }
 
-    resetpassword() {
-        this.accountService.resetpassword(this.model)
+    resetPassword() {
+        this.accountService.resetPassword(this.model)
             .subscribe(
                 data => {
                     this.alertService.success('Password is successfully Reset', true);

@@ -4,9 +4,8 @@ import { Router } from '@angular/router';
 import { AlertService } from '../services/alert';
 import { AccountService } from '../services/account';
 
-
 @Component({
-    moduleId: 'ra-forgotpassword',
+    selector: 'ra-forgot-password',
     templateUrl: '../templates/forgotPassword.html'
 })
 
@@ -18,12 +17,12 @@ export class ForgotPasswordComponent {
         private accountService: AccountService,
         private alertService: AlertService) { }
 
-    sendpasswordrecoverylink() {
-        this.accountService.sendpasswordrecoverylink(this.model)
+    sendPasswordRecoveryLink() {
+        this.accountService.sendPasswordRecoveryLink(this.model)
             .subscribe(
                 data => {
                     this.alertService.success('Registration successful', true);
-                    this.router.navigate(['/login']);
+                    this.router.navigate(['/account/login']);
                 },
                 error => {
                     this.alertService.error(error);

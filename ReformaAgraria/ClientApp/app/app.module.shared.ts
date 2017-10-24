@@ -64,10 +64,14 @@ import './styles/app.scss';
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: DashboardComponent, canActivate: [AuthGuard] },
             { path: 'event', component: EventComponent },
-            { path: 'login', component: LoginComponent },
-            { path: 'register', component: RegisterComponent },
-            { path: 'forgotpassword', component: ForgotPasswordComponent },
-            { path: 'resetpassword', component: ResetPasswordComponent },
+            {
+                path: 'account', children: [
+                    { path: 'login', component: LoginComponent },
+                    { path: 'register', component: RegisterComponent },
+                    { path: 'forgotpassword', component: ForgotPasswordComponent },
+                    { path: 'resetpassword', component: ResetPasswordComponent },
+                ]
+            },
             { path: '**', redirectTo: 'home'  }
         ])
     ],

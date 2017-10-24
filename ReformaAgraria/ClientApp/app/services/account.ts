@@ -5,7 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 import 'rxjs/add/operator/map'
 
-import { ResetPassword } from '../models/gen/resetPassword';
+import { ResetPasswordViewModel as ResetPassword } from '../models/gen/resetPasswordViewModel';
 import { LoginViewModel as User } from '../models/gen/loginViewModel';
 import { RequestHelper } from '../helpers/request';
 
@@ -43,14 +43,13 @@ export class AccountService {
             .catch(this.handleError);
     }
 
-    sendpasswordrecoverylink(user: User) {
+    sendPasswordRecoveryLink(user: User) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         return this.http.post('/api/account/sendpasswordrecoverylink', user, requestOptions)
             .catch(this.handleError);
     }
 
-    resetpassword(resetPassword: ResetPassword) {
-        console.log(resetPassword);
+    resetPassword(resetPassword: ResetPassword) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         return this.http.post('/api/account/resetpassword', resetPassword, requestOptions)
             .catch(this.handleError);

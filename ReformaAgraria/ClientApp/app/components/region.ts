@@ -1,22 +1,21 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { RegionService } from '../services/region';
 import { Region } from '../models/gen/region';
+import { RegionService } from '../services/gen/region';
 
 @Component({
     selector: 'ra-region',
     templateUrl: '../templates/region.html'
 })
-
 export class RegionComponent implements OnInit {
     model: any = {};
 
-    constructor( private _regionService: RegionService ) { }
+    constructor( private regionService: RegionService ) { }
 
     ngOnInit() {
         this.getRegion();
     }
 
     getRegion(): void {
-        this._regionService.getRegion("1").subscribe(data => this.model = data as Region);
+        this.regionService.Get('1', null).subscribe(data => this.model = data as Region);
     }
 }
