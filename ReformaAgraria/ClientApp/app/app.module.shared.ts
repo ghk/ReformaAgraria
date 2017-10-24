@@ -20,8 +20,8 @@ import { AgrariaIssuesListComponent } from './components/agraria-issues-list';
 import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
 import { RegisterComponent } from './components/register';
-import { ForgotPasswordComponent } from './components/forgotpassword';
-import { ResetPasswordComponent } from './components/resetpassword';
+import { ForgotPasswordComponent } from './components/forgotPassword';
+import { ResetPasswordComponent } from './components/resetPassword';
 
 import { DataService } from './services/data';
 import { SharedService } from './services/shared';

@@ -7,7 +7,7 @@ import { AccountService } from '../services/account';
 
 @Component({
     moduleId: 'ra-resetpassword',
-    templateUrl: '../templates/resetpassword.html'
+    templateUrl: '../templates/resetPassword.html'
 })
 
 export class ResetPasswordComponent {

@@ -7,7 +7,7 @@ import { AccountService } from '../services/account';
 
 @Component({
     moduleId: 'ra-forgotpassword',
-    templateUrl: '../templates/forgotpassword.html'
+    templateUrl: '../templates/forgotPassword.html'
 })
 
 export class ForgotPasswordComponent {
