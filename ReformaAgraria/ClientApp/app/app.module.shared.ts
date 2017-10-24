@@ -5,9 +5,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ProgressHttpModule } from 'angular-progress-http';
 
-import { ButtonsModule } from 'ngx-bootstrap';
-import { BsDropdownModule } from 'ngx-bootstrap';
-
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
 import { SidenavComponent } from './components/sidenav';
@@ -63,8 +60,6 @@ import './styles/app.scss';
         BrowserModule,
         FormsModule,
         ProgressHttpModule,
-        ButtonsModule.forRoot(),
-        BsDropdownModule.forRoot(),
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: DashboardComponent, canActivate: [AuthGuard] },
