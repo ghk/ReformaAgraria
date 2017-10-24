@@ -43,6 +43,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ClientApp\app\models\gen\loginViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\LoginViewModel.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\resetPasswordViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\ResetPasswordViewModel.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\services\gen\region.ts">
       <CustomToolNamespace>Controllers\RegionController.cs</CustomToolNamespace>
     </None>

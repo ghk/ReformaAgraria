@@ -14,7 +14,7 @@ import * as urljoin from 'url-join';
 @Injectable()
 export class RegionService {        
 
-    private serverUrl: any;
+    private serverUrl: string;
    
     constructor(
         private http: ProgressHttp,
@@ -49,19 +49,19 @@ export class RegionService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Get(Id: any, progressListener: any): Observable<Region> {
+    public Get(id: any, progressListener: any): Observable<Region> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, 'Region', Id),
+            urljoin(this.serverUrl, 'Region', id),
             null,
             progressListener
         );
 
         return request.map(res => res.json()).catch(this.handleError);
     }
-
+    
     private handleError(error: Response | any) {
         let errMsg: string;
         if (error instanceof Response) {

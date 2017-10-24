@@ -20,6 +20,8 @@ import { AgrariaIssuesListComponent } from './components/agraria-issues-list';
 import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
 import { RegisterComponent } from './components/register';
+import { ForgotPasswordComponent } from './components/forgotPassword';
+import { ResetPasswordComponent } from './components/resetPassword';
 
 import { DataService } from './services/data';
 import { SharedService } from './services/shared';
@@ -49,7 +51,9 @@ import './styles/app.scss';
         AlertComponent,
         LoginComponent,
         MapNavigationComponent,
-        RegisterComponent
+        RegisterComponent,
+        ForgotPasswordComponent,
+        ResetPasswordComponent
     ],
     imports: [
         HttpModule,
@@ -60,8 +64,14 @@ import './styles/app.scss';
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: DashboardComponent, canActivate: [AuthGuard] },
             { path: 'event', component: EventComponent },
-            { path: 'login', component: LoginComponent },
-            { path: 'register', component: RegisterComponent },
+            {
+                path: 'account', children: [
+                    { path: 'login', component: LoginComponent },
+                    { path: 'register', component: RegisterComponent },
+                    { path: 'forgotpassword', component: ForgotPasswordComponent },
+                    { path: 'resetpassword', component: ResetPasswordComponent },
+                ]
+            },
             { path: '**', redirectTo: 'home'  }
         ])
     ],

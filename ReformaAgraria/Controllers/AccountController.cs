@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Principal;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
 using ReformaAgraria.Security;
-using System.Transactions;
 using System.Linq;
+using System.Collections.Generic;
+using System.Net.Mail;
 
 namespace ReformaAgraria.Controllers
 {
@@ -149,6 +146,38 @@ namespace ReformaAgraria.Controllers
             });
 
             return handler.WriteToken(securityToken);
+        }
+
+        [HttpPost("sendpasswordrecoverylink")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SendPasswordRecoveryLink([FromBody] LoginViewModel model)
+        {
+            var user =  _userManager.FindByEmailAsync(model.Email).Result;
+
+            var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
+
+            //in dev, request scheme is skipped because there is no http or https in localhost
+            //string resetLink = Request.Scheme + "//" + Request.Host + "/resetpassword?token=" + token;
+            string resetLink = Request.Host + "/resetpassword?token=" + token;
+
+            MailController mc = new MailController();
+            string body = "Klik tautan di bawah ini untuk mereset password anda. " + resetLink;
+            mc.SendEmail("Reset Password", body, new MailAddress(user.Email, user.UserName));
+
+            return Ok();
+        }
+
+        [HttpPost("resetpassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel resetPasswordModel)
+        {
+            var user = _userManager.FindByEmailAsync(resetPasswordModel.Email).Result;
+
+            IdentityResult result = _userManager.ResetPasswordAsync(user, resetPasswordModel.Token, resetPasswordModel.Password).Result;
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            return BadRequest(result.Errors);
         }
     }
 }
