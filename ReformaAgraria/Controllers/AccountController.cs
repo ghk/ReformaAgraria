@@ -155,10 +155,8 @@ namespace ReformaAgraria.Controllers
             var user =  _userManager.FindByEmailAsync(model.Email).Result;
 
             var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
-
-            //in dev, request scheme is skipped because there is no http or https in localhost
-            //string resetLink = Request.Scheme + "//" + Request.Host + "/resetpassword?token=" + token;
-            string resetLink = Request.Host + "/resetpassword?token=" + token;
+            
+            string resetLink = Request.Scheme + "://" + Request.Host + "/account/resetpassword?id=" + user.Id + "&token=" + token;
 
             MailController mc = new MailController();
             string body = "Klik tautan di bawah ini untuk mereset password anda. " + resetLink;
@@ -168,11 +166,11 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("resetpassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel resetPasswordModel)
+        public async Task<IActionResult> ResetPassword(string id, string token, string password)
         {
-            var user = _userManager.FindByEmailAsync(resetPasswordModel.Email).Result;
-
-            IdentityResult result = _userManager.ResetPasswordAsync(user, resetPasswordModel.Token, resetPasswordModel.Password).Result;
+            var user = _userManager.FindByIdAsync(id).Result;
+            
+            IdentityResult result = _userManager.ResetPasswordAsync(user, token.Replace(" ", "+"), password).Result;
             if (result.Succeeded)
             {
                 return Ok();
@@ -181,21 +179,30 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpGet("getallusers")]
-        public List<string> GetAllUsers()
+        public List<object> GetAllUsers()
         {
             var users = _context.Users.ToList();
-            var result = new List<string>();
+            var result = new List<object>();
             foreach (var user in users)
             {
-                result.Add(user.Email);
+                result.Add(new ReformaAgrariaUser {
+                    Id = user.Id,
+                    Email = user.Email
+                });
             }
             return result;
         }
 
-        [HttpDelete("deleteuser")]
-        public async Task<IActionResult> DeleteUser([FromQuery] string email)
+        [HttpGet("getuserbyid")]
+        public ReformaAgrariaUser GetUserById(string id)
         {
-            var userDetail = _userManager.FindByEmailAsync(email).Result;
+            return _userManager.FindByIdAsync(id).Result;
+        }
+
+        [HttpDelete("deleteuser")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var userDetail = _userManager.FindByIdAsync(id).Result;
 
             await _userManager.DeleteAsync(userDetail);
 
@@ -203,11 +210,11 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("updateuser")]
-        public async Task<IActionResult> UpdateUser([FromQuery] string newEmail, [FromQuery] string oldEmail)
+        public async Task<IActionResult> UpdateUser(string id, string newEmail)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
-                var userDetail = _userManager.FindByEmailAsync(oldEmail).Result;
+                var userDetail = _userManager.FindByIdAsync(id).Result;
 
                 userDetail.Email = newEmail;
                 userDetail.NormalizedEmail = newEmail.ToUpper();
@@ -218,6 +225,19 @@ namespace ReformaAgraria.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpPost("changepassword")]
+        public async Task<IActionResult> ChangePassword(string id, string currentPassword, string newPassword)
+        {
+            var user = _userManager.FindByIdAsync(id).Result;
+            
+            if (await _userManager.CheckPasswordAsync(user, currentPassword))
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                await ResetPassword(id, token, newPassword);
+            }
+            return BadRequest();
         }
     }
 }

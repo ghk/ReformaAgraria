@@ -6,7 +6,6 @@ import { CookieService } from 'ngx-cookie-service';
 import 'rxjs/add/operator/map'
 import * as urljoin from 'url-join';
 
-import { ResetPasswordViewModel as ResetPassword } from '../models/gen/resetPasswordViewModel';
 import { LoginViewModel as User } from '../models/gen/loginViewModel';
 import { RequestHelper } from '../helpers/request';
 import { ProgressHttp } from "angular-progress-http";
@@ -52,10 +51,15 @@ export class AccountService {
             .catch(this.handleError);
     }
 
-    resetPassword(resetPassword: ResetPassword) {
+    resetPassword(id: string, token: string, password: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        return this.http.post('/api/account/resetpassword', resetPassword, requestOptions)
-            .catch(this.handleError);
+        let params = new URLSearchParams();
+        params.append('id', id);
+        params.append('token', token);
+        params.append('password', password);
+        requestOptions.params = params;
+        return this.http.post('/api/account/resetpassword', params)
+            .map(res => res.json());
     }
 
     getAllUsers() {
@@ -64,23 +68,42 @@ export class AccountService {
             .map(res => res.json());
     }
 
-    deleteUser(email: string) {
+    getUserById(id: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         let params = new URLSearchParams();
-        params.append('email', email);
+        params.append('id', id);
+        requestOptions.params = params;
+        return this.http.delete('/api/account/getuserbyid', requestOptions)
+            .map(res => res.json());
+    }
+
+    deleteUser(id: string) {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        let params = new URLSearchParams();
+        params.append('id', id);
         requestOptions.params = params;
         return this.http.delete('/api/account/deleteuser', requestOptions)
             .map(res => res.json());
     }
 
-    updateUser(newEmail: string, oldEmail: string) {
-        console.log(newEmail + ', ' + oldEmail);
+    updateUser(id: string, newEmail: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         let params = new URLSearchParams();
-        params.append('oldEmail', oldEmail);
+        params.append('id', id);
         params.append('newEmail', newEmail);
         requestOptions.params = params;
-        return this.http.post('/api/account/updateuser', requestOptions)
+        return this.http.post('/api/account/updateuser', params)
+            .map(res => res.json());
+    }
+
+    changePassword(id: string, currentPassword: string, newPassword: string) {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        let params = new URLSearchParams();
+        params.append('id', id);
+        params.append('currentPassword', currentPassword);
+        params.append('newPassword', newPassword);
+        requestOptions.params = params;
+        return this.http.post('/api/account/changepassword', params)
             .map(res => res.json());
     }
 

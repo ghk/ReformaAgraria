@@ -20,7 +20,6 @@ import { AgrariaIssuesHeaderComponent } from './components/agraria-issues-header
 import { AgrariaIssuesListComponent } from './components/agraria-issues-list';
 import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
-import { RegisterComponent } from './components/register';
 import { ForgotPasswordComponent } from './components/forgotPassword';
 import { ResetPasswordComponent } from './components/resetPassword';
 import { UserManagementComponent } from './components/userManagement';
@@ -53,7 +52,6 @@ import './styles/app.scss';
         AlertComponent,
         LoginComponent,
         MapNavigationComponent,
-        RegisterComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,
         UserManagementComponent
@@ -71,7 +69,6 @@ import './styles/app.scss';
             {
                 path: 'account', children: [
                     { path: 'login', component: LoginComponent },
-                    { path: 'register', component: RegisterComponent },
                     { path: 'forgotpassword', component: ForgotPasswordComponent },
                     { path: 'resetpassword', component: ResetPasswordComponent },
                     { path: 'usermanagement', component: UserManagementComponent }

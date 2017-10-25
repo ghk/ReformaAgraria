@@ -12,9 +12,11 @@ import { AccountService } from '../services/account';
 
 export class UserManagementComponent {
     model: any = {};
-    allUsers: Array<string>;
+    allUsers: any = [];
     isRegisterShown: boolean = false;
     isEditShown: boolean = false;
+    isChangePasswordShown: boolean = false;
+    isListUserShown: boolean = true;
 
     constructor(
         private router: Router,
@@ -31,29 +33,45 @@ export class UserManagementComponent {
             .subscribe(
                 data => {
                     this.allUsers = data;
+                    console.log(this.allUsers);
                 },
                 error => {
                     this.alertService.error(error);
                 });
     }
 
-    deleteUser(email: string) {
-        this.accountService.deleteUser(email)
+    deleteUser(id: string, email: string) {
+        if (confirm('Apakah kamu yakin ingin menghapus ' + email + '?')) {
+            this.accountService.deleteUser(id)
+                .subscribe(
+                data => {
+                    this.alertService.success('User ' + email + ' is successfully deleted.', true);
+                    this.getAllUsers();
+                },
+                error => {
+                    this.alertService.error(error);
+                });
+        }
+    }
+
+    updateUser() {
+        this.accountService.updateUser(this.model.id, this.model.newEmail)
             .subscribe(
             data => {
-                this.alertService.success('User ' + email + ' is successfully deleted.', true);
+                this.alertService.success('User ' + this.model.oldEmail + ' is successfully updated to ' + this.model.newEmail, true);
+                this.getAllUsers();
+                this.showListUser();
             },
             error => {
                 this.alertService.error(error);
             });
     }
 
-    updateUser() {
-        console.log(this.model.newEmail + ', ' + this.model.oldEmail)
-        this.accountService.updateUser(this.model.newEmail, this.model.oldEmail)
+    changePassword() {
+        this.accountService.changePassword(this.model.id, this.model.currentPassword, this.model.newPassword)
             .subscribe(
             data => {
-                this.alertService.success('User ' + this.model.oldEmail + ' is successfully updated to ' + this.model.newEmail, true);
+                this.alertService.success('Password is successfully changed.', true);
             },
             error => {
                 this.alertService.error(error);
@@ -61,9 +79,47 @@ export class UserManagementComponent {
     }
 
     addUser() {
-        this.isRegisterShown = true;
+        this.accountService.register(this.model)
+            .subscribe(
+            data => {
+                this.alertService.success('Registration successful', true);
+                this.getAllUsers();
+                this.showListUser();
+            },
+            error => {
+                this.alertService.error(error);
+            });
     }
-    editUser() {
+
+    showAddUser() {
+        this.isRegisterShown = true;
+        this.isEditShown = false;
+        this.isListUserShown = false;
+        this.isChangePasswordShown = false;
+    }
+
+    showEditUser(id: string, oldEmail: string) {
+        this.model.oldEmail = oldEmail;
+        this.model.newEmail = oldEmail;
+        this.model.id = id;
+        this.isRegisterShown = false;
         this.isEditShown = true;
+        this.isListUserShown = false;
+        this.isChangePasswordShown = false;
+    }
+
+    showListUser() {
+        this.getAllUsers();
+        this.isRegisterShown = false;
+        this.isEditShown = false;
+        this.isListUserShown = true;
+        this.isChangePasswordShown = false;
+    }
+
+    showChangePassword() {
+        this.isRegisterShown = false;
+        this.isEditShown = false;
+        this.isListUserShown = false;
+        this.isChangePasswordShown = true;
     }
 }
