@@ -183,8 +183,21 @@ namespace ReformaAgraria.Controllers
             return BadRequest(result.Errors);
         }
 
-        [HttpGet("getallusers")]
-        public List<object> GetAllUsers()
+        [HttpPost("changepassword")]
+        public async Task<IActionResult> ChangePassword(string id, string currentPassword, string newPassword)
+        {
+            var user = _userManager.FindByIdAsync(id).Result;
+
+            if (await _userManager.CheckPasswordAsync(user, currentPassword))
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                await ResetPassword(id, token, newPassword);
+            }
+            return BadRequest();
+        }
+
+        [HttpGet("user")]
+        public List<object> GetAllUser()
         {
             var users = _context.Users.ToList();
             var result = new List<object>();
@@ -198,13 +211,13 @@ namespace ReformaAgraria.Controllers
             return result;
         }
 
-        [HttpGet("getuserbyid")]
+        [HttpGet("user/{id}")]
         public ReformaAgrariaUser GetUserById(string id)
         {
             return _userManager.FindByIdAsync(id).Result;
         }
 
-        [HttpDelete("deleteuser")]
+        [HttpDelete("user/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var userDetail = _userManager.FindByIdAsync(id).Result;
@@ -214,9 +227,10 @@ namespace ReformaAgraria.Controllers
             return Ok();
         }
 
-        [HttpPost("updateuser")]
-        public async Task<IActionResult> UpdateUser(string id, string newEmail)
+        [HttpPut("user/{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody]Dictionary<string, string> data)
         {
+            var newEmail = data["email"];
             using (var transaction = _context.Database.BeginTransaction())
             {
                 var userDetail = _userManager.FindByIdAsync(id).Result;
@@ -230,19 +244,6 @@ namespace ReformaAgraria.Controllers
             }
 
             return Ok();
-        }
-
-        [HttpPost("changepassword")]
-        public async Task<IActionResult> ChangePassword(string id, string currentPassword, string newPassword)
-        {
-            var user = _userManager.FindByIdAsync(id).Result;
-            
-            if (await _userManager.CheckPasswordAsync(user, currentPassword))
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                await ResetPassword(id, token, newPassword);
-            }
-            return BadRequest();
-        }
+        }        
     }
 }
