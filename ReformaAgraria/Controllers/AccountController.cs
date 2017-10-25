@@ -74,7 +74,7 @@ namespace ReformaAgraria.Controllers
                         expiresIn = TokenAuthOption.ExpiresSpan.TotalSeconds,
                         tokenType = TokenAuthOption.TokenType,                        
                         accessToken = token,
-                        email = claimsUser.Email
+                        userName = claimsUser.UserName
                     }
                 });
             }

@@ -12,10 +12,15 @@ namespace ReformaAgraria.Controllers
 {
     [Produces("application/json")]    
     [Route("api/[controller]")]
-    [Authorize(Policy = "Bearer")]
+    //[Authorize(Policy = "Bearer")]
     public class RegionController : ReadOnlyController<Region, string>
     {
         public RegionController(ReformaAgrariaDbContext dbContext): base(dbContext) { }
 
+        [HttpGet]
+        public override IList<Region> GetAll()
+        {
+            return base.GetAll();
+        }
     }
 }
