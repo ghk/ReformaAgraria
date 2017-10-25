@@ -21,5 +21,10 @@
   },
   "Security": {
     "SecretKey": "microvacmicrovac"
+  },
+  "Email": {
+    "EmailAddress": "andanto.e@gmail.com",
+    "Password": "pass.123",
+    "DisplayName": "Reforma Agraria (no reply)"
   }
 }
