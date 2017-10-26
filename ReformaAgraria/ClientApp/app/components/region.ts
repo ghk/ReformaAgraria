@@ -16,6 +16,6 @@ export class RegionComponent implements OnInit {
     }
 
     getRegion(): void {
-        this.regionService.Get('1', null).subscribe(data => this.model = data as Region);
+        this.regionService.getById('1', null).subscribe(data => this.model = data as Region);
     }
 }

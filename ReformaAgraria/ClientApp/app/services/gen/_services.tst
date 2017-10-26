@@ -49,6 +49,11 @@
         return $"{type}";
     }
 
+    string GetSecondType(Class item) {
+        var type = item.BaseClass.TypeArguments.LastOrDefault();
+        return $"{type}";
+    }
+
     string GetLowerFirstType(Class item) {
         var type = item.BaseClass.TypeArguments.FirstOrDefault();
         return $"{type.ToString().ToLower()}";
@@ -64,11 +69,12 @@ import { Query } from '../../models/query';
 import { $GetFirstType } from '../../models/gen/$GetLowerFirstType';
 import { RequestHelper } from '../../helpers/request';
 import { SharedService } from '../../services/shared';
+import { CrudService } from '../../services/crud';
 
 import * as urljoin from 'url-join';
 
 @Injectable()
-export class $ServiceName {        
+export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{        
 
     private serverUrl: string;
    
@@ -79,7 +85,7 @@ export class $ServiceName {
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     } 
 
-    public GetAll(query: Query, progressListener: any): Observable<Array<$GetFirstType>> { 
+    public getAll(query: Query, progressListener: any): Observable<Array<$GetFirstType>> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -92,7 +98,7 @@ export class $ServiceName {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Count(query: Query, progressListener: any): Observable<number> { 
+    public count(query: Query, progressListener: any): Observable<number> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -105,7 +111,7 @@ export class $ServiceName {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Get(id: any, progressListener: any): Observable<$GetFirstType> {
+    public getById(id: $GetSecondType, progressListener: any): Observable<$GetFirstType> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -118,7 +124,16 @@ export class $ServiceName {
         return request.map(res => res.json()).catch(this.handleError);
     }
     $IsCrudController[
-    public Post(model: $GetFirstType, progressListener: any): Observable<number> {
+    public createOrUpdate(model: $GetFirstType, progressListener: any): Observable<number> {
+        let method = 'POST';
+        if (!model['id']) {
+            return this.create(model, progressListener);
+        } else if (model['id']) {
+            return this.update(model, progressListener);       
+        }
+    }
+
+    public create(model: $GetFirstType, progressListener: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -132,7 +147,7 @@ export class $ServiceName {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Put(model: $GetFirstType, progressListener: any): Observable<number> {
+    public update(model: $GetFirstType, progressListener: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -146,7 +161,7 @@ export class $ServiceName {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Delete(id: any, progressListener: any): Observable<number> {
+    public deleteById(id: any, progressListener: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,

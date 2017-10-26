@@ -14,6 +14,7 @@ using ReformaAgraria.Security;
 using System.Linq;
 using System.Collections.Generic;
 using System.Net.Mail;
+using Microsoft.Extensions.Configuration;
 
 namespace ReformaAgraria.Controllers
 {
@@ -25,19 +26,23 @@ namespace ReformaAgraria.Controllers
         private readonly SignInManager<ReformaAgrariaUser> _signInManager;
         private readonly ILogger _logger;
         private readonly TokenAuthOption _tokenOptions;
+        private readonly IConfiguration _iconfiguration;
 
         public AccountController(
             ReformaAgrariaDbContext context,
             UserManager<ReformaAgrariaUser> userManager,
             SignInManager<ReformaAgrariaUser> signInManager,
             ILoggerFactory loggerFactory,
+            IConfiguration iconfiguration,
             IOptions<TokenAuthOption> tokenOptions)
+
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = loggerFactory.CreateLogger<AccountController>();
             _tokenOptions = tokenOptions.Value;
+            _iconfiguration = iconfiguration;
         }
 
         // POST: /Account/login
@@ -69,7 +74,7 @@ namespace ReformaAgraria.Controllers
                         expiresIn = TokenAuthOption.ExpiresSpan.TotalSeconds,
                         tokenType = TokenAuthOption.TokenType,                        
                         accessToken = token,
-                        email = claimsUser.Email
+                        userName = claimsUser.UserName
                     }
                 });
             }
@@ -158,7 +163,7 @@ namespace ReformaAgraria.Controllers
             
             string resetLink = Request.Scheme + "://" + Request.Host + "/account/resetpassword?id=" + user.Id + "&token=" + token;
 
-            MailController mc = new MailController();
+            MailController mc = new MailController(_iconfiguration);
             string body = "Klik tautan di bawah ini untuk mereset password anda. " + resetLink;
             mc.SendEmail("Reset Password", body, new MailAddress(user.Email, user.UserName));
 
@@ -178,8 +183,21 @@ namespace ReformaAgraria.Controllers
             return BadRequest(result.Errors);
         }
 
-        [HttpGet("getallusers")]
-        public List<object> GetAllUsers()
+        [HttpPost("changepassword")]
+        public async Task<IActionResult> ChangePassword(string id, string currentPassword, string newPassword)
+        {
+            var user = _userManager.FindByIdAsync(id).Result;
+
+            if (await _userManager.CheckPasswordAsync(user, currentPassword))
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                await ResetPassword(id, token, newPassword);
+            }
+            return BadRequest();
+        }
+
+        [HttpGet("user")]
+        public List<object> GetAllUser()
         {
             var users = _context.Users.ToList();
             var result = new List<object>();
@@ -193,13 +211,13 @@ namespace ReformaAgraria.Controllers
             return result;
         }
 
-        [HttpGet("getuserbyid")]
+        [HttpGet("user/{id}")]
         public ReformaAgrariaUser GetUserById(string id)
         {
             return _userManager.FindByIdAsync(id).Result;
         }
 
-        [HttpDelete("deleteuser")]
+        [HttpDelete("user/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var userDetail = _userManager.FindByIdAsync(id).Result;
@@ -209,9 +227,10 @@ namespace ReformaAgraria.Controllers
             return Ok();
         }
 
-        [HttpPost("updateuser")]
-        public async Task<IActionResult> UpdateUser(string id, string newEmail)
+        [HttpPut("user/{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody]Dictionary<string, string> data)
         {
+            var newEmail = data["email"];
             using (var transaction = _context.Database.BeginTransaction())
             {
                 var userDetail = _userManager.FindByIdAsync(id).Result;
@@ -225,19 +244,6 @@ namespace ReformaAgraria.Controllers
             }
 
             return Ok();
-        }
-
-        [HttpPost("changepassword")]
-        public async Task<IActionResult> ChangePassword(string id, string currentPassword, string newPassword)
-        {
-            var user = _userManager.FindByIdAsync(id).Result;
-            
-            if (await _userManager.CheckPasswordAsync(user, currentPassword))
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                await ResetPassword(id, token, newPassword);
-            }
-            return BadRequest();
-        }
+        }        
     }
 }

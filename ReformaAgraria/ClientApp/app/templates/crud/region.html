@@ -1,0 +1,22 @@
+﻿<section class="row">
+    <div class="col-12" style="padding-top: 0.5em;">
+        <table class="table table-sm table-striped table-bordered">
+            <thead class="thead-default">
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Parent Id</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let entity of entities">
+                    <td>{{ entity.id }}</td>
+                    <td>{{ entity.name }}</td>
+                    <td>{{ entity.type }}</td>
+                    <td>{{ entity.fkParentId }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

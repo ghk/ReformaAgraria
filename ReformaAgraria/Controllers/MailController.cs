@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,18 @@ namespace ReformaAgraria.Controllers
 {
     public class MailController
     {
+        private readonly IConfiguration _iconfiguration;
+
+        public MailController(IConfiguration iconfiguration) {
+            _iconfiguration = iconfiguration;
+        }
+
         public void SendEmail(string subject, string body, MailAddress toAddress)
         {
-            var fromAddress = new MailAddress("andanto.e@gmail.com", "Reforma Agraria (no reply)");
-            const string fromPassword = "pass.123";
+            var from = _iconfiguration.GetSection("Email").GetSection("EmailAddress").Value;
+            var fromPassword = _iconfiguration.GetSection("Email").GetSection("Password").Value;
+            var displayName = _iconfiguration.GetSection("Email").GetSection("DisplayName").Value;
+            var fromAddress = new MailAddress(from, displayName);
 
             var smtp = new SmtpClient
             {
