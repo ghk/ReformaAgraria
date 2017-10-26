@@ -11,7 +11,7 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    [Migration("20171026065804_Initial")]
+    [Migration("20171026072605_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -275,9 +275,9 @@ namespace ReformaAgraria.Migrations
                         .HasColumnName("title");
 
                     b.HasKey("Id")
-                        .HasName("pk_work_calendar");
+                        .HasName("pk_event");
 
-                    b.ToTable("work_calendar");
+                    b.ToTable("event");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.MeetingAttendee", b =>
@@ -868,7 +868,7 @@ namespace ReformaAgraria.Migrations
                     b.HasOne("ReformaAgraria.Models.Event", "Event")
                         .WithMany()
                         .HasForeignKey("FkEventId")
-                        .HasConstraintName("fk_meeting_report_work_calendar_fk_event_id")
+                        .HasConstraintName("fk_meeting_report_event_fk_event_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -18,7 +18,7 @@ namespace ReformaAgraria.Models
         public DbSet<Region> Region { get; set; }
         public DbSet<VillageMapAttribute> VillageMapAttribute { get; set; }
         public DbSet<ToraMapAttribute> ToraMapAttribute { get; set; }
-        public DbSet<Event> WorkCalendar { get; set; }
+        public DbSet<Event> Event { get; set; }
         public DbSet<PoliciesDocument> PoliciesDocuments { get; set; }
         public DbSet<MeetingMinute> MeetingReport { get; set; }
         public DbSet<ToraObject> ToraObject { get; set; }

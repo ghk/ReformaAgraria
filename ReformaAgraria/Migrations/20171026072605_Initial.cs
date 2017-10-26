@@ -65,6 +65,27 @@ namespace ReformaAgraria.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "event",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int4", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    agenda = table.Column<string>(type: "text", nullable: true),
+                    date_created = table.Column<DateTime>(type: "timestamp", nullable: true),
+                    date_modified = table.Column<DateTime>(type: "timestamp", nullable: true),
+                    end_date = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    notes = table.Column<string>(type: "text", nullable: true),
+                    place = table.Column<string>(type: "text", nullable: true),
+                    region_type = table.Column<int>(type: "int4", nullable: false),
+                    start_date = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_event", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "policies_documents",
                 columns: table => new
                 {
@@ -116,27 +137,6 @@ namespace ReformaAgraria.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_tora_submission", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "work_calendar",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int4", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    agenda = table.Column<string>(type: "text", nullable: true),
-                    date_created = table.Column<DateTime>(type: "timestamp", nullable: true),
-                    date_modified = table.Column<DateTime>(type: "timestamp", nullable: true),
-                    end_date = table.Column<DateTime>(type: "timestamp", nullable: false),
-                    notes = table.Column<string>(type: "text", nullable: true),
-                    place = table.Column<string>(type: "text", nullable: true),
-                    region_type = table.Column<int>(type: "int4", nullable: false),
-                    start_date = table.Column<DateTime>(type: "timestamp", nullable: false),
-                    title = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_work_calendar", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -241,6 +241,29 @@ namespace ReformaAgraria.Migrations
                         name: "fk_asp_net_user_tokens_asp_net_users_user_id",
                         column: x => x.user_id,
                         principalTable: "asp_net_users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "meeting_report",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int4", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    attachment = table.Column<string>(type: "text", nullable: true),
+                    date_created = table.Column<DateTime>(type: "timestamp", nullable: true),
+                    date_modified = table.Column<DateTime>(type: "timestamp", nullable: true),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    fk_event_id = table.Column<int>(type: "int4", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_meeting_report", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_meeting_report_event_fk_event_id",
+                        column: x => x.fk_event_id,
+                        principalTable: "event",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -442,26 +465,25 @@ namespace ReformaAgraria.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "meeting_report",
+                name: "meeting_attendee",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int4", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    attachment = table.Column<string>(type: "text", nullable: true),
                     date_created = table.Column<DateTime>(type: "timestamp", nullable: true),
                     date_modified = table.Column<DateTime>(type: "timestamp", nullable: true),
-                    description = table.Column<string>(type: "text", nullable: true),
-                    fk_event_id = table.Column<int>(type: "int4", nullable: false)
+                    meeting_minute_id = table.Column<int>(type: "int4", nullable: true),
+                    name = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_meeting_report", x => x.id);
+                    table.PrimaryKey("pk_meeting_attendee", x => x.id);
                     table.ForeignKey(
-                        name: "fk_meeting_report_work_calendar_fk_event_id",
-                        column: x => x.fk_event_id,
-                        principalTable: "work_calendar",
+                        name: "fk_meeting_attendee_meeting_report_meeting_minute_id",
+                        column: x => x.meeting_minute_id,
+                        principalTable: "meeting_report",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -495,28 +517,6 @@ namespace ReformaAgraria.Migrations
                         principalTable: "tora_object",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "meeting_attendee",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int4", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    date_created = table.Column<DateTime>(type: "timestamp", nullable: true),
-                    date_modified = table.Column<DateTime>(type: "timestamp", nullable: true),
-                    meeting_minute_id = table.Column<int>(type: "int4", nullable: true),
-                    name = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_meeting_attendee", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_meeting_attendee_meeting_report_meeting_minute_id",
-                        column: x => x.meeting_minute_id,
-                        principalTable: "meeting_report",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -682,7 +682,7 @@ namespace ReformaAgraria.Migrations
                 name: "coordinate");
 
             migrationBuilder.DropTable(
-                name: "work_calendar");
+                name: "event");
 
             migrationBuilder.DropTable(
                 name: "region");
