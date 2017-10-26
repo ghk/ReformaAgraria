@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
-import { RequestHelper } from '../helpers/request';
+import { RequestHelper } from '../../helpers/request';
 
 import { Query } from '../../models/query';
 import { Region } from '../../models/gen/region';

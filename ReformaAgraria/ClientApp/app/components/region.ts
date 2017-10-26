@@ -9,7 +9,7 @@ export class RegionComponent implements OnInit {
     regions: any = [];
     region: string;
 
-    constructor( private regionService: RegionService ) { }
+    constructor(private regionService: RegionService) { }
 
     ngOnInit() {
         this.getRegion('2', null);
@@ -18,4 +18,5 @@ export class RegionComponent implements OnInit {
     getRegion(regionType: string, parent: string) {
         this.regionService.getAll(regionType, parent).subscribe(data => this.regions = data);
         this.region = this.regions[0].type;
+    }
 }

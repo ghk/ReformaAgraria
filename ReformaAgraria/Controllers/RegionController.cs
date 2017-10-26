@@ -30,7 +30,9 @@ namespace ReformaAgraria.Controllers
         //}
 
         [HttpGet("getregion")]
-        public IList<Region> GetRegion(int type, string parentId) {
+        public IList<Region> GetRegion(int type, string parentId)
+        {
             return base.GetAll().Where(r => r.Type == (RegionType)type).Where(r => r.FkParentId == parentId).ToList();
+        }
     }
 }
