@@ -24,6 +24,7 @@ import { LoginComponent } from './components/login';
 import { ForgotPasswordComponent } from './components/forgotPassword';
 import { ResetPasswordComponent } from './components/resetPassword';
 import { UserManagementComponent } from './components/userManagement';
+import { RegionComponent } from './components/region';
 
 import { RegionCrudComponent } from './components/crud/region'; 
 
@@ -59,7 +60,8 @@ import './styles/app.scss';
         ForgotPasswordComponent,
         ResetPasswordComponent,
         UserManagementComponent,
-        RegionCrudComponent
+        RegionCrudComponent,
+        RegionComponent
     ],
     imports: [
         HttpModule,
@@ -76,7 +78,8 @@ import './styles/app.scss';
                         path: 'crud', children: [
                             { path: 'region', component: RegionCrudComponent }
                         ]
-                    }
+                    },
+                    { path: 'region', component: RegionComponent }
                 ]
             },
             { path: 'event', component: EventComponent },

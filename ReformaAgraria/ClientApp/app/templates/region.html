@@ -1,15 +1,22 @@
-﻿<div class="card w-100">
-    <div class="card-body">
-        <h4 class="card-title">Kabupaten</h4>
-        <h6 class="card-subtitle mb-2 text-muted">Sigi</h6>
-        <br />
-        <a (click)="getRegion()">test</a>
-        <span>{{model.Id}}</span>
-        <span>{{model.Name}}</span>
-        <span>{{model.Type}}</span>
-        <span>{{model.IsKelurahan}}</span>
-        <span>{{model.fkParentId}}</span>
-        <span>{{model.DateCreated}}</span>
-        <span>{{model.DateModified}}</span>
+﻿<div class="container body-content">
+    <div class="container-fluid">
+        <div *ngIf="isListUserShown">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <!--<table class="table">
+                        <thead>
+                            <tr>
+                                <th style="vertical-align: middle; border-bottom: 2px solid #999;">{{region}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let region of regions">
+                                <td (click)="getRegion('3', region.id)" href="javascript:void(0)">{{region.name}}</td>
+                            </tr>
+                        </tbody>
+                    </table>-->
+                </div>
+            </div>
+        </div>
     </div>
 </div>

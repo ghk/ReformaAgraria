@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +19,28 @@ namespace ReformaAgraria.Controllers
     {
         public RegionController(ReformaAgrariaDbContext dbContext): base(dbContext) { }
 
-        [HttpGet]
-        public override IList<Region> GetAll()
+        protected override IQueryable<Region> ApplyQuery(IQueryable<Region> query)
         {
-            return base.GetAll();
+            var type = GetQueryString<string>("type");
+
+            if (type == "parent")
+            {
+                var parentId = GetQueryString<string>("parentId");
+                var regionType = GetQueryString<int?>("regionType");
+
+                if (!string.IsNullOrWhiteSpace(parentId))
+                {
+                    query = query.Where(r => r.FkParentId == parentId);
+
+                }
+                if (regionType != null)
+                {
+                    query = query.Where(r => r.Type == (RegionType)regionType);
+                }
+            }
+
+            return query;
         }
+        
     }
 }
