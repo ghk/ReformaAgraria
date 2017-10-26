@@ -62,40 +62,6 @@ export class AccountService {
             .map(res => res.json());
     }
 
-    getAllUsers() {
-        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        return this.http.get('/api/account/getallusers', requestOptions)
-            .map(res => res.json());
-    }
-
-    getUserById(id: string) {
-        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        let params = new URLSearchParams();
-        params.append('id', id);
-        requestOptions.params = params;
-        return this.http.delete('/api/account/getuserbyid', requestOptions)
-            .map(res => res.json());
-    }
-
-    deleteUser(id: string) {
-        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        let params = new URLSearchParams();
-        params.append('id', id);
-        requestOptions.params = params;
-        return this.http.delete('/api/account/deleteuser', requestOptions)
-            .map(res => res.json());
-    }
-
-    updateUser(id: string, newEmail: string) {
-        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        let params = new URLSearchParams();
-        params.append('id', id);
-        params.append('newEmail', newEmail);
-        requestOptions.params = params;
-        return this.http.post('/api/account/updateuser', params)
-            .map(res => res.json());
-    }
-
     changePassword(id: string, currentPassword: string, newPassword: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         let params = new URLSearchParams();
@@ -104,6 +70,31 @@ export class AccountService {
         params.append('newPassword', newPassword);
         requestOptions.params = params;
         return this.http.post('/api/account/changepassword', params)
+            .map(res => res.json());
+    }
+
+    getAllUser() {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        return this.http.get('/api/account/user', requestOptions)
+            .map(res => res.json());
+    }
+
+    getUserById(id: string) {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        return this.http.get('/api/account/user/' + id, requestOptions)
+            .map(res => res.json());
+    }
+
+    deleteUser(id: string) {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        return this.http.delete('/api/account/user/' + id, requestOptions)
+            .map(res => res.json());
+    }
+
+    updateUser(id: string, newEmail: string) {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        let body = { "email": newEmail };
+        return this.http.put('/api/account/user/' + id, body)
             .map(res => res.json());
     }
 

@@ -25,11 +25,11 @@ export class UserManagementComponent {
     ) { }
 
     ngOnInit() {
-        this.getAllUsers();
+        this.getAllUser();
     }
 
-    getAllUsers() {
-        this.accountService.getAllUsers()
+    getAllUser() {
+        this.accountService.getAllUser()
             .subscribe(
                 data => {
                     this.allUsers = data;
@@ -46,7 +46,7 @@ export class UserManagementComponent {
                 .subscribe(
                 data => {
                     this.alertService.success('User ' + email + ' is successfully deleted.', true);
-                    this.getAllUsers();
+                    this.getAllUser();
                 },
                 error => {
                     this.alertService.error(error);
@@ -59,7 +59,7 @@ export class UserManagementComponent {
             .subscribe(
             data => {
                 this.alertService.success('User ' + this.model.oldEmail + ' is successfully updated to ' + this.model.newEmail, true);
-                this.getAllUsers();
+                this.getAllUser();
                 this.showListUser();
             },
             error => {
@@ -83,7 +83,7 @@ export class UserManagementComponent {
             .subscribe(
             data => {
                 this.alertService.success('Registration successful', true);
-                this.getAllUsers();
+                this.getAllUser();
                 this.showListUser();
             },
             error => {
@@ -109,7 +109,7 @@ export class UserManagementComponent {
     }
 
     showListUser() {
-        this.getAllUsers();
+        this.getAllUser();
         this.isRegisterShown = false;
         this.isEditShown = false;
         this.isListUserShown = true;

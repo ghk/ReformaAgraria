@@ -1,37 +1,11 @@
 ﻿<ra-header></ra-header>
 <div class="container-fluid">
-    <ra-sidenav></ra-sidenav>
-    <section class="row">  
-        <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
-            <div class="container body-content">
-                <div class="row">
-                    <hr>
-
-                    <div class="col-md-8 col-sm-12 card-padding activity-agenda">
-                        <ra-event></ra-event>
-                    </div>
-                    <div class="col-md-4 col-sm-12 card-padding village-history">
-                        <ra-village></ra-village>
-                    </div>
-                    <div class="col-md-12 col-sm-12 card-padding team-work-village">
-                        <ra-team></ra-team>
-                    </div>
-                    <div class="col-md-12 col-sm-12 card-padding village-border-table">
-                        <ra-village-border></ra-village-border>
-                    </div>
-                    <div class="col-md-12 col-sm-12 card-padding map-navigation">
-                        <ra-map-navigation></ra-map-navigation>
-                    </div>
-                    <div class="col-md-12 col-sm-12 card-padding agraria-issues-header">
-                        <ra-agraria-issues-header></ra-agraria-issues-header>
-                    </div>
-                    <div class="col-md-12 col-sm-12 card-padding agraria-issues-list">
-                        <ra-agraria-issues-list></ra-agraria-issues-list>
-                    </div>
-
-                    <hr/>
-                </div>
-            </div>
-        </main>
-    </section>
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-xl-2 d-none d-sm-block sidebar bg-dark">
+            <ra-sidenav></ra-sidenav>
+        </div>
+        <div class="col-sm-9 col-md-10 col-xl-10">
+            <router-outlet></router-outlet>   
+        </div>
+    </div>
 </div>

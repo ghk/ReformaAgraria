@@ -10,6 +10,7 @@ import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
 import { SidenavComponent } from './components/sidenav';
 import { DashboardComponent } from './components/dashboard';
+import { HomeComponent } from './components/home'; 
 import { BreadcrumbComponent } from './components/breadcrumb';
 import { EventComponent } from './components/event';
 import { VillageComponent } from './components/village'; 
@@ -23,6 +24,8 @@ import { LoginComponent } from './components/login';
 import { ForgotPasswordComponent } from './components/forgotPassword';
 import { ResetPasswordComponent } from './components/resetPassword';
 import { UserManagementComponent } from './components/userManagement';
+
+import { RegionCrudComponent } from './components/crud/region'; 
 
 import { DataService } from './services/data';
 import { SharedService } from './services/shared';
@@ -42,6 +45,7 @@ import './styles/app.scss';
         HeaderComponent,
         SidenavComponent,
         DashboardComponent,
+        HomeComponent,
         BreadcrumbComponent,
         EventComponent, 
         VillageComponent,
@@ -54,7 +58,8 @@ import './styles/app.scss';
         MapNavigationComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,
-        UserManagementComponent
+        UserManagementComponent,
+        RegionCrudComponent
     ],
     imports: [
         HttpModule,
@@ -64,7 +69,16 @@ import './styles/app.scss';
         CommonModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
-            { path: 'home', component: DashboardComponent, canActivate: [AuthGuard] },
+            {
+                path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
+                    { path: 'home', component: HomeComponent },
+                    {
+                        path: 'crud', children: [
+                            { path: 'region', component: RegionCrudComponent }
+                        ]
+                    }
+                ]
+            },
             { path: 'event', component: EventComponent },
             {
                 path: 'account', children: [
@@ -74,7 +88,7 @@ import './styles/app.scss';
                     { path: 'usermanagement', component: UserManagementComponent }
                 ]
             },
-            { path: '**', redirectTo: 'home'  }
+            { path: '**', redirectTo: ''  }
         ])
     ],
     providers: [

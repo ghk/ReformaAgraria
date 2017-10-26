@@ -9,11 +9,12 @@ import { RequestHelper } from '../helpers/request';
 import { Query } from '../../models/query';
 import { Region } from '../../models/gen/region';
 import { SharedService } from '../../services/shared';
+import { CrudService } from '../../services/crud';
 
 import * as urljoin from 'url-join';
 
 @Injectable()
-export class RegionService {        
+export class RegionService implements CrudService<Region, string>{        
 
     private serverUrl: string;
    
@@ -24,7 +25,7 @@ export class RegionService {
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     } 
 
-    public GetAll(query: Query, progressListener: any): Observable<Array<Region>> { 
+    public getAll(query: Query, progressListener: any): Observable<Array<Region>> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -37,7 +38,7 @@ export class RegionService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Count(query: Query, progressListener: any): Observable<number> { 
+    public count(query: Query, progressListener: any): Observable<number> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -50,7 +51,7 @@ export class RegionService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Get(id: any, progressListener: any): Observable<Region> {
+    public getById(id: string, progressListener: any): Observable<Region> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,

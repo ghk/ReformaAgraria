@@ -14,7 +14,7 @@ namespace ReformaAgraria.Controllers
 {
     [Produces("application/json")]    
     [Route("api/[controller]")]
-    [Authorize(Policy = "Bearer")]
+    //[Authorize(Policy = "Bearer")]
     public class RegionController : ReadOnlyController<Region, string>
     {
         public RegionController(ReformaAgrariaDbContext dbContext): base(dbContext) { }
@@ -32,6 +32,5 @@ namespace ReformaAgraria.Controllers
         [HttpGet("getregion")]
         public IList<Region> GetRegion(int type, string parentId) {
             return base.GetAll().Where(r => r.Type == (RegionType)type).Where(r => r.FkParentId == parentId).ToList();
-        }
     }
 }

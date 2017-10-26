@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\components\crud.ts" />
+    <None Remove="ClientApp\app\components\crud\region.ts" />
+    <None Remove="ClientApp\app\components\home.ts" />
+    <None Remove="ClientApp\app\services\crud.ts" />
     <None Remove="ClientApp\environments\environment.prod.ts" />
     <None Remove="ClientApp\environments\environment.ts" />
   </ItemGroup>
@@ -38,6 +42,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\components\crud\crud.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\crud\region.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\home.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\crud.ts" />
     <TypeScriptCompile Include="ClientApp\environments\environment.prod.ts" />
     <TypeScriptCompile Include="ClientApp\environments\environment.ts" />
   </ItemGroup>

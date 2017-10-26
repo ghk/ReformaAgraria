@@ -8,11 +8,12 @@ import { Query } from '../../models/query';
 import { Event } from '../../models/gen/event';
 import { RequestHelper } from '../../helpers/request';
 import { SharedService } from '../../services/shared';
+import { CrudService } from '../../services/crud';
 
 import * as urljoin from 'url-join';
 
 @Injectable()
-export class EventService {        
+export class EventService implements CrudService<Event, number>{        
 
     private serverUrl: string;
    
@@ -23,7 +24,7 @@ export class EventService {
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     } 
 
-    public GetAll(query: Query, progressListener: any): Observable<Array<Event>> { 
+    public getAll(query: Query, progressListener: any): Observable<Array<Event>> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -36,7 +37,7 @@ export class EventService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Count(query: Query, progressListener: any): Observable<number> { 
+    public count(query: Query, progressListener: any): Observable<number> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -49,7 +50,7 @@ export class EventService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Get(id: any, progressListener: any): Observable<Event> {
+    public getById(id: number, progressListener: any): Observable<Event> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -62,7 +63,16 @@ export class EventService {
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public Post(model: Event, progressListener: any): Observable<number> {
+    public createOrUpdate(model: Event, progressListener: any): Observable<number> {
+        let method = 'POST';
+        if (!model['id']) {
+            return this.create(model, progressListener);
+        } else if (model['id']) {
+            return this.update(model, progressListener);       
+        }
+    }
+
+    public create(model: Event, progressListener: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -76,7 +86,7 @@ export class EventService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Put(model: Event, progressListener: any): Observable<number> {
+    public update(model: Event, progressListener: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -90,7 +100,7 @@ export class EventService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public Delete(id: any, progressListener: any): Observable<number> {
+    public deleteById(id: any, progressListener: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
