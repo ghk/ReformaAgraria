@@ -1,5 +1,4 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { Region } from '../models/gen/region';
 import { RegionService } from '../services/gen/region';
 
 @Component({
@@ -7,15 +6,17 @@ import { RegionService } from '../services/gen/region';
     templateUrl: '../templates/region.html'
 })
 export class RegionComponent implements OnInit {
-    model: any = {};
+    regions: any = [];
+    region: string;
 
     constructor( private regionService: RegionService ) { }
 
     ngOnInit() {
-        this.getRegion();
+        this.getRegion('2', null);
     }
 
-    getRegion(): void {
-        this.regionService.Get('1', null).subscribe(data => this.model = data as Region);
+    getRegion(regionType: string, parent: string) {
+        this.regionService.Get(regionType, parent).subscribe(data => this.regions = data);
+        this.region = this.regions[0].type;
     }
 }

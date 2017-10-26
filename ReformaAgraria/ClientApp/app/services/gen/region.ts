@@ -4,9 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
+import { RequestHelper } from '../helpers/request';
+
 import { Query } from '../../models/query';
 import { Region } from '../../models/gen/region';
-import { RequestHelper } from '../../helpers/request';
 import { SharedService } from '../../services/shared';
 
 import * as urljoin from 'url-join';
@@ -60,6 +61,16 @@ export class RegionService {
         );
 
         return request.map(res => res.json()).catch(this.handleError);
+    }
+
+    public getRegion (regionType: string, parent: string) {
+            let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+            let params = new URLSearchParams();
+            params.append('regionType', regionType);
+            params.append('parent', parent);
+            requestOptions.params = params;
+            return this.http.post('/api/region/getregion', params)
+                .map(res => res.json());
     }
     
     private handleError(error: Response | any) {
