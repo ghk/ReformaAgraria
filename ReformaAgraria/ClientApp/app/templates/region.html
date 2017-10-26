@@ -1,30 +1,22 @@
-﻿<ra-header></ra-header>
-<div class="container-fluid">
-    <div class="row">
-        <ra-sidenav></ra-sidenav>
-        <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
-            <div class="container body-content">
-                <div class="container-fluid">
-                    <div *ngIf="isListUserShown">
-                        <div class="row">
-                            <div class="col-md-4 col-md-offset-4">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th style="vertical-align: middle; border-bottom: 2px solid #999;">{{region}}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let region of regions">
-                                            <td (click)="getRegion('3', region.id)" href="javascript:void(0)">{{region.name}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+﻿<div class="container body-content">
+    <div class="container-fluid">
+        <div *ngIf="isListUserShown">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <!--<table class="table">
+                        <thead>
+                            <tr>
+                                <th style="vertical-align: middle; border-bottom: 2px solid #999;">{{region}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let region of regions">
+                                <td (click)="getRegion('3', region.id)" href="javascript:void(0)">{{region.name}}</td>
+                            </tr>
+                        </tbody>
+                    </table>-->
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 </div>

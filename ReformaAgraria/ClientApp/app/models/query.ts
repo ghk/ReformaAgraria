@@ -3,4 +3,5 @@
     perPage?: number;
     sort?: string;
     keywords?: string;
+    data?: any;
 }

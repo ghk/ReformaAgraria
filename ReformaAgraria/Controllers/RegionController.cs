@@ -19,20 +19,33 @@ namespace ReformaAgraria.Controllers
     {
         public RegionController(ReformaAgrariaDbContext dbContext): base(dbContext) { }
 
-        //protected override IQueryable<Region> ApplyQuery(IQueryable<Region> query)
-        //{
-        //    var type = GetQueryString<int>("type");
-        //    var parentId = GetQueryString<string>("parentid");
-
-        //    query = query.Where(r => r.Type == (RegionType)type).Where(r => r.FkParentId == parentId);
-
-        //    return query;
-        //}
-
-        [HttpGet("getregion")]
-        public IList<Region> GetRegion(int type, string parentId)
+        protected override IQueryable<Region> ApplyQuery(IQueryable<Region> query)
         {
-            return base.GetAll().Where(r => r.Type == (RegionType)type).Where(r => r.FkParentId == parentId).ToList();
+            var data = GetQueryString<Dictionary<string, object>>("data", null);
+
+            if (data == null)
+                return query;
+
+            var type = (string)data.GetValueOrDefault("type");
+
+            if (type == "parent")
+            {
+                var parentId = (string)data.GetValueOrDefault("parentId");
+                var regionType = data.GetValueOrDefault("regionType", null);
+
+                if (!string.IsNullOrWhiteSpace(parentId))
+                {
+                    query = query.Where(r => r.FkParentId == parentId);
+
+                }
+                if (regionType != null)
+                {
+                    query = query.Where(r => r.Type == (RegionType)regionType);
+                }
+            }
+
+            return query;
         }
+        
     }
 }
