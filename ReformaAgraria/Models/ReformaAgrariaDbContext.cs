@@ -19,13 +19,13 @@ namespace ReformaAgraria.Models
         public DbSet<VillageMapAttribute> VillageMapAttribute { get; set; }
         public DbSet<ToraMapAttribute> ToraMapAttribute { get; set; }
         public DbSet<Event> Event { get; set; }
-        public DbSet<PoliciesDocument> PoliciesDocuments { get; set; }
+        public DbSet<PoliciesDocument> PoliciesDocument { get; set; }
         public DbSet<MeetingMinute> MeetingReport { get; set; }
         public DbSet<ToraObject> ToraObject { get; set; }
         public DbSet<ToraSubject> ToraSubject { get; set; }
         public DbSet<ToraSubmission> ToraSubmission { get; set; }
-        public DbSet<ActProposalDocumentCheckList> ProposalOfActDocumentCheckList { get; set; }
-        public DbSet<VillageProfile> ProfileOfVillage { get; set; }
+        public DbSet<ActProposalDocumentCheckList> ActProposalDocumentCheckList { get; set; }
+        public DbSet<VillageProfile> VillageProfile { get; set; }
         public DbSet<TipologyOfAgrarianProblem> TipologyOfAgrarianProblem { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

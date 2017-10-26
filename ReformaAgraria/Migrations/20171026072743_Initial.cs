@@ -86,7 +86,7 @@ namespace ReformaAgraria.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "policies_documents",
+                name: "policies_document",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int4", nullable: false)
@@ -98,7 +98,7 @@ namespace ReformaAgraria.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_policies_documents", x => x.id);
+                    table.PrimaryKey("pk_policies_document", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -269,31 +269,7 @@ namespace ReformaAgraria.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "profile_of_village",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int4", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    date_created = table.Column<DateTime>(type: "timestamp", nullable: true),
-                    date_modified = table.Column<DateTime>(type: "timestamp", nullable: true),
-                    fk_region_id = table.Column<string>(type: "text", nullable: true),
-                    history = table.Column<string>(type: "text", nullable: true),
-                    potential = table.Column<string>(type: "text", nullable: true),
-                    tenurial_condition = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_profile_of_village", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_profile_of_village_region_fk_region_id",
-                        column: x => x.fk_region_id,
-                        principalTable: "region",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "proposal_of_act_document_check_list",
+                name: "act_proposal_document_check_list",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int4", nullable: false)
@@ -314,9 +290,9 @@ namespace ReformaAgraria.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_proposal_of_act_document_check_list", x => x.id);
+                    table.PrimaryKey("pk_act_proposal_document_check_list", x => x.id);
                     table.ForeignKey(
-                        name: "fk_proposal_of_act_document_check_list_region_fk_region_id",
+                        name: "fk_act_proposal_document_check_list_region_fk_region_id",
                         column: x => x.fk_region_id,
                         principalTable: "region",
                         principalColumn: "id",
@@ -465,6 +441,30 @@ namespace ReformaAgraria.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "village_profile",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int4", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    date_created = table.Column<DateTime>(type: "timestamp", nullable: true),
+                    date_modified = table.Column<DateTime>(type: "timestamp", nullable: true),
+                    fk_region_id = table.Column<string>(type: "text", nullable: true),
+                    history = table.Column<string>(type: "text", nullable: true),
+                    potential = table.Column<string>(type: "text", nullable: true),
+                    tenurial_condition = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_village_profile", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_village_profile_region_fk_region_id",
+                        column: x => x.fk_region_id,
+                        principalTable: "region",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "meeting_attendee",
                 columns: table => new
                 {
@@ -520,6 +520,11 @@ namespace ReformaAgraria.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "ix_act_proposal_document_check_list_fk_region_id",
+                table: "act_proposal_document_check_list",
+                column: "fk_region_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_asp_net_role_claims_role_id",
                 table: "asp_net_role_claims",
                 column: "role_id");
@@ -567,16 +572,6 @@ namespace ReformaAgraria.Migrations
                 column: "fk_event_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_profile_of_village_fk_region_id",
-                table: "profile_of_village",
-                column: "fk_region_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_proposal_of_act_document_check_list_fk_region_id",
-                table: "proposal_of_act_document_check_list",
-                column: "fk_region_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_region_fk_parent_id",
                 table: "region",
                 column: "fk_parent_id");
@@ -620,10 +615,18 @@ namespace ReformaAgraria.Migrations
                 name: "ix_village_map_attribute_fk_region_id",
                 table: "village_map_attribute",
                 column: "fk_region_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_village_profile_fk_region_id",
+                table: "village_profile",
+                column: "fk_region_id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "act_proposal_document_check_list");
+
             migrationBuilder.DropTable(
                 name: "asp_net_role_claims");
 
@@ -643,13 +646,7 @@ namespace ReformaAgraria.Migrations
                 name: "meeting_attendee");
 
             migrationBuilder.DropTable(
-                name: "policies_documents");
-
-            migrationBuilder.DropTable(
-                name: "profile_of_village");
-
-            migrationBuilder.DropTable(
-                name: "proposal_of_act_document_check_list");
+                name: "policies_document");
 
             migrationBuilder.DropTable(
                 name: "tipology_of_agrarian_problem");
@@ -665,6 +662,9 @@ namespace ReformaAgraria.Migrations
 
             migrationBuilder.DropTable(
                 name: "village_map_attribute");
+
+            migrationBuilder.DropTable(
+                name: "village_profile");
 
             migrationBuilder.DropTable(
                 name: "asp_net_roles");

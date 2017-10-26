@@ -11,7 +11,7 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    [Migration("20171026072605_Initial")]
+    [Migration("20171026072743_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -209,12 +209,12 @@ namespace ReformaAgraria.Migrations
                         .HasColumnName("fk_region_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_proposal_of_act_document_check_list");
+                        .HasName("pk_act_proposal_document_check_list");
 
                     b.HasIndex("FkRegionId")
-                        .HasName("ix_proposal_of_act_document_check_list_fk_region_id");
+                        .HasName("ix_act_proposal_document_check_list_fk_region_id");
 
-                    b.ToTable("proposal_of_act_document_check_list");
+                    b.ToTable("act_proposal_document_check_list");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.Coordinate", b =>
@@ -356,9 +356,9 @@ namespace ReformaAgraria.Migrations
                         .HasColumnName("title");
 
                     b.HasKey("Id")
-                        .HasName("pk_policies_documents");
+                        .HasName("pk_policies_document");
 
-                    b.ToTable("policies_documents");
+                    b.ToTable("policies_document");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.ReformaAgrariaUser", b =>
@@ -788,12 +788,12 @@ namespace ReformaAgraria.Migrations
                         .HasColumnName("tenurial_condition");
 
                     b.HasKey("Id")
-                        .HasName("pk_profile_of_village");
+                        .HasName("pk_village_profile");
 
                     b.HasIndex("FkRegionId")
-                        .HasName("ix_profile_of_village_fk_region_id");
+                        .HasName("ix_village_profile_fk_region_id");
 
-                    b.ToTable("profile_of_village");
+                    b.ToTable("village_profile");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -852,7 +852,7 @@ namespace ReformaAgraria.Migrations
                     b.HasOne("ReformaAgraria.Models.Region", "Region")
                         .WithMany()
                         .HasForeignKey("FkRegionId")
-                        .HasConstraintName("fk_proposal_of_act_document_check_list_region_fk_region_id");
+                        .HasConstraintName("fk_act_proposal_document_check_list_region_fk_region_id");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.MeetingAttendee", b =>
@@ -941,7 +941,7 @@ namespace ReformaAgraria.Migrations
                     b.HasOne("ReformaAgraria.Models.Region", "Region")
                         .WithMany()
                         .HasForeignKey("FkRegionId")
-                        .HasConstraintName("fk_profile_of_village_region_fk_region_id");
+                        .HasConstraintName("fk_village_profile_region_fk_region_id");
                 });
 #pragma warning restore 612, 618
         }
