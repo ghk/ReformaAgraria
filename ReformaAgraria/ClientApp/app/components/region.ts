@@ -19,7 +19,6 @@ export class RegionComponent implements OnInit {
     getRegion(regionType: RegionType, parentId: string) {
         let query = { data: { 'type': 'parent', 'regionType': regionType, 'parentId': parentId } }
         console.log(query);
-        this.regionService.getAll(query, null).subscribe(data => this.regions = data);
-        //this.region = this.regions[0].type;
+        this.regionService.getAll(query, null).subscribe(data => { this.regions = data, this.region = RegionType[this.regions[0].type] });
     }
 }

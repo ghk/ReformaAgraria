@@ -1,10 +1,12 @@
 ﻿<ra-header></ra-header>
 <div class="container-fluid">
     <div class="row">
-        <ra-sidenav></ra-sidenav>
-        <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
-            <div class="container body-content">
-                <div class="container-fluid">
+        <div class="col-sm-3 col-md-2 col-xl-2 d-none d-sm-block sidebar bg-dark">
+            <ra-sidenav></ra-sidenav>
+        </div>
+        <div class="col-sm-9 col-md-10 col-xl-10">
+            <div class="card w-100 h-100">
+                <div class="card-body">
                     <div *ngIf="isListUserShown">
                         <div class="row">
                             <div class="col-md-4 col-md-offset-4">
@@ -100,6 +102,6 @@
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 </div>
