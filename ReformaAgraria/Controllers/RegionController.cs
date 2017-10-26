@@ -21,17 +21,12 @@ namespace ReformaAgraria.Controllers
 
         protected override IQueryable<Region> ApplyQuery(IQueryable<Region> query)
         {
-            var data = GetQueryString<Dictionary<string, object>>("data", null);
-
-            if (data == null)
-                return query;
-
-            var type = (string)data.GetValueOrDefault("type");
+            var type = GetQueryString<string>("type");
 
             if (type == "parent")
             {
-                var parentId = (string)data.GetValueOrDefault("parentId");
-                var regionType = data.GetValueOrDefault("regionType", null);
+                var parentId = GetQueryString<string>("parentId");
+                var regionType = GetQueryString<int?>("regionType");
 
                 if (!string.IsNullOrWhiteSpace(parentId))
                 {
