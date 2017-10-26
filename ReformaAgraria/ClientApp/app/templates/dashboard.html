@@ -1,19 +1,18 @@
 ﻿<ra-header></ra-header>
 <div class="container-fluid">
 <div class="row">
-        <div class="col-sm-3 col-md-2 col-xl-2 d-none d-sm-block sidebar bg-dark">
+        <nav class="col-sm-3 col-md-2 col-xl-2 d-none d-sm-block sidebar bg-dark">
             <ra-sidenav></ra-sidenav>
-        </div>
+        </nav>
         <div class="col-sm-9 col-md-10 col-xl-10">
             <router-outlet></router-outlet>   
         </div>
-    </div>
+    
     <section class="row">  
         <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
             <div class="container-fluid body-content">
                 <div class="row">
                     
-
                     <div class="col-md-8 col-sm-12 card-padding activity-agenda">
                         <ra-event></ra-event>
                     </div>
@@ -35,10 +34,10 @@
                     <div class="col-md-12 col-sm-12 card-padding agraria-issues-list">
                         <ra-agraria-issues-list></ra-agraria-issues-list>
                     </div>
-
                     
                 </div>
             </div>
         </main>
     </section>
+</div>
 </div>
