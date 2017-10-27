@@ -1,106 +1,88 @@
-﻿<ra-header></ra-header>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-3 col-md-2 col-xl-2 d-none d-sm-block sidebar bg-dark">
-            <ra-sidenav></ra-sidenav>
+﻿<div class="card w-100 h-100">
+    <div class="card-body">
+        <div *ngIf="isListUserShown">
+            <div class="col-md-4 col-md-offset-4">
+                <h2>Pengguna</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="vertical-align: middle; border-bottom: 2px solid #999;">Email</th>
+                            <th style="border-bottom: 2px solid #999;"></th>
+                            <th style="border-bottom: 2px solid #999;"><button type="button" class="btn btn-primary btn-block" (click)="showAddUser()">+</button></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of allUsers">
+                            <td>{{user.email}}</td>
+                            <td><a (click)="showEditUser(user.id, user.email)" href="javascript:void(0)">Ubah</a></td>
+                            <td><a (click)="deleteUser(user.id)" href="javascript:void(0)">Hapus</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-sm-9 col-md-10 col-xl-10">
-            <div class="card w-100 h-100">
-                <div class="card-body">
-                    <div *ngIf="isListUserShown">
-                        <div class="row">
-                            <div class="col-md-4 col-md-offset-4">
-                                <h2>Pengguna</h2>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th style="vertical-align: middle; border-bottom: 2px solid #999;">Email</th>
-                                            <th style="border-bottom: 2px solid #999;"></th>
-                                            <th style="border-bottom: 2px solid #999;"><button type="button" class="btn btn-primary btn-block" (click)="showAddUser()">+</button></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let user of allUsers">
-                                            <td>{{user.email}}</td>
-                                            <td><a (click)="showEditUser(user.id, user.email)" href="javascript:void(0)">Ubah</a></td>
-                                            <td><a (click)="deleteUser(user.id)" href="javascript:void(0)">Hapus</a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+        <div *ngIf="isRegisterShown">
+            <div class="col-md-4 col-md-offset-4">
+                <h2>Tambah Pengguna</h2>
+                <ra-alert></ra-alert>
+                <form name="form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" class="form-control" name="email" [(ngModel)]="model.Email" #email="ngModel" required />
                     </div>
-                    <div *ngIf="isRegisterShown">
-                        <div class="row">
-                            <div class="col-md-4 col-md-offset-4">
-                                <h2>Tambah Pengguna</h2>
-                                <ra-alert></ra-alert>
-                                <form name="form">
-                                    <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="text" class="form-control" name="email" [(ngModel)]="model.Email" #email="ngModel" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password">Password</label>
-                                        <input type="password" class="form-control" name="password" [(ngModel)]="model.Password" #password="ngModel" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-primary" (click)="addUser()">Tambah</button>
-                                        <button type="button" class="btn btn-primary" (click)="showListUser()">Batal</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" name="password" [(ngModel)]="model.Password" #password="ngModel" required />
                     </div>
-                    <div *ngIf="isEditShown">
-                        <div class="row">
-                            <div class="col-md-4 col-md-offset-4">
-                                <h2>Ubah Pengguna</h2>
-                                <ra-alert></ra-alert>
-                                <form name="form" novalidate>
-                                    <div class="form-group">
-                                        <input type="hidden" class="form-control" name="oldEmail" [(ngModel)]="model.oldEmail" #oldEmail="ngModel" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="newEmail">Email</label>
-                                        <input type="text" class="form-control" name="newEmail" [(ngModel)]="model.newEmail" #newEmail="ngModel" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-primary" (click)="updateUser()">Ubah</button>
-                                        <button type="button" class="btn btn-primary" (click)="showListUser()">Batal</button>
-                                        <button type="button" class="btn btn-primary" (click)="showChangePassword()">Ganti Password</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" (click)="addUser()">Tambah</button>
+                        <button type="button" class="btn btn-primary" (click)="showListUser()">Batal</button>
                     </div>
-                    <div *ngIf="isChangePasswordShown">
-                        <div class="row">
-                            <div class="col-md-4 col-md-offset-4">
-                                <h2>Ganti Password</h2>
-                                <ra-alert></ra-alert>
-                                <form name="form">
-                                    <div class="form-group">
-                                        <label for="currentPassword">Password Lama</label>
-                                        <input type="password" class="form-control" name="currentPassword" [(ngModel)]="model.currentPassword" #password="ngModel" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="newPassword">Password Baru</label>
-                                        <input type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #password="ngModel" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="confirmPassword">Konfirmasi Password Baru</label>
-                                        <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #password="ngModel" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-primary" (click)="changePassword()">Ganti</button>
-                                        <button type="button" class="btn btn-primary" (click)="showEditUser(model.id, model.oldEmail)">Batal</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                </form>
+            </div>
+        </div>
+        <div *ngIf="isEditShown">
+            <div class="col-md-4 col-md-offset-4">
+                <h2>Ubah Pengguna</h2>
+                <ra-alert></ra-alert>
+                <form name="form" novalidate>
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" name="oldEmail" [(ngModel)]="model.oldEmail" #oldEmail="ngModel" required />
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="newEmail">Email</label>
+                        <input type="text" class="form-control" name="newEmail" [(ngModel)]="model.newEmail" #newEmail="ngModel" required />
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" (click)="updateUser()">Ubah</button>
+                        <button type="button" class="btn btn-primary" (click)="showListUser()">Batal</button>
+                        <button type="button" class="btn btn-primary" (click)="showChangePassword()">Ganti Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div *ngIf="isChangePasswordShown">
+            <div class="col-md-4 col-md-offset-4">
+                <h2>Ganti Password</h2>
+                <ra-alert></ra-alert>
+                <form name="form">
+                    <div class="form-group">
+                        <label for="currentPassword">Password Lama</label>
+                        <input type="password" class="form-control" name="currentPassword" [(ngModel)]="model.currentPassword" #password="ngModel" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Password Baru</label>
+                        <input type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #password="ngModel" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Konfirmasi Password Baru</label>
+                        <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #password="ngModel" required />
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" (click)="changePassword()">Ganti</button>
+                        <button type="button" class="btn btn-primary" (click)="showEditUser(model.id, model.oldEmail)">Batal</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

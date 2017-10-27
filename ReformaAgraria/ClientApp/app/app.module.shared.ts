@@ -71,24 +71,21 @@ import './styles/app.scss';
         CommonModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
-            {
-                path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
+            { path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
                     { path: 'home', component: HomeComponent },
-                    {
-                        path: 'crud', children: [
+                    { path: 'region', component: RegionComponent },
+                    { path: 'event', component: EventComponent },
+                    { path: 'crud', children: [
                             { path: 'region', component: RegionCrudComponent }
                         ]
                     },
-                    { path: 'region', component: RegionComponent }
-                ]
-            },
-            { path: 'event', component: EventComponent },
-            {
-                path: 'account', children: [
-                    { path: 'login', component: LoginComponent },
-                    { path: 'forgotpassword', component: ForgotPasswordComponent },
-                    { path: 'resetpassword', component: ResetPasswordComponent },
-                    { path: 'usermanagement', component: UserManagementComponent }
+                    { path: 'account', children: [
+                            { path: 'login', component: LoginComponent },
+                            { path: 'forgotpassword', component: ForgotPasswordComponent },
+                            { path: 'resetpassword', component: ResetPasswordComponent },
+                            { path: 'usermanagement', component: UserManagementComponent }
+                        ]
+                    }
                 ]
             },
             { path: '**', redirectTo: ''  }
