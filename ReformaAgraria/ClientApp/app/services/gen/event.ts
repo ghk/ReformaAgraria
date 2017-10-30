@@ -24,7 +24,7 @@ export class EventService implements CrudService<Event, number>{
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     } 
 
-    public getAll(query: Query, progressListener: any): Observable<Array<Event>> { 
+    public getAll(query?: Query, progressListener?: any): Observable<Array<Event>> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -37,7 +37,7 @@ export class EventService implements CrudService<Event, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public count(query: Query, progressListener: any): Observable<number> { 
+    public count(query?: Query, progressListener?: any): Observable<number> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -50,20 +50,20 @@ export class EventService implements CrudService<Event, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public getById(id: number, progressListener: any): Observable<Event> {
+    public getById(id: number, query?: Query, progressListener?: any): Observable<Event> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
             urljoin(this.serverUrl, 'event', id),
-            null,
+            query,
             progressListener
         );
 
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public createOrUpdate(model: Event, progressListener: any): Observable<number> {
+    public createOrUpdate(model: Event, progressListener?: any): Observable<number> {
         let method = 'POST';
         if (!model['id']) {
             return this.create(model, progressListener);
@@ -72,7 +72,7 @@ export class EventService implements CrudService<Event, number>{
         }
     }
 
-    public create(model: Event, progressListener: any): Observable<number> {
+    public create(model: Event, progressListener?: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -86,7 +86,7 @@ export class EventService implements CrudService<Event, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public update(model: Event, progressListener: any): Observable<number> {
+    public update(model: Event, progressListener?: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -100,7 +100,7 @@ export class EventService implements CrudService<Event, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public deleteById(id: any, progressListener: any): Observable<number> {
+    public deleteById(id: any, progressListener?: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
