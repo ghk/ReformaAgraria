@@ -78,14 +78,15 @@ import './styles/app.scss';
                     { path: 'crud', children: [
                             { path: 'region', component: RegionCrudComponent }
                         ]
-                    },
-                    { path: 'account', children: [
-                            { path: 'login', component: LoginComponent },
-                            { path: 'forgotpassword', component: ForgotPasswordComponent },
-                            { path: 'resetpassword', component: ResetPasswordComponent },
-                            { path: 'usermanagement', component: UserManagementComponent }
-                        ]
                     }
+                ]
+            },
+            {
+                path: 'account', children: [
+                    { path: 'login', component: LoginComponent },
+                    { path: 'forgotpassword', component: ForgotPasswordComponent },
+                    { path: 'resetpassword', component: ResetPasswordComponent },
+                    { path: 'usermanagement', component: UserManagementComponent }
                 ]
             },
             { path: '**', redirectTo: ''  }
