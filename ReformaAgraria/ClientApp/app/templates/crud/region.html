@@ -1,22 +1,74 @@
-﻿<section class="row">
+﻿<div class="row">
     <div class="col-12" style="padding-top: 0.5em;">
-        <table class="table table-sm table-striped table-bordered">
-            <thead class="thead-default">
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Parent Id</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let entity of entities">
-                    <td>{{ entity.id }}</td>
-                    <td>{{ entity.name }}</td>
-                    <td>{{ entity.type }}</td>
-                    <td>{{ entity.fkParentId }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="card w-100 h-100">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-10">
+                        Regions
+                    </div>
+                    <div class="col-2" *ngIf="!isReadOnly">
+                        <button class="btn btn-sm btn-success float-right" (click)="toggleForm(!showForm)">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">     
+                <div class="card" [hidden]="!showForm">
+                    <div class="card-header">
+                        Region Form
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group row">
+                                <label class="col-2">Id</label>
+                                <input class="col-10 form-control" type="text" [(ngModel)]="model.id" name="id" />
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-2">Name</label>
+                                <input class="col-10 form-control" type="text" [(ngModel)]="model.name" name="name" placeholder="Enter Region Name"/>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-2">Region Type</label>
+                                <select class="col-10 form-control" [(ngModel)]="model.type" name="type">
+                                    <option *ngFor="let type of regionTypes | enum" [value]="type.key">{{type.value}}</option>
+                                </select>
+                            </div>            
+                            <div class="form-check row">
+                                <label class="col-2">Is Kelurahan</label>
+                                <input class="col-0 align-middle" type="checkbox" [(ngModel)]="model.isKelurahan" name="isKelurahan">
+                            </div>
+                            <div class="float-right">
+                                <button type="button" class="btn btn-primary" (click)="toggleForm(false)">Cancel</button>
+                                <button type="button" class="btn btn-warning" (click)="resetModel()">Reset</button>
+                                <button type="submit" class="btn btn-success" (click)="createOrUpdate()">Save</button>                            
+                            </div>
+                        </form>
+                    </div>                    
+                </div>                
+
+                <table class="table table-responsive table-sm">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Parent Id</th>
+                            <th *ngIf="!isReadOnly">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let entity of entities">
+                            <td>{{ entity.id }}</td>
+                            <td>{{ entity.name }}</td>
+                            <td>{{ entity.type }}</td>
+                            <td>{{ entity.fkParentId }}</td>
+                            <td *ngIf="!isReadOnly">
+                                <button class="btn btn-sm btn-info" (click)="edit(entity)">Edit</button>
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </td>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>            
+        </div>
     </div>
-</section>
+</div>

@@ -60,8 +60,17 @@
             return true;
         return false;
     }
+
+    bool IsPropertyNullable(Property prop) {
+        if (prop.Type.IsNullable)
+            return true;
+        else if (prop.Attributes.Any(a => a.Name == "ForeignKey"))
+            return true;
+        return false;
+    }
+
 }$Classes($ModelFilter)[$Imports
 
 export interface $Name$TypeParameters$Inherit { $Properties[
-	$name: $Type;]
+    $IsPropertyNullable[$name?: $Type][$name: $Type];]
 }]

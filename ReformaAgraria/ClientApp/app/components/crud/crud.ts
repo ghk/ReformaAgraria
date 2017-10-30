@@ -6,7 +6,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { CrudService } from '../../services/crud';
 
 export class CrudComponent<TModel, TId> implements OnInit, OnDestroy {
-   
+
+    isReadOnly: boolean = true;
     service: CrudService<TModel, TId>;
     model: TModel;
     entities: Array<TModel> = [];
@@ -16,9 +17,7 @@ export class CrudComponent<TModel, TId> implements OnInit, OnDestroy {
         sort: 'id',
         keywords: ''
     };
-
     progress: Progress;
-
     showForm: boolean = false;
     formMessage: {
         'type': string,
@@ -32,6 +31,8 @@ export class CrudComponent<TModel, TId> implements OnInit, OnDestroy {
 
     constructor(service: CrudService<TModel, TId>) {
         this.service = service;
+        if (this.service.createOrUpdate)
+            this.isReadOnly = false;
     }
 
     ngOnInit(): void {
@@ -104,7 +105,7 @@ export class CrudComponent<TModel, TId> implements OnInit, OnDestroy {
         this.getAll(this.query);
     }
 
-    toggleForm(show: boolean): void {
+    toggleForm(show: boolean): void {        
         this.showForm = show;
     }
 

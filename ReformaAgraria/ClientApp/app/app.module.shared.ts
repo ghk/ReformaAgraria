@@ -28,14 +28,15 @@ import { RegionComponent } from './components/region';
 
 import { RegionCrudComponent } from './components/crud/region'; 
 
+import { CookieService } from 'ngx-cookie-service';
 import { DataService } from './services/data';
 import { SharedService } from './services/shared';
 import { AlertService } from './services/alert';
 import { AccountService } from './services/account';
 import { AuthGuard } from './services/authGuard';
-import { CookieService } from 'ngx-cookie-service';
-
 import { RegionService } from './services/gen/region';
+
+import { EnumPipe } from './pipes/enum'; 
 
 import 'bootstrap';
 import './styles/app.scss';
@@ -61,7 +62,8 @@ import './styles/app.scss';
         ResetPasswordComponent,
         UserManagementComponent,
         RegionCrudComponent,
-        RegionComponent
+        RegionComponent,
+        EnumPipe
     ],
     imports: [
         HttpModule,

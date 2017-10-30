@@ -28,6 +28,7 @@
     <None Remove="ClientApp\app\components\crud.ts" />
     <None Remove="ClientApp\app\components\crud\region.ts" />
     <None Remove="ClientApp\app\components\home.ts" />
+    <None Remove="ClientApp\app\pipes\enum.ts" />
     <None Remove="ClientApp\app\services\crud.ts" />
     <None Remove="ClientApp\environments\environment.prod.ts" />
     <None Remove="ClientApp\environments\environment.ts" />
@@ -45,14 +46,60 @@
     <TypeScriptCompile Include="ClientApp\app\components\crud\crud.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\crud\region.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\home.ts" />
+    <TypeScriptCompile Include="ClientApp\app\pipes\enum.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\crud.ts" />
     <TypeScriptCompile Include="ClientApp\environments\environment.prod.ts" />
     <TypeScriptCompile Include="ClientApp\environments\environment.ts" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ClientApp\app\models\gen\actProposalDocumentCheckList.ts">
+      <CustomToolNamespace>Models\ActProposalDocumentCheckList.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\baseEntity.ts">
+      <CustomToolNamespace>Models\BaseEntity.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\coordinate.ts">
+      <CustomToolNamespace>Models\Coordinate.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\event.ts">
+      <CustomToolNamespace>Models\Event.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\loginViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\LoginViewModel.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\meetingAttendee.ts">
+      <CustomToolNamespace>Models\MeetingAttendee.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\meetingMinute.ts">
+      <CustomToolNamespace>Models\MeetingMinute.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\policiesDocument.ts">
+      <CustomToolNamespace>Models\PoliciesDocument.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\region.ts">
+      <CustomToolNamespace>Models\Region.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\tipologyOfAgrarianProblem.ts">
+      <CustomToolNamespace>Models\TipologyOfAgrarianProblem.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\toraMapAttribute.ts">
+      <CustomToolNamespace>Models\ToraMapAttribute.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\toraObject.ts">
+      <CustomToolNamespace>Models\ToraObject.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\toraSubject.ts">
+      <CustomToolNamespace>Models\ToraSubject.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\toraSubmission.ts">
+      <CustomToolNamespace>Models\ToraSubmission.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\villageMapAttribute.ts">
+      <CustomToolNamespace>Models\VillageMapAttribute.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\villageProfile.ts">
+      <CustomToolNamespace>Models\VillageProfile.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\services\gen\event.ts">
       <CustomToolNamespace>Controllers\EventController.cs</CustomToolNamespace>
