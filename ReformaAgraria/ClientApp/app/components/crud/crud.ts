@@ -1,11 +1,10 @@
-﻿import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+﻿import { OnInit, OnDestroy } from '@angular/core';
 import { Progress } from 'angular-progress-http';
 
 import { Query } from '../../models/query';
 import { CookieService } from 'ngx-cookie-service';
 import { CrudService } from '../../services/crud';
 
-@Component({})
 export class CrudComponent<TModel, TId> implements OnInit, OnDestroy {
    
     service: CrudService<TModel, TId>;
