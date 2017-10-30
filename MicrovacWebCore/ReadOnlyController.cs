@@ -63,6 +63,7 @@ namespace MicrovacWebCore
                 exp = exp.Include(include);
             }
 
+            exp = ApplyQuery(exp);
             var result = exp.SingleOrDefault();
             return result;
         }

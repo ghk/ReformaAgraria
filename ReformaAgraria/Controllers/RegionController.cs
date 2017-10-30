@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using MicrovacWebCore;
 using ReformaAgraria.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace ReformaAgraria.Controllers
 {
@@ -22,6 +23,17 @@ namespace ReformaAgraria.Controllers
         protected override IQueryable<Region> ApplyQuery(IQueryable<Region> query)
         {
             var type = GetQueryString<string>("type");
+
+            if (type == "breadcrumb")
+            {
+                var depth = GetQueryString<int>("depth");
+                for(var i = 1; i <= depth; i++)
+                {
+                    var includeString = string.Concat(Enumerable.Repeat("Parent.", i));
+                    includeString = includeString.Remove(includeString.Length - 1);
+                    query = query.Include(includeString);
+                }               
+            }
 
             if (type == "parent")
             {
