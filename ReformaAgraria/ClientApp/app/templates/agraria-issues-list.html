@@ -1,43 +1,680 @@
 <div class="card w-100">
-        <div class="card-body">
-            <h4 class="card-title">List permaslahan Agraria</h4>
-                <div class="table-responsive">
+    <div class="card-body">
+        <h4 class="card-title">List permaslahan Agraria</h4>
+        <h6 class="card-subtitle text-muted">Tester</h6>
+
+            <div class="nav justify-content-end mr-3" style="z-index=1000;">
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal-lg" title="Tambah List Permasalahan"><span class="oi oi-plus"></span></button>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Form Tipologi Permasalahan Agraria</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                            <div class="col-12 kartu">
+                                    <div class="card w-100 h-100">
+                                        <div class="card-body">
+                                            <h4 sclass="card-title">Form Tipologi Permasalahan Agraria</h4>
+                                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                            <form>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4">
+                                                        <label for="inputEmail4">No. ID</label>
+                                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="Auto Generate">
+                                                    </div>
+                                                </div>    
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6">
+                                                        <label for="inputEmail4">Jumlah Penduduk</label>
+                                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="">
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="inputEmail4">Luas Wilayah</label>
+                                                        <input type="email" class="form-control" id="inputEmail4" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="inputEmail4">Masalah Utama</label>
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+                                                    </div>
+                                                </div>
+                                            
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4">
+                                                        <label for="">Kodefikasi</label>
+                                                        <div class="form-group">    
+                                                            <div class="form-check form-check-inline">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1" value="option1"> Masyarakat - Masyarakat
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio2" value="option2"> Masyarakat - Negara
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio3" value="option3"> Masyarakat - Swasta
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio3" value="option3"> Negara - Swasta
+                                                                </label>
+                                                            </div>
+                                                        </div>    
+                                                    </div>
+                                                    
+                                                    <div class="form-group col-md-4">
+                                                        <label for="">Usulan Penanganan</label>
+                                                        <div class="form-group">    
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions2" id="inlineRadio1" value="option1"> Pelepasan Kawasan Hutan
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions2" id="inlineRadio2" value="option2"> Redistribusi Tanah
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions2" id="inlineRadio3" value="option3"> Hutan Adat
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions2" id="inlineRadio4" value="option3"> Legalisasi Aset
+                                                                </label>
+                                                            </div>
+                                                        </div>    
+                                                    </div>
+                                                    
+                                                    <div class="form-group col-md-4">
+                                                        <label for="">Luas Usulan</label>
+                                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="">
+                                                        <small id="passwordHelpBlock" class="form-text text-muted">
+                                                          Your input must be contain numbers only, and must not contain spaces, special characters, or emoji.
+                                                        </small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                
+                                                <div class="form-row">
+                                                    <label for="inputCity" class="col-form-label col-md-12">Pemenuhan Prasyarat</label>
+                                                    <div class="form-group col-md-4">                                            
+                                                        <select id="inputState" class="form-control">
+                                                            <option selected>Subjek</option>
+                                                            <option value="1">One</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-4">                                          
+                                                        <select id="inputState" class="form-control">
+                                                            <option selected>Objek</option>
+                                                            <option value="1">One</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-4">                                          
+                                                        <select id="inputState" class="form-control">
+                                                            <option selected>Sejarah</option>
+                                                            <option value="1">One</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4">
+                                                        <label for="">Bentangan lahan</label>
+                                                        <div class="form-group">    
+                                                            <div class="form-check form-check-inline">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1" value="option1"> Datar
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio2" value="option2"> Bukit
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio3" value="option3"> Landai
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio3" value="option3"> Pegunungan
+                                                                </label>
+                                                            </div>
+                                                        </div>       
+                                                    </div>
+                                                    
+                                                    <div class="form-group col-8">
+                                                        <label for="">Luas Pemanfaatan tata guna lahan-hutan (Ha)</label>
+                                                        <div class="form-group">
+                                                            <div class="col-4">
+                                                            <div class="form-group">
+                                                            <div class="form-check form-check-inline">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1" value="option1"> Mukim
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio2" value="option2"> Ladang
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio3" value="option3"> Kolam
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio3" value="option3"> Sawah
+                                                                </label>
+                                                            </div>
+                                                            </div>
+                                                            </div>
+                                                            
+                                                            <div class="col-md-4">
+                                                            <div class="form-group">
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio2" value="option2"> Gembala
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio3" value="option3"> Kebun
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio3" value="option3"> hutan
+                                                                </label>
+                                                            </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>       
+                                                    </div>
+                                                    
+                                                    
+                                                    
+                                                </div>
+                                                
+                                            </form>
+                                            
+                                            <div class="form-row">
+                                                <div class="form-group col-md-12">
+                                                    <label class="custom-file">
+                                                        <input type="file" class="custom-file-input" required id="exampleFormControlFile1">
+                                                        <span class="custom-file-control text-muted">Unggah Photo</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-6 col-md-2 col-sm-4 col-xs-12">
+                                                    <button type="submit" class="btn btn-primary btn-block">Simpan</button>
+                                                </div>
+                                                <div class="col-6 col-md-2 col-sm-4 col-xs-12">
+                                                    <button type="submit" class="btn btn-danger btn-block">Hapus</button>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+                <div class="table-responsive pt-2">
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Nama Lokasi</th>
+                                <th><input type="checkbox"></th>
+                                <th>Lokasi</th>
                                 <th>Penggarap</th>
                                 <th>Status Tanah</th>
                                 <th>Usulan Skema</th>
                                 <th>Koordinat</th>
-                                <th>Presentase Penyelesaian</th>  
+                                <th>Tahapan</th>
+                                <th></th>
+                                <th></th> 
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td><a href="#">Hibula</a></td>
-                                <td>4 KK</td>
-                                <td>Ada kebun warga</td>
-                                <td class="text-success">Pelepasan kawasan hutan</td>
-                                <td>sit</td>
-                                <td><div class="progress" style="width:95%"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 80%; height: 15px">80%</div></div>
-                                </td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable">Hibula</td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable">4 KK</td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable">Ada kebun warga</td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable text-success">Pelepasan kawasan hutan</td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable">Image</td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable">Penetapan</td>
+                                <td data-toggle="tooltip" data-placement="top" title="hapus"><a href=""><span class="oi oi-trash" title="Hapus"></span></a></td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable"><span class="oi oi-chevron-bottom" title="icon-chevron"></span></td>
                             </tr>
                             <tr>
-                                <td><input type="checkbox"></td>
-                                <td>Higira</td>
-                                <td>9 KK</td>
-                                <td>Taluran Terbatas dengan hutan</td>
-                                <td class="text-success">Hutan Adat</td>
-                                <td>koordinat</td>
-                                <td><div class="progress" style="width:95%"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%; height: 15px">75%</div></div>
+                                <td colspan="12">
+                                    <div id="accordion" class="collapse">
+                                        <h5>Tester</h5>
+                                        <table class="table table-bordered table-responsive bg-light">
+                                        
+                                            <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
+                                            
+                                            <thead>
+                                                <tr>
+                                                <th scope="col">No</th>
+                                                <th scope="col" colspan="2">Informasi Umum</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                <th scope="row">1</th>
+                                                <td scope="row">Nama Lokasi</td>
+                                                <td>Hibula</td>
+                                                </tr>
+
+                                                <tr>
+                                                <th scope="row">2</th>
+                                                <td>Desa</td>
+                                                <td>Otto</td>
+                                                </tr>
+
+                                                <tr>
+                                                <th scope="row">3</th>
+                                                <td>kecamatan</td>
+                                                <td>Sigi Biromaru</td>
+                                                </tr>
+
+                                                <tr>
+                                                <th scope="row">4</th>
+                                                <td>Kabupaten/Provinsi</td>
+                                                <td>Sigi</td>
+                                                </tr>
+
+                                                <tr>
+                                                <th scope="row">5</th>
+                                                <td>Luas Wilayah Objek</td>
+                                                <td>15 Ha</td>
+                                                </tr>
+
+                                                <tr>
+                                                <th scope="row">6</th>
+                                                <td>Jumlah Penggarap</td>
+                                                <td>19 KK</td>
+                                                </tr>
+
+                                                <tr>
+                                                <th scope="row">7</th>
+                                                <td>Status Kawasan</td>
+                                                <td>Tahura perbatasan dengan Hutan Lindung</td>
+                                                </tr>
+
+                                                <tr>
+                                                <th scope="row">8</th>
+                                                <td>Klasifikasi bentang Lahan</td>
+                                                <td>Pegunungan</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <th scope="row">9</th>
+                                                <td>Tipe Penggunaan Lahan</td>
+                                                <td>Kebun</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <th scope="row">10</th>
+                                                <td>Usulan Skema</td>
+                                                <td>Hutan Adat</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <th scope="row">11</th>
+                                                <td>Tahapan</td>
+                                                <td>Verifikasi</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <th scope="col">No</th>
+                                                <th scope="col" colspan="2">Data Pendukung</th>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <th scope="row">1</th>
+                                                <td>Status Tanah</td>
+                                                <td>Tahura Perbatasan dengan hutan lindung</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <th scope="row">2</th>
+                                                <td>Sejarah Penguasaan Tanah</td>
+                                                <td>Higira adalah pemukiman masyrakat pada zaman dulu. Hal tersebut dapat dibuktikan dengan adanya kuburan tua tempat dimakamkanya orang tua dulu. Tanah yang ada dikawasan tersebut yang dulunya telah dibuka oleh masyarakat yang dulu diwariskan sampai sekarang pada anak turunannya.</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <th scope="row">3</th>
+                                                <td>Kronologi Konflik</td>
+                                                <td>-</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <th scope="row">4</th>
+                                                <td>Progres Langkah Advokasi</td>
+                                                <td>-</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <th scope="row">5</th>
+                                                <td>Koordinat PETA</td>
+                                                <td>Image</td>
+                                                </tr>
+
+                                            </tbody>
+
+                                        </table>
+                                    </div>
                                 </td>
                             </tr>
+
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td data-toggle="collapse" data-target="#accordion1" class="clickable">Hibula</td>
+                                <td data-toggle="collapse" data-target="#accordion1" class="clickable">4 KK</td>
+                                <td data-toggle="collapse" data-target="#accordion1" class="clickable">Ada kebun warga</td>
+                                <td data-toggle="collapse" data-target="#accordion1" class="clickable text-success">Pelepasan kawasan hutan</td>
+                                <td data-toggle="collapse" data-target="#accordion1" class="clickable">sit</td>
+                                <td data-toggle="collapse" data-target="#accordion1" class="clickable">Penetapan</td>
+                                <td data-toggle="tooltip" data-placement="top" title="hapus"><a href=""><span class="oi oi-trash" title="Hapus"></span></a></td>
+                                <td data-toggle="collapse" data-target="#accordion1" class="clickable"><span class="oi oi-chevron-bottom" title="icon-chevron"></span></td>
+                            </tr>
+                                <tr>
+                                    <td colspan="12">
+                                        <div id="accordion1" class="collapse">
+                                            <h5>Tester</h5>
+                                            <table class="table table-bordered table-responsive bg-light">
+                                            
+                                                <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
+                                                
+                                                <thead>
+                                                    <tr>
+                                                    <th scope="col">No</th>
+                                                    <th scope="col" colspan="2">Informasi Umum</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                    <th scope="row">1</th>
+                                                    <td scope="row">Nama Lokasi</td>
+                                                    <td>Hibula</td>
+                                                    </tr>
+    
+                                                    <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>Desa</td>
+                                                    <td>Otto</td>
+                                                    </tr>
+    
+                                                    <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>kecamatan</td>
+                                                    <td>Sigi Biromaru</td>
+                                                    </tr>
+    
+                                                    <tr>
+                                                    <th scope="row">4</th>
+                                                    <td>Kabupaten/Provinsi</td>
+                                                    <td>Sigi</td>
+                                                    </tr>
+    
+                                                    <tr>
+                                                    <th scope="row">5</th>
+                                                    <td>Luas Wilayah Objek</td>
+                                                    <td>15 Ha</td>
+                                                    </tr>
+    
+                                                    <tr>
+                                                    <th scope="row">6</th>
+                                                    <td>Jumlah Penggarap</td>
+                                                    <td>19 KK</td>
+                                                    </tr>
+    
+                                                    <tr>
+                                                    <th scope="row">7</th>
+                                                    <td>Status Kawasan</td>
+                                                    <td>Tahura perbatasan dengan Hutan Lindung</td>
+                                                    </tr>
+    
+                                                    <tr>
+                                                    <th scope="row">8</th>
+                                                    <td>Klasifikasi bentang Lahan</td>
+                                                    <td>Pegunungan</td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                    <th scope="row">9</th>
+                                                    <td>Tipe Penggunaan Lahan</td>
+                                                    <td>Kebun</td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                    <th scope="row">10</th>
+                                                    <td>Usulan Skema</td>
+                                                    <td>Hutan Adat</td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                    <th scope="row">11</th>
+                                                    <td>Tahapan</td>
+                                                    <td>Verifikasi</td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                    <th scope="col">No</th>
+                                                    <th scope="col" colspan="2">Data Pendukung</th>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>Status Tanah</td>
+                                                    <td>Tahura Perbatasan dengan hutan lindung</td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>Sejarah Penguasaan Tanah</td>
+                                                    <td>Higira adalah pemukiman masyrakat pada zaman dulu. Hal tersebut dapat dibuktikan dengan adanya kuburan tua tempat dimakamkanya orang tua dulu. Tanah yang ada dikawasan tersebut yang dulunya telah dibuka oleh masyarakat yang dulu diwariskan sampai sekarang pada anak turunannya.</td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>Kronologi Konflik</td>
+                                                    <td>-</td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                    <th scope="row">4</th>
+                                                    <td>Progres Langkah Advokasi</td>
+                                                    <td>-</td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                    <th scope="row">5</th>
+                                                    <td>Koordinat PETA</td>
+                                                    <td>Image</td>
+                                                    </tr>
+    
+                                                </tbody>
+    
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                        <td><input type="checkbox"></td>
+                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">Hibula</td>
+                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">10 KK</td>
+                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">Ada jalan warga</td>
+                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable text-success">Pelepasan kawasan hutan</td>
+                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">sit</td>
+                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">Verifikasi</td>
+                                        <td data-toggle="tooltip" data-placement="top" title="hapus"><a href=""><span class="oi oi-trash" title="Hapus"></span></a></td>
+                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable"><span class="oi oi-chevron-bottom" title="icon-chevron"></span></td>
+                                </tr>
+                                    <tr>
+                                        <td colspan="12">
+                                            <div id="accordion2" class="collapse">
+                                                <h5>Tester</h5>
+                                                <table class="table table-bordered table-responsive bg-light">
+                                                    
+                                                    <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
+                                                        
+                                                        <thead>
+                                                            <tr>
+                                                            <th scope="col">No</th>
+                                                            <th scope="col" colspan="2">Informasi Umum</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                            <th scope="row">1</th>
+                                                            <td scope="row">Nama Lokasi</td>
+                                                            <td>Hibula</td>
+                                                            </tr>
+            
+                                                            <tr>
+                                                            <th scope="row">2</th>
+                                                            <td>Desa</td>
+                                                            <td>Otto</td>
+                                                            </tr>
+            
+                                                            <tr>
+                                                            <th scope="row">3</th>
+                                                            <td>kecamatan</td>
+                                                            <td>Sigi Biromaru</td>
+                                                            </tr>
+            
+                                                            <tr>
+                                                            <th scope="row">4</th>
+                                                            <td>Kabupaten/Provinsi</td>
+                                                            <td>Sigi</td>
+                                                            </tr>
+            
+                                                            <tr>
+                                                            <th scope="row">5</th>
+                                                            <td>Luas Wilayah Objek</td>
+                                                            <td>15 Ha</td>
+                                                            </tr>
+            
+                                                            <tr>
+                                                            <th scope="row">6</th>
+                                                            <td>Jumlah Penggarap</td>
+                                                            <td>19 KK</td>
+                                                            </tr>
+            
+                                                            <tr>
+                                                            <th scope="row">7</th>
+                                                            <td>Status Kawasan</td>
+                                                            <td>Tahura perbatasan dengan Hutan Lindung</td>
+                                                            </tr>
+            
+                                                            <tr>
+                                                            <th scope="row">8</th>
+                                                            <td>Klasifikasi bentang Lahan</td>
+                                                            <td>Pegunungan</td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                            <th scope="row">9</th>
+                                                            <td>Tipe Penggunaan Lahan</td>
+                                                            <td>Kebun</td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                            <th scope="row">10</th>
+                                                            <td>Usulan Skema</td>
+                                                            <td>Hutan Adat</td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                            <th scope="row">11</th>
+                                                            <td>Tahapan</td>
+                                                            <td>Verifikasi</td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                            <th scope="col">No</th>
+                                                            <th scope="col" colspan="2">Data Pendukung</th>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                            <th scope="row">1</th>
+                                                            <td>Status Tanah</td>
+                                                            <td>Tahura Perbatasan dengan hutan lindung</td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                            <th scope="row">2</th>
+                                                            <td>Sejarah Penguasaan Tanah</td>
+                                                            <td>Higira adalah pemukiman masyrakat pada zaman dulu. Hal tersebut dapat dibuktikan dengan adanya kuburan tua tempat dimakamkanya orang tua dulu. Tanah yang ada dikawasan tersebut yang dulunya telah dibuka oleh masyarakat yang dulu diwariskan sampai sekarang pada anak turunannya.</td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                            <th scope="row">3</th>
+                                                            <td>Kronologi Konflik</td>
+                                                            <td>-</td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                            <th scope="row">4</th>
+                                                            <td>Progres Langkah Advokasi</td>
+                                                            <td>-</td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                            <th scope="row">5</th>
+                                                            <td>Koordinat PETA</td>
+                                                            <td>Image</td>
+                                                            </tr>
+            
+                                                        </tbody>
+            
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
                             
                         </tbody>
-                    </table>
-                </div>
-        </div>
+                </table>
+            </div>
     </div>
+</div>
+
+    
