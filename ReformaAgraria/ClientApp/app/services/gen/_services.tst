@@ -85,7 +85,7 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     } 
 
-    public getAll(query: Query, progressListener: any): Observable<Array<$GetFirstType>> { 
+    public getAll(query?: Query, progressListener?: any): Observable<Array<$GetFirstType>> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -98,7 +98,7 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public count(query: Query, progressListener: any): Observable<number> { 
+    public count(query?: Query, progressListener?: any): Observable<number> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -111,20 +111,20 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public getById(id: $GetSecondType, progressListener: any): Observable<$GetFirstType> {
+    public getById(id: $GetSecondType, query?: Query, progressListener?: any): Observable<$GetFirstType> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
             urljoin(this.serverUrl, '$GetLowerFirstType', id),
-            null,
+            query,
             progressListener
         );
 
         return request.map(res => res.json()).catch(this.handleError);
     }
     $IsCrudController[
-    public createOrUpdate(model: $GetFirstType, progressListener: any): Observable<number> {
+    public createOrUpdate(model: $GetFirstType, progressListener?: any): Observable<number> {
         let method = 'POST';
         if (!model['id']) {
             return this.create(model, progressListener);
@@ -133,7 +133,7 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
         }
     }
 
-    public create(model: $GetFirstType, progressListener: any): Observable<number> {
+    public create(model: $GetFirstType, progressListener?: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -147,7 +147,7 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public update(model: $GetFirstType, progressListener: any): Observable<number> {
+    public update(model: $GetFirstType, progressListener?: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -161,7 +161,7 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public deleteById(id: any, progressListener: any): Observable<number> {
+    public deleteById(id: any, progressListener?: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,

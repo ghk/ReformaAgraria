@@ -24,7 +24,7 @@ export class RegionService implements CrudService<Region, string>{
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     } 
 
-    public getAll(query: Query, progressListener: any): Observable<Array<Region>> { 
+    public getAll(query?: Query, progressListener?: any): Observable<Array<Region>> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -37,7 +37,7 @@ export class RegionService implements CrudService<Region, string>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public count(query: Query, progressListener: any): Observable<number> { 
+    public count(query?: Query, progressListener?: any): Observable<number> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -50,13 +50,13 @@ export class RegionService implements CrudService<Region, string>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public getById(id: string, progressListener: any): Observable<Region> {
+    public getById(id: string, query?: Query, progressListener?: any): Observable<Region> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
             urljoin(this.serverUrl, 'region', id),
-            null,
+            query,
             progressListener
         );
 

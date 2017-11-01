@@ -46,7 +46,7 @@
     "css": "2.2.1",
     "css-loader": "0.28.7",
     "expose-loader": "0.7.3",
-    "extract-text-webpack-plugin": "3.0.1",
+    "extract-text-webpack-plugin": "2.1.2",
     "file-loader": "1.1.5",
     "html-loader": "0.5.1",
     "jasmine-core": "2.6.4",
@@ -61,11 +61,11 @@
     "popper.js": "^1.12.5",
     "raw-loader": "0.5.1",
     "sass-loader": "6.0.6",
-    "style-loader": "1.1.5",
+    "style-loader": "0.19.0",
     "to-string-loader": "1.1.5",
     "typescript": "2.5.3",
     "url-loader": "0.6.2",
-    "webpack": "3.7.1",
+    "webpack": "2.5.1",
     "webpack-hot-middleware": "2.20.0",
     "webpack-merge": "4.1.0"
   }

@@ -28,14 +28,15 @@ import { RegionComponent } from './components/region';
 
 import { RegionCrudComponent } from './components/crud/region'; 
 
+import { CookieService } from 'ngx-cookie-service';
 import { DataService } from './services/data';
 import { SharedService } from './services/shared';
 import { AlertService } from './services/alert';
 import { AccountService } from './services/account';
 import { AuthGuard } from './services/authGuard';
-import { CookieService } from 'ngx-cookie-service';
-
 import { RegionService } from './services/gen/region';
+
+import { EnumPipe } from './pipes/enum'; 
 
 import 'bootstrap';
 import './styles/app.scss';
@@ -61,7 +62,8 @@ import './styles/app.scss';
         ResetPasswordComponent,
         UserManagementComponent,
         RegionCrudComponent,
-        RegionComponent
+        RegionComponent,
+        EnumPipe
     ],
     imports: [
         HttpModule,
@@ -71,18 +73,16 @@ import './styles/app.scss';
         CommonModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
-            {
-                path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
+            { path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
                     { path: 'home', component: HomeComponent },
-                    {
-                        path: 'crud', children: [
+                    { path: 'region', component: RegionComponent },
+                    { path: 'event', component: EventComponent },
+                    { path: 'crud', children: [
                             { path: 'region', component: RegionCrudComponent }
                         ]
-                    },
-                    { path: 'region', component: RegionComponent }
+                    }
                 ]
             },
-            { path: 'event', component: EventComponent },
             {
                 path: 'account', children: [
                     { path: 'login', component: LoginComponent },

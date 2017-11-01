@@ -1,9 +1,9 @@
 ﻿<div class="container body-content">
     <div class="container-fluid">
-        <div *ngIf="isListUserShown">
+        <div>
             <div class="row">
                 <div class="col-md-4 col-md-offset-4">
-                    <!--<table class="table">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th style="vertical-align: middle; border-bottom: 2px solid #999;">{{region}}</th>
@@ -11,10 +11,12 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let region of regions">
-                                <td (click)="getRegion('3', region.id)" href="javascript:void(0)">{{region.name}}</td>
+                                <td>
+                                <a (click)="getRegion((region.type + 1), region.id)" href="javascript:void(0)">{{region.name}}</a>
+                                </td>
                             </tr>
                         </tbody>
-                    </table>-->
+                    </table>
                 </div>
             </div>
         </div>
