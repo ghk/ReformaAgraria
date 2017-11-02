@@ -37,6 +37,7 @@ import { AuthGuard } from './services/authGuard';
 import { RegionService } from './services/gen/region';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
+import { EnumPipe } from './pipes/enum'; 
 
 import 'bootstrap';
 import './styles/app.scss';
@@ -63,7 +64,8 @@ import './styles/app.scss';
         UserManagementComponent,
         RegionCrudComponent,
         RegionComponent,
-        RegionBreadcrumbPipe
+        RegionBreadcrumbPipe,
+        EnumPipe
     ],
     imports: [
         HttpModule,
