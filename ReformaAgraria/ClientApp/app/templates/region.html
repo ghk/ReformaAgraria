@@ -12,7 +12,7 @@
                         <tbody>
                             <tr *ngFor="let region of regions">
                                 <td>
-                                <a (click)="getRegion((region.type + 1), region.id)" href="javascript:void(0)">{{region.name}}</a>
+                                <a (click)="clicked(region.id, region.type, region.fkParentId)" href="javascript:void(0)">{{region.name}}</a>
                                 </td>
                             </tr>
                         </tbody>

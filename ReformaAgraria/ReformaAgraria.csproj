@@ -28,9 +28,10 @@
     <None Remove="ClientApp\app\components\crud.ts" />
     <None Remove="ClientApp\app\components\crud\region.ts" />
     <None Remove="ClientApp\app\components\home.ts" />
+    <None Remove="ClientApp\app\pipes\regionBreadcrumb.ts" />
     <None Remove="ClientApp\app\services\crud.ts" />
-    <None Remove="ClientApp\environments\environment.prod.ts" />
-    <None Remove="ClientApp\environments\environment.ts" />
+    <None Remove="ClientApp\app\templates\environments\environment.prod.ts" />
+    <None Remove="ClientApp\app\templates\environments\environment.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,9 +46,10 @@
     <TypeScriptCompile Include="ClientApp\app\components\crud\crud.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\crud\region.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\home.ts" />
+    <TypeScriptCompile Include="ClientApp\app\pipes\regionBreadcrumb.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\crud.ts" />
-    <TypeScriptCompile Include="ClientApp\environments\environment.prod.ts" />
-    <TypeScriptCompile Include="ClientApp\environments\environment.ts" />
+    <TypeScriptCompile Include="ClientApp\app\templates\environments\environment.prod.ts" />
+    <TypeScriptCompile Include="ClientApp\app\templates\environments\environment.ts" />
   </ItemGroup>
 
   <ItemGroup>
