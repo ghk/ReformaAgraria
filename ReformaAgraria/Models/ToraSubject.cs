@@ -13,16 +13,19 @@ namespace ReformaAgraria.Models
         public override int Id { get; set; }
 
         public string Name { get; set; }
-       
-        public MaritalStatus MaritalStatus { get; set; }
+
+        //public MaritalStatus MaritalStatus { get; set; }
+        public string MaritalStatus { get; set; }
 
         public string Address { get; set; }
 
         public Gender Gender { get; set; }
 
-        public int? Age { get; set; }
+        //public int? Age { get; set; }
+        public string Age { get; set; }
 
-        public EducationalAttainment EducationalAttainment { get; set; }
+        //public EducationalAttainment EducationalAttainment { get; set; }
+        public string EducationalAttainment { get; set; }
 
         public int TotalFamilyMembers { get; set; }
 

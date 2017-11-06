@@ -3,7 +3,7 @@ namespace ReformaAgraria.Models
 {
     public enum Gender
     {
-        Male = 0,
-        Female = 1,
+        L = 0,
+        P = 1,
     }
 }

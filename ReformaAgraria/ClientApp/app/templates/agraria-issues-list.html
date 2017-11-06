@@ -5,6 +5,7 @@
 
             <div class="nav justify-content-end mr-3" style="z-index=1000;">
                 <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal-lg" title="Tambah List Permasalahan"><span class="oi oi-plus"></span></button>
+                <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".xls,.xlsx">
             </div>
 
             <!-- Modal -->
@@ -268,13 +269,13 @@
                                 <th></th> 
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody *ngFor="let issueList of issueLists">
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td data-toggle="collapse" data-target="#accordion" class="clickable">Hibula</td>
-                                <td data-toggle="collapse" data-target="#accordion" class="clickable">4 KK</td>
-                                <td data-toggle="collapse" data-target="#accordion" class="clickable">Ada kebun warga</td>
-                                <td data-toggle="collapse" data-target="#accordion" class="clickable text-success">Pelepasan kawasan hutan</td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable">{{issueList.name}}</td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable">{{issueList.totalTenants}}</td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable">{{issueList.landStatus}}</td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable text-success">{{issueList.proposedTreatment}}</td>
                                 <td data-toggle="collapse" data-target="#accordion" class="clickable">Image</td>
                                 <td data-toggle="collapse" data-target="#accordion" class="clickable">Penetapan</td>
                                 <td data-toggle="tooltip" data-placement="top" title="hapus"><a href=""><span class="oi oi-trash" title="Hapus"></span></a></td>
@@ -298,7 +299,7 @@
                                                 <tr>
                                                 <th scope="row">1</th>
                                                 <td scope="row">Nama Lokasi</td>
-                                                <td>Hibula</td>
+                                                <td>{{issueList.name}}</td>
                                                 </tr>
 
                                                 <tr>
@@ -322,37 +323,37 @@
                                                 <tr>
                                                 <th scope="row">5</th>
                                                 <td>Luas Wilayah Objek</td>
-                                                <td>15 Ha</td>
+                                                <td>{{issueList.size}}</td>
                                                 </tr>
 
                                                 <tr>
                                                 <th scope="row">6</th>
                                                 <td>Jumlah Penggarap</td>
-                                                <td>19 KK</td>
+                                                <td>{{issueList.totalTenants}}</td>
                                                 </tr>
 
                                                 <tr>
                                                 <th scope="row">7</th>
                                                 <td>Status Kawasan</td>
-                                                <td>Tahura perbatasan dengan Hutan Lindung</td>
+                                                <td>{{issueList.landStatus}}</td>
                                                 </tr>
 
                                                 <tr>
                                                 <th scope="row">8</th>
                                                 <td>Klasifikasi bentang Lahan</td>
-                                                <td>Pegunungan</td>
+                                                <td>{{issueList.landType}}</td>
                                                 </tr>
                                                 
                                                 <tr>
                                                 <th scope="row">9</th>
                                                 <td>Tipe Penggunaan Lahan</td>
-                                                <td>Kebun</td>
+                                                <td>{{issueList.livelihood}}</td>
                                                 </tr>
                                                 
                                                 <tr>
                                                 <th scope="row">10</th>
                                                 <td>Usulan Skema</td>
-                                                <td>Hutan Adat</td>
+                                                <td>{{issueList.proposedTreatment}}</td>
                                                 </tr>
                                                 
                                                 <tr>
@@ -369,13 +370,13 @@
                                                 <tr>
                                                 <th scope="row">1</th>
                                                 <td>Status Tanah</td>
-                                                <td>Tahura Perbatasan dengan hutan lindung</td>
+                                                <td>{{issueList.landStatus}}</td>
                                                 </tr>
                                                 
                                                 <tr>
                                                 <th scope="row">2</th>
                                                 <td>Sejarah Penguasaan Tanah</td>
-                                                <td>Higira adalah pemukiman masyrakat pada zaman dulu. Hal tersebut dapat dibuktikan dengan adanya kuburan tua tempat dimakamkanya orang tua dulu. Tanah yang ada dikawasan tersebut yang dulunya telah dibuka oleh masyarakat yang dulu diwariskan sampai sekarang pada anak turunannya.</td>
+                                                <td>{{issueList.landTenureHistory}}</td>
                                                 </tr>
                                                 
                                                 <tr>
@@ -402,275 +403,6 @@
                                     </div>
                                 </td>
                             </tr>
-
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td data-toggle="collapse" data-target="#accordion1" class="clickable">Hibula</td>
-                                <td data-toggle="collapse" data-target="#accordion1" class="clickable">4 KK</td>
-                                <td data-toggle="collapse" data-target="#accordion1" class="clickable">Ada kebun warga</td>
-                                <td data-toggle="collapse" data-target="#accordion1" class="clickable text-success">Pelepasan kawasan hutan</td>
-                                <td data-toggle="collapse" data-target="#accordion1" class="clickable">sit</td>
-                                <td data-toggle="collapse" data-target="#accordion1" class="clickable">Penetapan</td>
-                                <td data-toggle="tooltip" data-placement="top" title="hapus"><a href=""><span class="oi oi-trash" title="Hapus"></span></a></td>
-                                <td data-toggle="collapse" data-target="#accordion1" class="clickable"><span class="oi oi-chevron-bottom" title="icon-chevron"></span></td>
-                            </tr>
-                                <tr>
-                                    <td colspan="12">
-                                        <div id="accordion1" class="collapse">
-                                            <h5>Tester</h5>
-                                            <table class="table table-bordered table-responsive bg-light">
-                                            
-                                                <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
-                                                
-                                                <thead>
-                                                    <tr>
-                                                    <th scope="col">No</th>
-                                                    <th scope="col" colspan="2">Informasi Umum</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                    <th scope="row">1</th>
-                                                    <td scope="row">Nama Lokasi</td>
-                                                    <td>Hibula</td>
-                                                    </tr>
-    
-                                                    <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>Desa</td>
-                                                    <td>Otto</td>
-                                                    </tr>
-    
-                                                    <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>kecamatan</td>
-                                                    <td>Sigi Biromaru</td>
-                                                    </tr>
-    
-                                                    <tr>
-                                                    <th scope="row">4</th>
-                                                    <td>Kabupaten/Provinsi</td>
-                                                    <td>Sigi</td>
-                                                    </tr>
-    
-                                                    <tr>
-                                                    <th scope="row">5</th>
-                                                    <td>Luas Wilayah Objek</td>
-                                                    <td>15 Ha</td>
-                                                    </tr>
-    
-                                                    <tr>
-                                                    <th scope="row">6</th>
-                                                    <td>Jumlah Penggarap</td>
-                                                    <td>19 KK</td>
-                                                    </tr>
-    
-                                                    <tr>
-                                                    <th scope="row">7</th>
-                                                    <td>Status Kawasan</td>
-                                                    <td>Tahura perbatasan dengan Hutan Lindung</td>
-                                                    </tr>
-    
-                                                    <tr>
-                                                    <th scope="row">8</th>
-                                                    <td>Klasifikasi bentang Lahan</td>
-                                                    <td>Pegunungan</td>
-                                                    </tr>
-                                                    
-                                                    <tr>
-                                                    <th scope="row">9</th>
-                                                    <td>Tipe Penggunaan Lahan</td>
-                                                    <td>Kebun</td>
-                                                    </tr>
-                                                    
-                                                    <tr>
-                                                    <th scope="row">10</th>
-                                                    <td>Usulan Skema</td>
-                                                    <td>Hutan Adat</td>
-                                                    </tr>
-                                                    
-                                                    <tr>
-                                                    <th scope="row">11</th>
-                                                    <td>Tahapan</td>
-                                                    <td>Verifikasi</td>
-                                                    </tr>
-                                                    
-                                                    <tr>
-                                                    <th scope="col">No</th>
-                                                    <th scope="col" colspan="2">Data Pendukung</th>
-                                                    </tr>
-                                                    
-                                                    <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>Status Tanah</td>
-                                                    <td>Tahura Perbatasan dengan hutan lindung</td>
-                                                    </tr>
-                                                    
-                                                    <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>Sejarah Penguasaan Tanah</td>
-                                                    <td>Higira adalah pemukiman masyrakat pada zaman dulu. Hal tersebut dapat dibuktikan dengan adanya kuburan tua tempat dimakamkanya orang tua dulu. Tanah yang ada dikawasan tersebut yang dulunya telah dibuka oleh masyarakat yang dulu diwariskan sampai sekarang pada anak turunannya.</td>
-                                                    </tr>
-                                                    
-                                                    <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>Kronologi Konflik</td>
-                                                    <td>-</td>
-                                                    </tr>
-                                                    
-                                                    <tr>
-                                                    <th scope="row">4</th>
-                                                    <td>Progres Langkah Advokasi</td>
-                                                    <td>-</td>
-                                                    </tr>
-                                                    
-                                                    <tr>
-                                                    <th scope="row">5</th>
-                                                    <td>Koordinat PETA</td>
-                                                    <td>Image</td>
-                                                    </tr>
-    
-                                                </tbody>
-    
-                                            </table>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">Hibula</td>
-                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">10 KK</td>
-                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">Ada jalan warga</td>
-                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable text-success">Pelepasan kawasan hutan</td>
-                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">sit</td>
-                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">Verifikasi</td>
-                                        <td data-toggle="tooltip" data-placement="top" title="hapus"><a href=""><span class="oi oi-trash" title="Hapus"></span></a></td>
-                                        <td data-toggle="collapse" data-target="#accordion2" class="clickable"><span class="oi oi-chevron-bottom" title="icon-chevron"></span></td>
-                                </tr>
-                                    <tr>
-                                        <td colspan="12">
-                                            <div id="accordion2" class="collapse">
-                                                <h5>Tester</h5>
-                                                <table class="table table-bordered table-responsive bg-light">
-                                                    
-                                                    <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
-                                                        
-                                                        <thead>
-                                                            <tr>
-                                                            <th scope="col">No</th>
-                                                            <th scope="col" colspan="2">Informasi Umum</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                            <th scope="row">1</th>
-                                                            <td scope="row">Nama Lokasi</td>
-                                                            <td>Hibula</td>
-                                                            </tr>
-            
-                                                            <tr>
-                                                            <th scope="row">2</th>
-                                                            <td>Desa</td>
-                                                            <td>Otto</td>
-                                                            </tr>
-            
-                                                            <tr>
-                                                            <th scope="row">3</th>
-                                                            <td>kecamatan</td>
-                                                            <td>Sigi Biromaru</td>
-                                                            </tr>
-            
-                                                            <tr>
-                                                            <th scope="row">4</th>
-                                                            <td>Kabupaten/Provinsi</td>
-                                                            <td>Sigi</td>
-                                                            </tr>
-            
-                                                            <tr>
-                                                            <th scope="row">5</th>
-                                                            <td>Luas Wilayah Objek</td>
-                                                            <td>15 Ha</td>
-                                                            </tr>
-            
-                                                            <tr>
-                                                            <th scope="row">6</th>
-                                                            <td>Jumlah Penggarap</td>
-                                                            <td>19 KK</td>
-                                                            </tr>
-            
-                                                            <tr>
-                                                            <th scope="row">7</th>
-                                                            <td>Status Kawasan</td>
-                                                            <td>Tahura perbatasan dengan Hutan Lindung</td>
-                                                            </tr>
-            
-                                                            <tr>
-                                                            <th scope="row">8</th>
-                                                            <td>Klasifikasi bentang Lahan</td>
-                                                            <td>Pegunungan</td>
-                                                            </tr>
-                                                            
-                                                            <tr>
-                                                            <th scope="row">9</th>
-                                                            <td>Tipe Penggunaan Lahan</td>
-                                                            <td>Kebun</td>
-                                                            </tr>
-                                                            
-                                                            <tr>
-                                                            <th scope="row">10</th>
-                                                            <td>Usulan Skema</td>
-                                                            <td>Hutan Adat</td>
-                                                            </tr>
-                                                            
-                                                            <tr>
-                                                            <th scope="row">11</th>
-                                                            <td>Tahapan</td>
-                                                            <td>Verifikasi</td>
-                                                            </tr>
-                                                            
-                                                            <tr>
-                                                            <th scope="col">No</th>
-                                                            <th scope="col" colspan="2">Data Pendukung</th>
-                                                            </tr>
-                                                            
-                                                            <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>Status Tanah</td>
-                                                            <td>Tahura Perbatasan dengan hutan lindung</td>
-                                                            </tr>
-                                                            
-                                                            <tr>
-                                                            <th scope="row">2</th>
-                                                            <td>Sejarah Penguasaan Tanah</td>
-                                                            <td>Higira adalah pemukiman masyrakat pada zaman dulu. Hal tersebut dapat dibuktikan dengan adanya kuburan tua tempat dimakamkanya orang tua dulu. Tanah yang ada dikawasan tersebut yang dulunya telah dibuka oleh masyarakat yang dulu diwariskan sampai sekarang pada anak turunannya.</td>
-                                                            </tr>
-                                                            
-                                                            <tr>
-                                                            <th scope="row">3</th>
-                                                            <td>Kronologi Konflik</td>
-                                                            <td>-</td>
-                                                            </tr>
-                                                            
-                                                            <tr>
-                                                            <th scope="row">4</th>
-                                                            <td>Progres Langkah Advokasi</td>
-                                                            <td>-</td>
-                                                            </tr>
-                                                            
-                                                            <tr>
-                                                            <th scope="row">5</th>
-                                                            <td>Koordinat PETA</td>
-                                                            <td>Image</td>
-                                                            </tr>
-            
-                                                        </tbody>
-            
-                                                    </table>
-                                                </div>
-                                            </td>
-                                        </tr>
-                            
                         </tbody>
                 </table>
             </div>

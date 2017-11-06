@@ -1,4 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { RequestHelper } from "../helpers/request";
+import { Http, Headers, Response, URLSearchParams } from '@angular/http';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
     selector: 'ra-agraria-issues-header',
@@ -6,7 +9,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 })
 export class AgrariaIssuesHeaderComponent implements OnInit, OnDestroy {
 
-    constructor() { }
+    constructor(
+        private http: Http,
+        private cookieService: CookieService) { }
 
     ngOnInit(): void {
 
@@ -16,4 +21,9 @@ export class AgrariaIssuesHeaderComponent implements OnInit, OnDestroy {
 
     }
 
+    import() {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        return this.http.get('/api/torasubject/import', requestOptions)
+            .map(res => res.json());
+    }
 }

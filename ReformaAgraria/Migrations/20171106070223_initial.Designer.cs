@@ -11,8 +11,8 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    [Migration("20171026072743_Initial")]
-    partial class Initial
+    [Migration("20171106070223_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -607,22 +607,25 @@ namespace ReformaAgraria.Migrations
                     b.Property<string>("FkRegionId")
                         .HasColumnName("fk_region_id");
 
-                    b.Property<int>("LandStatus")
+                    b.Property<string>("LandStatus")
                         .HasColumnName("land_status");
 
                     b.Property<string>("LandTenureHistory")
                         .HasColumnName("land_tenure_history");
 
-                    b.Property<int>("LandType")
+                    b.Property<string>("LandType")
                         .HasColumnName("land_type");
 
                     b.Property<string>("Livelihood")
                         .HasColumnName("livelihood");
 
-                    b.Property<int>("ProposedTreatment")
+                    b.Property<string>("Name")
+                        .HasColumnName("name");
+
+                    b.Property<string>("ProposedTreatment")
                         .HasColumnName("proposed_treatment");
 
-                    b.Property<int>("RegionalStatus")
+                    b.Property<string>("RegionalStatus")
                         .HasColumnName("regional_status");
 
                     b.Property<decimal>("Size")
@@ -649,7 +652,7 @@ namespace ReformaAgraria.Migrations
                     b.Property<string>("Address")
                         .HasColumnName("address");
 
-                    b.Property<int?>("Age")
+                    b.Property<string>("Age")
                         .HasColumnName("age");
 
                     b.Property<DateTime?>("DateCreated")
@@ -658,7 +661,7 @@ namespace ReformaAgraria.Migrations
                     b.Property<DateTime?>("DateModified")
                         .HasColumnName("date_modified");
 
-                    b.Property<int>("EducationalAttainment")
+                    b.Property<string>("EducationalAttainment")
                         .HasColumnName("educational_attainment");
 
                     b.Property<int>("FkToraObjectId")
@@ -673,7 +676,7 @@ namespace ReformaAgraria.Migrations
                     b.Property<string>("LandStatus")
                         .HasColumnName("land_status");
 
-                    b.Property<int>("MaritalStatus")
+                    b.Property<string>("MaritalStatus")
                         .HasColumnName("marital_status");
 
                     b.Property<string>("Name")
