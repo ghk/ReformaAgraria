@@ -274,7 +274,7 @@
                                 <td><input type="checkbox"></td>
                                 <td data-toggle="collapse" data-target="#accordion" class="clickable">{{issueList.name}}</td>
                                 <td data-toggle="collapse" data-target="#accordion" class="clickable">{{issueList.totalTenants}}</td>
-                                <td data-toggle="collapse" data-target="#accordion" class="clickable">{{issueList.landStatus}}</td>
+                                <td data-toggle="collapse" data-target="#accordion" class="clickable">{{LandStatus[issueList.landStatus]}}</td>
                                 <td data-toggle="collapse" data-target="#accordion" class="clickable text-success">{{issueList.proposedTreatment}}</td>
                                 <td data-toggle="collapse" data-target="#accordion" class="clickable">Image</td>
                                 <td data-toggle="collapse" data-target="#accordion" class="clickable">Penetapan</td>
@@ -335,7 +335,7 @@
                                                 <tr>
                                                 <th scope="row">7</th>
                                                 <td>Status Kawasan</td>
-                                                <td>{{issueList.landStatus}}</td>
+                                                <td>{{RegionalStatus[issueList.regionalStatus]}}</td>
                                                 </tr>
 
                                                 <tr>
@@ -370,7 +370,7 @@
                                                 <tr>
                                                 <th scope="row">1</th>
                                                 <td>Status Tanah</td>
-                                                <td>{{issueList.landStatus}}</td>
+                                                <td>{{LandStatus[issueList.landStatus]}}</td>
                                                 </tr>
                                                 
                                                 <tr>

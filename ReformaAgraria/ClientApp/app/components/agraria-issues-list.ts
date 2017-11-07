@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RequestOptions } from "@angular/http/http";
 
 import { AgrariaIssuesListService } from '../services/agrariaIssuesList';
+import { LandStatus } from '../models/gen/landStatus';
+import { RegionalStatus } from '../models/gen/regionalStatus';
 
 @Component({
     selector: 'ra-agraria-issues-list',
@@ -9,6 +11,8 @@ import { AgrariaIssuesListService } from '../services/agrariaIssuesList';
 })
 export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     issueLists: any = [];
+    LandStatus = LandStatus;
+    RegionalStatus = RegionalStatus;
 
     constructor(private agrariaIssuesList: AgrariaIssuesListService) { }
 
