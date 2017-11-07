@@ -14,10 +14,12 @@ export class SharedService {
 
     private _environment: any;
     private _region$: ReplaySubject<Region>;
+    private _regionId$: ReplaySubject<string>;
 
     constructor() {
         this._environment = ENVIRONMENT;
         this._region$ = new ReplaySubject(1);
+        this._regionId$ = new ReplaySubject(1);
     }
 
     public getEnvironment() {        
@@ -30,6 +32,14 @@ export class SharedService {
 
     public setRegion(region: Region) {
         this._region$.next(region);
+    }
+
+    public getRegionId() {
+        return this._regionId$;
+    }
+
+    public setRegionId(id: string) {
+        this._regionId$.next(id);
     }
 
     private handleError(error: Response | any) {

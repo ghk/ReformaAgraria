@@ -9,7 +9,7 @@
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ol class="breadcrumb mr-auto" style="background-color:#1976D2; margin-top:20px; padding: 0 0 0 20px">
-            <li class="breadcrumb-item" *ngFor="let r of (region | regionBreadcrumb)"><a href="#" style="color:white">{{ r.name }}</a></li>
+            <li class="breadcrumb-item" *ngFor="let r of (region | regionBreadcrumb)"><a [routerLink]="['/home', r.id]" href="javascript:void(0)" style="color:white">{{ r.name }}</a></li>
         </ol>
         
         <ul class="navbar-nav">

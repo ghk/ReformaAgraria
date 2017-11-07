@@ -78,7 +78,9 @@ import './styles/app.scss';
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
                     { path: 'home', component: HomeComponent },
+                    { path: 'home/:id', component: HomeComponent },
                     { path: 'region', component: RegionComponent },
+                    { path: 'region/:id', component: RegionComponent },
                     { path: 'event', component: EventComponent },
                     //{ path: 'crud', children: [
                     //        //{ path: 'region', component: RegionCrudComponent }

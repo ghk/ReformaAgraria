@@ -12,7 +12,7 @@
                         <tbody>
                             <tr *ngFor="let region of regions">
                                 <td>
-                                <a (click)="clicked(region.id, region.type, region.fkParentId)" href="javascript:void(0)">{{region.name}}</a>
+                                <a [routerLink]="['/home', region.id]" href="javascript:void(0)">{{region.name}}</a>
                                 </td>
                             </tr>
                         </tbody>

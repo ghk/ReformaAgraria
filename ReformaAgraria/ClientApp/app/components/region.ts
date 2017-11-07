@@ -17,20 +17,19 @@ export class RegionComponent implements OnInit {
 
     constructor(
         private regionService: RegionService,
-        private sharedService: SharedService
+        private sharedService: SharedService,
     ) { }
 
     ngOnInit() {
-        this.getRegion(RegionType.Kecamatan, '72.1');
-    }
-
-    clicked(id: string, regionType: RegionType, parentId: string) {
-        this.getRegionById(id, (regionType - 2), (regionType), parentId);
-    }
-
+        this.sharedService.getRegionId().subscribe(id =>
+            this.regionService.getById(id).subscribe(data => {
+                this.getRegionById(data.id, (data.type - 2), (data.type), data.fkParentId);
+            })
+        )
+    };
+    
      getRegion(regionType: RegionType, parentId: string) {
         let query = { data: { 'type': 'parent', 'regionType': regionType, 'parentId': parentId } }
-        console.log(query);
         this.regionService.getAll(query, null).subscribe(data => {
             this.regions = data;
             this.region = RegionType[this.regions[0].type];

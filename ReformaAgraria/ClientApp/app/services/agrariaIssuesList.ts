@@ -39,7 +39,6 @@ export class AgrariaIssuesListService {
     }
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<ToraObject>> {
-        console.log(query);
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,

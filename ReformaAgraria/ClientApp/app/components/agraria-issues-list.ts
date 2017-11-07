@@ -13,7 +13,7 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     constructor(private agrariaIssuesList: AgrariaIssuesListService) { }
 
     ngOnInit(): void {
-        this.getIssuesList('72.10.07.2016');
+        this.getIssuesList('72.10.11.2006');
     }
 
     ngOnDestroy(): void {
