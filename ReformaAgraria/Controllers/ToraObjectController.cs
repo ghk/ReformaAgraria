@@ -90,17 +90,38 @@ namespace ReformaAgraria.Controllers
 
                     to.Name = worksheet.Cells[3, 4].Value.ToString();
                     to.Size = worksheet.Cells[7, 4].Value != null ? Int32.Parse(worksheet.Cells[7, 4].Value.ToString()) : 0;
-                    to.TotalTenants = worksheet.Cells[8, 4].Value.ToString();
-                    to.RegionalStatus = worksheet.Cells[9, 4].Value.ToString();
+                    to.TotalTenants = worksheet.Cells[8, 4].Value.ToString().Split(" ")[0];
+                    if (worksheet.Cells[9, 4].Value.ToString().ToLower().Trim() == "hutan")
+                    {
+                        to.RegionalStatus = RegionalStatus.Forest;
+                    }
+                    else if (worksheet.Cells[9, 4].Value.ToString().ToLower().Trim() == "non hutan")
+                    {
+                        to.RegionalStatus = RegionalStatus.NonForest;
+                    }
                     to.LandType = worksheet.Cells[10, 4].Value.ToString();
                     to.Livelihood = worksheet.Cells[11, 4].Value.ToString();
                     to.ProposedTreatment = worksheet.Cells[12, 4].Value.ToString();
-                    to.LandStatus = worksheet.Cells[14, 4].Value.ToString();
+                    if (worksheet.Cells[14, 4].Value.ToString().ToLower().Contains("negara"))
+                    {
+                        to.LandStatus = LandStatus.Government;
+                    }
+                    else if (worksheet.Cells[14, 4].Value.ToString().ToLower().Contains("swasta"))
+                    {
+                        to.LandStatus = LandStatus.Private;
+                    }
+                    else
+                    {
+                        to.LandStatus = LandStatus.Others;
+                    }
+
+                    to.LandTenureHistory = worksheet.Cells[16, 3].Value.ToString();
+                    to.ConflictChronology = worksheet.Cells[19, 4].Value.ToString();
+                    to.FormalAdvocacyProgress = worksheet.Cells[21, 4].Value.ToString();
+                    to.NonFormalAdvocacyProgress = worksheet.Cells[22, 4].Value.ToString();
 
                     Post(to);
-
-                    //ToraSubjectController ts = new ToraSubjectController();
-                    //ts.Import(file, to.Id);
+                    
                     file.Delete(); 
                     return to;
                 }

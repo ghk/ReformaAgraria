@@ -23,85 +23,124 @@ namespace ReformaAgraria.Controllers
         {
             _hostingEnvironment = hostingEnvironment;
         }
-
-        [HttpGet("export")]
-        public string Export()
+        
+        [HttpPost("import")]
+        public ToraSubject Import()
         {
-            string sWebRootFolder = _hostingEnvironment.WebRootPath;
-            string sFileName = @"demo.xlsx";
-            string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
-            FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
-            if (file.Exists)
+            var formFile = HttpContext.Request.ReadFormAsync().Result.Files[0];
+
+            var path = Path.Combine(
+                        Directory.GetCurrentDirectory(), "wwwroot",
+                        formFile.FileName);
+
+            using (var stream = new FileStream(path, FileMode.Create))
             {
-                file.Delete();
-                file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
+                formFile.CopyTo(stream);
             }
-            using (ExcelPackage package = new ExcelPackage(file))
-            {
-                // add a new worksheet to the empty workbook
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employee");
-                //First add the headers
-                worksheet.Cells[1, 1].Value = "ID";
-                worksheet.Cells[1, 2].Value = "Name";
-                worksheet.Cells[1, 3].Value = "Gender";
-                worksheet.Cells[1, 4].Value = "Salary (in $)";
 
-                //Add values
-                worksheet.Cells["A2"].Value = 1000;
-                worksheet.Cells["B2"].Value = "Jon";
-                worksheet.Cells["C2"].Value = "M";
-                worksheet.Cells["D2"].Value = 5000;
-
-                worksheet.Cells["A3"].Value = 1001;
-                worksheet.Cells["B3"].Value = "Graham";
-                worksheet.Cells["C3"].Value = "M";
-                worksheet.Cells["D3"].Value = 10000;
-
-                worksheet.Cells["A4"].Value = 1002;
-                worksheet.Cells["B4"].Value = "Jenny";
-                worksheet.Cells["C4"].Value = "F";
-                worksheet.Cells["D4"].Value = 5000;
-
-                package.Save(); //Save the workbook.
-            }
-            return URL;
-        }
-
-        [HttpGet("import")]
-        public void Import(FileInfo file, int FkToraObjectId)
-        {
+            FileInfo file = new FileInfo(path);
             try
             {
                 using (ExcelPackage package = new ExcelPackage(file))
                 {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[2];
-                    ToraSubject ts = new ToraSubject();
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
                     int rowCount = worksheet.Dimension.Rows;
+                    ToraSubject ts = new ToraSubject();
 
-                    for(int row = 2; row <= rowCount; row++)
+                    for (int i = 2; i <= rowCount; i++)
                     {
-                        ts.Name = worksheet.Cells[row, 2].Value.ToString();
-                        ts.MaritalStatus = worksheet.Cells[row, 3].Value.ToString();
-                        ts.Address = worksheet.Cells[row, 4].Value.ToString();
-                        ts.Gender = (Gender)worksheet.Cells[row, 5].Value;
-                        ts.Age = worksheet.Cells[row, 6].Value.ToString();
-                        ts.EducationalAttainment = worksheet.Cells[row, 7].Value.ToString();
-                        ts.TotalFamilyMembers = Int32.Parse(worksheet.Cells[row, 8].Value.ToString());
-                        ts.LandStatus = worksheet.Cells[row, 9].Value.ToString();
-                        ts.LandLocation = worksheet.Cells[row, 10].Value.ToString();
-                        ts.Size = worksheet.Cells[row, 3].Value != null ? Int32.Parse(worksheet.Cells[row, 11].Value.ToString()) : 0;
-                        ts.PlantTypes = worksheet.Cells[row, 12].Value.ToString();
-                        ts.Notes = worksheet.Cells[row, 13].Value.ToString();
-                        ts.FkToraObjectId = FkToraObjectId;
+                        ts.Name = worksheet.Cells[i, 2].Value.ToString();
+                        if (worksheet.Cells[i, 3].Value.ToString().ToLower().Trim() == "menikah")
+                        {
+                            ts.MaritalStatus = MaritalStatus.Married;
+                        }
+                        else if (worksheet.Cells[i, 3].Value.ToString().ToLower().Trim().Contains("belum menikah"))
+                        {
+                            ts.MaritalStatus = MaritalStatus.Single;
+                        }
+                        else if (worksheet.Cells[i, 3].Value.ToString().ToLower().Trim().Contains("cerai"))
+                        {
+                            ts.MaritalStatus = MaritalStatus.Divorced;
+                        }
+
+                        ts.Address = worksheet.Cells[i, 4].Value.ToString();
+
+                        if (worksheet.Cells[i, 5].Value.ToString().ToLower().Trim() == "l")
+                        {
+                            ts.Gender = Gender.Male;
+                        }
+                        else if (worksheet.Cells[i, 5].Value.ToString().ToLower().Trim() == "p")
+                        {
+                            ts.Gender = Gender.Female;
+                        }
+
+                        ts.Age = int.Parse(worksheet.Cells[i, 6].Value.ToString().Trim());
+
+                        if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("tidak sekolah"))
+                        {
+                            ts.EducationalAttainment = EducationalAttainment.Uneducated;
+                        }
+                        else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("sd"))
+                        {
+                            ts.EducationalAttainment = EducationalAttainment.ElementarySchool;
+                        }
+                        else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("smp"))
+                        {
+                            ts.EducationalAttainment = EducationalAttainment.JuniorHighSchool;
+                        }
+                        else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("sma"))
+                        {
+                            ts.EducationalAttainment = EducationalAttainment.SeniorHighSchool;
+                        }
+                        else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("s1"))
+                        {
+                            ts.EducationalAttainment = EducationalAttainment.BachelorDegree;
+                        }
+                        else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("s2"))
+                        {
+                            ts.EducationalAttainment = EducationalAttainment.MasterDegree;
+                        }
+                        else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("s3"))
+                        {
+                            ts.EducationalAttainment = EducationalAttainment.DoctorateDegree;
+                        }
+                        else
+                        {
+                            ts.EducationalAttainment = EducationalAttainment.Others;
+                        }
+                        ts.TotalFamilyMembers = int.Parse(worksheet.Cells[i, 9].Value.ToString().Trim());
+                        ts.LandStatus = worksheet.Cells[i, 10].Value.ToString();
+                        ts.LandLocation = worksheet.Cells[i, 11].Value.ToString();
+                        ts.Size = int.Parse(worksheet.Cells[i, 12].Value.ToString().Split(" ")[0]);
+                        ts.PlantTypes = worksheet.Cells[i, 14].Value.ToString();
+                        ts.Notes = worksheet.Cells[i, 15].Value.ToString();
 
                         Post(ts);
-                    }                    
+                    }
+
+                    
+                    
+                    file.Delete();
+                    return ts;
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+        }
+
+        protected override IQueryable<ToraSubject> ApplyQuery(IQueryable<ToraSubject> query)
+        {
+            var type = GetQueryString<string>("type");
+
+            if (type == "getAllById")
+            {
+                var id = GetQueryString<int>("id");
+                query = query.Where(ts => ts.FkToraObjectId == id);
+            }
+
+            return query;
         }
     }
 }
