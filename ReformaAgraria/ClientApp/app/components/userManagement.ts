@@ -33,7 +33,6 @@ export class UserManagementComponent {
             .subscribe(
                 data => {
                     this.allUsers = data;
-                    console.log(this.allUsers);
                 },
                 error => {
                     this.alertService.error(error);
@@ -45,8 +44,8 @@ export class UserManagementComponent {
             this.accountService.deleteUser(id)
                 .subscribe(
                 data => {
-                    this.alertService.success('User ' + email + ' is successfully deleted.', true);
                     this.getAllUser();
+                    this.alertService.success('User ' + email + ' is successfully deleted.', true);
                 },
                 error => {
                     this.alertService.error(error);
@@ -55,10 +54,8 @@ export class UserManagementComponent {
     }
 
     updateUser() {
-        this.accountService.updateUser(this.model.id, this.model.newEmail)
-            .subscribe(
-            data => {
-                this.alertService.success('User ' + this.model.oldEmail + ' is successfully updated to ' + this.model.newEmail, true);
+        this.accountService.updateUser(this.model.id, this.model.newEmail).subscribe(data => {
+                this.alertService.success('User is successfully updated.', true);
                 this.getAllUser();
                 this.showListUser();
             },
@@ -110,6 +107,8 @@ export class UserManagementComponent {
 
     showListUser() {
         this.getAllUser();
+        this.model.Email = '';
+        this.model.Password = '';
         this.isRegisterShown = false;
         this.isEditShown = false;
         this.isListUserShown = true;

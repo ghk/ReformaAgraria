@@ -1,23 +1,23 @@
-﻿<div class="container-fluid">
+﻿<ra-header></ra-header>
+<div class="container-fluid">
     <div class="row">
         <nav class="col-sm-3 col-md-2 col-xl-2 d-none d-sm-block sidebar bg-dark">
             <ra-sidenav></ra-sidenav>
         </nav>
-        <main class="col-sm-9 col-md-10 ml-sm-auto pt-4" role="main">
-            <div class="body-content">
-
-                <div class="card w-100">
+        <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
+            <div class="card w-100">
                 <div class="card-body">
 
                     <div *ngIf="isListUserShown">
                         <div class="row">
                             <div class="col-12">
                                 <h2 class="card-title">Manajemen Akun</h2>
-                                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                    
-                                    <div class="nav justify-content-end my-2 mr-3">
+                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                <ra-alert></ra-alert>
+
+                                <div class="nav justify-content-end my-2 mr-3">
                                     <button type="button" class="btn btn-outline-primary" (click)="showAddUser()" data-toggle="modal" data-target="#exampleModal" title="Tambah Akun"><span class="oi oi-plus"></span></button>
-                                    </div>
+                                </div>
 
                                 <table class="table table-responsive">
                                     <thead>
@@ -26,7 +26,7 @@
                                             <th>Email</th>
                                             <th></th>
                                             <th></th>
-                                           
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -34,25 +34,24 @@
                                             <td>Nama</td>
                                             <td>{{user.email}}</td>
                                             <td span="2"><a (click)="showEditUser(user.id, user.email)" href="javascript:void(0)" title="Rubah Email atau Password"><span class="oi oi-pencil"></span></a></td>
-                                            <td><a (click)="deleteUser(user.id)" href="javascript:void(0)" title="Hapus"><span class="oi oi-x"></span></a></td>
+                                            <td><a (click)="deleteUser(user.id, user.email)" href="javascript:void(0)" title="Hapus"><span class="oi oi-x"></span></a></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div *ngIf="isRegisterShown">
                         <div class="row">
                             <div class="col-12">
                                 <h2 class="card-title">Tambah Pengguna</h2>
-                                <ra-alert></ra-alert>
 
                                 <form name="form">
                                     <div class="form-row">
                                         <div class="form-group col-md-4 was-validated">
                                             <label for="email">Nama</label>
-                                            <input type="text" class="form-control" name="email" placeholder="Nama"/>
+                                            <input type="text" class="form-control" name="email" placeholder="Nama" />
                                         </div>
 
                                         <div class="form-group col-md-4 was-validated">
@@ -65,14 +64,14 @@
                                         <div class="form-group col-md-8 was-validated">
                                             <label for="password">Password</label>
                                             <input type="password" class="form-control is-invalid" name="password" placeholder="Password" [(ngModel)]="model.Password" #password="ngModel" required />
-                                        </div>  
+                                        </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-6 col-md-2 col-sm-4">
                                             <button type="button" class="btn btn-primary btn-block" (click)="addUser()">Simpan</button>
-                                        </div>    
-                                        <div class="col-6 col-md-2 col-sm-4">    
+                                        </div>
+                                        <div class="col-6 col-md-2 col-sm-4">
                                             <button type="button" class="btn btn-danger btn-block" (click)="showListUser()">Batal</button>
                                         </div>
                                     </div>
@@ -81,12 +80,11 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div *ngIf="isEditShown">
                         <div class="row">
                             <div class="col-md-4 col-md-offset-4">
                                 <h3 class="card-title">Ganti Email atau Password</h3>
-                                <ra-alert></ra-alert>
                                 <form name="form" novalidate>
                                     <div class="form-group">
                                         <input type="hidden" class="form-control" name="oldEmail" [(ngModel)]="model.oldEmail" #oldEmail="ngModel" required />
@@ -95,7 +93,7 @@
                                         <label for="newEmail">Email</label>
                                         <input type="text" class="form-control" name="newEmail" [(ngModel)]="model.newEmail" #newEmail="ngModel" required />
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <button type="button" class="btn btn-primary" (click)="updateUser()">Ubah</button>
                                         <button type="button" class="btn btn-primary" (click)="showListUser()">Batal</button>
@@ -105,12 +103,11 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div *ngIf="isChangePasswordShown">
                         <div class="row">
                             <div class="col-md-4 col-md-offset-4">
                                 <h2>Ganti Password</h2>
-                                <ra-alert></ra-alert>
                                 <form name="form">
                                     <div class="form-group">
                                         <label for="currentPassword">Password Lama</label>
@@ -134,7 +131,6 @@
                     </div>
                 </div>
             </div>
-        </div>
         </main>
     </div>
 </div>
