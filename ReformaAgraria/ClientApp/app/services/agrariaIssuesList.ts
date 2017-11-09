@@ -24,7 +24,7 @@ export class AgrariaIssuesListService {
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     }
     
-    import(event) {
+    import(event, regionId) {
         let fileList: FileList = event.target.files;
         if (fileList.length > 0) {
             let file: File = fileList[0];

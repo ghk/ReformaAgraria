@@ -26,7 +26,7 @@ namespace ReformaAgraria.Models
 
         public int TotalFamilyMembers { get; set; }
 
-        public string LandStatus { get; set; }
+        public LandStatus LandStatus { get; set; }
 
         public string LandLocation { get; set; }
 

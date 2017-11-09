@@ -1,8 +1,7 @@
-<div class="card w-100">
+<div class="card w-100" *ngIf="reloaded">
     <div class="card-body">
-        <h4 class="card-title">List permaslahan Agraria</h4>
-        <h6 class="card-subtitle text-muted">Tester</h6>
-
+        <h4 class="card-title">List Permasalahan Agraria</h4>
+        <ra-alert></ra-alert>
             <div class="nav justify-content-end mr-3" style="z-index=1000;">
                 <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal-lg" title="Tambah List Permasalahan"><span class="oi oi-plus"></span></button>
                 <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".xls,.xlsx">

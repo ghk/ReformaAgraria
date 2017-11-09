@@ -5,6 +5,8 @@ namespace ReformaAgraria.Models
     {
         Government = 0,
         Private = 1,
-        Others = 2
+        Gift = 2,
+        Inheritage = 3,
+        Others = 4
     }
 }

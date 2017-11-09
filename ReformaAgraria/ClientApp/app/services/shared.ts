@@ -15,11 +15,13 @@ export class SharedService {
     private _environment: any;
     private _region$: ReplaySubject<Region>;
     private _regionId$: ReplaySubject<string>;
+    private _isAgrariaIssuesListReloaded$: ReplaySubject<boolean>;
 
     constructor() {
         this._environment = ENVIRONMENT;
         this._region$ = new ReplaySubject(1);
         this._regionId$ = new ReplaySubject(1);
+        this._isAgrariaIssuesListReloaded$ = new ReplaySubject<false>(1);
     }
 
     public getEnvironment() {        
@@ -40,6 +42,14 @@ export class SharedService {
 
     public setRegionId(id: string) {
         this._regionId$.next(id);
+    }
+
+    public setIsAgrariaIssuesListReloaded(reloaded: boolean) {
+        this._isAgrariaIssuesListReloaded$.next(reloaded);
+    }
+
+    public getIsAgrariaIssuesListReloaded() {
+        return this._isAgrariaIssuesListReloaded$;
     }
 
     private handleError(error: Response | any) {
