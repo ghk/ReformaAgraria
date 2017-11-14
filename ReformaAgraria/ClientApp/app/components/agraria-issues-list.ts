@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-<<<<<<< HEAD
-import * as $ from 'jquery';
-=======
+//import * as $ from 'jquery';
 import { RequestOptions } from "@angular/http/http";
 
 import { AgrariaIssuesListService } from '../services/agrariaIssuesList';
@@ -10,7 +8,6 @@ import { AlertService } from '../services/alert';
 import { SharedService } from '../services/shared';
 import { LandStatus } from '../models/gen/landStatus';
 import { RegionalStatus } from '../models/gen/regionalStatus';
->>>>>>> 3392331749e684ce5df56b5cb81ad47328b2b58f
 
 @Component({
     selector: 'ra-agraria-issues-list',
@@ -43,17 +40,17 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
 
     }
 
-    onToggle(id){
-        let img = $("#"+id+" img");
-        if(img.hasClass("spin-icon")){
-            img.removeClass("spin-icon");
-            img.addClass("back-spin");
-        } else {
-            img.removeClass("back-spin");
-            img.addClass("spin-icon");
-        }
+    // onToggle(id){
+    //     let img = $("#"+id+" img");
+    //     if(img.hasClass("spin-icon")){
+    //         img.removeClass("spin-icon");
+    //         img.addClass("back-spin");
+    //     } else {
+    //         img.removeClass("back-spin");
+    //         img.addClass("spin-icon");
+    //     }
 
-    }
+    // }
 
     fileChange(event) {
         this.agrariaIssuesList.import(event, this.regionId)
