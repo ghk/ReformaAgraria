@@ -1,7 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AlertService } from '../services/alert';
+import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../services/account';
 
 
@@ -17,11 +17,13 @@ export class UserManagementComponent {
     isEditShown: boolean = false;
     isChangePasswordShown: boolean = false;
     isListUserShown: boolean = true;
+    id: string;
+    email: string;
 
     constructor(
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService
+        private toastr: ToastrService
     ) { }
 
     ngOnInit() {
@@ -35,32 +37,39 @@ export class UserManagementComponent {
                     this.allUsers = data;
                 },
                 error => {
-                    this.alertService.error(error);
+                    this.toastr.error(error, null);
                 });
     }
 
-    deleteUser(id: string, email: string) {
-        if (confirm('Apakah kamu yakin ingin menghapus ' + email + '?')) {
-            this.accountService.deleteUser(id)
+    delete(id: string, email: string) {
+        this.id = id;
+        this.email = email;
+    }
+
+    deleteUser() {
+            this.accountService.deleteUser(this.id)
                 .subscribe(
                 data => {
-                    this.getAllUser();
-                    this.alertService.success('User ' + email + ' is successfully deleted.', true);
+                    this.toastr.success('User ' + this.email + ' is successfully deleted.', null);
+                    this.showListUser();
                 },
                 error => {
-                    this.alertService.error(error);
+                    this.toastr.error(error, null);
                 });
-        }
+    }
+
+    update(id: string, email: string) {
+        this.clearForm();
+        this.model.id = id;
     }
 
     updateUser() {
         this.accountService.updateUser(this.model.id, this.model.newEmail).subscribe(data => {
-                this.alertService.success('User is successfully updated.', true);
-                this.getAllUser();
+                this.toastr.success('User is successfully updated.', null);
                 this.showListUser();
             },
             error => {
-                this.alertService.error(error);
+                this.toastr.error(error, null);
             });
     }
 
@@ -68,10 +77,13 @@ export class UserManagementComponent {
         this.accountService.changePassword(this.model.id, this.model.currentPassword, this.model.newPassword)
             .subscribe(
             data => {
-                this.alertService.success('Password is successfully changed.', true);
+                console.log('success');
+                this.toastr.success('Password is successfully changed.', null);
+                this.showListUser();
             },
             error => {
-                this.alertService.error(error);
+                console.log('gagal');
+                this.toastr.error(error, null);
             });
     }
 
@@ -79,46 +91,28 @@ export class UserManagementComponent {
         this.accountService.register(this.model)
             .subscribe(
             data => {
-                this.alertService.success('Registration successful', true);
-                this.getAllUser();
+                this.toastr.success('Registration successful', null)
                 this.showListUser();
             },
             error => {
-                this.alertService.error(error);
+                this.toastr.error(error, null);
             });
     }
-
-    showAddUser() {
-        this.isRegisterShown = true;
-        this.isEditShown = false;
-        this.isListUserShown = false;
-        this.isChangePasswordShown = false;
-    }
-
-    showEditUser(id: string, oldEmail: string) {
-        this.model.oldEmail = oldEmail;
-        this.model.newEmail = oldEmail;
-        this.model.id = id;
-        this.isRegisterShown = false;
-        this.isEditShown = true;
-        this.isListUserShown = false;
-        this.isChangePasswordShown = false;
-    }
-
+    
     showListUser() {
+        this.clearForm();
         this.getAllUser();
+    }
+
+    clearForm() {
+        this.email = '';
+        this.id = '';
         this.model.Email = '';
         this.model.Password = '';
-        this.isRegisterShown = false;
-        this.isEditShown = false;
-        this.isListUserShown = true;
-        this.isChangePasswordShown = false;
-    }
-
-    showChangePassword() {
-        this.isRegisterShown = false;
-        this.isEditShown = false;
-        this.isListUserShown = false;
-        this.isChangePasswordShown = true;
+        this.model.newEmail = '';
+        this.model.currentPassword = '';
+        this.model.newPassword = '';
+        this.model.confirmPassword = '';
+        this.model.Name = '';
     }
 }

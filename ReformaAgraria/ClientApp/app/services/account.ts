@@ -69,8 +69,7 @@ export class AccountService {
         params.append('currentPassword', currentPassword);
         params.append('newPassword', newPassword);
         requestOptions.params = params;
-        return this.http.post('/api/account/changepassword', params)
-            .map(res => res.json());
+        return this.http.post('/api/account/changepassword', params);
     }
 
     getAllUser() {

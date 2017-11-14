@@ -191,7 +191,7 @@ namespace ReformaAgraria.Controllers
             if (await _userManager.CheckPasswordAsync(user, currentPassword))
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                await ResetPassword(id, token, newPassword);
+                return await ResetPassword(id, token, newPassword);
             }
             return BadRequest();
         }
