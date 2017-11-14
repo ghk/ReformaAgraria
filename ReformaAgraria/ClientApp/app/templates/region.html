@@ -1,24 +1,29 @@
-﻿<div class="container body-content">
-    <div class="container-fluid">
-        <div>
-            <div class="row">
-                <div class="col-md-4 col-md-offset-4">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th style="vertical-align: middle; border-bottom: 2px solid #999;">{{region}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let region of regions">
-                                <td>
-                                <a (click)="getRegion((region.type + 1), region.id)" href="javascript:void(0)">{{region.name}}</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+﻿<div class="card w-100" *ngIf="showDiv">
+    <div class="card-body">
+        <h4 class="card-title">Permasalahan Agraria di {{region}}</h4>
+                
+        <div class="table-responsive pt-2">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Lokasi</th>
+                        <th>Luas</th>
+                        <th>Koordinat</th>
+                        <th>Total Permasalahan</th>
+                        <th>Total Penyelesaian</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let region of regions">
+                        <td><a [routerLink]="['/home', region.id]" href="javascript:void(0)">{{region.name}}</a></td>
+                        <td>1000 ha</td>
+                        <td>image</td>
+                        <td>20</td>
+                        <td>28%</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+

@@ -14,7 +14,7 @@ export class AlertService {
             if (event instanceof NavigationStart) {
                 if (this.keepAfterNavigationChange) {
                     // only keep for a single location change
-                    this.keepAfterNavigationChange = false;
+                    this.keepAfterNavigationChange = true;
                 } else {
                     // clear alert
                     this.subject.next();

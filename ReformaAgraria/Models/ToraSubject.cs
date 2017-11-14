@@ -13,7 +13,7 @@ namespace ReformaAgraria.Models
         public override int Id { get; set; }
 
         public string Name { get; set; }
-       
+
         public MaritalStatus MaritalStatus { get; set; }
 
         public string Address { get; set; }
@@ -26,7 +26,7 @@ namespace ReformaAgraria.Models
 
         public int TotalFamilyMembers { get; set; }
 
-        public string LandStatus { get; set; }
+        public LandStatus LandStatus { get; set; }
 
         public string LandLocation { get; set; }
 

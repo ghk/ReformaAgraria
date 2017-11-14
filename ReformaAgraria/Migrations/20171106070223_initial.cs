@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ReformaAgraria.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -388,12 +388,13 @@ namespace ReformaAgraria.Migrations
                     date_created = table.Column<DateTime>(type: "timestamp", nullable: true),
                     date_modified = table.Column<DateTime>(type: "timestamp", nullable: true),
                     fk_region_id = table.Column<string>(type: "text", nullable: true),
-                    land_status = table.Column<int>(type: "int4", nullable: false),
+                    land_status = table.Column<string>(type: "int4", nullable: true),
                     land_tenure_history = table.Column<string>(type: "text", nullable: true),
-                    land_type = table.Column<int>(type: "int4", nullable: false),
+                    land_type = table.Column<string>(type: "text", nullable: true),
                     livelihood = table.Column<string>(type: "text", nullable: true),
-                    proposed_treatment = table.Column<int>(type: "int4", nullable: false),
-                    regional_status = table.Column<int>(type: "int4", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: true),
+                    proposed_treatment = table.Column<string>(type: "text", nullable: true),
+                    regional_status = table.Column<string>(type: "int4", nullable: true),
                     size = table.Column<decimal>(type: "numeric", nullable: false),
                     total_tenants = table.Column<string>(type: "text", nullable: true)
                 },
@@ -493,15 +494,15 @@ namespace ReformaAgraria.Migrations
                     id = table.Column<int>(type: "int4", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     address = table.Column<string>(type: "text", nullable: true),
-                    age = table.Column<int>(type: "int4", nullable: true),
+                    age = table.Column<string>(type: "int4", nullable: true),
                     date_created = table.Column<DateTime>(type: "timestamp", nullable: true),
                     date_modified = table.Column<DateTime>(type: "timestamp", nullable: true),
-                    educational_attainment = table.Column<int>(type: "int4", nullable: false),
+                    educational_attainment = table.Column<string>(type: "int4", nullable: true),
                     fk_tora_object_id = table.Column<int>(type: "int4", nullable: false),
                     gender = table.Column<int>(type: "int4", nullable: false),
                     land_location = table.Column<string>(type: "text", nullable: true),
-                    land_status = table.Column<string>(type: "text", nullable: true),
-                    marital_status = table.Column<int>(type: "int4", nullable: false),
+                    land_status = table.Column<string>(type: "int4", nullable: true),
+                    marital_status = table.Column<string>(type: "int4", nullable: true),
                     name = table.Column<string>(type: "text", nullable: true),
                     notes = table.Column<string>(type: "text", nullable: true),
                     plant_types = table.Column<string>(type: "text", nullable: true),

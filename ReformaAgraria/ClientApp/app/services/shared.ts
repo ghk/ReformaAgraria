@@ -1,6 +1,8 @@
 ﻿import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
+import { Subject} from 'rxjs/Subject';
+import { Region } from "../models/gen/region";
 
 declare var ENV: string;
 var ENVIRONMENT = require('../../environments/environment.ts')['environment'];
@@ -11,13 +13,43 @@ if ('Production' === ENV)
 export class SharedService {
 
     private _environment: any;
+    private _region$: ReplaySubject<Region>;
+    private _regionId$: ReplaySubject<string>;
+    private _isAgrariaIssuesListReloaded$: ReplaySubject<boolean>;
 
     constructor() {
         this._environment = ENVIRONMENT;
+        this._region$ = new ReplaySubject(1);
+        this._regionId$ = new ReplaySubject(1);
+        this._isAgrariaIssuesListReloaded$ = new ReplaySubject<false>(1);
     }
 
     public getEnvironment() {        
         return this._environment;
+    }
+
+    public getRegion() {
+        return this._region$;
+    }
+
+    public setRegion(region: Region) {
+        this._region$.next(region);
+    }
+
+    public getRegionId() {
+        return this._regionId$;
+    }
+
+    public setRegionId(id: string) {
+        this._regionId$.next(id);
+    }
+
+    public setIsAgrariaIssuesListReloaded(reloaded: boolean) {
+        this._isAgrariaIssuesListReloaded$.next(reloaded);
+    }
+
+    public getIsAgrariaIssuesListReloaded() {
+        return this._isAgrariaIssuesListReloaded$;
     }
 
     private handleError(error: Response | any) {

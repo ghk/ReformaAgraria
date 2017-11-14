@@ -87,15 +87,13 @@ export class AccountService {
 
     deleteUser(id: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        return this.http.delete('/api/account/user/' + id, requestOptions)
-            .map(res => res.json());
+        return this.http.delete('/api/account/user/' + id, requestOptions);
     }
 
     updateUser(id: string, newEmail: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         let body = { "email": newEmail };
-        return this.http.put('/api/account/user/' + id, body)
-            .map(res => res.json());
+        return this.http.put('/api/account/user/' + id, body);
     }
 
     private handleError(error: Response | any) {

@@ -11,8 +11,8 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    [Migration("20171026072743_Initial")]
-    partial class Initial
+    [Migration("20171107065549_Second Update")]
+    partial class SecondUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -598,6 +598,9 @@ namespace ReformaAgraria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
+                    b.Property<string>("ConflictChronology")
+                        .HasColumnName("conflict_chronology");
+
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnName("date_created");
 
@@ -607,19 +610,28 @@ namespace ReformaAgraria.Migrations
                     b.Property<string>("FkRegionId")
                         .HasColumnName("fk_region_id");
 
+                    b.Property<string>("FormalAdvocacyProgress")
+                        .HasColumnName("formal_advocacy_progress");
+
                     b.Property<int>("LandStatus")
                         .HasColumnName("land_status");
 
                     b.Property<string>("LandTenureHistory")
                         .HasColumnName("land_tenure_history");
 
-                    b.Property<int>("LandType")
+                    b.Property<string>("LandType")
                         .HasColumnName("land_type");
 
                     b.Property<string>("Livelihood")
                         .HasColumnName("livelihood");
 
-                    b.Property<int>("ProposedTreatment")
+                    b.Property<string>("Name")
+                        .HasColumnName("name");
+
+                    b.Property<string>("NonFormalAdvocacyProgress")
+                        .HasColumnName("non_formal_advocacy_progress");
+
+                    b.Property<string>("ProposedTreatment")
                         .HasColumnName("proposed_treatment");
 
                     b.Property<int>("RegionalStatus")

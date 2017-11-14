@@ -35,7 +35,9 @@ import { AlertService } from './services/alert';
 import { AccountService } from './services/account';
 import { AuthGuard } from './services/authGuard';
 import { RegionService } from './services/gen/region';
+import { AgrariaIssuesListService } from './services/agrariaIssuesList';
 
+import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum'; 
 
 import 'bootstrap';
@@ -63,6 +65,7 @@ import './styles/app.scss';
         UserManagementComponent,
         RegionCrudComponent,
         RegionComponent,
+        RegionBreadcrumbPipe,
         EnumPipe
     ],
     imports: [
@@ -75,12 +78,14 @@ import './styles/app.scss';
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
                     { path: 'home', component: HomeComponent },
+                    { path: 'home/:id', component: HomeComponent },
                     { path: 'region', component: RegionComponent },
+                    { path: 'region/:id', component: RegionComponent },
                     { path: 'event', component: EventComponent },
-                    { path: 'crud', children: [
-                            { path: 'region', component: RegionCrudComponent }
-                        ]
-                    }
+                    //{ path: 'crud', children: [
+                    //        //{ path: 'region', component: RegionCrudComponent }
+                    //    ]
+                    //}
                 ]
             },
             {
@@ -101,7 +106,8 @@ import './styles/app.scss';
         AccountService,
         AlertService,
         AuthGuard,
-        RegionService
+        RegionService,
+        AgrariaIssuesListService
     ]
 })
 export class AppModuleShared {

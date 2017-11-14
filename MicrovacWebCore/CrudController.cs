@@ -30,7 +30,7 @@ namespace MicrovacWebCore
         [HttpPost]
         public virtual TId Post([FromBody] TModel model)
         {
-            if (PostFields != null)
+            if (PostFields != null && PostFields.Count > 0)
             {
                 var m = new TModel();
                 foreach (var field in PostFields)

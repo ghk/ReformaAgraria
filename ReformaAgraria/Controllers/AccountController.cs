@@ -164,7 +164,7 @@ namespace ReformaAgraria.Controllers
             string resetLink = Request.Scheme + "://" + Request.Host + "/account/resetpassword?id=" + user.Id + "&token=" + token;
 
             MailController mc = new MailController(_iconfiguration);
-            string body = "Klik tautan di bawah ini untuk mereset password anda. " + resetLink;
+            string body = "Klik tautan di bawah ini untuk mereset password anda. </br><a href='" + resetLink + "'>Reset Password</a>";
             mc.SendEmail("Reset Password", body, new MailAddress(user.Email, user.UserName));
 
             return Ok();

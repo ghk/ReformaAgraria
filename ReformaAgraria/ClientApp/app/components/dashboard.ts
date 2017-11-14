@@ -1,4 +1,6 @@
 ﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { RegionService } from "../services/gen/region";
+import { SharedService } from "../services/shared";
 
 @Component({
     selector: 'ra-dashboard',
@@ -6,14 +8,19 @@
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
-    constructor() { }
+    constructor(
+        private _regionService: RegionService,
+        private _sharedService: SharedService
+    ) { }
 
-    ngOnInit(): void {      
+    ngOnInit(): void {
+        let query = { data: { 'type': 'breadcrumb', 'depth': 0 } }
+        this._regionService.getById('72.1', query).subscribe(region => {
+            this._sharedService.setRegion(region);
+        })
     }
 
-
     ngOnDestroy(): void {
-
     }
 
 }

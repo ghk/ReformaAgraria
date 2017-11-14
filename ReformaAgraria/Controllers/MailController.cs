@@ -35,6 +35,7 @@ namespace ReformaAgraria.Controllers
             };
             using (var message = new MailMessage(fromAddress, toAddress)
             {
+                IsBodyHtml = true,
                 Subject = subject,
                 Body = body
             })

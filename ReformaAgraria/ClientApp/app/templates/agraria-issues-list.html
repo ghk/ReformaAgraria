@@ -1,4 +1,4 @@
-<div class="card w-100">
+<div class="card w-100" *ngIf="reloaded">
     <div class="card-body">
         <h4 class="card-title">Data objek dan subjek TORA</h4>
         <h6 class="card-subtitle text-muted">Tester</h6>
@@ -345,67 +345,67 @@
                                                 <tr>
                                                 <th scope="row">1</th>
                                                 <td scope="row" colspan="1">Nama Lokasi</td>
-                                                <td>Hibula</td>
+                                                <td>{{issueList.name}}</td>
                                                 </tr>
 
                                                 <tr>
                                                 <th scope="row">2</th>
                                                 <td>Desa</td>
-                                                <td>Otto</td>
+                                                <td>Desa</td>
                                                 </tr>
 
                                                 <tr>
                                                 <th scope="row">3</th>
-                                                <td>kecamatan</td>
-                                                <td>Sigi Biromaru</td>
+                                                <td>Kecamatan</td>
+                                                <td>Kecamatan</td>
                                                 </tr>
 
                                                 <tr>
                                                 <th scope="row">4</th>
                                                 <td>Kabupaten/Provinsi</td>
-                                                <td>Sigi</td>
+                                                <td>Kabupaten/Provinsi</td>
                                                 </tr>
 
                                                 <tr>
                                                 <th scope="row">5</th>
                                                 <td>Luas Wilayah Objek</td>
-                                                <td>15 Ha</td>
+                                                <td>{{issueList.size}}</td>
                                                 </tr>
 
                                                 <tr>
                                                 <th scope="row">6</th>
                                                 <td>Jumlah Penggarap</td>
-                                                <td>19 KK</td>
+                                                <td>{{issueList.totalTenants}}</td>
                                                 </tr>
 
                                                 <tr>
                                                 <th scope="row">7</th>
                                                 <td>Status Kawasan</td>
-                                                <td>Tahura perbatasan dengan Hutan Lindung</td>
+                                                <td>{{RegionalStatus[issueList.regionalStatus]}}</td>
                                                 </tr>
 
                                                 <tr>
                                                 <th scope="row">8</th>
                                                 <td>Klasifikasi bentang Lahan</td>
-                                                <td>Pegunungan</td>
+                                                <td>{{issueList.landType}}</td>
                                                 </tr>
                                                 
                                                 <tr>
                                                 <th scope="row">9</th>
                                                 <td>Tipe Penggunaan Lahan</td>
-                                                <td>Kebun</td>
+                                                <td>{{issueList.livelihood}}</td>
                                                 </tr>
                                                 
                                                 <tr>
                                                 <th scope="row">10</th>
                                                 <td>Usulan Skema</td>
-                                                <td>Hutan Adat</td>
+                                                <td>{{issueList.proposedTreatment}}</td>
                                                 </tr>
                                                 
                                                 <tr>
                                                 <th scope="row">11</th>
                                                 <td>Tahapan</td>
-                                                <td>Verifikasi</td>
+                                                <td>Tahapan</td>
                                                 </tr>
                                                 
                                                 <tr>
@@ -416,25 +416,25 @@
                                                 <tr>
                                                 <th scope="row">1</th>
                                                 <td>Status Tanah</td>
-                                                <td>Tahura Perbatasan dengan hutan lindung</td>
+                                                <td>{{LandStatus[issueList.landStatus]}}</td>
                                                 </tr>
                                                 
                                                 <tr>
                                                 <th scope="row">2</th>
                                                 <td>Sejarah Penguasaan Tanah</td>
-                                                <td>Higira adalah pemukiman masyrakat pada zaman dulu. Hal tersebut dapat dibuktikan dengan adanya kuburan tua tempat dimakamkanya orang tua dulu. Tanah yang ada dikawasan tersebut yang dulunya telah dibuka oleh masyarakat yang dulu diwariskan sampai sekarang pada anak turunannya.</td>
+                                                <td>{{issueList.landTenureHistory}}</td>
                                                 </tr>
                                                 
                                                 <tr>
                                                 <th scope="row">3</th>
                                                 <td>Kronologi Konflik</td>
-                                                <td>-</td>
+                                                <td>{{issueList.conflictChronology}}</td>
                                                 </tr>
                                                 
                                                 <tr>
                                                 <th scope="row">4</th>
                                                 <td>Progres Langkah Advokasi</td>
-                                                <td>-</td>
+                                                <td>Jalur Formal: {{issueList.formalAdvocacyProgress}}<br/> Non Formal: {{issueList.nonFormalAdvocacyProgress}}</td>
                                                 </tr>
                                                 
                                                 <tr>

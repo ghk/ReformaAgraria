@@ -12,21 +12,29 @@ namespace ReformaAgraria.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override int Id { get; set; }
 
+        public string Name { get; set; }
+
         public decimal Size { get; set; }
        
         public string TotalTenants { get; set; }
 
         public RegionalStatus RegionalStatus { get; set; }
-
-        public LandType LandType { get; set; }
+        
+        public string LandType { get; set; }
 
         public string Livelihood { get; set; }
-
-        public ProposedTreatment ProposedTreatment { get; set; }
-
+        
+        public string ProposedTreatment { get; set; }
+        
         public LandStatus LandStatus { get; set; }
 
         public string LandTenureHistory { get; set; }
+
+        public string ConflictChronology { get; set; }
+
+        public string FormalAdvocacyProgress { get; set; }
+
+        public string NonFormalAdvocacyProgress { get; set; }
 
         public string FkRegionId { get; set; }
 
