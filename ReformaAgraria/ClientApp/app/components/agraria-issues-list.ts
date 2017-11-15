@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-//import * as $ from 'jquery';
+import * as $ from 'jquery';
 import { RequestOptions } from "@angular/http/http";
 
 import { AgrariaIssuesListService } from '../services/agrariaIssuesList';
@@ -8,14 +8,21 @@ import { AlertService } from '../services/alert';
 import { SharedService } from '../services/shared';
 import { LandStatus } from '../models/gen/landStatus';
 import { RegionalStatus } from '../models/gen/regionalStatus';
+import { EducationalAttainment } from '../models/gen/educationalAttainment';
+import { MaritalStatus } from '../models/gen/maritalStatus';
+import { Gender } from '../models/gen/gender';
 
 @Component({
     selector: 'ra-agraria-issues-list',
     templateUrl: '../templates/agraria-issues-list.html',
 })
 export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
-    issueLists: any = [];
+    objectList: any = [];
+    subjectList: any = [];
     LandStatus = LandStatus;
+    EducationalAttainment = EducationalAttainment;
+    MaritalStatus = MaritalStatus;
+    Gender = Gender;
     RegionalStatus = RegionalStatus;
     regionId = this.cookieService.get('regionId');
     reloaded: boolean = false;
@@ -31,7 +38,7 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
         this.sharedService.getIsAgrariaIssuesListReloaded().subscribe(reloaded => {
             this.reloaded = reloaded;
             this.sharedService.getRegionId().subscribe(id => {
-                this.getIssuesList(id);
+                this.getObjectList(id);
             });
         });
     }
@@ -40,17 +47,17 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
 
     }
 
-    // onToggle(id){
-    //     let img = $("#"+id+" img");
-    //     if(img.hasClass("spin-icon")){
-    //         img.removeClass("spin-icon");
-    //         img.addClass("back-spin");
-    //     } else {
-    //         img.removeClass("back-spin");
-    //         img.addClass("spin-icon");
-    //     }
-
-    // }
+     onToggle(id, objectId){
+         this.getSubjectList(objectId);
+         let img = $("#" + id + " img");
+         if(img.hasClass("spin-icon")){
+             img.removeClass("spin-icon");
+             img.addClass("back-spin");
+         } else {
+             img.removeClass("back-spin");
+             img.addClass("spin-icon");
+         }
+     }
 
     fileChange(event) {
         this.agrariaIssuesList.import(event, this.regionId)
@@ -60,9 +67,14 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
             );
     }
 
-    getIssuesList(id) {
+    getObjectList(id) {
         let query = { data: { 'type': 'getAllById', 'id': id } }
-        this.agrariaIssuesList.getAll(query, null).subscribe(data => this.issueLists = data);
+        this.agrariaIssuesList.getAllObject(query, null).subscribe(data => this.objectList = data);
+    }
+
+    getSubjectList(id) {
+        let query = { data: { 'type': 'getAllById', 'id': id } }
+        this.agrariaIssuesList.getAllSubject(query, null).subscribe(data => this.subjectList = data);
     }
 
 
