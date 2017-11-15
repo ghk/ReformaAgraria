@@ -6,6 +6,7 @@ import { AgrariaIssuesListService } from '../services/agrariaIssuesList';
 import { CookieService } from 'ngx-cookie-service';
 import { AlertService } from '../services/alert';
 import { SharedService } from '../services/shared';
+import { ToastrService } from 'ngx-toastr';
 import { LandStatus } from '../models/gen/landStatus';
 import { RegionalStatus } from '../models/gen/regionalStatus';
 import { EducationalAttainment } from '../models/gen/educationalAttainment';
@@ -31,7 +32,8 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
         private agrariaIssuesList: AgrariaIssuesListService,
         private cookieService: CookieService,
         private alertService: AlertService,
-        private sharedService: SharedService
+        private sharedService: SharedService,
+        private toastr: ToastrService
     ) { }
 
     ngOnInit(): void {
@@ -62,8 +64,8 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     uploadFile(event) {
         this.agrariaIssuesList.import(event, this.regionId)
             .subscribe(
-            data => this.alertService.success('File is successfully uploaded', true),
-            error => this.alertService.error(error)
+            data => this.toastr.success('File is successfully uploaded', null),
+            error => this.toastr.error(error, null)
             );
     }
 
