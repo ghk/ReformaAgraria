@@ -59,7 +59,7 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
          }
      }
 
-    fileChange(event) {
+    uploadFile(event) {
         this.agrariaIssuesList.import(event, this.regionId)
             .subscribe(
             data => this.alertService.success('File is successfully uploaded', true),

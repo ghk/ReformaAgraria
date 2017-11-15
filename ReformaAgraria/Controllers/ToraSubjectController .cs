@@ -26,7 +26,7 @@ namespace ReformaAgraria.Controllers
         }
         
         [HttpPost("import")]
-        public ToraSubject Import(int id, ExcelPackage package)
+        public ToraSubject Import(List<Dictionary<string, int>> objectIdList, ExcelPackage package)
         {
             try
             {
@@ -35,11 +35,34 @@ namespace ReformaAgraria.Controllers
                     ExcelWorksheet worksheet = package.Workbook.Worksheets[2];
                     int rowCount = worksheet.Dimension.Rows;
                     ToraSubject ts = new ToraSubject();
+                    int age;
+                    decimal size;
+                    int totalFamilyMembers;
 
                     for (int i = 2; i <= rowCount; i++)
                     {
                         ts = new ToraSubject();
-                        ts.FkToraObjectId = id;
+
+                        if (objectIdList[0].Count <= 1)
+                        {
+                            ts.FkToraObjectId = int.Parse(objectIdList[0].Values.ElementAt(0).ToString());
+                        }
+                        else
+                        {
+                            for (int j = 0; j < objectIdList[0].Count(); j++)
+                            {
+                                if (objectIdList[0].Keys.ElementAt(j).ToString().Trim().ToLower().Contains(worksheet.Cells[i, 10].Value != null ? worksheet.Cells[i, 10].Value.ToString().Trim().ToLower() : "null"))
+                                {
+                                    ts.FkToraObjectId = int.Parse(objectIdList[0].Values.ElementAt(j).ToString());
+                                    break;
+                                }
+                                else
+                                {
+                                    ts.FkToraObjectId = int.Parse(objectIdList[0].Values.ElementAt(0).ToString());
+                                }
+                            }
+                        }
+                        
                         ts.Name = worksheet.Cells[i, 2].Value != null ? worksheet.Cells[i, 2].Value.ToString().Trim() : "";
 
                         if (worksheet.Cells[i, 3].Value != null)
@@ -64,43 +87,72 @@ namespace ReformaAgraria.Controllers
 
                         ts.Address = worksheet.Cells[i, 4].Value != null ? worksheet.Cells[i, 4].Value.ToString().Trim() : "";
 
-                        if (worksheet.Cells[i, 5].Value.ToString().ToLower().Trim() == "l")
+                        if (worksheet.Cells[i, 5].Value != null)
                         {
-                            ts.Gender = Gender.Male;
-                        }
-                        else if (worksheet.Cells[i, 5].Value.ToString().ToLower().Trim() == "p")
-                        {
-                            ts.Gender = Gender.Female;
+                            if (worksheet.Cells[i, 5].Value.ToString().Trim() != "-")
+                            {
+                                if (worksheet.Cells[i, 5].Value.ToString().ToLower().Trim() == "l")
+                                {
+                                    ts.Gender = Gender.Male;
+                                }
+                                else if (worksheet.Cells[i, 5].Value.ToString().ToLower().Trim() == "p")
+                                {
+                                    ts.Gender = Gender.Female;
+                                }
+                                else
+                                {
+                                    ts.Gender = Gender.NotSpecified;
+                                }
+                            }
+                            else
+                            {
+                                ts.Gender = Gender.NotSpecified;
+                            }
                         }
 
-                        ts.Age = worksheet.Cells[i, 6].Value != null ? int.Parse(worksheet.Cells[i, 6].Value.ToString().Trim().Split(" ")[0]) : 0;
-                        if (worksheet.Cells[i, 8].Value != null)
+                        if (worksheet.Cells[i, 6].Value != null)
                         {
-                            if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("tidak sekolah"))
+                            if (int.TryParse(worksheet.Cells[i, 6].Value.ToString().Trim().ToLower().Split(" ")[0], out age))
+                            {
+                                ts.Age = age;
+                            }
+                            else
+                            {
+                                ts.Age = 0;
+                            }
+                        }
+                        else
+                        {
+                            ts.Age = 0;
+                        }
+
+                        if (worksheet.Cells[i, 7].Value != null)
+                        {
+                            if (worksheet.Cells[i, 7].Value.ToString().ToLower().Trim().Contains("tidak sekolah"))
                             {
                                 ts.EducationalAttainment = EducationalAttainment.Uneducated;
                             }
-                            else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("sd"))
+                            else if (worksheet.Cells[i, 7].Value.ToString().ToLower().Trim().Contains("sd"))
                             {
                                 ts.EducationalAttainment = EducationalAttainment.ElementarySchool;
                             }
-                            else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("smp"))
+                            else if (worksheet.Cells[i, 7].Value.ToString().ToLower().Trim().Contains("smp"))
                             {
                                 ts.EducationalAttainment = EducationalAttainment.JuniorHighSchool;
                             }
-                            else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("sma"))
+                            else if (worksheet.Cells[i, 7].Value.ToString().ToLower().Trim().Contains("sma"))
                             {
                                 ts.EducationalAttainment = EducationalAttainment.SeniorHighSchool;
                             }
-                            else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("s1"))
+                            else if (worksheet.Cells[i, 7].Value.ToString().ToLower().Trim().Contains("s1"))
                             {
                                 ts.EducationalAttainment = EducationalAttainment.BachelorDegree;
                             }
-                            else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("s2"))
+                            else if (worksheet.Cells[i, 7].Value.ToString().ToLower().Trim().Contains("s2"))
                             {
                                 ts.EducationalAttainment = EducationalAttainment.MasterDegree;
                             }
-                            else if (worksheet.Cells[i, 8].Value.ToString().ToLower().Trim().Contains("s3"))
+                            else if (worksheet.Cells[i, 7].Value.ToString().ToLower().Trim().Contains("s3"))
                             {
                                 ts.EducationalAttainment = EducationalAttainment.DoctorateDegree;
                             }
@@ -114,42 +166,70 @@ namespace ReformaAgraria.Controllers
                             ts.EducationalAttainment = EducationalAttainment.Others;
                         }
 
-                        if (worksheet.Cells[i, 9].Value != null)
+                        if (worksheet.Cells[i, 8].Value != null)
                         {
-                            if (worksheet.Cells[i, 9].Value.ToString().Trim() != "-" && worksheet.Cells[i, 9].Value.ToString().Trim() != "")
+                            if (int.TryParse(worksheet.Cells[i, 8].Value.ToString().Trim(), out totalFamilyMembers))
                             {
-                                ts.TotalFamilyMembers = int.Parse(worksheet.Cells[i, 9].Value.ToString().Trim());
+                                ts.TotalFamilyMembers = totalFamilyMembers;
                             }
                             else
                             {
                                 ts.TotalFamilyMembers = 0;
                             }
                         }
-
-                        
-                        if (worksheet.Cells[i, 10].Value != null)
+                        else
                         {
-                            if (worksheet.Cells[i, 10].Value.ToString().ToLower().Trim() == "tanah warisan")
+                            ts.TotalFamilyMembers = 0;
+                        }
+
+
+                        if (worksheet.Cells[i, 9].Value != null)
+                        {
+                            if (worksheet.Cells[i, 9].Value.ToString().Trim() != "-")
                             {
-                                ts.LandStatus = LandStatus.Inheritage;
+                                if (worksheet.Cells[i, 9].Value.ToString().ToLower().Trim() == "tanah warisan")
+                                {
+                                    ts.LandStatus = LandStatus.Inheritage;
+                                }
+                                else if (worksheet.Cells[i, 9].Value.ToString().ToLower().Trim() == "tanah berian")
+                                {
+                                    ts.LandStatus = LandStatus.Gift;
+                                }
                             }
-                            else if (worksheet.Cells[i, 10].Value.ToString().ToLower().Trim() == "tanah berian")
+                            else
                             {
-                                ts.LandStatus = LandStatus.Gift;
+                                ts.LandStatus = LandStatus.Others;
                             }
                         }
                         else
                         {
                             ts.LandStatus = LandStatus.Others;
                         }
-                        ts.LandLocation = worksheet.Cells[i, 11].Value != null ? worksheet.Cells[i, 11].Value.ToString().Trim() : "";
-                        ts.Size = worksheet.Cells[i, 12].Value != null ? decimal.Parse(worksheet.Cells[i, 12].Value.ToString().Trim().Split(" ")[0].Replace(",", ".")) : 0;
-                        ts.PlantTypes = worksheet.Cells[i, 14].Value != null ? worksheet.Cells[i, 14].Value.ToString().Trim() : "";
-                        ts.Notes = worksheet.Cells[i, 15].Value != null ? worksheet.Cells[i, 15].Value.ToString().Trim() : "";
+
+                        ts.LandLocation = worksheet.Cells[i, 10].Value != null ? worksheet.Cells[i, 10].Value.ToString().Trim() : "";
+
+                        if (worksheet.Cells[i, 11].Value != null)
+                        {
+                            if (decimal.TryParse(worksheet.Cells[i, 11].Value.ToString().Trim().Split(" ")[0].Replace(",", "."), out size))
+                            {
+                                ts.Size = size;
+                            }
+                            else
+                            {
+                                ts.Size = 0;
+                            }
+                        }
+                        else
+                        {
+                            ts.Size = 0;
+                        }
+
+                        ts.PlantTypes = worksheet.Cells[i, 12].Value != null ? worksheet.Cells[i, 12].Value.ToString().Trim() : "";
+                        ts.Notes = worksheet.Cells[i, 13].Value != null ? worksheet.Cells[i, 13].Value.ToString().Trim() : "";
 
                         Post(ts);
                     }
-                                        
+
                     //file.Delete();
                     return ts;
                 }
