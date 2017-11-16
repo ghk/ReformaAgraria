@@ -126,6 +126,7 @@ export class UserManagementComponent {
     clearForm() {
         this.email = '';
         this.id = '';
+        this.model.FullName = '';
         this.model.Email = '';
         this.model.Password = '';
         this.model.newEmail = '';
@@ -192,6 +193,13 @@ export class UserManagementComponent {
         else {
             this.invalidPassword = "";
         }
+
+        if (this.invalidPassword == "" && this.unmatchedPassword == "") {
+            this.isValid = true;
+        }
+        else {
+            this.isValid = false;
+        }
     }
 
     validatePasswordMatch() {
@@ -206,7 +214,7 @@ export class UserManagementComponent {
             this.unmatchedPassword = "";
         }
 
-        if (this.model.newPassword == "" && this.model.confirmPassword == "") {
+        if (this.invalidPassword == "" && this.unmatchedPassword == "") {
             this.isValid = true;
         }
         else {
