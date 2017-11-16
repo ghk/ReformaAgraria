@@ -19,10 +19,11 @@ namespace ReformaAgraria.Models
             if (context.Users.Any(r => r.UserName == "admin@admin.com")) return;
 
             //Create the default Admin account and apply the Administrator role
+            string fullName = "Administrator";
             string user = "admin@admin.com";
             string email = "admin@admin.com";
             string password = "admin";
-            var result = await userManager.CreateAsync(new ReformaAgrariaUser { UserName = user, Email = email, EmailConfirmed = true }, password);
+            var result = await userManager.CreateAsync(new ReformaAgrariaUser { UserName = user, Email = email, FullName = fullName, EmailConfirmed = true }, password);
 
             var newUser = await userManager.FindByNameAsync(user);
             if (!context.UserClaims.Any(r => r.ClaimType == ClaimTypes.Role && r.ClaimValue == "Administrator"))

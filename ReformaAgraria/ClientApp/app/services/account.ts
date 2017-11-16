@@ -62,11 +62,10 @@ export class AccountService {
             .map(res => res.json());
     }
 
-    changePassword(id: string, currentPassword: string, newPassword: string) {
+    changePassword(id: string, newPassword: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         let params = new URLSearchParams();
         params.append('id', id);
-        params.append('currentPassword', currentPassword);
         params.append('newPassword', newPassword);
         requestOptions.params = params;
         return this.http.post('/api/account/changepassword', params);

@@ -99,7 +99,7 @@ namespace ReformaAgraria.Controllers
                 try
                 {
 
-                    var user = new ReformaAgrariaUser { UserName = model.Email, Email = model.Email };
+                    var user = new ReformaAgrariaUser { UserName = model.Email, Email = model.Email, FullName = model.FullName };
                     user.Claims.Add(new IdentityUserClaim<string>
                     {
                         ClaimType = "external",
@@ -184,16 +184,12 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("changepassword")]
-        public async Task<IActionResult> ChangePassword(string id, string currentPassword, string newPassword)
+        public async Task<IActionResult> ChangePassword(string id, string newPassword)
         {
             var user = _userManager.FindByIdAsync(id).Result;
-
-            if (await _userManager.CheckPasswordAsync(user, currentPassword))
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                return await ResetPassword(id, token, newPassword);
-            }
-            return BadRequest();
+            
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            return await ResetPassword(id, token, newPassword);
         }
 
         [HttpGet("user")]
@@ -205,7 +201,8 @@ namespace ReformaAgraria.Controllers
             {
                 result.Add(new ReformaAgrariaUser {
                     Id = user.Id,
-                    Email = user.Email
+                    Email = user.Email,
+                    FullName = user.FullName
                 });
             }
             return result;

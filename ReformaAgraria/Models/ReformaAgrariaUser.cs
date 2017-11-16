@@ -8,6 +8,7 @@ namespace ReformaAgraria.Models
 {
     public class ReformaAgrariaUser: IdentityUser
     {
+        public string FullName { get; set; }
         /// <summary>
         /// Navigation property for the roles this user belongs to.
         /// </summary>

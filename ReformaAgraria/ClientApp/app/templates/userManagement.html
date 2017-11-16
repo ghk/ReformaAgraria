@@ -4,7 +4,7 @@
         <nav class="col-sm-3 col-md-2 col-xl-2 d-none d-sm-block sidebar bg-dark">
             <ra-sidenav></ra-sidenav>
         </nav>
-        <main class="col-sm-9 col-md-10 ml-sm-auto pt-4" role="main">    
+        <main class="col-sm-9 col-md-10 ml-sm-auto pt-4" role="main">
 
             <div class="card w-100">
                 <div class="card-body">
@@ -13,10 +13,10 @@
                         <div class="row">
                             <div class="col-12">
                                 <h2 class="card-title">Manajemen Akun</h2>
-                                    
-                                    <div class="nav justify-content-end my-2 mr-3">
+
+                                <div class="nav justify-content-end my-2 mr-3">
                                     <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalAddUser" title="Tambah Akun" (click)="clearForm()"><span class="oi oi-plus"></span></button>
-                                    </div>
+                                </div>
 
                                 <table class="table table-responsive">
                                     <thead>
@@ -29,18 +29,18 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let user of allUsers">
-                                            <td>Nama</td>
+                                            <td>{{user.fullName}}</td>
                                             <td>{{user.email}}</td>
                                             <td span="2">
                                                 <div class="dropdown show">
-                                                    <button class="btn btn-link dropdown-toggle" href="javascript:void(0)" title="Rubah Email atau Password" role="button" id="dropdownEditLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <button class="btn btn-link dropdown-toggle" href="javascript:void(0)" title="Ubah Email atau Password" role="button" id="dropdownEditLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <span class="oi oi-pencil"></span>
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownEditLink">
-                                                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalEditEmail" (click)="update(user.id)">Rubah Email</button>
-                                                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalEditPassword" (click)="update(user.id, user.email)">Rubah Password</button>
+                                                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalEditEmail" (click)="update(user.id, user.email)">Ubah Email</button>
+                                                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalEditPassword" (click)="update(user.id, user.email)">Ubah Password</button>
                                                     </div>
-                                                </div> 
+                                                </div>
                                             </td>
                                             <td><button class="btn btn-link" data-toggle="modal" data-target="#modalDelete" href="javascript:void(0)" title="Hapus" (click)="delete(user.id, user.email)"><span class="oi oi-x"></span></button></td>
                                         </tr>
@@ -49,9 +49,9 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
-            </div> 
+            </div>
 
         </main>
     </div>
@@ -60,159 +60,152 @@
 
 
 <!-- Modal -->
-
 <!-- modal addUser -->
 
 <div class="modal fade" id="modalAddUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Tambah Pengguna</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
 
-        <div class="modal-body">
-            <div class="col-12">
-                <ra-alert></ra-alert>
-                <form name="form" class="was-validated">
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label for="email">Nama</label>
-                            <input type="text" class="form-control" name="email" placeholder="Nama" [(ngModel)]="model.Name"/>
+        <div class="modal-content">
+            <form name="form" class="was-validated" (submit)="isValid && addUser()">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tambah Pengguna</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="col-12">
+                        <ra-alert></ra-alert>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="email">Nama</label>
+                                <input type="text" class="form-control" name="name" placeholder="Nama" [(ngModel)]="model.FullName" />
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" name="email" placeholder="Email" [(ngModel)]="model.Email" #email="ngModel" required (keyup)="validateAddUserForm($event)" />
+                                <label for="email" id="invalidEmail" *ngIf="invalidEmail.length > 0">{{this.invalidEmail}}</label>
+                            </div>
                         </div>
 
-                        <div class="form-group col-md-12">
-                            <label for="email">Email</label>
-                            <input type="text" class="form-control" name="email" placeholder="Email" [(ngModel)]="model.Email" #email="ngModel" required />
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control is-invalid" name="password" placeholder="Password" [(ngModel)]="model.Password" #password="ngModel" required (keyup)="validateAddUserForm($event)" />
+                                <label for="password" id="invalidPassword" *ngIf="invalidPassword.length > 0">{{this.invalidPassword}}</label>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control is-invalid" name="password" placeholder="Password" [(ngModel)]="model.Password" #password="ngModel" required />
-                        </div>  
-                    </div>
-                </form>
-            </div>   
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="showListUser()" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
         </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="showListUser()" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" (click)="addUser()">Save changes</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
-  <!-- end modal addUser -->
+<!-- end modal addUser -->
+<!-- start modal change email -->
 
-
-  <!-- start modal change email -->
-
-  <div class="modal fade" id="modalEditEmail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalEditEmail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ganti email</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
+        <form name="form" class="was-validated" (submit)="isValid && updateUser()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ganti email</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-            <div class="col-12">
-                <ra-alert></ra-alert>
-
-                <form name="form" novalidate>
-                    <div class="form-row">
-                        <div class="form-group col-md-12 was-validated">
-                            <label for="newEmail">Email</label>
-                            <input type="text" class="form-control" name="newEmail" [(ngModel)]="model.newEmail" #newEmail="ngModel" required />
-                            <small id="changeEmaillHelp" class="form-text text-muted">Masukan email baru anda</small>
+                    <div class="col-12">
+                        <div class="form-row">
+                            <div class="form-group col-md-12 was-validated">
+                                <label for="newEmail">Email</label>
+                                <input type="text" class="form-control" onfocus="this.select();" name="newEmail" [(ngModel)]="model.newEmail" #newEmail="ngModel" required (keyup)="validateUpdateEmailForm($event)" />
+                                <small id="changeEmaillHelp" class="form-text text-muted">Masukan email baru anda</small>
+                                <label for="newEmail" *ngIf="invalidEmail.length > 0">{{this.invalidEmail}}</label>
+                            </div>
                         </div>
-                    </div>
-                </form> 
 
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="showListUser()" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
             </div>
-               
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="showListUser()" data-dismiss="modal">Tutup</button>
-          <button type="button" class="btn btn-primary" (click)="updateUser()">Simpan</button>
-        </div>
-      </div>
+        </form>
     </div>
-  </div>
+</div>
 
 <!-- end modal change email -->
-
-
 <!-- start modal change password -->
 
 <div class="modal fade" id="modalEditPassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Ganti password</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-          
-                <div class="col-12">
-                    <!--<ra-alert></ra-alert>-->
-                    <form name="form" class="was-validated">
-                        <div class="form-group">
-                            <label for="currentPassword">Password lama</label>
-                            <input type="password" class="form-control" name="currentPassword" [(ngModel)]="model.currentPassword" #password="ngModel" required/>
-                            <small id="changePasswordlHelp" class="form-text text-muted">Masukan password lama anda</small>
-                        </div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form name="form" class="was-validated" (submit)="isValid && changePassword()">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ganti password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="col-12">
                         <div class="form-group">
                             <label for="newPassword">Password Baru</label>
-                            <input type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #password="ngModel" required/>
+                            <input type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #password="ngModel" required (keyup)="validateUpdatePasswordForm($event)" />
                             <small id="changePasswordlHelp1" class="form-text text-muted"></small>
+                            <label for="newPassword" *ngIf="invalidPassword.length > 0">{{this.invalidPassword}}</label>
                         </div>
                         <div class="form-group">
                             <label for="confirmPassword">Konfirmasi Password Baru</label>
-                            <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #password="ngModel" required />
+                            <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #password="ngModel" required (keyup)="validatePasswordMatch($event)" />
+                            <label for="confirmPassword" *ngIf="unmatchedPassword.length > 0">{{this.unmatchedPassword}}</label>
                         </div>
-                    </form>
+                    </div>
+
                 </div>
-            
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-              <button type="button" class="btn btn-primary" (click)="changePassword()">Simpan</button>
-            </div>
-          </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
         </div>
-      </div>
+    </div>
+</div>
 
 <!-- end modal change password -->
-
 <!-- start modal deleteUser -->
 
 <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="alert alert-light alert-dismissible fade show" role="alert">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <div class="form-row col-12">
-                    <div class="col-12">
-                        <h2 class="alert-heading">Hapus data?</h2>
-                    </div>
-                </div>
-                <div class="nav justify-content-end pb-2 mt-4 mr-3">
-                    <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-danger" (click)="deleteUser()" data-dismiss="modal">Hapus</button>        
+    <div class="modal-dialog" role="document">
+        <div class="alert alert-light alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="form-row col-12">
+                <div class="col-12">
+                    <h2 class="alert-heading">Hapus data?</h2>
                 </div>
             </div>
-        </div>  
+            <div class="nav justify-content-end pb-2 mt-4 mr-3">
+                <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-danger" (click)="deleteUser()" data-dismiss="modal">Hapus</button>
+            </div>
+        </div>
     </div>
+</div>
 
 <!-- end modal deleteUser -->
