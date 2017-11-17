@@ -8,6 +8,7 @@ using ReformaAgraria.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ReformaAgraria.Controllers
 {
@@ -21,6 +22,14 @@ namespace ReformaAgraria.Controllers
         {
             _hostingEnvironment = hostingEnvironment;
             _contextAccessor = contextAccessor;
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteObject(int id)
+        {
+            Delete(id);
+
+            return Ok();
         }
 
         [HttpGet("export")]
@@ -71,6 +80,7 @@ namespace ReformaAgraria.Controllers
         {
             var formFile = HttpContext.Request.ReadFormAsync().Result.Files[0];
             string regionId = HttpContext.Request.Cookies["regionId"].ToString();
+            decimal size;
 
             var path = Path.Combine(
                         Directory.GetCurrentDirectory(), "wwwroot",
@@ -80,61 +90,128 @@ namespace ReformaAgraria.Controllers
             {
                 formFile.CopyTo(stream);
             }
-            
+
             FileInfo file = new FileInfo(path);
             try
             {
                 using (ExcelPackage package = new ExcelPackage(file))
                 {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                    ExcelWorkbook workbook = package.Workbook;
                     ToraObject to = new ToraObject();
 
-                    to.FkRegionId = regionId;
-                    to.Name = worksheet.Cells[3, 4].Value != null ? worksheet.Cells[3, 4].Value.ToString().Trim() : "";
-                    to.Size = worksheet.Cells[7, 4].Value != null ? decimal.Parse(worksheet.Cells[7, 4].Value.ToString().Trim().Split(" ")[0].Replace(",", ".")) : 0;
-                    to.TotalTenants = worksheet.Cells[8, 4].Value != null ? worksheet.Cells[8, 4].Value.ToString().Trim().Split(" ")[0] : "";
-                    if (worksheet.Cells[9, 4].Value.ToString().ToLower().Trim() == "hutan")
+                    if (workbook.Worksheets.Count > 0)
                     {
-                        to.RegionalStatus = RegionalStatus.Forest;
-                    }
-                    else if (worksheet.Cells[9, 4].Value.ToString().ToLower().Trim() == "non hutan")
-                    {
-                        to.RegionalStatus = RegionalStatus.NonForest;
-                    }
-                    to.LandType = worksheet.Cells[10, 4].Value != null ? worksheet.Cells[10, 4].Value.ToString().Trim() : "";
-                    to.Livelihood = worksheet.Cells[11, 4].Value != null ? worksheet.Cells[11, 4].Value.ToString().Trim() : "";
-                    to.ProposedTreatment = worksheet.Cells[12, 4].Value != null ? worksheet.Cells[12, 4].Value.ToString().Trim() : "";
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                        int rowCount = worksheet.Dimension.Rows;
+                        Dictionary<string, int> objectIdDict = new Dictionary<string, int>();
+                        List<Dictionary<string, int>> objectIdList = new List<Dictionary<string, int>>();
 
-                    if (worksheet.Cells[14, 4].Value != null)
-                    {
-                        if (worksheet.Cells[14, 4].Value.ToString().ToLower().Contains("negara"))
+                        for (int i = 1; i <= rowCount; i+=22)
                         {
-                            to.LandStatus = LandStatus.Government;
+                            if (worksheet.Cells[i, 1].Value != null)
+                            {
+                                if (worksheet.Cells[i, 1].Value.ToString().Trim().ToLower() == "no")
+                                {
+                                    to = new ToraObject();
+                                    to.FkRegionId = regionId;
+                                    to.Name = worksheet.Cells[(i + 2), 4].Value != null ? worksheet.Cells[(i + 2), 4].Value.ToString().Trim() : "";
+
+                                    if (worksheet.Cells[(i + 6), 4].Value != null)
+                                    {
+                                        if (decimal.TryParse(worksheet.Cells[(i + 6), 4].Value.ToString().Trim().Split(" ")[0].Replace(",", "."), out size))
+                                        {
+                                            to.Size = size;
+                                        }
+                                        else
+                                        {
+                                            to.Size = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        to.Size = 0;
+                                    }
+
+                                    to.TotalTenants = worksheet.Cells[(i + 7), 4].Value != null ? worksheet.Cells[(i + 7), 4].Value.ToString().Trim().Split(" ")[0] : "";
+
+                                    if (worksheet.Cells[(i + 8), 4].Value != null)
+                                    {
+                                        if (worksheet.Cells[(i + 8), 4].Value.ToString().Trim() != "-")
+                                        {
+                                            if (worksheet.Cells[(i + 8), 4].Value.ToString().ToLower().Trim() == "hutan")
+                                            {
+                                                to.RegionalStatus = RegionalStatus.Forest;
+                                            }
+                                            else if (worksheet.Cells[(i + 8), 4].Value.ToString().ToLower().Trim() == "non hutan")
+                                            {
+                                                to.RegionalStatus = RegionalStatus.NonForest;
+                                            }
+                                            else
+                                            {
+                                                to.RegionalStatus = RegionalStatus.NotSpecified;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            to.RegionalStatus = RegionalStatus.NotSpecified;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        to.RegionalStatus = RegionalStatus.NotSpecified;
+                                    }
+
+                                    to.LandType = worksheet.Cells[(i + 9), 4].Value != null ? worksheet.Cells[(i + 9), 4].Value.ToString().Trim() : "";
+                                    to.Livelihood = worksheet.Cells[(i + 10), 4].Value != null ? worksheet.Cells[(i + 10), 4].Value.ToString().Trim() : "";
+                                    to.ProposedTreatment = worksheet.Cells[(i + 11), 4].Value != null ? worksheet.Cells[(i + 11), 4].Value.ToString().Trim() : "";
+
+                                    if (worksheet.Cells[(i + 13), 4].Value != null)
+                                    {
+                                        if (worksheet.Cells[(i + 13), 4].Value.ToString().Trim() != "-")
+                                        {
+                                            if (worksheet.Cells[(i + 13), 4].Value.ToString().ToLower().Contains("negara"))
+                                            {
+                                                to.LandStatus = LandStatus.Government;
+                                            }
+                                            else if (worksheet.Cells[(i + 13), 4].Value.ToString().ToLower().Contains("swasta"))
+                                            {
+                                                to.LandStatus = LandStatus.Private;
+                                            }
+                                            else
+                                            {
+                                                to.LandStatus = LandStatus.Others;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            to.LandStatus = LandStatus.Others;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        to.LandStatus = LandStatus.Others;
+                                    }
+
+                                    to.LandTenureHistory = worksheet.Cells[(i + 15), 3].Value != null ? worksheet.Cells[(i + 15), 3].Value.ToString().Trim() : "";
+                                    to.ConflictChronology = worksheet.Cells[(i + 18), 4].Value != null ? worksheet.Cells[(i + 18), 4].Value.ToString().Trim() : "";
+                                    to.FormalAdvocacyProgress = worksheet.Cells[(i + 20), 4].Value != null ? worksheet.Cells[(i + 20), 4].Value.ToString().Trim() : "";
+                                    to.NonFormalAdvocacyProgress = worksheet.Cells[(i + 22), 4].Value != null ? worksheet.Cells[(i + 22), 4].Value.ToString().Trim() : "";
+
+                                    int objectId = Post(to);
+                                    objectIdDict.Add(to.Name, objectId);
+                                }
+                            }
                         }
-                        else if (worksheet.Cells[14, 4].Value.ToString().ToLower().Contains("swasta"))
+
+                        objectIdList.Add(objectIdDict);
+
+                        if (objectIdList.Count > 0 && workbook.Worksheets.Count > 1)
                         {
-                            to.LandStatus = LandStatus.Private;
-                        }
-                        else
-                        {
-                            to.LandStatus = LandStatus.Others;
+                            ToraSubjectController ts = new ToraSubjectController((ReformaAgrariaDbContext)dbContext, _hostingEnvironment);
+                            ts.Import(objectIdList, package);
                         }
                     }
-                    else
-                    {
-                        to.LandStatus = LandStatus.Others;
-                    }
 
-                    to.LandTenureHistory = worksheet.Cells[16, 3].Value != null ? worksheet.Cells[16, 3].Value.ToString().Trim() : "";
-                    to.ConflictChronology = worksheet.Cells[19, 4].Value != null ? worksheet.Cells[19, 4].Value.ToString().Trim() : "";
-                    to.FormalAdvocacyProgress = worksheet.Cells[21, 4].Value != null ? worksheet.Cells[21, 4].Value.ToString().Trim() : "";
-                    to.NonFormalAdvocacyProgress = worksheet.Cells[22, 4].Value != null ? worksheet.Cells[22, 4].Value.ToString().Trim() : "";
-
-                    int id = Post(to);
-
-                    ToraSubjectController ts = new ToraSubjectController((ReformaAgrariaDbContext)dbContext, _hostingEnvironment);
-                    ts.Import(id, package);
-                    
                     file.Delete();
                     return to;
                 }
@@ -144,7 +221,7 @@ namespace ReformaAgraria.Controllers
                 throw ex;
             }
         }
-        
+
         protected override IQueryable<ToraObject> ApplyQuery(IQueryable<ToraObject> query)
         {
             var type = GetQueryString<string>("type");

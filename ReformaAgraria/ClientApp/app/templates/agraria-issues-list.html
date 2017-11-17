@@ -27,15 +27,14 @@
                 </div>
                 <div class="modal-body">
                     <div class="col-12">
-                            
                         <form>
                             <div class="form-row pt-2">
                                 <div class="form-group col-md-12">
                                     <label for="uploadFile">Unggah berkas</label>
                                     <label class="custom-file">
-                                        <input type="file" class="custom-file-input" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
+                                        <input type="file" class="custom-file-input" (change)="uploadFile($event)" placeholder="Upload file" accept=".xls,.xlsx" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
                                         <small id="uploadHelpBlock" class="form-text text-muted">
-                                            File Ms.Excel (.xl .xls)
+                                            File Ms.Excel (.xls .xlsx)
                                         </small>
                                         <span class="custom-file-control text-muted">
                                             <span class="oi oi-cloud-upload pr-3"></span>
@@ -58,7 +57,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan data</button>
                 </div>
                 </div>
             </div>
@@ -367,474 +365,217 @@
                 </thead>
 
                 <tbody>
+                    <ng-container *ngFor="let object of objectList">
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">{{object.name}}</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">{{object.totalTenants}}</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">{{LandStatus[object.landStatus]}}</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable text-success">{{object.proposedTreatment}}</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">Image</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">Penetapan</td>
+                            <td data-toggle="tooltip" data-placement="top" title="edit">
+                                <div class="dropdown">
+                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuEdit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="oi oi-pencil" title="Edit"></span>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuEdit">
+                                        <button class="dropdown-item" type="button">Edit Objek</button>
+                                        <button class="dropdown-item" type="button">Edit Subjek</button>
+                                    </div>
+                                </div>  
+                            </td>
+                            <td data-toggle="modal" data-target="#exampleModal1" title="hapus"><button type="button" class="btn btn-link"><span class="oi oi-trash" title="Hapus"></span></button></td>
+                            <td id="{{ 'toggle-' + object.id }}" data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id, object.id)"><button type="button" class="btn btn-link btn-sm"><img src="/images/ic_keyboard_arrow_up_black_24dp_2x.png" class="spin-icon"></button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">
+                                <div id="{{ 'accordion-' + object.id }}" class="collapse">
 
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td data-toggle="collapse" data-target="#accordion" class="clickable">Hibulas</td>
-                        <td data-toggle="collapse" data-target="#accordion" class="clickable">4 KK</td>
-                        <td data-toggle="collapse" data-target="#accordion" class="clickable">Ada kebun warga</td>
-                        <td data-toggle="collapse" data-target="#accordion" class="clickable text-success">Pelepasan kawasan hutan</td>
-                        <td data-toggle="collapse" data-target="#accordion" class="clickable">Image</td>
-                        <td data-toggle="collapse" data-target="#accordion" class="clickable">Penetapan</td>
-                        <td data-toggle="tooltip" data-placement="top" title="edit">
-                            <div class="dropdown">
-                                <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuEdit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="oi oi-pencil" title="Edit"></span>
-                                </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuEdit">
-                                <button class="dropdown-item" type="button">Edit Objek</button>
-                                <button class="dropdown-item" type="button">Edit Subjek</button>
-                            </div>
-                            </div>
-                        </td>
-                        <td data-toggle="modal" data-target="#exampleModal1" title="hapus"><button type="button" class="btn btn-link"><span class="oi oi-trash" title="Hapus"></span></button></td>
-                        <td id="toggle1" data-toggle="collapse" data-target="#accordion" class="clickable" (click)="onToggle('toggle1')"><button type="button" class="btn btn-link btn-sm"><img src="/images/ic_keyboard_arrow_up_black_24dp_2x.png" class="spin-icon"></button></td>
-                    </tr>
+                                    <ul class="nav nav-tabs my-3 navObjekSUbjek" id="objekSubjekTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="dataObjekTab" data-toggle="tab" href="#dataObjek" role="tab" aria-controls="dataObjek" aria-selected="true">Data objek</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="dataSubjekTab" data-toggle="tab" href="#dataSubjek" role="tab" aria-controls="dataSubjek" aria-selected="false">Data subjek</a>
+                                        </li>
+                                    </ul>
 
-                    <tr>
-                        <td colspan="12">
-                            <div id="accordion" class="collapse">
+                                    <div class="tab-content" id="subjekObjekTabContent">
+                                        <div class="tab-pane fade show active" id="dataObjek" role="tabpanel" aria-labelledby="dataObjek">
 
-                                <ul class="nav nav-tabs my-3 navObjekSUbjek" id="objekSubjekTab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="dataObjekTab" data-toggle="tab" href="#dataObjek" role="tab" aria-controls="dataObjek" aria-selected="true">Data objek</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="dataSubjekTab" data-toggle="tab" href="#dataSubjek" role="tab" aria-controls="dataSubjek" aria-selected="false">Data subjek</a>
-                                    </li>
-                                </ul>
+                                            <table class="table table-bordered table-responsive bg-light my-3 table-object">
+                                                <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
 
-                                <div class="tab-content" id="subjekObjekTabContent">
-                                    <div class="tab-pane fade show active" id="dataObjek" role="tabpanel" aria-labelledby="dataObjek">
-
-                                        <table class="table table-bordered table-responsive bg-light my-3 table-object">
-                                            <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
-
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">No</th>
-                                                    <th scope="col" colspan="3">Informasi Umum</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td scope="row">Nama Lokasi</td>
-                                                    <td colspan="2">{{issueList.name}}</td>
-                                                    
-                                                </tr>
-
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>Desa</td>
-                                                    <td colspan="2">Desa</td>
-                                                </tr>
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">No</th>
+                                                        <th scope="col" colspan="2">Informasi Umum</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">1</th>
+                                                        <td scope="row" colspan="1">Nama Lokasi</td>
+                                                        <td colspan="2">{{object.name}}</td>
+                                                    </tr>
 
                                                     <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>Kecamatan</td>
-                                                    <td colspan="2">Kecamatan</td>
-                                                </tr>
+                                                        <th scope="row">2</th>
+                                                        <td>Desa</td>
+                                                        <td colspan="2">Desa</td>
+                                                    </tr>
 
-                                                <tr>
-                                                    <th scope="row">4</th>
-                                                    <td>Kabupaten/Provinsi</td>
-                                                    <td colspan="2">Kabupaten/Provinsi</td>
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="row">3</th>
+                                                        <td>Kecamatan</td>
+                                                        <td> colspan="2"Kecamatan</td>
+                                                    </tr>
 
-                                                <tr>
-                                                    <th scope="row">5</th>
-                                                    <td>Luas Wilayah Objek</td>
-                                                    <td colspan="2">{{issueList.size}}</td>
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="row">4</th>
+                                                        <td>Kabupaten/Provinsi</td>
+                                                        <td colspan="2">Kabupaten/Provinsi</td>
+                                                    </tr>
 
-                                                <tr>
-                                                    <th scope="row">6</th>
-                                                    <td>Jumlah Penggarap</td>
-                                                    <td colspan="2">{{issueList.totalTenants}}</td>
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="row">5</th>
+                                                        <td>Luas Wilayah Objek</td>
+                                                        <td colspan="2">{{object.size}}</td>
+                                                    </tr>
 
-                                                <tr>
-                                                    <th scope="row">7</th>
-                                                    <td>Status Kawasan</td>
-                                                    <td colspan="2">{{RegionalStatus[issueList.regionalStatus]}}</td>
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="row">6</th>
+                                                        <td>Jumlah Penggarap</td>
+                                                        <td colspan="2">{{object.totalTenants}}</td>
+                                                    </tr>
 
-                                                <tr>
-                                                    <th scope="row">8</th>
-                                                    <td>Klasifikasi bentang Lahan</td>
-                                                    <td colspan="2">{{issueList.landType}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <th scope="row">9</th>
-                                                    <td>Tipe Penggunaan Lahan</td>
-                                                    <td colspan="2">{{issueList.livelihood}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <th scope="row">10</th>
-                                                    <td>Usulan Skema</td>
-                                                    <td colspan="2">{{issueList.proposedTreatment}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <th scope="row">11</th>
-                                                    <td>Tahapan</td>
-                                                    <td colspan="2">Tahapan</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <th scope="col">No</th>
-                                                    <th scope="col" colspan="3">Data Pendukung</th>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>Status Tanah</td>
-                                                    <td colspan="2">{{LandStatus[issueList.landStatus]}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>Sejarah Penguasaan Tanah</td>
-                                                    <td colspan="2">{{issueList.landTenureHistory}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>Kronologi Konflik</td>
-                                                    <td colspan="2">{{issueList.conflictChronology}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <th scope="row" rowspan="4">4</th>
-                                                    <td rowspan="4">Progres Langkah Advokasi</td>
-                                                    <td rowspan="2">Jalur Formal: {{issueList.formalAdvocacyProgress}}</td>
-                                                    <td rowspan="2">isi jalur formal</td>
-                                                </tr>
-                                                   
-                                                <tr>
-                                                 
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="row">7</th>
+                                                        <td>Status Kawasan</td>
+                                                        <td colspan="2">{{RegionalStatus[object.regionalStatus]}}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th scope="row">8</th>
+                                                        <td>Klasifikasi bentang Lahan</td>
+                                                        <td colspan="2">{{object.landType}}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th scope="row">9</th>
+                                                        <td>Tipe Penggunaan Lahan</td>
+                                                        <td colspan="2">{{object.livelihood}}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th scope="row">10</th>
+                                                        <td>Usulan Skema</td>
+                                                        <td colspan="2">{{object.proposedTreatment}}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th scope="row">11</th>
+                                                        <td>Tahapan</td>
+                                                        <td colspan="2">Tahapan</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th scope="col">No</th>
+                                                        <th scope="col" colspan="2">Data Pendukung</th>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th scope="row">1</th>
+                                                        <td>Status Tanah</td>
+                                                        <td colspan="2">{{LandStatus[object.landStatus]}}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th scope="row">2</th>
+                                                        <td>Sejarah Penguasaan Tanah</td>
+                                                        <td colspan="2">{{object.landTenureHistory}}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th scope="row">3</th>
+                                                        <td>Kronologi Konflik</td>
+                                                        <td colspan="2">{{object.conflictChronology}}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                            <th scope="row" rowspan="4">4</th>
+                                                            <td rowspan="4">Progres Langkah Advokasi</td>
+                                                            <td rowspan="2">Jalur Formal: {{issueList.formalAdvocacyProgress}}</td>
+                                                            <td rowspan="2">isi jalur formal</td>
+                                                        </tr>
+                                                           
+                                                        <tr>
+                                                         
+                                                        </tr>
+                                                            
+                                                        <tr>
+                                                            <td rowspan="2">Non Formal: {{issueList.nonFormalAdvocacyProgress}}</td>
+                                                            <td rowspan="2">isi jalur non formal</td>
+                                                        </tr>
+        
+                                                        <tr>
                                                     
-                                                <tr>
-                                                    <td rowspan="2">Non Formal: {{issueList.nonFormalAdvocacyProgress}}</td>
-                                                    <td rowspan="2">isi jalur non formal</td>
-                                                </tr>
+                                                        </tr>
+        
+                                                        <tr>
+                                                            <th scope="row">3</th>
+                                                            <td>Koordinat peta</td>
+                                                            <td colspan="2">isi koordinat peta</td>
+                                                        </tr>
+                                                </tbody>
+                                            </table>
 
-                                                <tr>
-                                            
-                                                </tr>
+                                        </div>
+                                        <div class="tab-pane fade" id="dataSubjek" role="tabpanel" aria-labelledby="dataSubjek">
 
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>Koordinat peta</td>
-                                                    <td colspan="2">isi koordinat peta</td>
-                                                </tr>
+                                            <table class="table table-bordered table-striped table-sm table-subject">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Nama</th>
+                                                        <th scope="col">Status pernikahan</th>
+                                                        <th scope="col">Alamat</th>
+                                                        <th scope="col">Jenis kelamin</th>
+                                                        <th scope="col">Umur</th>
+                                                        <th scope="col">Pendidikan</th>
+                                                        <th scope="col">Jumlah keluarga</th>
+                                                        <th scope="col">Status tanah</th>
+                                                        <th scope="col">Lokasi lahan garapan</th>
+                                                        <th scope="col">Luas (ha)</th>
+                                                        <th scope="col">Jenis tanaman</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngFor="let subject of subjectList">
+                                                    <tr>
+                                                        <th scope="row">1</th>
+                                                        <td>{{subject.name}}</td>
+                                                        <td>{{MaritalStatus[subject.maritalStatus]}}</td>
+                                                        <td>{{subject.address}}</td>
+                                                        <td>{{Gender[subject.gender]}}</td>
+                                                        <td>{{subject.age}}</td>
+                                                        <td>{{EducationalAttainment[subject.educationalAttainment]}}</td>
+                                                        <td>{{subject.totalFamilyMembers}}</td>
+                                                        <td>{{LandStatus[subject.landStatus]}}</td>
+                                                        <td>{{subject.landLocation}}</td>
+                                                        <td>{{subject.size}}</td>
+                                                        <td>{{subject.plantTypes}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
 
-                                            </tbody>
-                                        </table>
-                                        
+                                        </div>
                                     </div>
-                                    <div class="tab-pane fade" id="dataSubjek" role="tabpanel" aria-labelledby="dataSubjek">
 
-                                        <table class="table table-bordered table-striped table-sm table-subject">
-                                            <thead>
-                                                <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Nama</th>
-                                                <th scope="col">Status pernikahan</th>
-                                                <th scope="col">Alamat</th>
-                                                <th scope="col">Jenis kelamin</th>
-                                                <th scope="col">Umur</th>
-                                                <th scope="col">Pendidikan</th>
-                                                <th scope="col">Jumlah keluarga</th>
-                                                <th scope="col">Status tanah</th>
-                                                <th scope="col">Lokasi lahan garapan</th>
-                                                <th scope="col">Luas (ha)</th>
-                                                <th scope="col">Jenis tanaman</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>pouselana</td>
-                                                    <td>Menikah</td>
-                                                    <td>Dusun IV Siiovi</td>
-                                                    <td>L</td>
-                                                    <td>53 Tahun</td>
-                                                    <td>SD</td>
-                                                    <td>5</td>
-                                                    <td>Tanah warisan</td>
-                                                    <td></td>
-                                                    <td>2 Ha</td>
-                                                    <td>Kacang tanah, coklat, kemiri</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>pouselana</td>
-                                                    <td>Menikah</td>
-                                                    <td>Dusun IV Siiovi</td>
-                                                    <td>L</td>
-                                                    <td>53 Tahun</td>
-                                                    <td>SD</td>
-                                                    <td>5</td>
-                                                    <td>Tanah warisan</td>
-                                                    <td></td>
-                                                    <td>2 Ha</td>
-                                                    <td>Kacang tanah, coklat, kemiri</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>pouselana</td>
-                                                    <td>Menikah</td>
-                                                    <td>Dusun IV Siiovi</td>
-                                                    <td>L</td>
-                                                    <td>53 Tahun</td>
-                                                    <td>SD</td>
-                                                    <td>5</td>
-                                                    <td>Tanah warisan</td>
-                                                    <td></td>
-                                                    <td>2 Ha</td>
-                                                    <td>Kacang tanah, coklat, kemiri</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                    </div>
                                 </div>
-
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">Hibula</td>
-                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">10 KK</td>
-                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">Ada jalan warga</td>
-                        <td data-toggle="collapse" data-target="#accordion2" class="clickable text-success">Pelepasan kawasan hutan</td>
-                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">sit</td>
-                        <td data-toggle="collapse" data-target="#accordion2" class="clickable">Verifikasi</td>
-                        <td data-toggle="tooltip" data-placement="top" title="edit">
-                            <div class="dropdown">
-                                <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuEdit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="oi oi-pencil" title="Edit"></span>
-                                </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuEdit">
-                                <button class="dropdown-item" type="button">Edit Objek</button>
-                                <button class="dropdown-item" type="button">Edit Subjek</button>
-                            </div>
-                            </div>
-                        </td>
-                        <td data-toggle="modal" data-target="#exampleModal1" title="hapus"><button type="button" class="btn btn-link"><span class="oi oi-trash" title="Hapus"></span></button></td>
-                        <td id="toggle1" data-toggle="collapse" data-target="#accordion2" class="clickable" (click)="onToggle('toggle1')"><button type="button" class="btn btn-link btn-sm"><img src="/images/ic_keyboard_arrow_up_black_24dp_2x.png" class="spin-icon"></button></td>
-                    </tr>
-
-                    <tr>
-                        <td colspan="12">
-                            <div id="accordion2" class="collapse">
-                                
-                                <ul class="nav nav-tabs my-3 navObjekSUbjek" id="objekSubjekTab1" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="dataObjekTab" data-toggle="tab" href="#dataObjek1" role="tab" aria-controls="dataObjek" aria-selected="true">Data objek</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="dataSubjekTab" data-toggle="tab" href="#dataSubjek1" role="tab" aria-controls="dataSubjek" aria-selected="false">Data subjek</a>
-                                    </li>
-                                </ul>
-                                    
-                                <!-- tab content objek and subjek -->
-                                <div class="tab-content" id="objekSubjekTab1">
-                                    <div class="tab-pane fade show active" id="dataObjek1" role="tabpanel" aria-labelledby="dataObjek1">
-
-                                        <table class="table table-bordered table-responsive bg-light my-3 table-object">
-                                            <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
-
-                                            <thead>
-                                                <tr>
-                                                <th scope="col">No</th>
-                                                <th scope="col" colspan="2">Informasi Umum</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                <th scope="row">1</th>
-                                                <td scope="row">Nama Lokasi</td>
-                                                <td>Hibula</td>
-                                                </tr>
-
-                                                <tr>
-                                                <th scope="row">2</th>
-                                                <td>Desa</td>
-                                                <td>Otto</td>
-                                                </tr>
-
-                                                <tr>
-                                                <th scope="row">3</th>
-                                                <td>kecamatan</td>
-                                                <td>Sigi Biromaru</td>
-                                                </tr>
-
-                                                <tr>
-                                                <th scope="row">4</th>
-                                                <td>Kabupaten/Provinsi</td>
-                                                <td>Sigi</td>
-                                                </tr>
-
-                                                <tr>
-                                                <th scope="row">5</th>
-                                                <td>Luas Wilayah Objek</td>
-                                                <td>15 Ha</td>
-                                                </tr>
-
-                                                <tr>
-                                                <th scope="row">6</th>
-                                                <td>Jumlah Penggarap</td>
-                                                <td>19 KK</td>
-                                                </tr>
-
-                                                <tr>
-                                                <th scope="row">7</th>
-                                                <td>Status Kawasan</td>
-                                                <td>Tahura perbatasan dengan Hutan Lindung</td>
-                                                </tr>
-
-                                                <tr>
-                                                <th scope="row">8</th>
-                                                <td>Klasifikasi bentang Lahan</td>
-                                                <td>Pegunungan</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">9</th>
-                                                <td>Tipe Penggunaan Lahan</td>
-                                                <td>Kebun</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">10</th>
-                                                <td>Usulan Skema</td>
-                                                <td>Hutan Adat</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">11</th>
-                                                <td>Tahapan</td>
-                                                <td>Verifikasi</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="col">No</th>
-                                                <th scope="col" colspan="2">Data Pendukung</th>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">1</th>
-                                                <td>Status Tanah</td>
-                                                <td>Tahura Perbatasan dengan hutan lindung</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">2</th>
-                                                <td>Sejarah Penguasaan Tanah</td>
-                                                <td>Higira adalah pemukiman masyrakat pada zaman dulu. Hal tersebut dapat dibuktikan dengan adanya kuburan tua tempat dimakamkanya orang tua dulu. Tanah yang ada dikawasan tersebut yang dulunya telah dibuka oleh masyarakat yang dulu diwariskan sampai sekarang pada anak turunannya.</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">3</th>
-                                                <td>Kronologi Konflik</td>
-                                                <td>-</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">4</th>
-                                                <td>Progres Langkah Advokasi</td>
-                                                <td>-</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">5</th>
-                                                <td>Koordinat PETA</td>
-                                                <td>Image</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                    </div>
-
-                                    <div class="tab-pane fade" id="dataSubjek1" role="tabpanel" aria-labelledby="dataSubjek1">
-
-                                        <table class="table table-bordered table-striped table-sm table-subject">
-                                            <thead>
-                                                <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Nama</th>
-                                                <th scope="col">Status pernikahan</th>
-                                                <th scope="col">Alamat</th>
-                                                <th scope="col">Jenis kelamin</th>
-                                                <th scope="col">Umur</th>
-                                                <th scope="col">Pendidikan</th>
-                                                <th scope="col">Jumlah keluarga</th>
-                                                <th scope="col">Status tanah</th>
-                                                <th scope="col">Lokasi lahan garapan</th>
-                                                <th scope="col">Luas (ha)</th>
-                                                <th scope="col">Jenis tanaman</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>pouselana</td>
-                                                    <td>Menikah</td>
-                                                    <td>Dusun IV Siiovi</td>
-                                                    <td>L</td>
-                                                    <td>53 Tahun</td>
-                                                    <td>SD</td>
-                                                    <td>5</td>
-                                                    <td>Tanah warisan</td>
-                                                    <td></td>
-                                                    <td>2 Ha</td>
-                                                    <td>Kacang tanah, coklat, kemiri</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>pouselana</td>
-                                                    <td>Menikah</td>
-                                                    <td>Dusun IV Siiovi</td>
-                                                    <td>L</td>
-                                                    <td>53 Tahun</td>
-                                                    <td>SD</td>
-                                                    <td>5</td>
-                                                    <td>Tanah warisan</td>
-                                                    <td></td>
-                                                    <td>2 Ha</td>
-                                                    <td>Kacang tanah, coklat, kemiri</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>pouselana</td>
-                                                    <td>Menikah</td>
-                                                    <td>Dusun IV Siiovi</td>
-                                                    <td>L</td>
-                                                    <td>53 Tahun</td>
-                                                    <td>SD</td>
-                                                    <td>5</td>
-                                                    <td>Tanah warisan</td>
-                                                    <td></td>
-                                                    <td>2 Ha</td>
-                                                    <td>Kacang tanah, coklat, kemiri</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-
+                            </td>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
         </div>
@@ -858,7 +599,7 @@
             </div>
             <div class="nav justify-content-end pb-2 mt-4 mr-3">
                 <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-danger">Hapus</button>        
+                <button type="button" class="btn btn-danger" (click)="deleteObject(object.id)">Hapus</button>        
             </div>
          </div>
     </div>  

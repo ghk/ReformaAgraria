@@ -5,5 +5,6 @@ namespace ReformaAgraria.Models
     {
         Male = 0,
         Female = 1,
+        NotSpecified = 2
     }
 }

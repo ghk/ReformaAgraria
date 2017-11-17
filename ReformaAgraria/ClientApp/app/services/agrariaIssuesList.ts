@@ -38,7 +38,7 @@ export class AgrariaIssuesListService {
         }
     }
 
-    public getAll(query?: Query, progressListener?: any): Observable<Array<ToraObject>> {
+    public getAllObject(query?: Query, progressListener?: any): Observable<Array<ToraObject>> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
@@ -49,6 +49,24 @@ export class AgrariaIssuesListService {
         );
 
         return request.map(res => res.json()).catch(this.handleError);
+    }
+
+    public getAllSubject(query?: Query, progressListener?: any): Observable<Array<ToraObject>> {
+        let request = RequestHelper.getHttpRequest(
+            this.cookieService,
+            this.http,
+            'GET',
+            urljoin(this.serverUrl, 'torasubject'),
+            query,
+            progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public deleteObject(id: string) {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        return this.http.delete('/api/toraobject/delete/' + id, requestOptions);
     }
 
     private handleError(error: Response | any) {

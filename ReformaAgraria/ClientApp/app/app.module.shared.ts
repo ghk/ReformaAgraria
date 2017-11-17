@@ -5,6 +5,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ProgressHttpModule } from 'angular-progress-http';
 import { CommonModule } from '@angular/common';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
@@ -74,6 +76,8 @@ import './styles/app.scss';
         FormsModule,
         ProgressHttpModule,
         CommonModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot(),
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
