@@ -8,13 +8,15 @@
 
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ol class="breadcrumb mr-auto" style="background-color:#1976D2; margin-top:20px; padding: 0 0 0 20px">
-            <li class="breadcrumb-item" *ngFor="let r of (region | regionBreadcrumb)"><a [routerLink]="['/home', r.id]" href="javascript:void(0)" style="color:white">{{ r.name }}</a></li>
+        <ol class="breadcrumb mr-auto" style="background-color:#1976D2; margin-top:20px; padding: 0 0 0 20px;">
+            <li class="breadcrumb-item active" *ngFor="let r of (region | regionBreadcrumb)">
+                <a [routerLink]="['/home', r.id]" href="javascript:void(0)">{{ r.name }}</a>
+            </li>
         </ol>
         
         <ul class="navbar-nav">
             <li class="nav-item" [routerLink]="['/account/usermanagement']">
-                <a class="nav-link" href="javascript:void(0)"><span class="oi oi-people" aria-hidden="true"></span></a>
+                <a class="nav-link m-auto" href="javascript:void(0)"><span class="oi oi-people" aria-hidden="true"></span></a>
             </li>
         </ul>
 

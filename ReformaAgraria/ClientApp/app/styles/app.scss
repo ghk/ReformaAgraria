@@ -12,9 +12,9 @@ body {
     background-color: #EEEEEE; 
 }
 
-section {
+// section {
 
-}
+// }
 
 .container {
     padding-right: 5px;
@@ -31,15 +31,15 @@ h1 {
     border-bottom: 1px solid #eee;
 }
 
-h4 {
+// h4 {
 
-}
+// }
 
 /*list group*/
 
-.list-group .list-group-item {
+// .list-group .list-group-item {
 
-}
+// }
 
 /* Login image properti*/
 .image-login-style {
@@ -85,9 +85,9 @@ h4 {
     border-radius: 0;
 }
 
-.nav .nav-item {
+// .nav .nav-item {
     
-}
+// }
 
 .sidebar .nav .nav-item .nav-link {
     color: rgba(255,255,255,.5);
@@ -115,6 +115,7 @@ h4 {
 .navbar {
     background-color: #1976d2;
     box-shadow: 12px 0px 8px;
+    
 }
 
 .navbar-brand {
@@ -133,11 +134,27 @@ h4 {
 }
 
 .breadcrumb {
-    
+    background-color: #1976d2;
+    font-size: 14px;
+    line-height: 5px;
+    height: 5px;  
 }
 
-.breadcrumb .breadcrumb-item {
-    
+ol.breadcrumb li a {
+    text-decoration: none;
+    color: rgba(255,255,255,.5);
+}
+
+ol.breadcrumb .active {
+    color: #FFFFFF;
+}
+
+ol.breadcrumb li a:hover {
+    color: #FFFFFF;   
+}
+
+.breadcrumb .breadcrumb-item::before {
+    color: rgba(255,255,255,.5);
 }
 
 .card {
@@ -198,9 +215,9 @@ h4 {
 
 /*Listgroup*/
 
-.list-group {
+// .list-group {
     
-}
+// }
 
 /* Placeholders */
 
@@ -246,7 +263,7 @@ animation: spin 1100ms linear both;
     4.66% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     4.76% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     7.81% { transform: matrix3d(0.525, 0.851, 0, 0, -0.851, 0.525, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    10.77% { transform: matrix3d(-0.12, 0.993, 0, 0, -0.993, -0.12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+    10.77% { transform: matrix3d(-0.12, 0.993, q0, 0, -0.993, -0.12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     16.68% { transform: matrix3d(-0.783, 0.622, 0, 0, -0.622, -0.783, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     22.68% { transform: matrix3d(-0.954, 0.299, 0, 0, -0.299, -0.954, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     28.6% { transform: matrix3d(-0.991, 0.137, 0, 0, -0.137, -0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
@@ -293,3 +310,12 @@ animation: spin 1100ms linear both;
 .navObjekSubjek {
     font-size: 14px;
 }
+
+/* end text size */
+
+// table size 
+
+// tab style
+
+
+

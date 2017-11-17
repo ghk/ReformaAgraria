@@ -19,7 +19,7 @@
                                     <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalAddUser" title="Tambah Akun"><span class="oi oi-plus"></span></button>
                                     </div>
 
-                                <table class="table table-responsive">
+                                <table class="table table-sm table-responsive tableAccount">
                                     <thead>
                                         <tr>
                                             <th>Nama</th>
@@ -214,7 +214,7 @@
                 </div>
                 <div class="nav justify-content-end pb-2 mt-4 mr-3">
                     <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-danger" (click)="deleteUser(user.id)">Hapus</button>        
+                    <button type="button" class="btn btn-danger" (click)="deleteUser(user.id)" data-dismiss="modal">Hapus</button>        
                 </div>
             </div>
         </div>  

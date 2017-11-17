@@ -40,17 +40,16 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
 
     }
 
-    // onToggle(id){
-    //     let img = $("#"+id+" img");
-    //     if(img.hasClass("spin-icon")){
+   //  onToggle(id){
+   //      let img = $("#"+id+" img");
+   //      if(img.hasClass("spin-icon")){
     //         img.removeClass("spin-icon");
     //         img.addClass("back-spin");
-    //     } else {
-    //         img.removeClass("back-spin");
-    //         img.addClass("spin-icon");
+   //      } else {
+   //          img.removeClass("back-spin");
+   //          img.addClass("spin-icon");
     //     }
-
-    // }
+    //    }
 
     fileChange(event) {
         this.agrariaIssuesList.import(event, this.regionId)

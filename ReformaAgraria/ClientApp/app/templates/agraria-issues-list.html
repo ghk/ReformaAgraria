@@ -1,6 +1,6 @@
 <div class="card w-100" *ngIf="reloaded">
     <div class="card-body">
-        <h4 class="card-title">Data objek dan subjek TORA</h4>
+        <h4 class="card-title">List permasalahan agraria desa ...</h4>
         <h6 class="card-subtitle text-muted">Tester</h6>
 
         <!-- start new add object and subject -->
@@ -80,183 +80,258 @@
                         <div class="col-12">
                             <form class="was-validated">
 
-                                <div class="form-row">
-                                    <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Jumlah objek dan subjek</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
-                                            <option value="">Masukan jumlah</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                        </select>
-                                    </div>
-                                </div>
+                                <ul class="nav nav-tabs tabObjectSubject" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="object-tab" data-toggle="tab" href="#formObject" role="tab" aria-controls="formObject" aria-selected="true">Form objek</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="subject-tab" data-toggle="tab" href="#formSubject" role="tab" aria-controls="formSubject" aria-selected="false">Form subjek</a>
+                                    </li>
+                                </ul>
 
-                                <h5 class="pt-3">Data Utama</h5>
-
-                                <div class="form-row pt-2">
-                                    <div class="form-group col-md-8">
-                                        <label for="inputEmail4">Nama lokasi</label>
-                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="Nama Lokasi" required>
-                                    </div>
-                                </div>  
-
-                                <div class="form-row">
-                                    <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Desa</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
-                                            <option value="">Pilih desa</option>
-                                            <option value="1">Bora</option>
-                                            <option value="2">Kababona</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Kecamatan</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
-                                            <option value="">Pilih kecamatan</option>
-                                            <option value="1">Dolo Barat</option>
-                                            <option value="2">Dolo Selatan</option>
-                                            <option value="3">Gumbasa</option>
-                                            <option value="4">Kinovaro</option>
-                                            <option value="5">Kulawi</option>
-                                            <option value="6">Marawola Barat</option>
-                                            <option value="7">Nokilalaki</option>
-                                            <option value="8">Palalo</option>
-                                        </select>
-                                    </div>
-                                    <div class="fieldset disabled form-group col-md-4">
-                                        <label for="disabledSelect">Kabupaten</label>
-                                        <select id="disabledSelect" class="form-control" disabled>
-                                            <option>Sigi</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-row">
-                                    <div class="form-group col-md-4">
-                                        <label for="inputEmail4">Luas wilayah objek</label>
-                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="Ha" required>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputEmail4">Unggah berkas subjek</label>
-                                        <label class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
-                                            <small id="uploadHelpBlock" class="form-text text-muted">
-                                                File Ms.Excel (.xl .xls)
-                                            </small>
-                                            <span class="custom-file-control text-muted">Unggah berkas</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputEmail4">Jumlah penggarap</label>
-                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="jumlah data unggah" disabled>
-                                    </div>
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Status kawasan</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
-                                            <option value="">Pilih status kawasan</option>
-                                            <option value="1">Hutan</option>
-                                            <option value="2">Non Hutan</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-8">
-                                        <label for="inputEmail4">Klasifikasi bentang lahan</label>
-                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="Perbukitan, pegunungan" required>
-                                    </div>
-
-                                    <div class="form-group col-md-12">
-                                        <label for="inputEmail4">Tipe penggunaan lahan</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Tipe penggunaan lahan" required></textarea>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Usulan skema</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
-                                            <option value="">Pilih usulan skema</option>
-                                            <option value="1">TORA</option>
-                                            <option value="2">Pelepasan kawasan hutan</option>
-                                            <option value="3">redistribusi tanah</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Tahapan</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
-                                            <option value="">Pilih tahapan</option>
-                                            <option value="1">Usulan</option>
-                                            <option value="2">Verifikasi</option>
-                                            <option value="3">Penetapan</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                            <label for="inputEmail4">Unggah Koordinat PETA</label>
-                                            <label class="custom-file">
-                                                <input type="file" class="custom-file-input" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
-                                                <small id="uploadHelpBlock" class="form-text text-muted">
-                                                    File Ms.Excel (.xl .xls)
-                                                </small>
-                                                <span class="custom-file-control text-muted">Unggah PETA</span>
-                                            </label>
-                                        </div>
-                                </div>
-
-                                <hr>
-                                <h5 class="pt-3">Data Pendukung</h5>
-
-                                <div class="form-row pt-2">
-                                    <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Status tanah</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
-                                            <option value="">Pilih status tanah</option>
-                                            <option value="1">Negara</option>
-                                            <option value="2">Swasta</option>
-                                            <option value="3">lainya</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-8 text-muted">
-                                        <label for="inputEmail4">*Data tambahan</label>
-                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="data tambahan">
-                                    </div>
-
-                                    <div class="form-group col-md-12">
-                                        <label for="inputEmail4">Sejarah penguasaan tanah</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" required></textarea>
-                                    </div>
-
-                                    <div class="form-group col-md-12">
-                                        <label for="inputEmail4">Kronologi konflik <label class="text-muted">*(Jika ada)</label></label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                    </div>
-
-                                    <div class="form-row col-md-12">
-                                        <div class="form-group col-md-12 mb-auto">
-                                            <label for="progresLangkahAdvokasi">Progres langkah advokasi:</label>
-                                        </div>
-                                    
-                                        <div class="form-group col-md-6 text-muted">
-                                            <label for="Formal">a. Formal</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="formObject" role="tabpanel" aria-labelledby="object-tab">
+                                       
+                                        <h5 class="pt-3">Data Utama</h5>
+                                            
+                                        <div class="form-row pt-2">
+                                            <div class="form-group col-md-8">
+                                                <label for="inputEmail4">Nama lokasi</label>
+                                                <input type="Text" class="form-control" id="inputEmail4" placeholder="Nama Lokasi" required>
+                                            </div>
+                                        </div>  
+        
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4">
+                                                <label for="exampleFormControlSelect1">Desa</label>
+                                                <select class="form-control" id="exampleFormControlSelect1" required>
+                                                    <option value="">Pilih desa</option>
+                                                    <option value="1">Bora</option>
+                                                    <option value="2">Kababona</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="exampleFormControlSelect1">Kecamatan</label>
+                                                <select class="form-control" id="exampleFormControlSelect1" required>
+                                                    <option value="">Pilih kecamatan</option>
+                                                    <option value="1">Dolo Barat</option>
+                                                    <option value="2">Dolo Selatan</option>
+                                                    <option value="3">Gumbasa</option>
+                                                    <option value="4">Kinovaro</option>
+                                                    <option value="5">Kulawi</option>
+                                                    <option value="6">Marawola Barat</option>
+                                                    <option value="7">Nokilalaki</option>
+                                                    <option value="8">Palalo</option>
+                                                </select>
+                                            </div>
+                                            <div class="fieldset disabled form-group col-md-4">
+                                                <label for="disabledSelect">Kabupaten</label>
+                                                <select id="disabledSelect" class="form-control" disabled>
+                                                    <option>Sigi</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         
-                                        <div class="form-group col-md-6 text-muted">
-                                            <label for="NonFormal">b. Non formal</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>  
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4">
+                                                <label for="inputEmail4">Luas wilayah objek</label>
+                                                <input type="Text" class="form-control" id="inputEmail4" placeholder="Ha" required>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="inputEmail4">Unggah berkas subjek</label>
+                                                <label class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
+                                                    <small id="uploadHelpBlock" class="form-text text-muted">
+                                                        File Ms.Excel (.xl .xls)
+                                                    </small>
+                                                    <span class="custom-file-control text-muted">Unggah berkas</span>
+                                                </label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="inputEmail4">Jumlah penggarap</label>
+                                                <input type="Text" class="form-control" id="inputEmail4" placeholder="jumlah data unggah" disabled>
+                                            </div>
                                         </div>
+        
+                                        <div class="form-row">
+                                            
+                                            <div class="form-group col-md-4">
+                                                <label for="exampleFormControlSelect1">Status kawasan</label>
+                                                <select class="form-control" id="exampleFormControlSelect1" required>
+                                                    <option value="">Pilih status kawasan</option>
+                                                    <option value="1">Hutan</option>
+                                                    <option value="2">Non Hutan</option>
+                                                </select>
+                                            </div>
+        
+                                            <div class="form-group col-md-8">
+                                                <label for="inputEmail4">Klasifikasi bentang lahan</label>
+                                                <input type="Text" class="form-control" id="inputEmail4" placeholder="Perbukitan, pegunungan" required>
+                                            </div>
+        
+                                            <div class="form-group col-md-12">
+                                                <label for="inputEmail4">Tipe penggunaan lahan</label>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Tipe penggunaan lahan" required></textarea>
+                                            </div>
+        
+                                            <div class="form-group col-md-4">
+                                                <label for="exampleFormControlSelect1">Usulan skema</label>
+                                                <select class="form-control" id="exampleFormControlSelect1" required>
+                                                    <option value="">Pilih usulan skema</option>
+                                                    <option value="1">TORA</option>
+                                                    <option value="2">Pelepasan kawasan hutan</option>
+                                                    <option value="3">redistribusi tanah</option>
+                                                </select>
+                                            </div>
+        
+                                            <div class="form-group col-md-4">
+                                                <label for="exampleFormControlSelect1">Tahapan</label>
+                                                <select class="form-control" id="exampleFormControlSelect1" required>
+                                                    <option value="">Pilih tahapan</option>
+                                                    <option value="1">Usulan</option>
+                                                    <option value="2">Verifikasi</option>
+                                                    <option value="3">Penetapan</option>
+                                                </select>
+                                            </div>
+        
+                                            <div class="form-group col-md-4">
+                                                <label for="inputEmail4">Unggah Koordinat PETA</label>
+                                                <label class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
+                                                    <small id="uploadHelpBlock" class="form-text text-muted">
+                                                        File Ms.Excel (.xl .xls)
+                                                    </small>
+                                                    <span class="custom-file-control text-muted">Unggah PETA</span>
+                                                </label>
+                                            </div>
+        
+                                        </div>
+        
+                                        <hr>
+        
+                                        <h5 class="pt-3">Data Pendukung</h5>
+        
+                                        <div class="form-row pt-2">
+                                            
+                                            <div class="form-group col-md-4">
+                                                <label for="exampleFormControlSelect1">Status tanah</label>
+                                                <select class="form-control" id="exampleFormControlSelect1" required>
+                                                    <option value="">Pilih status tanah</option>
+                                                    <option value="1">Negara</option>
+                                                    <option value="2">Swasta</option>
+                                                    <option value="3">lainya</option>
+                                                </select>
+                                            </div>
+        
+                                            <div class="form-group col-md-8 text-muted">
+                                                <label for="inputEmail4">*Data tambahan</label>
+                                                <input type="Text" class="form-control" id="inputEmail4" placeholder="data tambahan">
+                                            </div>
+        
+                                            <div class="form-group col-md-12">
+                                                <label for="inputEmail4">Sejarah penguasaan tanah</label>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" required></textarea>
+                                            </div>
+        
+                                            <div class="form-group col-md-12">
+                                                <label for="inputEmail4">Kronologi konflik <label class="text-muted">*(Jika ada)</label></label>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                            </div>
+        
+                                            <div class="form-row col-md-12">
+                                                <div class="form-group col-md-12 mb-auto">
+                                                    <label for="progresLangkahAdvokasi">Progres langkah advokasi:</label>
+                                                </div>
+                                            
+                                                <div class="form-group col-md-6 text-muted">
+                                                    <label for="Formal">a. Formal</label>
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                                </div>
+                                                
+                                                <div class="form-group col-md-6 text-muted">
+                                                    <label for="NonFormal">b. Non formal</label>
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>  
+                                                </div>
+                                            </div>
+        
+                                        </div>
+                                            
                                     </div>
 
+                                    <div class="tab-pane fade" id="formSubject" role="tabpanel" aria-labelledby="subject-tab">
+                                        <div class="form-row pt-2">
+                                            <div class="form-group col-md-6">
+                                                <label for="Name">Nama</label>
+                                                <input type="text" class="form-control" id="subjekName" aria-describedby="nameHelp" placeholder="Masukan Nama">
+                                                <small id="namelHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label for="status-pernikahan">Status pernikahan</label>
+                                                <select id="inputState" class="form-control">
+                                                    <option selected>Pilih status pernikahan</option>
+                                                    <option>Menikah</option>
+                                                    <option>Tidak menikah</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="formSubjectAlamat">Alamat</label>
+                                                <textarea class="form-control" id="formSubjectAlamat" rows="3"></textarea>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label for="jenisKelamin">Jenis kelamin</label>
+                                                <select id="inputState" class="form-control">
+                                                    <option selected>Pilih jenis kelamin</option>
+                                                    <option>Pria</option>
+                                                    <option>Wanita</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label for="umur">Umur</label>
+                                                <input type="text" class="form-control" id="formSubjectUmur" aria-describedby="umurHelp" placeholder="Masukan umur">
+                                                <small id="umurlHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label for="pendidikan">Pendidikan</label>
+                                                <input type="text" class="form-control" id="formSubjectPendidikan" aria-describedby="pendidikanHelp" placeholder="Masukan pendidikan">
+                                                <small id="pendidikanHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label for="jumlahAnggotaKeluarga">Jumlah anggota keluarga</label>
+                                                <input type="text" class="form-control" id="formSubjectAnggotaKeluarga" aria-describedby="anggotaKeluargaHelp" placeholder="Masukan pendidikan">
+                                                <small id="pendidikanHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
+
+                                            <div class="form-group col-md-8">
+                                                <label for="statusTanah">Status tanah</label>
+                                                <input type="text" class="form-control" id="formSubjectStatusTanah" aria-describedby="statusTanahHelp" placeholder="Masukan status tanah">
+                                                <small id="statusTanahHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="lokasiLahanGarapan">Lokasi lahan garapan</label>
+                                                <textarea class="form-control" id="formSubjectLokasiLahanGarapan" rows="3"></textarea>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label for="Luas">Luas</label>
+                                                <input type="text" class="form-control" id="formSubjectLuas" aria-describedby="luasHelp" placeholder="Luas">
+                                                <small id="statusTanahHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
 
+                          
                             </form>     
                         </div>
                     </div>
@@ -337,111 +412,127 @@
 
                                             <thead>
                                                 <tr>
-                                                <th scope="col">No</th>
-                                                <th scope="col" colspan="2">Informasi Umum</th>
+                                                    <th scope="col">No</th>
+                                                    <th scope="col" colspan="3">Informasi Umum</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                <th scope="row">1</th>
-                                                <td scope="row" colspan="1">Nama Lokasi</td>
-                                                <td>{{issueList.name}}</td>
+                                                    <th scope="row">1</th>
+                                                    <td scope="row">Nama Lokasi</td>
+                                                    <td colspan="2">{{issueList.name}}</td>
+                                                    
                                                 </tr>
 
                                                 <tr>
-                                                <th scope="row">2</th>
-                                                <td>Desa</td>
-                                                <td>Desa</td>
+                                                    <th scope="row">2</th>
+                                                    <td>Desa</td>
+                                                    <td colspan="2">Desa</td>
+                                                </tr>
+
+                                                    <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>Kecamatan</td>
+                                                    <td colspan="2">Kecamatan</td>
                                                 </tr>
 
                                                 <tr>
-                                                <th scope="row">3</th>
-                                                <td>Kecamatan</td>
-                                                <td>Kecamatan</td>
+                                                    <th scope="row">4</th>
+                                                    <td>Kabupaten/Provinsi</td>
+                                                    <td colspan="2">Kabupaten/Provinsi</td>
                                                 </tr>
 
                                                 <tr>
-                                                <th scope="row">4</th>
-                                                <td>Kabupaten/Provinsi</td>
-                                                <td>Kabupaten/Provinsi</td>
+                                                    <th scope="row">5</th>
+                                                    <td>Luas Wilayah Objek</td>
+                                                    <td colspan="2">{{issueList.size}}</td>
                                                 </tr>
 
                                                 <tr>
-                                                <th scope="row">5</th>
-                                                <td>Luas Wilayah Objek</td>
-                                                <td>{{issueList.size}}</td>
+                                                    <th scope="row">6</th>
+                                                    <td>Jumlah Penggarap</td>
+                                                    <td colspan="2">{{issueList.totalTenants}}</td>
                                                 </tr>
 
                                                 <tr>
-                                                <th scope="row">6</th>
-                                                <td>Jumlah Penggarap</td>
-                                                <td>{{issueList.totalTenants}}</td>
+                                                    <th scope="row">7</th>
+                                                    <td>Status Kawasan</td>
+                                                    <td colspan="2">{{RegionalStatus[issueList.regionalStatus]}}</td>
                                                 </tr>
 
                                                 <tr>
-                                                <th scope="row">7</th>
-                                                <td>Status Kawasan</td>
-                                                <td>{{RegionalStatus[issueList.regionalStatus]}}</td>
+                                                    <th scope="row">8</th>
+                                                    <td>Klasifikasi bentang Lahan</td>
+                                                    <td colspan="2">{{issueList.landType}}</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th scope="row">9</th>
+                                                    <td>Tipe Penggunaan Lahan</td>
+                                                    <td colspan="2">{{issueList.livelihood}}</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th scope="row">10</th>
+                                                    <td>Usulan Skema</td>
+                                                    <td colspan="2">{{issueList.proposedTreatment}}</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th scope="row">11</th>
+                                                    <td>Tahapan</td>
+                                                    <td colspan="2">Tahapan</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th scope="col">No</th>
+                                                    <th scope="col" colspan="3">Data Pendukung</th>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>Status Tanah</td>
+                                                    <td colspan="2">{{LandStatus[issueList.landStatus]}}</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>Sejarah Penguasaan Tanah</td>
+                                                    <td colspan="2">{{issueList.landTenureHistory}}</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>Kronologi Konflik</td>
+                                                    <td colspan="2">{{issueList.conflictChronology}}</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th scope="row" rowspan="4">4</th>
+                                                    <td rowspan="4">Progres Langkah Advokasi</td>
+                                                    <td rowspan="2">Jalur Formal: {{issueList.formalAdvocacyProgress}}</td>
+                                                    <td rowspan="2">isi jalur formal</td>
+                                                </tr>
+                                                   
+                                                <tr>
+                                                 
+                                                </tr>
+                                                    
+                                                <tr>
+                                                    <td rowspan="2">Non Formal: {{issueList.nonFormalAdvocacyProgress}}</td>
+                                                    <td rowspan="2">isi jalur non formal</td>
                                                 </tr>
 
                                                 <tr>
-                                                <th scope="row">8</th>
-                                                <td>Klasifikasi bentang Lahan</td>
-                                                <td>{{issueList.landType}}</td>
+                                            
                                                 </tr>
-                                                
+
                                                 <tr>
-                                                <th scope="row">9</th>
-                                                <td>Tipe Penggunaan Lahan</td>
-                                                <td>{{issueList.livelihood}}</td>
+                                                    <th scope="row">3</th>
+                                                    <td>Koordinat peta</td>
+                                                    <td colspan="2">isi koordinat peta</td>
                                                 </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">10</th>
-                                                <td>Usulan Skema</td>
-                                                <td>{{issueList.proposedTreatment}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">11</th>
-                                                <td>Tahapan</td>
-                                                <td>Tahapan</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="col">No</th>
-                                                <th scope="col" colspan="2">Data Pendukung</th>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">1</th>
-                                                <td>Status Tanah</td>
-                                                <td>{{LandStatus[issueList.landStatus]}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">2</th>
-                                                <td>Sejarah Penguasaan Tanah</td>
-                                                <td>{{issueList.landTenureHistory}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">3</th>
-                                                <td>Kronologi Konflik</td>
-                                                <td>{{issueList.conflictChronology}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">4</th>
-                                                <td>Progres Langkah Advokasi</td>
-                                                <td>Jalur Formal: {{issueList.formalAdvocacyProgress}}<br/> Non Formal: {{issueList.nonFormalAdvocacyProgress}}</td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                <th scope="row">5</th>
-                                                <td>Koordinat PETA</td>
-                                                <td>Image</td>
-                                                </tr>
+
                                             </tbody>
                                         </table>
                                         
