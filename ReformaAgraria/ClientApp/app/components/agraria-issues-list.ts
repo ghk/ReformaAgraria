@@ -79,6 +79,18 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
         this.agrariaIssuesList.getAllSubject(query, null).subscribe(data => this.subjectList = data);
     }
 
+    deleteObject(id) {
+        this.agrariaIssuesList.deleteObject(id)
+            .subscribe(
+            data => {
+                this.toastr.success('Data is successfully deleted.', null);
+                this.getObjectList(this.regionId);
+                (<any>$('#modalDelete')).modal('hide');
+            },
+            error => {
+                this.toastr.error(error, null);
+            });
+    }
 
 
 }

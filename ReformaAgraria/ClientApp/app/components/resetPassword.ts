@@ -13,6 +13,9 @@ import { AccountService } from '../services/account';
 export class ResetPasswordComponent {
     model: any = {};
     user: any = {};
+    invalidPassword: string = "";
+    unmatchedPassword: string = "";
+    isValid: boolean = false;
 
     constructor(
         private router: Router,
@@ -27,6 +30,7 @@ export class ResetPasswordComponent {
             .subscribe(params => {
                 this.model.token = params['token'];
                 this.model.id = params['id'];
+                this.getUserById(this.model.id);
             });
     }
 
@@ -50,5 +54,35 @@ export class ResetPasswordComponent {
             error => {
                 this.alertService.error(error);
             });
+    }
+
+    validateResetPasswordForm() {
+        if (this.model.password.length < 5) {
+            this.invalidPassword = "Password terlalu pendek";
+        }
+        else if (this.model.password.length == 0) {
+            this.invalidPassword = "Password tidak boleh kosong";
+        }
+        else {
+            this.invalidPassword = "";
+        }
+
+        if (this.model.password != this.model.confirmPassword) {
+            this.unmatchedPassword = "Password tidak sama";
+            this.isValid = false;
+        }
+        else if (this.model.confirmPassword.length == 0) {
+            this.unmatchedPassword = "Konfirmasi Password tidak boleh kosong";
+        }
+        else {
+            this.unmatchedPassword = "";
+        }
+
+        if (this.invalidPassword == "" && this.unmatchedPassword == "") {
+            this.isValid = true;
+        }
+        else {
+            this.isValid = false;
+        }
     }
 }

@@ -100,7 +100,6 @@ export class UserManagementComponent {
                 this.toastr.success('Password is successfully changed.', null);
             },
             error => {
-                console.log('gagal');
                 this.toastr.error(error, null);
             });
     }

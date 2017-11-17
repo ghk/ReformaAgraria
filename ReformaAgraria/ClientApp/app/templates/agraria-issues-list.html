@@ -292,12 +292,12 @@
                     <ng-container *ngFor="let object of objectList">
                         <tr>
                             <td><input type="checkbox"></td>
-                            <td data-toggle="collapse" data-target="#accordion" class="clickable">{{object.name}}</td>
-                            <td data-toggle="collapse" data-target="#accordion" class="clickable">{{object.totalTenants}}</td>
-                            <td data-toggle="collapse" data-target="#accordion" class="clickable">{{LandStatus[object.landStatus]}}</td>
-                            <td data-toggle="collapse" data-target="#accordion" class="clickable text-success">{{object.proposedTreatment}}</td>
-                            <td data-toggle="collapse" data-target="#accordion" class="clickable">Image</td>
-                            <td data-toggle="collapse" data-target="#accordion" class="clickable">Penetapan</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">{{object.name}}</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">{{object.totalTenants}}</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">{{LandStatus[object.landStatus]}}</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable text-success">{{object.proposedTreatment}}</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">Image</td>
+                            <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">Penetapan</td>
                             <td data-toggle="tooltip" data-placement="top" title="edit">
                                 <div class="dropdown">
                                     <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuEdit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -307,14 +307,14 @@
                                         <button class="dropdown-item" type="button">Edit Objek</button>
                                         <button class="dropdown-item" type="button">Edit Subjek</button>
                                     </div>
-                                </div>
+                                </div>  
                             </td>
                             <td data-toggle="modal" data-target="#exampleModal1" title="hapus"><button type="button" class="btn btn-link"><span class="oi oi-trash" title="Hapus"></span></button></td>
-                            <td id="toggle1" data-toggle="collapse" data-target="#accordion" class="clickable" (click)="onToggle('toggle1', object.id)"><button type="button" class="btn btn-link btn-sm"><img src="/images/ic_keyboard_arrow_up_black_24dp_2x.png" class="spin-icon"></button></td>
+                            <td id="{{ 'toggle-' + object.id }}" data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id, object.id)"><button type="button" class="btn btn-link btn-sm"><img src="/images/ic_keyboard_arrow_up_black_24dp_2x.png" class="spin-icon"></button></td>
                         </tr>
                         <tr>
                             <td colspan="12">
-                                <div id="accordion" class="collapse">
+                                <div id="{{ 'accordion-' + object.id }}" class="collapse">
 
                                     <ul class="nav nav-tabs my-3 navObjekSUbjek" id="objekSubjekTab" role="tablist">
                                         <li class="nav-item">
@@ -509,7 +509,7 @@
             </div>
             <div class="nav justify-content-end pb-2 mt-4 mr-3">
                 <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-danger">Hapus</button>        
+                <button type="button" class="btn btn-danger" (click)="deleteObject(object.id)">Hapus</button>        
             </div>
          </div>
     </div>  

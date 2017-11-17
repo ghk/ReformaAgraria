@@ -8,6 +8,7 @@ using ReformaAgraria.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ReformaAgraria.Controllers
 {
@@ -21,6 +22,14 @@ namespace ReformaAgraria.Controllers
         {
             _hostingEnvironment = hostingEnvironment;
             _contextAccessor = contextAccessor;
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteObject(int id)
+        {
+            Delete(id);
+
+            return Ok();
         }
 
         [HttpGet("export")]
