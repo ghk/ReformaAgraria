@@ -23,31 +23,33 @@ namespace ReformaAgraria.Controllers
         protected override IQueryable<Region> ApplyQuery(IQueryable<Region> query)
         {
             var type = GetQueryString<string>("type");
-
-            if (type == "breadcrumb")
+            if (type != null)
             {
-                var depth = GetQueryString<int>("depth");
-                for(var i = 1; i <= depth; i++)
+                if (type == "breadcrumb")
                 {
-                    var includeString = string.Concat(Enumerable.Repeat("Parent.", i));
-                    includeString = includeString.Remove(includeString.Length - 1);
-                    query = query.Include(includeString);
-                }               
-            }
-
-            if (type == "parent")
-            {
-                var parentId = GetQueryString<string>("parentId");
-                var regionType = GetQueryString<int?>("regionType");
-
-                if (!string.IsNullOrWhiteSpace(parentId))
-                {
-                    query = query.Where(r => r.FkParentId == parentId);
-
+                    var depth = GetQueryString<int>("depth");
+                    for (var i = 1; i <= depth; i++)
+                    {
+                        var includeString = string.Concat(Enumerable.Repeat("Parent.", i));
+                        includeString = includeString.Remove(includeString.Length - 1);
+                        query = query.Include(includeString);
+                    }
                 }
-                if (regionType != null)
+
+                if (type == "parent")
                 {
-                    query = query.Where(r => r.Type == (RegionType)regionType);
+                    var parentId = GetQueryString<string>("parentId");
+                    var regionType = GetQueryString<int?>("regionType");
+
+                    if (!string.IsNullOrWhiteSpace(parentId))
+                    {
+                        query = query.Where(r => r.FkParentId == parentId);
+
+                    }
+                    if (regionType != null)
+                    {
+                        query = query.Where(r => r.Type == (RegionType)regionType);
+                    }
                 }
             }
 

@@ -6,20 +6,16 @@
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th>Lokasi</th>
+                        <th>{{region}}</th>
                         <th>Luas</th>
-                        <th>Koordinat</th>
-                        <th>Total Permasalahan</th>
-                        <th>Total Penyelesaian</th>
+                        <th>Total Objek</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let region of regions">
-                        <td><a [routerLink]="['/home', region.id]" href="javascript:void(0)">{{region.name}}</a></td>
-                        <td>1000 ha</td>
-                        <td>image</td>
-                        <td>20</td>
-                        <td>28%</td>
+                    <tr *ngFor="let reg of regions">
+                        <td><a [routerLink]="['/home', reg.region.id]" href="javascript:void(0)">{{reg.region.name}}</a></td>
+                        <td>{{reg.totalSize}} Ha</td>
+                        <td>{{reg.totalToraObjects}}</td>
                     </tr>
                 </tbody>
             </table>

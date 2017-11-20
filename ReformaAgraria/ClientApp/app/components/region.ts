@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { RegionType } from '../models/gen/regionType';
 import { RegionService } from '../services/gen/region';
+import { AgrariaIssuesListService } from '../services/agrariaIssuesList';
 import { SharedService } from '../services/shared';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -10,7 +11,7 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class RegionComponent implements OnInit {
     regions: any = [];
-    region: string;
+    region: string = 'Lokasi';
     id: string;
     parentId: string;
     model: any = {};
@@ -21,6 +22,7 @@ export class RegionComponent implements OnInit {
         private regionService: RegionService,
         private cookieService: CookieService,
         private sharedService: SharedService,
+        private agrariaIssuesListService: AgrariaIssuesListService
     ) { }
 
     ngOnInit() {
@@ -44,11 +46,11 @@ export class RegionComponent implements OnInit {
         )
     };
     
-     getRegion(regionType: RegionType, parentId: string) {
+    getRegion(regionType: RegionType, parentId: string) {
         let query = { data: { 'type': 'parent', 'regionType': regionType, 'parentId': parentId } }
         this.regionService.getAll(query, null).subscribe(data => {
             this.regions = data;
-            this.region = RegionType[this.regions[0].type];
+            this.region = RegionType[this.regions[0].region.type];
         });
     }
 
@@ -57,8 +59,15 @@ export class RegionComponent implements OnInit {
          this.regionService.getById(id, query).subscribe(region => {
              this.sharedService.setRegion(region); 
              if (regionType < 4) {
-                 this.getRegion((regionType + 1), id);
+                 this.getToraObjectSummary(id);
              }
+         })
+    }
+
+     getToraObjectSummary(id: string) {
+         this.agrariaIssuesListService.getToraObjectSummary(id).subscribe(data => {
+             this.regions = data;
+             this.region = RegionType[this.regions[0].region.type];
          })
      }
 
