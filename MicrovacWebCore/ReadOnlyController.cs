@@ -94,20 +94,23 @@ namespace MicrovacWebCore
 
         protected virtual IEnumerable<TResult> GetQueryStrings<TResult>(String key)
         {
-            if (HttpContext.Request.Query.ContainsKey(key))
+            if (HttpContext != null)
             {
-                foreach (var match in HttpContext.Request.Query[key])
+                if (HttpContext.Request.Query.ContainsKey(key))
                 {
-                    var type = typeof(TResult);
-                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                        type = type.GenericTypeArguments[0];
-
-                    if (type.IsEnum)
+                    foreach (var match in HttpContext.Request.Query[key])
                     {
-                        yield return (TResult)Enum.ToObject(type, Convert.ToUInt64(match));
-                    }
+                        var type = typeof(TResult);
+                        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                            type = type.GenericTypeArguments[0];
 
-                    yield return (TResult)Convert.ChangeType(match, type);
+                        if (type.IsEnum)
+                        {
+                            yield return (TResult)Enum.ToObject(type, Convert.ToUInt64(match));
+                        }
+
+                        yield return (TResult)Convert.ChangeType(match, type);
+                    }
                 }
             }
         }

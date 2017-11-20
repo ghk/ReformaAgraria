@@ -24,6 +24,15 @@ namespace ReformaAgraria.Controllers
             _contextAccessor = contextAccessor;
         }
 
+        public class DashboardData
+        {
+            public Region Region { get; set; }
+            public decimal TotalSize { get; set; }
+            public int TotalToraObjects { get; set; }
+            public int TotalToraSubjects { get; set; }
+
+        }
+
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteObject(int id)
         {
@@ -220,6 +229,31 @@ namespace ReformaAgraria.Controllers
             {
                 throw ex;
             }
+        }
+
+        [HttpGet("gettoraobjectsummary/{id}")]
+        public List<DashboardData> GetToraObjectSummary(string id)
+        {
+            var region = dbContext.Set<Region>().First(r => r.Id == id);
+            var children = dbContext.Set<Region>().Where(r => r.FkParentId == id).OrderBy(x => x.Name).ToList();
+
+            var results = from objects in dbContext.Set<ToraObject>()
+                          join desa in dbContext.Set<Region>() on objects.FkRegionId equals desa.Id
+                          join kec in dbContext.Set<Region>() on desa.FkParentId equals kec.Id
+                          join kab in dbContext.Set<Region>() on kec.FkParentId equals kab.Id
+                          where objects.FkRegionId.StartsWith(id)
+                          group objects by region.Type == RegionType.Kabupaten ? kec.Id : desa.Id into r
+                          select new DashboardData
+                          {
+                              Region = children.First(c => c.Id == r.Key),
+                              TotalSize = r.Sum(_ => _.Size),
+                              TotalToraObjects = r.Count()
+                          };
+            
+            return children
+                .Select(c => results.FirstOrDefault(g => g.Region.Id == c.Id)
+                    ?? new DashboardData { Region = c } )
+                .ToList();
         }
 
         protected override IQueryable<ToraObject> ApplyQuery(IQueryable<ToraObject> query)

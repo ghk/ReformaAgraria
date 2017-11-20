@@ -50,7 +50,6 @@ export class CrudComponent<TModel, TId> implements OnInit, OnDestroy {
                 this.entities = result;
             },
             error => {
-                console.log(error);
                 this.formMessage.type = 'error';
                 this.formMessage.message = error;
                 this.formMessage.errors = "";

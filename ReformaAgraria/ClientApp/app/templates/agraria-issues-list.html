@@ -1,79 +1,75 @@
 <div class="card w-100" *ngIf="reloaded">
     <div class="card-body">
-        <h4 class="card-title">List permasalahan agraria desa ...</h4>
-        <h6 class="card-subtitle text-muted">Tester</h6>
+        <h4 class="card-title">List permasalahan agraria</h4>
 
         <!-- start new add object and subject -->
         <div class="dropdown nav justify-content-end mr-3">
             <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownMenuForm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Tambah data objek dan subjek tora"><span class="oi oi-plus"></span></button>
-            
+
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuForm">
                 <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalUploadDocument">Upload dokumen</button>
                 <button class="dropdown-item" type="button" data-toggle="modal" data-target="#exampleModal-lg">Isi form dokumen</button>
             </div>
         </div>
 
-    <!-- MODAL -->
-
+        <!-- MODAL -->
         <!-- modal add new upload dokumen objek dan subjek table -->
         <div class="modal fade" id="modalUploadDocument" tabindex="-1" role="dialog" aria-labelledby="tambah data dengan unggah dokumen" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Unggah dokumen objek dan subjek</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="col-12">
-                        <form>
-                            <div class="form-row pt-2">
-                                <div class="form-group col-md-12">
-                                    <label for="uploadFile">Unggah berkas</label>
-                                    <label class="custom-file">
-                                        <input type="file" class="custom-file-input" (change)="uploadFile($event)" placeholder="Upload file" accept=".xls,.xlsx" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
-                                        <small id="uploadHelpBlock" class="form-text text-muted">
-                                            File Ms.Excel (.xls .xlsx)
-                                        </small>
-                                        <span class="custom-file-control text-muted">
-                                            <span class="oi oi-cloud-upload pr-3"></span>
-                                            Pilih file...
-                                        </span>
-                                    </label>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Unggah dokumen objek dan subjek</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-12">
+                            <form>
+                                <div class="form-row pt-2">
+                                    <div class="form-group col-md-12">
+                                        <label for="uploadFile">Unggah berkas</label>
+                                        <label class="custom-file">
+                                            <input type="file" class="custom-file-input" (change)="uploadFile($event)" placeholder="Upload file" accept=".xls,.xlsx" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
+                                            <small id="uploadHelpBlock" class="form-text text-muted">
+                                                File Ms.Excel (.xls .xlsx)
+                                            </small>
+                                            <span class="custom-file-control text-muted">
+                                                <span class="oi oi-cloud-upload pr-3"></span>
+                                                Pilih file...
+                                            </span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="downloadFileTemplateObjekSubjek">Unduh file template</label>
-                                    <button type="button" class="btn btn-outline-secondary pl-3">
-                                    <img src="/images/ic_file_download_black_24dp_2x.png" class="img-fluid" alt="responsive image" width="32" height="32">
-                                    </button>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="downloadFileTemplateObjekSubjek">Unduh file template</label>
+                                        <button type="button" class="btn btn-outline-secondary pl-3">
+                                            <img src="/images/ic_file_download_black_24dp_2x.png" class="img-fluid" alt="responsive image" width="32" height="32">
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
 
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                </div>
-                </div>
             </div>
-            </div>
-            <!-- end modal add new upload dokumen objek dan subjek table -->
-
-
+        </div>
+        <!-- end modal add new upload dokumen objek dan subjek table -->
         <!-- Modal add new objek dan subjek table -->
         <div class="modal fade" id="exampleModal-lg" tabindex="-1" role="dialog" aria-labelledby="Tambah data dengan isi form dokumen" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLabel">Form objek dan subjek TORA</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel">Form objek dan subjek TORA</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <div class="modal-body">
                         <div class="col-12">
                             <form class="was-validated">
@@ -89,16 +85,16 @@
 
                                 <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane fade show active" id="formObject" role="tabpanel" aria-labelledby="object-tab">
-                                       
+
                                         <h5 class="pt-3">Data Utama</h5>
-                                            
+
                                         <div class="form-row pt-2">
                                             <div class="form-group col-md-8">
                                                 <label for="inputEmail4">Nama lokasi</label>
                                                 <input type="Text" class="form-control" id="inputEmail4" placeholder="Nama Lokasi" required>
                                             </div>
-                                        </div>  
-        
+                                        </div>
+
                                         <div class="form-row">
                                             <div class="form-group col-md-4">
                                                 <label for="exampleFormControlSelect1">Desa</label>
@@ -132,7 +128,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-row">
                                             <div class="form-group col-md-4">
                                                 <label for="inputEmail4">Luas wilayah objek</label>
@@ -153,9 +149,9 @@
                                                 <input type="Text" class="form-control" id="inputEmail4" placeholder="jumlah data unggah" disabled>
                                             </div>
                                         </div>
-        
+
                                         <div class="form-row">
-                                            
+
                                             <div class="form-group col-md-4">
                                                 <label for="exampleFormControlSelect1">Status kawasan</label>
                                                 <select class="form-control" id="exampleFormControlSelect1" required>
@@ -164,17 +160,17 @@
                                                     <option value="2">Non Hutan</option>
                                                 </select>
                                             </div>
-        
+
                                             <div class="form-group col-md-8">
                                                 <label for="inputEmail4">Klasifikasi bentang lahan</label>
                                                 <input type="Text" class="form-control" id="inputEmail4" placeholder="Perbukitan, pegunungan" required>
                                             </div>
-        
+
                                             <div class="form-group col-md-12">
                                                 <label for="inputEmail4">Tipe penggunaan lahan</label>
                                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Tipe penggunaan lahan" required></textarea>
                                             </div>
-        
+
                                             <div class="form-group col-md-4">
                                                 <label for="exampleFormControlSelect1">Usulan skema</label>
                                                 <select class="form-control" id="exampleFormControlSelect1" required>
@@ -184,7 +180,7 @@
                                                     <option value="3">redistribusi tanah</option>
                                                 </select>
                                             </div>
-        
+
                                             <div class="form-group col-md-4">
                                                 <label for="exampleFormControlSelect1">Tahapan</label>
                                                 <select class="form-control" id="exampleFormControlSelect1" required>
@@ -194,7 +190,7 @@
                                                     <option value="3">Penetapan</option>
                                                 </select>
                                             </div>
-        
+
                                             <div class="form-group col-md-4">
                                                 <label for="inputEmail4">Unggah Koordinat PETA</label>
                                                 <label class="custom-file">
@@ -205,15 +201,15 @@
                                                     <span class="custom-file-control text-muted">Unggah PETA</span>
                                                 </label>
                                             </div>
-        
+
                                         </div>
-        
+
                                         <hr>
-        
+
                                         <h5 class="pt-3">Data Pendukung</h5>
-        
+
                                         <div class="form-row pt-2">
-                                            
+
                                             <div class="form-group col-md-4">
                                                 <label for="exampleFormControlSelect1">Status tanah</label>
                                                 <select class="form-control" id="exampleFormControlSelect1" required>
@@ -223,40 +219,40 @@
                                                     <option value="3">lainya</option>
                                                 </select>
                                             </div>
-        
+
                                             <div class="form-group col-md-8 text-muted">
                                                 <label for="inputEmail4">*Data tambahan</label>
                                                 <input type="Text" class="form-control" id="inputEmail4" placeholder="data tambahan">
                                             </div>
-        
+
                                             <div class="form-group col-md-12">
                                                 <label for="inputEmail4">Sejarah penguasaan tanah</label>
                                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" required></textarea>
                                             </div>
-        
+
                                             <div class="form-group col-md-12">
                                                 <label for="inputEmail4">Kronologi konflik <label class="text-muted">*(Jika ada)</label></label>
                                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                                             </div>
-        
+
                                             <div class="form-row col-md-12">
                                                 <div class="form-group col-md-12 mb-auto">
                                                     <label for="progresLangkahAdvokasi">Progres langkah advokasi:</label>
                                                 </div>
-                                            
+
                                                 <div class="form-group col-md-6 text-muted">
                                                     <label for="Formal">a. Formal</label>
                                                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                                                 </div>
-                                                
+
                                                 <div class="form-group col-md-6 text-muted">
                                                     <label for="NonFormal">b. Non formal</label>
-                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>  
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                                                 </div>
                                             </div>
-        
+
                                         </div>
-                                            
+
                                     </div>
 
                                     <div class="tab-pane fade" id="formSubject" role="tabpanel" aria-labelledby="subject-tab">
@@ -380,23 +376,22 @@
                                     </div>
                                 </div>
 
-                          
-                            </form>     
+
+                            </form>
                         </div>
                     </div>
                     <!-- End Modal Body-->
-                <div class="modal-footer">
-                    <div class="pr-4">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan data</button>
+                    <div class="modal-footer">
+                        <div class="pr-4">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-primary">Simpan data</button>
+                        </div>
                     </div>
                 </div>
             </div>
-            </div>
         </div>
-   
-    <!-- END MODAL -->
 
+        <!-- END MODAL -->
         <!-- Table objek subjek -->
 
         <div class="table-responsive pt-2">
@@ -412,7 +407,7 @@
                         <th>Tahapan</th>
                         <th></th>
                         <th></th>
-                        <th></th> 
+                        <th></th>
                     </tr>
                 </thead>
 
@@ -441,7 +436,7 @@
                                         <button class="dropdown-item" type="button">Edit Objek</button>
                                         <button class="dropdown-item" type="button">Edit Subjek</button>
                                     </div>
-                                </div>  
+                                </div>
                             </td>
                             <td data-toggle="modal" data-target="#exampleModal1" title="hapus"><button type="button" class="btn btn-link"><span class="oi oi-trash" title="Hapus"></span></button></td>
                             <td id="{{ 'toggle-' + object.id }}" data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id, object.id)"><button type="button" class="btn btn-link btn-sm"><img src="/images/ic_keyboard_arrow_up_black_24dp_2x.png" class="spin-icon"></button></td>
@@ -449,18 +444,17 @@
                         <tr>
                             <td colspan="12">
                                 <div id="{{ 'accordion-' + object.id }}" class="collapse">
-
                                     <ul class="nav nav-tabs my-3 navObjekSUbjek" id="objekSubjekTab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="dataObjekTab" data-toggle="tab" href="#dataObjek" role="tab" aria-controls="dataObjek" aria-selected="true">Data objek</a>
+                                            <a class="nav-link active" id="dataObjekTab" data-toggle="tab" [attr.href]="'#dataObjek-' + object.id" role="tab" aria-controls="dataObjek" aria-selected="true">Data objek</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="dataSubjekTab" data-toggle="tab" href="#dataSubjek" role="tab" aria-controls="dataSubjek" aria-selected="false">Data subjek</a>
+                                            <a class="nav-link" id="dataSubjekTab" data-toggle="tab" [attr.href]="'#dataSubjek-' + object.id" role="tab" aria-controls="dataSubjek" aria-selected="false">Data subjek</a>
                                         </li>
                                     </ul>
 
                                     <div class="tab-content" id="subjekObjekTabContent">
-                                        <div class="tab-pane fade show active" id="dataObjek" role="tabpanel" aria-labelledby="dataObjek">
+                                        <div class="tab-pane fade show active" id="{{'dataObjek-' + object.id}}" role="tabpanel" aria-labelledby="dataObjek">
 
                                             <table class="table table-bordered table-responsive bg-light my-3 table-object">
                                                 <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
@@ -487,7 +481,7 @@
                                                     <tr>
                                                         <th scope="row">3</th>
                                                         <td>Kecamatan</td>
-                                                        <td> colspan="2"Kecamatan</td>
+                                                        <td colspan="2">Kecamatan</td>
                                                     </tr>
 
                                                     <tr>
@@ -562,36 +556,31 @@
                                                     </tr>
 
                                                     <tr>
-                                                            <th scope="row" rowspan="4">4</th>
-                                                            <td rowspan="4">Progres Langkah Advokasi</td>
-                                                            <td rowspan="2">Jalur Formal: {{issueList.formalAdvocacyProgress}}</td>
-                                                            <td rowspan="2">isi jalur formal</td>
-                                                        </tr>
-                                                           
-                                                        <tr>
-                                                         
-                                                        </tr>
-                                                            
-                                                        <tr>
-                                                            <td rowspan="2">Non Formal: {{issueList.nonFormalAdvocacyProgress}}</td>
-                                                            <td rowspan="2">isi jalur non formal</td>
-                                                        </tr>
-        
-                                                        <tr>
-                                                    
-                                                        </tr>
-        
-                                                        <tr>
-                                                            <th scope="row">3</th>
-                                                            <td>Koordinat peta</td>
-                                                            <td colspan="2">isi koordinat peta</td>
-                                                        </tr>
+                                                        <th scope="row" rowspan="4">4</th>
+                                                        <td rowspan="4">Progres Langkah Advokasi</td>
+                                                        <td rowspan="2">Jalur Formal: </td>
+                                                        <td rowspan="2">{{object.formalAdvocacyProgress}}</td>
+                                                    </tr>
+
+                                                    <tr></tr>
+
+                                                    <tr>
+                                                        <td rowspan="2">Non Formal: </td>
+                                                        <td rowspan="2">{{object.nonFormalAdvocacyProgress}}</td>
+                                                    </tr>
+
+                                                    <tr></tr>
+
+                                                    <tr>
+                                                        <th scope="row">3</th>
+                                                        <td>Koordinat peta</td>
+                                                        <td colspan="2">isi koordinat peta</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
 
                                         </div>
-                                        <div class="tab-pane fade" id="dataSubjek" role="tabpanel" aria-labelledby="dataSubjek">
-
+                                        <div class="tab-pane fade" id="{{'dataSubjek-' + object.id}}" role="tabpanel" aria-labelledby="dataSubjek">
                                             <table class="table table-bordered table-striped table-sm table-subject">
                                                 <thead>
                                                     <tr>
@@ -629,7 +618,6 @@
                                             
                                         </div>
                                     </div>
-
                                 </div>
                             </td>
                         </tr>
@@ -643,12 +631,12 @@
 
 
 
- <!-- alert modal -->
+<!-- alert modal -->
 <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="alert alert-light alert-dismissible fade show" role="alert">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>
             </button>
             <div class="form-row col-12">
                 <div class="col-12">
@@ -657,11 +645,9 @@
             </div>
             <div class="nav justify-content-end pb-2 mt-4 mr-3">
                 <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-danger" (click)="deleteObject(object.id)">Hapus</button>        
+                <button type="button" class="btn btn-danger" (click)="deleteObject(object.id)">Hapus</button>
             </div>
-         </div>
-    </div>  
+        </div>
+    </div>
 </div>
- <!-- end alert modal -->
-
-    
+<!-- end alert modal -->
