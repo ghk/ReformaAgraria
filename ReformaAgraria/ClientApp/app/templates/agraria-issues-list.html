@@ -261,10 +261,55 @@
 
                                     <div class="tab-pane fade" id="formSubject" role="tabpanel" aria-labelledby="subject-tab">
                                         <div class="form-row pt-2">
+                                            
+                                            <div class="form-group col-md-12">
+                                                <nav id="navbar-tablePreview" class="navbar navbar-light bg-light navbarSubjectTable">
+                                                    <div data-spy="scroll" data-target="#navbar-tablePreview" data-offset="0">
+                                                      
+                                                            <table class="table table-bordered table-striped table-sm table-subject">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col">#</th>
+                                                                            <th scope="col">Nama</th>
+                                                                            <th scope="col">Status pernikahan</th>
+                                                                            <th scope="col">Alamat</th>
+                                                                            <th scope="col">Jenis kelamin</th>
+                                                                            <th scope="col">Umur</th>
+                                                                            <th scope="col">Pendidikan</th>
+                                                                            <th scope="col">Jumlah keluarga</th>
+                                                                            <th scope="col">Status tanah</th>
+                                                                            <th scope="col">Lokasi lahan garapan</th>
+                                                                            <th scope="col">Luas (ha)</th>
+                                                                            <th scope="col">Jenis tanaman</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody *ngFor="let subject of subjectList">
+                                                                        <tr>
+                                                                            <th scope="row">1</th>
+                                                                            <td>{{subject.name}}</td>
+                                                                            <td>{{MaritalStatus[subject.maritalStatus]}}</td>
+                                                                            <td>{{subject.address}}</td>
+                                                                            <td>{{Gender[subject.gender]}}</td>
+                                                                            <td>{{subject.age}}</td>
+                                                                            <td>{{EducationalAttainment[subject.educationalAttainment]}}</td>
+                                                                            <td>{{subject.totalFamilyMembers}}</td>
+                                                                            <td>{{LandStatus[subject.landStatus]}}</td>
+                                                                            <td>{{subject.landLocation}}</td>
+                                                                            <td>{{subject.size}}</td>
+                                                                            <td>{{subject.plantTypes}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+
+                                                    </div> 
+                                                </nav>
+                                            </div>   
+                                             
+
                                             <div class="form-group col-md-6">
                                                 <label for="Name">Nama</label>
                                                 <input type="text" class="form-control" id="subjekName" aria-describedby="nameHelp" placeholder="Masukan Nama">
-                                                <small id="namelHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                                <small id="namelHelp" class="form-text text-muted"></small>
                                             </div>
 
                                             <div class="form-group col-md-6">
@@ -293,25 +338,25 @@
                                             <div class="form-group col-md-4">
                                                 <label for="umur">Umur</label>
                                                 <input type="text" class="form-control" id="formSubjectUmur" aria-describedby="umurHelp" placeholder="Masukan umur">
-                                                <small id="umurlHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                                <small id="umurlHelp" class="form-text text-muted"></small>
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <label for="pendidikan">Pendidikan</label>
                                                 <input type="text" class="form-control" id="formSubjectPendidikan" aria-describedby="pendidikanHelp" placeholder="Masukan pendidikan">
-                                                <small id="pendidikanHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                                <small id="pendidikanHelp" class="form-text text-muted"></small>
                                             </div>
 
                                             <div class="form-group col-md-4">
-                                                <label for="jumlahAnggotaKeluarga">Jumlah anggota keluarga</label>
-                                                <input type="text" class="form-control" id="formSubjectAnggotaKeluarga" aria-describedby="anggotaKeluargaHelp" placeholder="Masukan pendidikan">
-                                                <small id="pendidikanHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                                <label for="jumlahAnggotaKeluarga">Jumlah keluarga</label>
+                                                <input type="text" class="form-control" id="formSubjectAnggotaKeluarga" aria-describedby="anggotaKeluargaHelp" placeholder="Masukan jumlah keluarga">
+                                                <small id="pendidikanHelp" class="form-text text-muted"></small>
                                             </div>
 
                                             <div class="form-group col-md-8">
                                                 <label for="statusTanah">Status tanah</label>
                                                 <input type="text" class="form-control" id="formSubjectStatusTanah" aria-describedby="statusTanahHelp" placeholder="Masukan status tanah">
-                                                <small id="statusTanahHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                                <small id="statusTanahHelp" class="form-text text-muted"></small>
                                             </div>
 
                                             <div class="form-group col-md-12">
@@ -322,7 +367,13 @@
                                             <div class="form-group col-md-4">
                                                 <label for="Luas">Luas</label>
                                                 <input type="text" class="form-control" id="formSubjectLuas" aria-describedby="luasHelp" placeholder="Luas">
-                                                <small id="statusTanahHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                                <small id="statusTanahHelp" class="form-text text-muted"></small>
+                                            </div>
+
+                                            <div class="form-group col-md-8">
+                                                <label for="Luas">Jenis tanaman</label>
+                                                <input type="text" class="form-control" id="formSubjectJenisTanaman" aria-describedby="jenisTanamanHelp" placeholder="Masukan jenis tanaman">
+                                                <small id="jenisTanamanHelp" class="form-text text-muted"></small>
                                             </div>
 
                                         </div>
@@ -347,6 +398,7 @@
     <!-- END MODAL -->
 
         <!-- Table objek subjek -->
+
         <div class="table-responsive pt-2">
             <table class="table table-sm">
                 <thead>
@@ -364,7 +416,13 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <td colspan="12">
+                <div class="col-md-12">
+                        <div id="loader"></div>
+                    </div>
+                </td>
+                
+                <tbody>   
                     <ng-container *ngFor="let object of objectList">
                         <tr>
                             <td><input type="checkbox"></td>
@@ -568,7 +626,7 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-
+                                            
                                         </div>
                                     </div>
 
