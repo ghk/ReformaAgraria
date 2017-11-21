@@ -58,8 +58,7 @@ export class AccountService {
         params.append('token', token);
         params.append('password', password);
         requestOptions.params = params;
-        return this.http.post('/api/account/resetpassword', params)
-            .map(res => res.json());
+        return this.http.post('/api/account/resetpassword', params);
     }
 
     changePassword(id: string, newPassword: string) {

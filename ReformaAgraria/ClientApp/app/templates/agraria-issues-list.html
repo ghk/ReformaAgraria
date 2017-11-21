@@ -23,39 +23,48 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="col-12">
-                            <form>
-                                <div class="form-row pt-2">
-                                    <div class="form-group col-md-12">
-                                        <label for="uploadFile">Unggah berkas</label>
-                                        <label class="custom-file">
-                                            <input type="file" class="custom-file-input" (change)="uploadFile($event)" placeholder="Upload file" accept=".xls,.xlsx" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
-                                            <small id="uploadHelpBlock" class="form-text text-muted">
-                                                File Ms.Excel (.xls .xlsx)
-                                            </small>
-                                            <span class="custom-file-control text-muted">
-                                                <span class="oi oi-cloud-upload pr-3"></span>
-                                                Pilih file...
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="downloadFileTemplateObjekSubjek">Unduh file template</label>
-                                        <button type="button" class="btn btn-outline-secondary pl-3">
-                                            <img src="/images/ic_file_download_black_24dp_2x.png" class="img-fluid" alt="responsive image" width="32" height="32">
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-
+                    <ng-container *ngIf="loadingUploadModal">
+                        <div class="modal-body">
+                            <div class="col-12">
+                                <div id="loader"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    </div>
+                    </ng-container>
+                    <ng-container *ngIf="showUploadModal">
+                        <div class="modal-body">
+                            <div class="col-12">
+                                <form>
+                                    <div class="form-row pt-2">
+                                        <div class="form-group col-md-12">
+                                            <label for="uploadFile">Unggah berkas</label>
+                                            <label class="custom-file">
+                                                <input type="file" class="custom-file-input" (change)="uploadFile($event)" placeholder="Upload file" accept=".xls,.xlsx" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
+                                                <small id="uploadHelpBlock" class="form-text text-muted">
+                                                    File Ms.Excel (.xls .xlsx)
+                                                </small>
+                                                <span class="custom-file-control text-muted">
+                                                    <span class="oi oi-cloud-upload pr-3"></span>
+                                                    Pilih file...
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="downloadFileTemplateObjekSubjek">Unduh file template</label>
+                                            <button type="button" class="btn btn-outline-secondary pl-3">
+                                                <img src="/images/ic_file_download_black_24dp_2x.png" class="img-fluid" alt="responsive image" width="32" height="32">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        </div>
+                    </ng-container>
                 </div>
             </div>
         </div>

@@ -28,7 +28,7 @@ import { ResetPasswordComponent } from './components/resetPassword';
 import { UserManagementComponent } from './components/userManagement';
 import { RegionComponent } from './components/region';
 
-import { LoaderComponent } from './components/loader';
+//import { LoaderComponent } from './components/loader';
 
 import { RegionCrudComponent } from './components/crud/region'; 
 

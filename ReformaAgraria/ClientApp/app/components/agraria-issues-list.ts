@@ -29,6 +29,8 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     reloaded: boolean = false;
     loading: boolean = false;
     showPage: boolean = true;
+    loadingUploadModal: boolean = false;
+    showUploadModal: boolean = true;
 
     constructor(
         private agrariaIssuesList: AgrariaIssuesListService,
@@ -65,12 +67,21 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
          }
      }
 
-    uploadFile(event) {
+     uploadFile(event) {
+         this.loadingUploadModal = true;
+         this.showUploadModal = false;
         this.agrariaIssuesList.import(event, this.regionId)
             .subscribe(
-            data => this.toastr.success('File is successfully uploaded', null),
-            error => this.toastr.error(error, null)
-            );
+            data => {
+                this.loadingUploadModal = false;
+                this.showUploadModal = true;
+                this.toastr.success('File is successfully uploaded', null)
+            },
+            error => {
+                this.loadingUploadModal = false;
+                this.showUploadModal = true;
+                this.toastr.error(error, null)
+            });
     }
 
     getObjectList(id) {

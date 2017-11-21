@@ -1,7 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { AlertService } from '../services/alert';
+import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../services/account';
 
 
@@ -16,12 +16,14 @@ export class ResetPasswordComponent {
     invalidPassword: string = "";
     unmatchedPassword: string = "";
     isValid: boolean = false;
+    loading: boolean = false;
+    showPage: boolean = true;
 
     constructor(
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private toastr: ToastrService
     ) { }
 
     ngOnInit() {
@@ -35,24 +37,31 @@ export class ResetPasswordComponent {
     }
 
     resetPassword() {
+        this.loading = true;
+        this.showPage = false;
         this.accountService.resetPassword(this.model.id, this.model.token, this.model.password)
             .subscribe(
-                data => {
-                    this.alertService.success('Password is successfully Reset', true);
-                },
-                error => {
-                    this.alertService.error(error);
-                });
+            data => {
+                this.loading = false;
+                this.showPage = true;
+                this.toastr.success('Password is successfully Reset', null);
+                this.router.navigate(['/account/login']);
+            },
+            error => {
+                this.loading = false;
+                this.showPage = true;
+                this.toastr.error(error, null);
+            });
     }
 
     getUserById(id: string) {
         this.accountService.getUserById(this.model.id)
-        .subscribe(
+            .subscribe(
             data => {
                 this.model.email = data.email;
             },
             error => {
-                this.alertService.error(error);
+                this.toastr.error(error, null);
             });
     }
 
