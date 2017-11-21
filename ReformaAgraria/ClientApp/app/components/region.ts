@@ -17,6 +17,8 @@ export class RegionComponent implements OnInit {
     model: any = {};
     breadcrumbs: any = [];
     showDiv: boolean = true;
+    loading: boolean = false;
+    showPage: boolean = true;
 
     constructor(
         private regionService: RegionService,
@@ -26,6 +28,8 @@ export class RegionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.loading = true;
+        this.showPage = false;
         this.sharedService.getRegionId().subscribe(id =>
             this.regionService.getById(id).subscribe(data => {
                 this.cookieService.set('regionId', data.id);
@@ -35,11 +39,15 @@ export class RegionComponent implements OnInit {
                     this.showDiv = false;
                     this.getRegionById(data.id, (data.type - 2), (data.type), data.fkParentId);
                     this.sharedService.setIsAgrariaIssuesListReloaded(true);
+                    this.loading = false;
+                    this.showPage = true;
                 }
                 else {
                     this.showDiv = true;
                     this.getRegionById(data.id, (data.type - 2), (data.type), data.fkParentId);
                     this.sharedService.setIsAgrariaIssuesListReloaded(false);
+                    this.loading = false;
+                    this.showPage = true;
                 }
                 
             })
@@ -65,9 +73,13 @@ export class RegionComponent implements OnInit {
     }
 
      getToraObjectSummary(id: string) {
+         this.loading = true;
+         this.showPage = false;
          this.agrariaIssuesListService.getToraObjectSummary(id).subscribe(data => {
              this.regions = data;
              this.region = RegionType[this.regions[0].region.type];
+             this.loading = false;
+             this.showPage = true;
          })
      }
 

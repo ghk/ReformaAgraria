@@ -27,6 +27,8 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     RegionalStatus = RegionalStatus;
     regionId = this.cookieService.get('regionId');
     reloaded: boolean = false;
+    loading: boolean = false;
+    showPage: boolean = true;
 
     constructor(
         private agrariaIssuesList: AgrariaIssuesListService,
@@ -37,6 +39,8 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
+        this.loading = true;
+        this.showPage = false;
         this.sharedService.getIsAgrariaIssuesListReloaded().subscribe(reloaded => {
             this.reloaded = reloaded;
             this.sharedService.getRegionId().subscribe(id => {
@@ -71,7 +75,11 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
 
     getObjectList(id) {
         let query = { data: { 'type': 'getAllById', 'id': id } }
-        this.agrariaIssuesList.getAllObject(query, null).subscribe(data => this.objectList = data);
+        this.agrariaIssuesList.getAllObject(query, null).subscribe(data => {
+            this.objectList = data;
+            this.loading = false;
+            this.showPage = true;
+        });
     }
 
     getSubjectList(id) {

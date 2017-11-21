@@ -23,6 +23,16 @@ export class UserManagementComponent {
     invalidEmail: string = "";
     unmatchedPassword: string = "";
     isValid: boolean = false;
+    loading: boolean = false;
+    showPage: boolean = true;
+    loadingAddUserModal: boolean = false;
+    showAddUserModal: boolean = true;
+    loadingEditEmailModal: boolean = false;
+    showEditEmailModal: boolean = true;
+    loadingChangePasswordModal: boolean = false;
+    showChangePasswordModal: boolean = true;
+    loadingDeleteUserModal: boolean = false;
+    showDeleteUserModal: boolean = true;
     emailregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
@@ -33,6 +43,8 @@ export class UserManagementComponent {
     ) { }
 
     ngOnInit() {
+        this.loading = true;
+        this.showPage = false;
         this.getAllUser();
         $('#modalAddUser').on('shown.bs.modal', function () {
             $("#modalAddUser input[name='name']").focus();
@@ -50,9 +62,13 @@ export class UserManagementComponent {
             .subscribe(
                 data => {
                     this.allUsers = data;
+                    this.loading = false;
+                    this.showPage = true;
                 },
                 error => {
                     this.toastr.error(error, null);
+                    this.loading = false;
+                    this.showPage = true;
                 });
     }
 
@@ -62,14 +78,20 @@ export class UserManagementComponent {
     }
 
     deleteUser() {
+        this.loadingDeleteUserModal = true;
+        this.showDeleteUserModal = false;
             this.accountService.deleteUser(this.id)
                 .subscribe(
                 data => {
                     this.toastr.success('User ' + this.email + ' is successfully deleted.', null);
                     this.showListUser();
+                    this.loadingDeleteUserModal = false;
+                    this.showDeleteUserModal = true;
                     (<any>$('#modalDelete')).modal('hide');
                 },
                 error => {
+                    this.loadingDeleteUserModal = false;
+                    this.showDeleteUserModal = true;
                     this.toastr.error(error, null);
                 });
     }
@@ -81,38 +103,56 @@ export class UserManagementComponent {
     }
 
     updateUser() {
+        this.loadingEditEmailModal = true;
+        this.showEditEmailModal = false;
         this.accountService.updateUser(this.model.id, this.model.newEmail).subscribe(data => {
-                this.showListUser();
+            this.showListUser();
+            this.loadingEditEmailModal = false;
+            this.showEditEmailModal = true;
                 (<any>$('#modalEditEmail')).modal('hide');
                 this.toastr.success('User is successfully updated.', null);
             },
             error => {
+                this.loadingEditEmailModal = false;
+                this.showEditEmailModal = true;
                 this.toastr.error(error, null);
             });
     }
 
     changePassword() {
+        this.loadingChangePasswordModal = true;
+        this.showChangePasswordModal = false;
         this.accountService.changePassword(this.model.id, this.model.newPassword)
             .subscribe(
             data => {
                 this.showListUser();
+                this.loadingChangePasswordModal = false;
+                this.showChangePasswordModal = true;
                 (<any>$('#modalEditPassword')).modal('hide');
                 this.toastr.success('Password is successfully changed.', null);
             },
             error => {
+                this.loadingChangePasswordModal = false;
+                this.showChangePasswordModal = true;
                 this.toastr.error(error, null);
             });
     }
 
     addUser() {
+        this.loadingAddUserModal = true;
+        this.showAddUserModal = false;
         this.accountService.register(this.model)
             .subscribe(
             data => {
                 this.showListUser();
+                this.loadingAddUserModal = false;
+                this.showAddUserModal = true;
                 (<any>$('#modalAddUser')).modal('hide');
                 this.toastr.success('Registration successful', null)
             },
             error => {
+                this.loadingAddUserModal = false;
+                this.showAddUserModal = true;
                 this.toastr.error(error, null);
             });
     }

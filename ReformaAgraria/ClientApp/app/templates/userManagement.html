@@ -28,31 +28,40 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let user of allUsers">
-                                            <td>{{user.fullName}}</td>
-                                            <td>{{user.email}}</td>
-                                            <td span="2">
-                                                <div class="dropdown show">
-                                                    <button class="btn btn-link dropdown-toggle" href="javascript:void(0)" title="Ubah Email atau Password" role="button" id="dropdownEditLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <span class="oi oi-pencil"></span>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownEditLink">
-                                                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalEditEmail" (click)="update(user.id, user.email)">Ubah Email</button>
-                                                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalEditPassword" (click)="update(user.id, user.email)">Ubah Password</button>
+                                        <ng-container *ngIf="loading">
+                                            <tr>
+                                                <td colspan="12">
+                                                    <div class="col-md-12">
+                                                        <div id="loader"></div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td><button class="btn btn-link" data-toggle="modal" data-target="#modalDelete" href="javascript:void(0)" title="Hapus" (click)="delete(user.id, user.email)"><span class="oi oi-x"></span></button></td>
-                                        </tr>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                        <ng-container *ngIf="showPage">
+                                            <tr *ngFor="let user of allUsers">
+                                                <td>{{user.fullName}}</td>
+                                                <td>{{user.email}}</td>
+                                                <td span="2">
+                                                    <div class="dropdown show">
+                                                        <button class="btn btn-link dropdown-toggle" href="javascript:void(0)" title="Ubah Email atau Password" role="button" id="dropdownEditLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <span class="oi oi-pencil"></span>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownEditLink">
+                                                            <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalEditEmail" (click)="update(user.id, user.email)">Ubah Email</button>
+                                                            <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalEditPassword" (click)="update(user.id, user.email)">Ubah Password</button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td><button class="btn btn-link" data-toggle="modal" data-target="#modalDelete" href="javascript:void(0)" title="Hapus" (click)="delete(user.id, user.email)"><span class="oi oi-x"></span></button></td>
+                                            </tr>
+                                        </ng-container>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </main>
     </div>
 </div>
@@ -61,7 +70,6 @@
 
 <!-- Modal -->
 <!-- modal addUser -->
-
 <div class="modal fade" id="modalAddUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
 
@@ -73,38 +81,44 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
-                <div class="modal-body">
-                    <div class="col-12">
-                        <ra-alert></ra-alert>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label for="email">Nama</label>
-                                <input type="text" class="form-control" name="name" placeholder="Nama" [(ngModel)]="model.FullName" />
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <label for="email">Email</label>
-                                <input type="text" class="form-control" name="email" placeholder="Email" [(ngModel)]="model.Email" #email="ngModel" required (keyup)="validateAddUserForm($event)" />
-                                <label for="email" id="invalidEmail" *ngIf="invalidEmail.length > 0">{{this.invalidEmail}}</label>
-                            </div>
+                <ng-container *ngIf="loadingAddUserModal">
+                    <div class="modal-body">
+                        <div class="col-12">
+                            <div id="loader"></div>
                         </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="showAddUserModal">
+                    <div class="modal-body">
+                        <div class="col-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="email">Nama</label>
+                                    <input type="text" class="form-control" name="name" placeholder="Nama" [(ngModel)]="model.FullName" />
+                                </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label for="password">Password</label>
-                                <input type="password" class="form-control is-invalid" name="password" placeholder="Password" [(ngModel)]="model.Password" #password="ngModel" required (keyup)="validateAddUserForm($event)" />
-                                <label for="password" id="invalidPassword" *ngIf="invalidPassword.length > 0">{{this.invalidPassword}}</label>
+                                <div class="form-group col-md-12">
+                                    <label for="email">Email</label>
+                                    <input type="text" class="form-control" name="email" placeholder="Email" [(ngModel)]="model.Email" #email="ngModel" required (keyup)="validateAddUserForm($event)" />
+                                    <label for="email" id="invalidEmail" *ngIf="invalidEmail.length > 0">{{this.invalidEmail}}</label>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control is-invalid" name="password" placeholder="Password" [(ngModel)]="model.Password" #password="ngModel" required (keyup)="validateAddUserForm($event)" />
+                                    <label for="password" id="invalidPassword" *ngIf="invalidPassword.length > 0">{{this.invalidPassword}}</label>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="showListUser()" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="showListUser()" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </ng-container>
             </form>
         </div>
     </div>
@@ -123,25 +137,33 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-
-                    <div class="col-12">
-                        <div class="form-row">
-                            <div class="form-group col-md-12 was-validated">
-                                <label for="newEmail">Email</label>
-                                <input type="text" class="form-control" onfocus="this.select();" name="newEmail" [(ngModel)]="model.newEmail" #newEmail="ngModel" required (keyup)="validateUpdateEmailForm($event)" />
-                                <small id="changeEmaillHelp" class="form-text text-muted">Masukan email baru anda</small>
-                                <label for="newEmail" *ngIf="invalidEmail.length > 0">{{this.invalidEmail}}</label>
+                <ng-container *ngIf="loadingEditEmailModal">
+                    <div class="modal-body">
+                        <div class="col-12">
+                            <div id="loader"></div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="showEditEmailModal">
+                    <div class="modal-body">
+                        <div class="col-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-12 was-validated">
+                                    <label for="newEmail">Email</label>
+                                    <input type="text" class="form-control" onfocus="this.select();" name="newEmail" [(ngModel)]="model.newEmail" #newEmail="ngModel" required (keyup)="validateUpdateEmailForm($event)" />
+                                    <small id="changeEmaillHelp" class="form-text text-muted">Masukan email baru anda</small>
+                                    <label for="newEmail" *ngIf="invalidEmail.length > 0">{{this.invalidEmail}}</label>
+                                </div>
                             </div>
+
                         </div>
 
                     </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="showListUser()" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="showListUser()" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </ng-container>
             </div>
         </form>
     </div>
@@ -160,27 +182,35 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="newPassword">Password Baru</label>
-                            <input type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #password="ngModel" required (keyup)="validateUpdatePasswordForm($event)" />
-                            <small id="changePasswordlHelp1" class="form-text text-muted"></small>
-                            <label for="newPassword" *ngIf="invalidPassword.length > 0">{{this.invalidPassword}}</label>
-                        </div>
-                        <div class="form-group">
-                            <label for="confirmPassword">Konfirmasi Password Baru</label>
-                            <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #password="ngModel" required (keyup)="validatePasswordMatch($event)" />
-                            <label for="confirmPassword" *ngIf="unmatchedPassword.length > 0">{{this.unmatchedPassword}}</label>
+                <ng-container *ngIf="loadingChangePasswordModal">
+                    <div class="modal-body">
+                        <div class="col-12">
+                            <div id="loader"></div>
                         </div>
                     </div>
+                </ng-container>
+                <ng-container *ngIf="showChangePasswordModal">
+                    <div class="modal-body">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="newPassword">Password Baru</label>
+                                <input type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #password="ngModel" required (keyup)="validateUpdatePasswordForm($event)" />
+                                <small id="changePasswordlHelp1" class="form-text text-muted"></small>
+                                <label for="newPassword" *ngIf="invalidPassword.length > 0">{{this.invalidPassword}}</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Konfirmasi Password Baru</label>
+                                <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #password="ngModel" required (keyup)="validatePasswordMatch($event)" />
+                                <label for="confirmPassword" *ngIf="unmatchedPassword.length > 0">{{this.unmatchedPassword}}</label>
+                            </div>
+                        </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </ng-container>
             </form>
         </div>
     </div>
@@ -192,18 +222,27 @@
 <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="alert alert-light alert-dismissible fade show" role="alert">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="form-row col-12">
-                <div class="col-12">
-                    <h2 class="alert-heading">Hapus data?</h2>
+            <ng-container *ngIf="loadingDeleteUserModal">
+                <div class="form-row col-12">
+                    <div class="col-12">
+                        <div id="loader"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="nav justify-content-end pb-2 mt-4 mr-3">
-                <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-danger" (click)="deleteUser()" data-dismiss="modal">Hapus</button>
-            </div>
+            </ng-container>
+            <ng-container *ngIf="showDeleteUserModal">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="form-row col-12">
+                    <div class="col-12">
+                        <h2 class="alert-heading">Hapus data?</h2>
+                    </div>
+                </div>
+                <div class="nav justify-content-end pb-2 mt-4 mr-3">
+                    <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-danger" (click)="deleteUser()" data-dismiss="modal">Hapus</button>
+                </div>
+            </ng-container>
         </div>
     </div>
 </div>

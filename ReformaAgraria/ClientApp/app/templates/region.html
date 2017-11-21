@@ -12,11 +12,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let reg of regions">
-                        <td><a [routerLink]="['/home', reg.region.id]" href="javascript:void(0)">{{reg.region.name}}</a></td>
-                        <td>{{reg.totalSize}} Ha</td>
-                        <td>{{reg.totalToraObjects}}</td>
-                    </tr>
+                    <ng-container *ngIf="loading">
+                        <tr>
+                            <td colspan="12">
+                                <div class="col-md-12">
+                                    <div id="loader"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <ng-container *ngIf="showPage">
+                        <tr *ngFor="let reg of regions">
+                            <td><a [routerLink]="['/home', reg.region.id]" href="javascript:void(0)">{{reg.region.name}}</a></td>
+                            <td>{{reg.totalSize}} Ha</td>
+                            <td>{{reg.totalToraObjects}}</td>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
         </div>
