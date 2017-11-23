@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ProgressHttpModule } from 'angular-progress-http';
 import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
+import { OrderModule } from 'ngx-order-pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './components/app';
@@ -78,6 +79,7 @@ import './styles/app.scss';
         FormsModule,
         ProgressHttpModule,
         CommonModule,
+        OrderModule,
         BrowserAnimationsModule,
         ToastrModule.forRoot(),
         RouterModule.forRoot([

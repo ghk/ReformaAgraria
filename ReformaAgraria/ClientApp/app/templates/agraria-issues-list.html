@@ -408,10 +408,10 @@
                 <thead>
                     <tr>
                         <th><input type="checkbox"></th>
-                        <th>Lokasi</th>
-                        <th>Penggarap</th>
-                        <th>Status Tanah</th>
-                        <th>Usulan Skema</th>
+                        <th (click)="sorted('Lokasi')">Lokasi</th>
+                        <th (click)="sorted('Penggarap')">#Penggarap</th>
+                        <th (click)="sorted('Status')">Status Tanah</th>
+                        <th (click)="sorted('Usulan')">Usulan Skema</th>
                         <th>Koordinat</th>
                         <th>Tahapan</th>
                         <th></th>
@@ -634,6 +634,11 @@
                                 </td>
                             </tr>
                         </ng-container>
+                        <tr *ngIf="objectList.length < 1">
+                            <td colspan="12" style="text-align:center; vertical-align:middle; background-color:#f2f2f2;">
+                                Tidak ada Permasalahan Agraria
+                            </td>
+                        </tr>
                     </ng-container>
                 </tbody>
             </table>

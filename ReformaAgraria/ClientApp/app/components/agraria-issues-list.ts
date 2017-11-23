@@ -31,6 +31,9 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     showPage: boolean = true;
     loadingUploadModal: boolean = false;
     showUploadModal: boolean = true;
+    orderBy: string = "region.name";
+    isDesc: boolean = false;
+    prevColumn: string = "";
 
     constructor(
         private agrariaIssuesList: AgrariaIssuesListService,
@@ -111,5 +114,39 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
             });
     }
 
+    sorted(sortedBy: string) {
+        console.log(sortedBy);
+        if (sortedBy == "Penggarap") {
+            this.orderBy = 'totalToraObjects';
+        }
+        else if (sortedBy == "Status") {
+            this.orderBy = 'landStatus';
+        }
+        else if (sortedBy == "Usulan") {
+            this.orderBy = 'proposedTreatment';
+        }
+        else if (sortedBy == "Koordinat") {
+            this.orderBy = '';
+        }
+        else if (sortedBy == "Tahapan") {
+            this.orderBy = '';
+        }
+        else {
+            this.orderBy = 'name';
+        }
 
+        if (this.prevColumn != this.orderBy) {
+            this.isDesc = false;
+        }
+        else {
+            if (this.isDesc == false) {
+                this.isDesc = true;
+            }
+            else {
+                this.isDesc = false;
+            }
+        }
+
+        this.prevColumn = this.orderBy;
+    }
 }

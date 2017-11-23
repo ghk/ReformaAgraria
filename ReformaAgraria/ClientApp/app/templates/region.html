@@ -6,9 +6,9 @@
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th>{{region}}</th>
-                        <th>Luas</th>
-                        <th>Total Objek</th>
+                        <th (click)="sorted('Name')">{{region}}</th>
+                        <th (click)="sorted('Luas')">Luas</th>
+                        <th (click)="sorted('Total Objek')">Total Objek</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,7 +22,7 @@
                         </tr>
                     </ng-container>
                     <ng-container *ngIf="showPage">
-                        <tr *ngFor="let reg of regions">
+                        <tr *ngFor="let reg of regions | orderBy: orderBy : isDesc" >
                             <td><a [routerLink]="['/home', reg.region.id]" href="javascript:void(0)">{{reg.region.name}}</a></td>
                             <td>{{reg.totalSize}} Ha</td>
                             <td>{{reg.totalToraObjects}}</td>
