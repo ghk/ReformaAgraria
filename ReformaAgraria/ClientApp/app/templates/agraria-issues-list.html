@@ -433,12 +433,12 @@
                         <ng-container *ngFor="let object of objectList">
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">{{object.name}}</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">{{object.totalTenants}}</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">{{LandStatus[object.landStatus]}}</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable text-success">{{object.proposedTreatment}}</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">Image</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable">Penetapan</td>
+                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.name}}</td>
+                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.totalTenants}}</td>
+                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{LandStatus[object.landStatus]}}</td>
+                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable text-success" (click)="onToggle('toggle-' + object.id)">{{object.proposedTreatment}}</td>
+                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">Image</td>
+                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">Penetapan</td>
                                 <td data-toggle="tooltip" data-placement="top" title="edit">
                                     <div class="dropdown">
                                         <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuEdit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -450,8 +450,8 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td data-toggle="modal" data-target="#exampleModal1" title="hapus"><button type="button" class="btn btn-link"><span class="oi oi-trash" title="Hapus"></span></button></td>
-                                <td id="{{ 'toggle-' + object.id }}" data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id, object.id)"><button type="button" class="btn btn-link btn-sm"><img src="/images/ic_keyboard_arrow_up_black_24dp_2x.png" class="spin-icon"></button></td>
+                                <td data-toggle="modal" data-target="#exampleModal1" title="hapus"><button type="button" class="btn btn-link"><span class="oi oi-trash" title="Hapus" (click)="delete(object.id)"></span></button></td>
+                                <td id="{{ 'toggle-' + object.id }}" data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)"><button type="button" class="btn btn-link btn-sm"><img src="/images/ic_keyboard_arrow_up_black_24dp_2x.png" class="spin-icon"></button></td>
                             </tr>
                             <tr>
                                 <td colspan="12">
@@ -461,7 +461,7 @@
                                                 <a class="nav-link active" id="dataObjekTab" data-toggle="tab" [attr.href]="'#dataObjek-' + object.id" role="tab" aria-controls="dataObjek" aria-selected="true">Data objek</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" id="dataSubjekTab" data-toggle="tab" [attr.href]="'#dataSubjek-' + object.id" role="tab" aria-controls="dataSubjek" aria-selected="false">Data subjek</a>
+                                                <a class="nav-link" id="dataSubjekTab" data-toggle="tab" [attr.href]="'#dataSubjek-' + object.id" role="tab" aria-controls="dataSubjek" aria-selected="false" (click)="getSubjectList(object.id)">Data subjek</a>
                                             </li>
                                         </ul>
 
@@ -610,9 +610,9 @@
                                                             <th scope="col">Jenis tanaman</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody *ngFor="let subject of subjectList">
+                                                    <tbody *ngFor="let subject of subjectList; let i = index">
                                                         <tr>
-                                                            <th scope="row">1</th>
+                                                            <th scope="row">{{i + 1}}</th>
                                                             <td>{{subject.name}}</td>
                                                             <td>{{MaritalStatus[subject.maritalStatus]}}</td>
                                                             <td>{{subject.address}}</td>
@@ -663,7 +663,7 @@
             </div>
             <div class="nav justify-content-end pb-2 mt-4 mr-3">
                 <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-danger" (click)="deleteObject(object.id)">Hapus</button>
+                <button type="button" class="btn btn-danger" (click)="deleteObject()">Hapus</button>
             </div>
         </div>
     </div>

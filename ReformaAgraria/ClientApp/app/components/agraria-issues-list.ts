@@ -25,7 +25,7 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     MaritalStatus = MaritalStatus;
     Gender = Gender;
     RegionalStatus = RegionalStatus;
-    regionId = this.cookieService.get('regionId');
+    regionId = "";
     reloaded: boolean = false;
     loading: boolean = false;
     showPage: boolean = true;
@@ -34,6 +34,7 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     orderBy: string = "region.name";
     isDesc: boolean = false;
     prevColumn: string = "";
+    objectId: number = 0;
 
     constructor(
         private agrariaIssuesList: AgrariaIssuesListService,
@@ -46,6 +47,7 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loading = true;
         this.showPage = false;
+        this.sharedService.getRegionId().subscribe(id => this.regionId = id);
         this.sharedService.getIsAgrariaIssuesListReloaded().subscribe(reloaded => {
             this.reloaded = reloaded;
             this.sharedService.getRegionId().subscribe(id => {
@@ -58,8 +60,8 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
 
     }
 
-     onToggle(id, objectId){
-         this.getSubjectList(objectId);
+    onToggle(id) {
+        (<any>$("tr")).find('.collapse.show').collapse('hide');
          let img = $("#" + id + " img");
          if(img.hasClass("spin-icon")){
              img.removeClass("spin-icon");
@@ -79,14 +81,15 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
                 this.loadingUploadModal = false;
                 this.showUploadModal = true;
                 this.toastr.success('File is successfully uploaded', null)
+                this.getObjectList(this.regionId);
             },
             error => {
                 this.loadingUploadModal = false;
                 this.showUploadModal = true;
-                this.toastr.error(error, null)
+                this.toastr.error('Unable to upload the file', null)
             });
     }
-
+    
     getObjectList(id) {
         let query = { data: { 'type': 'getAllById', 'id': id } }
         this.agrariaIssuesList.getAllObject(query, null).subscribe(data => {
@@ -101,13 +104,17 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
         this.agrariaIssuesList.getAllSubject(query, null).subscribe(data => this.subjectList = data);
     }
 
-    deleteObject(id) {
-        this.agrariaIssuesList.deleteObject(id)
+    delete(id) {
+        this.objectId = id;
+    }
+
+    deleteObject() {
+        this.agrariaIssuesList.deleteObject(this.objectId)
             .subscribe(
             data => {
                 this.toastr.success('Data is successfully deleted.', null);
                 this.getObjectList(this.regionId);
-                (<any>$('#modalDelete')).modal('hide');
+                (<any>$('#exampleModal1')).modal('hide');
             },
             error => {
                 this.toastr.error(error, null);
@@ -115,7 +122,6 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     }
 
     sorted(sortedBy: string) {
-        console.log(sortedBy);
         if (sortedBy == "Penggarap") {
             this.orderBy = 'totalToraObjects';
         }

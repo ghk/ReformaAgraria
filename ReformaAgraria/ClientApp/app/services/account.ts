@@ -96,11 +96,28 @@ export class AccountService {
     private handleError(error: Response | any) {
         let errMsg: string;
         if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+            try {
+                var body = error.json() || '';
+                if (body.length > 1) {
+                    body = body[1];
+                }
+                var err = null;
+                if (body.message != undefined) {
+                    err = body.message;
+                    //errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+                }
+                else if (body.description != undefined) {
+                    err = body.description;
+                }
+                else {
+                    err = JSON.stringify(body);
+                }
+                errMsg = `${err}`;
+            } catch (e) {
+                errMsg = `Unable to perform this request`;
+            }
         } else {
-            errMsg = error.message ? error.message : error.toString();
+            errMsg = 'Unable to perform this request';
         }
         return Observable.throw(errMsg);
     }
