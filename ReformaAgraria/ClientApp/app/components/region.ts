@@ -19,6 +19,9 @@ export class RegionComponent implements OnInit {
     showDiv: boolean = true;
     loading: boolean = false;
     showPage: boolean = true;
+    orderBy: string = "region.name";
+    isDesc: boolean = false;
+    prevColumn: string = "";
 
     constructor(
         private regionService: RegionService,
@@ -83,5 +86,29 @@ export class RegionComponent implements OnInit {
          })
      }
 
+     sorted(sortedBy: string) {
+         if (sortedBy == "Total Objek") {
+             this.orderBy = 'totalToraObjects';
+         }
+         else if (sortedBy == "Luas") {
+             this.orderBy = 'totalSize';
+         }
+         else {
+             this.orderBy = 'region.name';
+         }
 
+         if (this.prevColumn != this.orderBy) {
+             this.isDesc = false;
+         }
+         else {
+             if (this.isDesc == false) {
+                 this.isDesc = true;
+             }
+             else {
+                 this.isDesc = false;
+             }
+         }
+
+         this.prevColumn = this.orderBy;
+     }
 }
