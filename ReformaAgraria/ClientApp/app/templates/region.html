@@ -3,12 +3,12 @@
         <h4 class="card-title">Permasalahan Agraria di {{region}}</h4>
                 
         <div class="table-responsive pt-2">
-            <table class="table table-sm">
+            <table class="table table-sm table-region">
                 <thead>
                     <tr>
-                        <th (click)="sorted('Name')">{{region}}</th>
-                        <th (click)="sorted('Luas')">Luas</th>
-                        <th (click)="sorted('Total Objek')">Total Objek</th>
+                        <th (click)="sorted('Name')">{{region}}<img src="/images/ic_swap_vert_black_24px.svg" class="ml-3 mb-1" style="width:20px; color:#bdbdbd"></th>
+                        <th (click)="sorted('Luas')" class="text-right">Luas<img src="/images/ic_swap_vert_black_24px.svg" class="ml-3 mb-1" style="width:20px;"></th>
+                        <th (click)="sorted('Total Objek')" class="text-right table-head-padding">Total Objek<img src="/images/ic_swap_vert_black_24px.svg" class="ml-3 mb-1" style="width:20px;"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,9 +23,9 @@
                     </ng-container>
                     <ng-container *ngIf="showPage">
                         <tr *ngFor="let reg of regions | orderBy: orderBy : isDesc" >
-                            <td><a [routerLink]="['/home', reg.region.id]" href="javascript:void(0)">{{reg.region.name}}</a></td>
-                            <td>{{reg.totalSize}} Ha</td>
-                            <td>{{reg.totalToraObjects}}</td>
+                            <td class="text-left"><a [routerLink]="['/home', reg.region.id]" href="javascript:void(0)">{{reg.region.name}}</a></td>
+                            <td class="table-data-padding text-right">{{reg.totalSize}} Ha</td>
+                            <td class="text-right">{{reg.totalToraObjects}}</td>
                         </tr>
                     </ng-container>
                 </tbody>

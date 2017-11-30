@@ -309,7 +309,7 @@
                                                 </nav>
                                             </div>   
                                              
-                                            <form class="was-validated">
+                                            
                                                 <div class="form-group col-md-6">
                                                     <label for="Name">Nama</label>
                                                     <input type="text" class="form-control" id="subjekName" aria-describedby="nameHelp" placeholder="Masukan Nama">
@@ -379,7 +379,7 @@
                                                     <input type="text" class="form-control" id="formSubjectJenisTanaman" aria-describedby="jenisTanamanHelp" placeholder="Masukan jenis tanaman">
                                                     <small id="jenisTanamanHelp" class="form-text text-muted"></small>
                                                 </div>
-                                            </form>
+                                            
 
                                         </div>
                                     </div>
@@ -410,7 +410,8 @@
                     <tr>
                         <th><input type="checkbox"></th>
                         <th (click)="sorted('Lokasi')">Lokasi</th>
-                        <th (click)="sorted('Penggarap')">#Penggarap</th>
+                        <th (click)="sorted('Luas')">Luas</th>
+                        <th (click)="sorted('Penggarap')">Penggarap</th>
                         <th (click)="sorted('Status')">Status Tanah</th>
                         <th (click)="sorted('Usulan')">Usulan Skema</th>
                         <th>Koordinat</th>
@@ -434,7 +435,7 @@
                         <ng-container *ngFor="let object of objectList">
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.name}}</td>
+                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)"><a href="#">{{object.name}}</a></td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.totalTenants}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{LandStatus[object.landStatus]}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable text-success" (click)="onToggle('toggle-' + object.id)">{{object.proposedTreatment}}</td>

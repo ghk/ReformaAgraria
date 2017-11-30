@@ -317,9 +317,27 @@ animation: spin 1100ms linear both;
     box-shadow: none;
 }
 
+// table style
+
+table, td, th {    
+    
+}
+
+.table-region, table {
+    border-collapse: collapse;
+    
+}
+
+.table-region .table-data-padding, td  {
+    padding-right: 50px !important
+}
+
+.table-region .table-head-padding, th {
+    padding-right: 10px !important
+}
 
 
-// tab style
+
 
 
 // loader animation
