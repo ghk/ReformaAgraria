@@ -323,21 +323,18 @@ table, td, th {
     
 }
 
-.table-region, table {
+.table-region table {
     border-collapse: collapse;
     
 }
 
-.table-region .table-data-padding, td  {
+table#table-region td {
     padding-right: 50px !important
 }
 
-.table-region .table-head-padding, th {
+table#table-region th {
     padding-right: 10px !important
 }
-
-
-
 
 
 // loader animation
