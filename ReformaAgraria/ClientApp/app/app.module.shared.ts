@@ -23,6 +23,7 @@ import { VillageBorderComponent } from './components/village-border';
 import { MapNavigationComponent } from './components/map-navigation';
 import { AgrariaIssuesHeaderComponent } from './components/agraria-issues-header';
 import { AgrariaIssuesListComponent } from './components/agraria-issues-list';
+import { AgrariaIssuesListObjectSubjectComponent } from './components/agraria-issues-list-object-subject';
 import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
 import { ForgotPasswordComponent } from './components/forgotPassword';
