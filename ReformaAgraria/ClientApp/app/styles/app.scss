@@ -390,3 +390,14 @@ animation: spin 1100ms linear both;
     cursor: pointer;
 }
 
+
+//control bar leaflet
+.leaflet-control-layers:nth-child(3) {
+    position: absolute;
+    right: 80px;
+    top: -2px;
+}
+
+.leaflet-control-layers:nth-child(3) .leaflet-control-layers-toggle:after {
+    content: 'Kawasan dan Perizinan';
+}

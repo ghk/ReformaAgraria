@@ -9,20 +9,26 @@ const LAYERS = {
     'MapboxSatellite': new L.TileLayer('https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZ2hrIiwiYSI6ImUxYmUxZDU3MTllY2ZkMGQ3OTAwNTg1MmNlMWUyYWIyIn0.qZKc1XfW236NeD0qAKBf9A')
 };
 
-class LegendControl extends L.Control {
-    public features = null;
-    public indicator = null;
-
+class RegionAndLicensingControl extends L.Control {
     div = null;
-    surfaces = null;
 
     constructor() {
         super();
-       
-    }
+        this.onAdd = (map: L.Map) => {
+            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
 
-    updateFromData() {
-    }
+            container.style.backgroundColor = 'white';
+            container.style.backgroundImage = "url(https://t1.gstatic.com/images?q=tbn:ANd9GcR6FCUMW5bPn8C4PbKak2BJQQsmC-K9-mbYBeFZm1ZM2w2GRy40Ew)";
+            container.style.backgroundSize = "30px 30px";
+            container.style.width = '30px';
+            container.style.height = '30px';
+
+            container.onclick = function () {
+                console.log('buttonClicked');
+            }
+            return container;
+        };
+    }    
 }
 
 @Component({
@@ -47,54 +53,61 @@ export class MapComponent implements OnInit, OnDestroy {
     perkabigConfig: any;
     markers = [];
     isExportingMap: boolean;
-
-    legendControl: LegendControl;
+    layers: any;
+    layersControl: any;
+    regionAndLicensingControl: RegionAndLicensingControl;
 
     constructor() { }
 
     ngOnInit(): void {
-        this.isExportingMap = false;
-        this.center = L.latLng(-6.174668, 106.827126);
-        this.zoom = 14;
+        this.center = L.latLng(-6.174668, 106.8271269);
+        this.zoom = 5;
         this.options = {
-            layers: null
+            layers: null,
+            zoomControl: false
+            
         };
-        this.drawOptions = {
-            position: 'topright',
-            draw: {
-                marker: {
-                    icon: L.icon({
-                        iconUrl: '2273e3d8ad9264b7daa5bdbf8e6b47f8.png',
-                        shadowUrl: '44a526eed258222515aa21eaffd14a96.png'
-                    })
-                },
-                polyline: false,
-                circle: {
-                    shapeOptions: {
-                        color: '#aaaaaa'
-                    }
-                }
-            }
-        };
-    }
+        
+    }    
 
     ngOnDestroy() {
 
     }
 
+    createControlBar() {
+    }
+
+    setupControlBar() {
+        L.control.zoom({
+            position: 'topright'
+        }).addTo(this.map);
+
+        /*
+        let customControl = L.Control.extend({
+            options: {
+                position: 'topright'
+            },
+            onAdd: (map: L.Map) => {
+                var container = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
+
+                container.style.backgroundColor = 'white';
+                container.style.backgroundImage = "url(https://t1.gstatic.com/images?q=tbn:ANd9GcR6FCUMW5bPn8C4PbKak2BJQQsmC-K9-mbYBeFZm1ZM2w2GRy40Ew)";
+                container.style.backgroundSize = "30px 30px";
+                container.style.width = '30px';
+                container.style.height = '30px';
+
+                container.onclick = function () {
+                    console.log('buttonClicked');
+                }
+
+                return container;
+            }
+        });
+        this.map.addControl(new customControl());
+        */
+    }
+
     setMap(recenter = true): void {
-        this.clearMap();
-        this.loadGeoJson();
-
-        try {
-            if (recenter)
-                this.map.setView(this.geoJSONLayer.getBounds().getCenter(), 14);
-        }
-        catch (error) {
-            console.log('Something wrong with this geojson either the structure is error or null');
-        }
-
-        this.setupLegend();
     }
 
     setMapData(data): void {
@@ -108,12 +121,7 @@ export class MapComponent implements OnInit, OnDestroy {
     removeLayer(name): void {
         this.map.removeLayer(LAYERS[name]);
     }
-
-    setupLegend(): void {
-       
-    }
-
-    
+      
     loadGeoJson(): void {
      
     }
@@ -132,6 +140,10 @@ export class MapComponent implements OnInit, OnDestroy {
 
     onMapReady(map: L.Map): void {
         this.map = map;
+        this.setLayer('OpenStreetMap');
+        this.setupControlBar();
+        
+
         //RESIZE ICON
         this.map.on('zoomend', () => {
             this.map.eachLayer(layer => {

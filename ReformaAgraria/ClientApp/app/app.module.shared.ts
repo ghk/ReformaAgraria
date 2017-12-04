@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { OrderModule } from 'ngx-order-pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LeafletModule } from '@asymmetrik/angular2-leaflet';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';

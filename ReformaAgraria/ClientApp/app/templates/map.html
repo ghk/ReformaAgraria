@@ -1,7 +1,8 @@
-﻿<div leaflet style="flex: 1; height:800px" id="desaMap"
+﻿<div leaflet 
+     style=" height:800px"
      [leafletOptions]="options"
-     [leafletCenter]="center"
      [leafletZoom]="zoom"
+     [leafletCenter]="center"
      (leafletMapReady)="onMapReady($event)"
      >
 </div>
