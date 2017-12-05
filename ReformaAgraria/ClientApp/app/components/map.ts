@@ -1,5 +1,6 @@
 ﻿import { OnInit, OnDestroy, Component, ApplicationRef, EventEmitter, Input, Output, Injector, ComponentRef, ComponentFactoryResolver } from "@angular/core";
 import * as L from 'leaflet';
+import * as $ from 'jquery';
 
 const DATA_SOURCES = 'data';
 const LAYERS = {
@@ -9,27 +10,6 @@ const LAYERS = {
     'MapboxSatellite': new L.TileLayer('https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZ2hrIiwiYSI6ImUxYmUxZDU3MTllY2ZkMGQ3OTAwNTg1MmNlMWUyYWIyIn0.qZKc1XfW236NeD0qAKBf9A')
 };
 
-class RegionAndLicensingControl extends L.Control {
-    div = null;
-
-    constructor() {
-        super();
-        this.onAdd = (map: L.Map) => {
-            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-
-            container.style.backgroundColor = 'white';
-            container.style.backgroundImage = "url(https://t1.gstatic.com/images?q=tbn:ANd9GcR6FCUMW5bPn8C4PbKak2BJQQsmC-K9-mbYBeFZm1ZM2w2GRy40Ew)";
-            container.style.backgroundSize = "30px 30px";
-            container.style.width = '30px';
-            container.style.height = '30px';
-
-            container.onclick = function () {
-                console.log('buttonClicked');
-            }
-            return container;
-        };
-    }    
-}
 
 @Component({
     selector: 'ra-map',
@@ -55,7 +35,8 @@ export class MapComponent implements OnInit, OnDestroy {
     isExportingMap: boolean;
     layers: any;
     layersControl: any;
-    regionAndLicensingControl: RegionAndLicensingControl;
+    controlOverlayShowing: any;
+    afterInit: boolean;
 
     constructor() { }
 
@@ -64,8 +45,7 @@ export class MapComponent implements OnInit, OnDestroy {
         this.zoom = 5;
         this.options = {
             layers: null,
-            zoomControl: false
-            
+            zoomControl: false           
         };
         
     }    
@@ -74,37 +54,133 @@ export class MapComponent implements OnInit, OnDestroy {
 
     }
 
+    ngAfterViewChecked() {
+        if (this.afterInit) {
+            let elements = $(`.leaflet-control-layers-expanded`)
+            for (let i = 0; i < elements.length; i++) {
+                let element = elements[i];
+                element.style.visibility = 'hidden';
+            }
+            this.afterInit = false;
+        }
+
+    }
+
     createControlBar() {
     }
 
     setupControlBar() {
         L.control.zoom({
-            position: 'topright'
+            position: 'bottomright'
         }).addTo(this.map);
 
-        /*
-        let customControl = L.Control.extend({
+        
+        let buttonFullscreen = L.Control.extend({
+            options: {
+                position: 'bottomright'
+            },
+            onAdd: (map: L.Map) => {
+                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
+                div.innerHTML = '<a href="javascript:void(0);" style="color:black"><i class="oi oi-fullscreen-enter"></i></a>';
+                div.style.width = '33px';
+                div.style.height = '30px';
+                div.style.textAlign = 'center';
+                div.style.lineHeight = '30px';
+                div.onclick = (e) => this.fullScreenToggle(e);
+                return div;
+            }
+        });
+        this.map.addControl(new buttonFullscreen());
+
+        let buttonUploadDialog = L.Control.extend({
+            options: {
+                position: 'topleft'
+            },
+            onAdd: (map: L.Map) => {
+                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
+                div.innerHTML = '<label for="files" class="btn" style="padding-top:3px;">Upload File</label><input id= "files" style="display:none" type= "file" >';
+               
+                div.style.height = '30px';
+                div.style.textAlign = 'center';
+                div.style.lineHeight = '30px';
+
+                let input = div.getElementsByTagName('input')[0];
+                input.onchange = (e) => this.uploadFile(e);
+
+                return div;
+            }
+        });
+        this.map.addControl(new buttonUploadDialog());
+
+        let buttonListSector1 = L.Control.extend({
             options: {
                 position: 'topright'
             },
             onAdd: (map: L.Map) => {
-                var container = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
+                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-1');
+                div.innerHTML = `<div class="btn-group btn-group-sm" role="group" aria-label="First group"><button type="button" class="btn btn-light">Kawasan Dan Perizinan</button><button type="button" class="btn btn-secondary">+</button></div>`;
 
-                container.style.backgroundColor = 'white';
-                container.style.backgroundImage = "url(https://t1.gstatic.com/images?q=tbn:ANd9GcR6FCUMW5bPn8C4PbKak2BJQQsmC-K9-mbYBeFZm1ZM2w2GRy40Ew)";
-                container.style.backgroundSize = "30px 30px";
-                container.style.width = '30px';
-                container.style.height = '30px';
-
-                container.onclick = function () {
-                    console.log('buttonClicked');
-                }
-
-                return container;
+                let buttonOverlay = div.getElementsByTagName('button')[0];
+                buttonOverlay.onclick = (e) => this.toggleControlLayers(3);
+                
+                return div;
             }
         });
-        this.map.addControl(new customControl());
-        */
+        this.map.addControl(new buttonListSector1());
+
+        let buttonListSector2 = L.Control.extend({
+            options: {
+                position: 'topright'
+            },
+            onAdd: (map: L.Map) => {
+                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-2');
+                div.innerHTML = `<div class="btn-group btn-group-sm" role="group" aria-label="First group"><button type="button" class="btn btn-light">Wilayah Kelola</button><button type="button" class="btn btn-secondary">+</button></div>`;
+                window['div'] = div;
+
+                let buttonOverlay = div.getElementsByTagName('button')[0];
+                buttonOverlay.onclick = (e) => this.toggleControlLayers(4);
+                return div;
+            }
+        });
+        this.map.addControl(new buttonListSector2());        
+        L.control.layers(null, null,{ collapsed: false }).addTo(this.map);        
+        L.control.layers(null, null, { collapsed: false }).addTo(this.map);
+        this.afterInit = true;
+        
+    }
+
+    toggleControlLayers(id) {
+        if (this.controlOverlayShowing) {
+            if (this.controlOverlayShowing.id != id && this.controlOverlayShowing.status == '') {
+                let element = $(`.leaflet-control-layers-expanded:nth-child(${this.controlOverlayShowing.id})`)[0];
+                element.style.visibility == 'hidden';
+            }
+        }
+
+        let status = '';
+        let element = $(`.leaflet-control-layers-expanded:nth-child(${id})`)[0];
+        if (element) {
+            status = element.style.visibility === 'hidden' ? '' : 'hidden';
+            element.style.visibility = status;
+        }
+        this.controlOverlayShowing = { id: id, status: status }
+    }
+
+    fullScreenToggle(e) {
+        console.log('clicked');
+
+    }
+
+    uploadFile(e) {
+        
+    }
+
+    selectOverlay() {
+
+    }
+
+    addProperty() {
+
     }
 
     setMap(recenter = true): void {
@@ -142,7 +218,8 @@ export class MapComponent implements OnInit, OnDestroy {
         this.map = map;
         this.setLayer('OpenStreetMap');
         this.setupControlBar();
-        
+
+        this.map.setView(this.center, this.zoom, this.options);
 
         //RESIZE ICON
         this.map.on('zoomend', () => {

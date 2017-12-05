@@ -110,7 +110,7 @@ import './styles/app.scss';
                     { path: 'usermanagement', component: UserManagementComponent }
                 ]
             },
-            { path: '**', redirectTo: ''  }
+            { path: '**', redirectTo: 'home'  }
         ])
     ],
     providers: [

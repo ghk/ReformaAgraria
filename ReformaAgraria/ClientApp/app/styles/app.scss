@@ -407,12 +407,24 @@ table#table-region th {
 
 
 //control bar leaflet
-.leaflet-control-layers:nth-child(3) {
+.leaflet-control-layers.leaflet-control.control-1 {
     position: absolute;
-    right: 80px;
-    top: -2px;
+    right: 2px;
+}
+.leaflet-control-layers.leaflet-control.control-2 {
+    position: absolute;
+    right: 250px;
+}
+.leaflet-control-layers-expanded:nth-child(3) {
+    right: 26px;
+    top: 33px;
+    width: 172px;
+    position: absolute;
+}
+.leaflet-control-layers-expanded:nth-child(4) {
+    right: 275px;
+    top: 33px;
+    width: 115px;
+    position: absolute;
 }
 
-.leaflet-control-layers:nth-child(3) .leaflet-control-layers-toggle:after {
-    content: 'Kawasan dan Perizinan';
-}
