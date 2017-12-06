@@ -72,7 +72,8 @@ import './styles/app.scss';
         RegionCrudComponent,
         RegionComponent,
         RegionBreadcrumbPipe,
-        EnumPipe
+        EnumPipe,
+        AgrariaIssuesListObjectSubjectComponent
     ],
     imports: [
         HttpModule,

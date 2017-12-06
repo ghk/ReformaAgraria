@@ -329,12 +329,17 @@ table, td, th {
 }
 
 table#table-region td {
-    padding-right: 50px !important
+    padding-right: 45px !important
 }
 
 table#table-region th {
     padding-right: 10px !important
 }
+
+.table-object-subject {
+    font-size: 14px;
+}
+
 
 
 // loader animation
@@ -405,3 +410,45 @@ table#table-region th {
     cursor: pointer;
 }
 
+
+// vertical line
+
+.Vline {
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    height: 80px;
+    position: absolute;
+    left: 24%;
+    
+}
+
+// header indicator
+
+.header-list-problem, .header-list-object {
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.header-list-problem h2 {
+    color: #FF0058;
+    
+}
+
+.header-list-problem p {
+    
+    
+}
+
+.header-list-object h2 {
+    color: #4835E8;
+    
+
+}
+
+.header-list-large h2 {
+    color: rgb(54, 160, 9);
+    
+
+}
+
+.header-list-problem .header-list-object p {
+   margin-top: 20px;
+}
