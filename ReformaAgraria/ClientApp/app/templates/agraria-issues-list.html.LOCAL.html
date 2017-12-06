@@ -37,17 +37,16 @@
                                     <div class="form-row pt-2">
                                         <div class="form-group col-md-12">
                                             <label for="uploadFile">Unggah berkas</label>
-                                            
-                                            <form>
-                                                <div class="form-group">
-                                                    <label for="uploadDocument">Klik untuk unggah berkas</label>
-                                                    <input type="file" class="form-control-file" (change)="uploadFile($event)" accept=".xls,.xlsx" id="uploadDocumentObjectSubject">
-                                                    <small id="uploadHelpBlock" class="form-text text-muted">
-                                                        File yang di upload harus berupa Ms.Excel (.xls .xlsx)
-                                                    </small>
-                                                </div>
-                                            </form>
-
+                                            <label class="custom-file">
+                                                <input type="file" class="custom-file-input" (change)="uploadFile($event)" placeholder="Upload file" accept=".xls,.xlsx" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
+                                                <small id="uploadHelpBlock" class="form-text text-muted">
+                                                    File Ms.Excel (.xls .xlsx)
+                                                </small>
+                                                <span class="custom-file-control text-muted">
+                                                    <span class="oi oi-cloud-upload pr-3"></span>
+                                                    Pilih file...
+                                                </span>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -64,14 +63,12 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Simpan</button>
                         </div>
                     </ng-container>
                 </div>
             </div>
         </div>
         <!-- end modal add new upload dokumen objek dan subjek table -->
-
         <!-- Modal add new objek dan subjek table -->
         <div class="modal fade" id="exampleModal-lg" tabindex="-1" role="dialog" aria-labelledby="Tambah data dengan isi form dokumen" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -103,7 +100,7 @@
                                         <div class="form-row pt-2">
                                             <div class="form-group col-md-8">
                                                 <label for="inputEmail4">Nama lokasi</label>
-                                                <input type="Text" class="form-control is-invalid" id="inputEmail4" placeholder="Nama Lokasi" required>
+                                                <input type="Text" class="form-control" id="inputEmail4" placeholder="Nama Lokasi" required>
                                             </div>
                                         </div>
 
@@ -142,12 +139,29 @@
                                         </div>
 
                                         <div class="form-row">
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-4">
                                                 <label for="inputEmail4">Luas wilayah objek</label>
                                                 <input type="Text" class="form-control" id="inputEmail4" placeholder="Ha" required>
                                             </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="inputEmail4">Unggah berkas subjek</label>
+                                                <label class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
+                                                    <small id="uploadHelpBlock" class="form-text text-muted">
+                                                        File Ms.Excel (.xl .xls)
+                                                    </small>
+                                                    <span class="custom-file-control text-muted">Unggah berkas</span>
+                                                </label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="inputEmail4">Jumlah penggarap</label>
+                                                <input type="Text" class="form-control" id="inputEmail4" placeholder="jumlah data unggah" disabled>
+                                            </div>
+                                        </div>
 
-                                            <div class="form-group col-md-6">
+                                        <div class="form-row">
+
+                                            <div class="form-group col-md-4">
                                                 <label for="exampleFormControlSelect1">Status kawasan</label>
                                                 <select class="form-control" id="exampleFormControlSelect1" required>
                                                     <option value="">Pilih status kawasan</option>
@@ -155,13 +169,8 @@
                                                     <option value="2">Non Hutan</option>
                                                 </select>
                                             </div>
-                                           
-                                           
-                                        </div>
 
-                                        <div class="form-row">
-
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-8">
                                                 <label for="inputEmail4">Klasifikasi bentang lahan</label>
                                                 <input type="Text" class="form-control" id="inputEmail4" placeholder="Perbukitan, pegunungan" required>
                                             </div>
@@ -260,46 +269,48 @@
                                             
                                             <div class="form-group col-md-12">
                                                 <nav id="navbar-tablePreview" class="navbar navbar-light bg-light navbarSubjectTable">
-                                                    
-                                                    <table class="table table-bordered table-striped table-sm table-subject table-responsive">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">#</th>
-                                                                <th scope="col">Nama</th>
-                                                                <th scope="col">Status pernikahan</th>
-                                                                <th scope="col">Alamat</th>
-                                                                <th scope="col">Jenis kelamin</th>
-                                                                <th scope="col">Umur</th>
-                                                                <th scope="col">Pendidikan</th>
-                                                                <th scope="col">Jumlah keluarga</th>
-                                                                <th scope="col">Status tanah</th>
-                                                                <th scope="col">Lokasi lahan garapan</th>
-                                                                <th scope="col">Luas (ha)</th>
-                                                                <th scope="col">Jenis tanaman</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody *ngFor="let subject of subjectList">
-                                                            <tr>
-                                                                <th scope="row" id="">1</th>
-                                                                <td>{{subject.name}}</td>
-                                                                <td>{{MaritalStatus[subject.maritalStatus]}}</td>
-                                                                <td>{{subject.address}}</td>
-                                                                <td>{{Gender[subject.gender]}}</td>
-                                                                <td>{{subject.age}}</td>
-                                                                <td>{{EducationalAttainment[subject.educationalAttainment]}}</td>
-                                                                <td>{{subject.totalFamilyMembers}}</td>
-                                                                <td>{{LandStatus[subject.landStatus]}}</td>
-                                                                <td>{{subject.landLocation}}</td>
-                                                                <td>{{subject.size}}</td>
-                                                                <td>{{subject.plantTypes}}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                    <div data-spy="scroll" data-target="#navbar-tablePreview" data-offset="0">
+                                                      
+                                                            <table class="table table-bordered table-striped table-sm table-subject">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col">#</th>
+                                                                            <th scope="col">Nama</th>
+                                                                            <th scope="col">Status pernikahan</th>
+                                                                            <th scope="col">Alamat</th>
+                                                                            <th scope="col">Jenis kelamin</th>
+                                                                            <th scope="col">Umur</th>
+                                                                            <th scope="col">Pendidikan</th>
+                                                                            <th scope="col">Jumlah keluarga</th>
+                                                                            <th scope="col">Status tanah</th>
+                                                                            <th scope="col">Lokasi lahan garapan</th>
+                                                                            <th scope="col">Luas (ha)</th>
+                                                                            <th scope="col">Jenis tanaman</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody *ngFor="let subject of subjectList">
+                                                                        <tr>
+                                                                            <th scope="row">1</th>
+                                                                            <td>{{subject.name}}</td>
+                                                                            <td>{{MaritalStatus[subject.maritalStatus]}}</td>
+                                                                            <td>{{subject.address}}</td>
+                                                                            <td>{{Gender[subject.gender]}}</td>
+                                                                            <td>{{subject.age}}</td>
+                                                                            <td>{{EducationalAttainment[subject.educationalAttainment]}}</td>
+                                                                            <td>{{subject.totalFamilyMembers}}</td>
+                                                                            <td>{{LandStatus[subject.landStatus]}}</td>
+                                                                            <td>{{subject.landLocation}}</td>
+                                                                            <td>{{subject.size}}</td>
+                                                                            <td>{{subject.plantTypes}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
 
+                                                    </div> 
                                                 </nav>
                                             </div>   
                                              
-                                            
+
                                             <div class="form-group col-md-6">
                                                 <label for="Name">Nama</label>
                                                 <input type="text" class="form-control" id="subjekName" aria-describedby="nameHelp" placeholder="Masukan Nama">
@@ -370,12 +381,6 @@
                                                 <small id="jenisTanamanHelp" class="form-text text-muted"></small>
                                             </div>
 
-                                            <div class="form-group col-md-8">
-                                                <button type="button" class="btn btn-info">Simpan data subjek</button>
-                                                <button type="button" class="btn btn-warning">Clear data</button>
-                                            </div>
-                                            
-
                                         </div>
                                     </div>
                                 </div>
@@ -385,21 +390,20 @@
                         </div>
                     </div>
                     <!-- End Modal Body-->
-
                     <div class="modal-footer">
                         <div class="pr-4">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="button" class="btn btn-primary">Simpan</button>
+                            <button type="button" class="btn btn-primary">Simpan data</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- END MODAL -->
 
+        <!-- END MODAL -->
         <!-- Table objek subjek -->
 
-        <div class="table-responsive pt-2 table-object-subject">
+        <div class="table-responsive pt-2">
             <table class="table table-sm">
                 <thead>
                     <tr>
@@ -413,7 +417,7 @@
                         <th>Tahapan</th>
                         <th></th>
                         <th></th>
-                        
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>   
@@ -430,7 +434,7 @@
                         <ng-container *ngFor="let object of objectList">
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)"><a href="#">{{object.name}}</a></td>
+                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.name}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.totalTenants}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.size | number}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{LandStatus[object.landStatus]}}</td>
@@ -466,13 +470,13 @@
                                         <div class="tab-content" id="subjekObjekTabContent">
                                             <div class="tab-pane fade show active" id="{{'dataObjek-' + object.id}}" role="tabpanel" aria-labelledby="dataObjek">
 
-                                                <table width="800" class="table table-bordered table-responsive bg-light my-3 table-object">
+                                                <table class="table table-bordered table-responsive bg-light my-3 table-object">
                                                     <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
 
                                                     <thead>
                                                         <tr>
                                                             <th scope="col">No</th>
-                                                            <th scope="col" colspan="4">Informasi Umum</th>
+                                                            <th scope="col" colspan="2">Informasi Umum</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -544,7 +548,7 @@
 
                                                         <tr>
                                                             <th scope="col">No</th>
-                                                            <th scope="col" colspan="4">Data Pendukung</th>
+                                                            <th scope="col" colspan="2">Data Pendukung</th>
                                                         </tr>
 
                                                         <tr>
@@ -629,7 +633,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
                                 </td>
                             </tr>
                         </ng-container>

@@ -4,6 +4,7 @@ import { RegionService } from '../services/gen/region';
 import { AgrariaIssuesListService } from '../services/agrariaIssuesList';
 import { SharedService } from '../services/shared';
 import { CookieService } from 'ngx-cookie-service';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'ra-region',

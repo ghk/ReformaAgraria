@@ -12,6 +12,7 @@ import { RegionalStatus } from '../models/gen/regionalStatus';
 import { EducationalAttainment } from '../models/gen/educationalAttainment';
 import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'ra-agraria-issues-list',

@@ -24,7 +24,7 @@
                     <ng-container *ngIf="showPage">
                         <tr *ngFor="let reg of regions | orderBy: orderBy : isDesc" >
                             <td class="text-left"><a [routerLink]="['/home', reg.region.id]" href="javascript:void(0)">{{reg.region.name}}</a></td>
-                            <td class="table-data-padding text-right">{{reg.totalSize}} Ha</td>
+                            <td class="table-data-padding text-right">{{reg.totalSize | number}} Ha</td>
                             <td class="text-right">{{reg.totalToraObjects}}</td>
                         </tr>
                     </ng-container>

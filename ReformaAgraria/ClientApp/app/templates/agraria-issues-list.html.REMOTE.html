@@ -38,6 +38,17 @@
                                         <div class="form-group col-md-12">
                                             <label for="uploadFile">Unggah berkas</label>
                                             
+                                            <!-- <label class="custom-file">
+                                                <input type="file" class="custom-file-input" (change)="uploadFile($event)" placeholder="Upload file" accept=".xls,.xlsx" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
+                                                <small id="uploadHelpBlock" class="form-text text-muted">
+                                                    File Ms.Excel (.xls .xlsx)
+                                                </small>
+                                                <span class="custom-file-control text-muted">
+                                                    <span class="oi oi-cloud-upload pr-3"></span>
+                                                    Pilih file...
+                                                </span>
+                                            </label> -->
+
                                             <form>
                                                 <div class="form-group">
                                                     <label for="uploadDocument">Klik untuk unggah berkas</label>
@@ -64,7 +75,6 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Simpan</button>
                         </div>
                     </ng-container>
                 </div>
@@ -261,119 +271,114 @@
                                             <div class="form-group col-md-12">
                                                 <nav id="navbar-tablePreview" class="navbar navbar-light bg-light navbarSubjectTable">
                                                     
-                                                    <table class="table table-bordered table-striped table-sm table-subject table-responsive">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">#</th>
-                                                                <th scope="col">Nama</th>
-                                                                <th scope="col">Status pernikahan</th>
-                                                                <th scope="col">Alamat</th>
-                                                                <th scope="col">Jenis kelamin</th>
-                                                                <th scope="col">Umur</th>
-                                                                <th scope="col">Pendidikan</th>
-                                                                <th scope="col">Jumlah keluarga</th>
-                                                                <th scope="col">Status tanah</th>
-                                                                <th scope="col">Lokasi lahan garapan</th>
-                                                                <th scope="col">Luas (ha)</th>
-                                                                <th scope="col">Jenis tanaman</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody *ngFor="let subject of subjectList">
-                                                            <tr>
-                                                                <th scope="row" id="">1</th>
-                                                                <td>{{subject.name}}</td>
-                                                                <td>{{MaritalStatus[subject.maritalStatus]}}</td>
-                                                                <td>{{subject.address}}</td>
-                                                                <td>{{Gender[subject.gender]}}</td>
-                                                                <td>{{subject.age}}</td>
-                                                                <td>{{EducationalAttainment[subject.educationalAttainment]}}</td>
-                                                                <td>{{subject.totalFamilyMembers}}</td>
-                                                                <td>{{LandStatus[subject.landStatus]}}</td>
-                                                                <td>{{subject.landLocation}}</td>
-                                                                <td>{{subject.size}}</td>
-                                                                <td>{{subject.plantTypes}}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                        <table class="table table-bordered table-striped table-sm table-subject">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">#</th>
+                                                                        <th scope="col">Nama</th>
+                                                                        <th scope="col">Status pernikahan</th>
+                                                                        <th scope="col">Alamat</th>
+                                                                        <th scope="col">Jenis kelamin</th>
+                                                                        <th scope="col">Umur</th>
+                                                                        <th scope="col">Pendidikan</th>
+                                                                        <th scope="col">Jumlah keluarga</th>
+                                                                        <th scope="col">Status tanah</th>
+                                                                        <th scope="col">Lokasi lahan garapan</th>
+                                                                        <th scope="col">Luas (ha)</th>
+                                                                        <th scope="col">Jenis tanaman</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody *ngFor="let subject of subjectList">
+                                                                    <tr>
+                                                                        <th scope="row" id="">1</th>
+                                                                        <td>{{subject.name}}</td>
+                                                                        <td>{{MaritalStatus[subject.maritalStatus]}}</td>
+                                                                        <td>{{subject.address}}</td>
+                                                                        <td>{{Gender[subject.gender]}}</td>
+                                                                        <td>{{subject.age}}</td>
+                                                                        <td>{{EducationalAttainment[subject.educationalAttainment]}}</td>
+                                                                        <td>{{subject.totalFamilyMembers}}</td>
+                                                                        <td>{{LandStatus[subject.landStatus]}}</td>
+                                                                        <td>{{subject.landLocation}}</td>
+                                                                        <td>{{subject.size}}</td>
+                                                                        <td>{{subject.plantTypes}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
 
                                                 </nav>
                                             </div>   
                                              
                                             
-                                            <div class="form-group col-md-6">
-                                                <label for="Name">Nama</label>
-                                                <input type="text" class="form-control" id="subjekName" aria-describedby="nameHelp" placeholder="Masukan Nama">
-                                                <small id="namelHelp" class="form-text text-muted"></small>
-                                            </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="Name">Nama</label>
+                                                    <input type="text" class="form-control" id="subjekName" aria-describedby="nameHelp" placeholder="Masukan Nama">
+                                                    <small id="namelHelp" class="form-text text-muted"></small>
+                                                </div>
 
-                                            <div class="form-group col-md-6">
-                                                <label for="status-pernikahan">Status pernikahan</label>
-                                                <select id="inputState" class="form-control">
-                                                    <option selected>Pilih status pernikahan</option>
-                                                    <option>Menikah</option>
-                                                    <option>Tidak menikah</option>
-                                                </select>
-                                            </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="status-pernikahan">Status pernikahan</label>
+                                                    <select id="inputState" class="form-control">
+                                                        <option selected>Pilih status pernikahan</option>
+                                                        <option>Menikah</option>
+                                                        <option>Tidak menikah</option>
+                                                    </select>
+                                                </div>
 
-                                            <div class="form-group col-md-12">
-                                                <label for="formSubjectAlamat">Alamat</label>
-                                                <textarea class="form-control" id="formSubjectAlamat" rows="3"></textarea>
-                                            </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="formSubjectAlamat">Alamat</label>
+                                                    <textarea class="form-control" id="formSubjectAlamat" rows="3"></textarea>
+                                                </div>
 
-                                            <div class="form-group col-md-4">
-                                                <label for="jenisKelamin">Jenis kelamin</label>
-                                                <select id="inputState" class="form-control">
-                                                    <option selected>Pilih jenis kelamin</option>
-                                                    <option>Pria</option>
-                                                    <option>Wanita</option>
-                                                </select>
-                                            </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="jenisKelamin">Jenis kelamin</label>
+                                                    <select id="inputState" class="form-control">
+                                                        <option selected>Pilih jenis kelamin</option>
+                                                        <option>Pria</option>
+                                                        <option>Wanita</option>
+                                                    </select>
+                                                </div>
 
-                                            <div class="form-group col-md-4">
-                                                <label for="umur">Umur</label>
-                                                <input type="text" class="form-control" id="formSubjectUmur" aria-describedby="umurHelp" placeholder="Masukan umur">
-                                                <small id="umurlHelp" class="form-text text-muted"></small>
-                                            </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="umur">Umur</label>
+                                                    <input type="text" class="form-control" id="formSubjectUmur" aria-describedby="umurHelp" placeholder="Masukan umur">
+                                                    <small id="umurlHelp" class="form-text text-muted"></small>
+                                                </div>
 
-                                            <div class="form-group col-md-4">
-                                                <label for="pendidikan">Pendidikan</label>
-                                                <input type="text" class="form-control" id="formSubjectPendidikan" aria-describedby="pendidikanHelp" placeholder="Masukan pendidikan">
-                                                <small id="pendidikanHelp" class="form-text text-muted"></small>
-                                            </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="pendidikan">Pendidikan</label>
+                                                    <input type="text" class="form-control" id="formSubjectPendidikan" aria-describedby="pendidikanHelp" placeholder="Masukan pendidikan">
+                                                    <small id="pendidikanHelp" class="form-text text-muted"></small>
+                                                </div>
 
-                                            <div class="form-group col-md-4">
-                                                <label for="jumlahAnggotaKeluarga">Jumlah keluarga</label>
-                                                <input type="text" class="form-control" id="formSubjectAnggotaKeluarga" aria-describedby="anggotaKeluargaHelp" placeholder="Masukan jumlah keluarga">
-                                                <small id="pendidikanHelp" class="form-text text-muted"></small>
-                                            </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="jumlahAnggotaKeluarga">Jumlah keluarga</label>
+                                                    <input type="text" class="form-control" id="formSubjectAnggotaKeluarga" aria-describedby="anggotaKeluargaHelp" placeholder="Masukan jumlah keluarga">
+                                                    <small id="pendidikanHelp" class="form-text text-muted"></small>
+                                                </div>
 
-                                            <div class="form-group col-md-8">
-                                                <label for="statusTanah">Status tanah</label>
-                                                <input type="text" class="form-control" id="formSubjectStatusTanah" aria-describedby="statusTanahHelp" placeholder="Masukan status tanah">
-                                                <small id="statusTanahHelp" class="form-text text-muted"></small>
-                                            </div>
+                                                <div class="form-group col-md-8">
+                                                    <label for="statusTanah">Status tanah</label>
+                                                    <input type="text" class="form-control" id="formSubjectStatusTanah" aria-describedby="statusTanahHelp" placeholder="Masukan status tanah">
+                                                    <small id="statusTanahHelp" class="form-text text-muted"></small>
+                                                </div>
 
-                                            <div class="form-group col-md-12">
-                                                <label for="lokasiLahanGarapan">Lokasi lahan garapan</label>
-                                                <textarea class="form-control" id="formSubjectLokasiLahanGarapan" rows="3"></textarea>
-                                            </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="lokasiLahanGarapan">Lokasi lahan garapan</label>
+                                                    <textarea class="form-control" id="formSubjectLokasiLahanGarapan" rows="3"></textarea>
+                                                </div>
 
-                                            <div class="form-group col-md-4">
-                                                <label for="Luas">Luas</label>
-                                                <input type="text" class="form-control" id="formSubjectLuas" aria-describedby="luasHelp" placeholder="Luas">
-                                                <small id="statusTanahHelp" class="form-text text-muted"></small>
-                                            </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="Luas">Luas</label>
+                                                    <input type="text" class="form-control" id="formSubjectLuas" aria-describedby="luasHelp" placeholder="Luas">
+                                                    <small id="statusTanahHelp" class="form-text text-muted"></small>
+                                                </div>
 
-                                            <div class="form-group col-md-8">
-                                                <label for="Luas">Jenis tanaman</label>
-                                                <input type="text" class="form-control" id="formSubjectJenisTanaman" aria-describedby="jenisTanamanHelp" placeholder="Masukan jenis tanaman">
-                                                <small id="jenisTanamanHelp" class="form-text text-muted"></small>
-                                            </div>
-
-                                            <div class="form-group col-md-8">
-                                                <button type="button" class="btn btn-info">Simpan data subjek</button>
-                                                <button type="button" class="btn btn-warning">Clear data</button>
-                                            </div>
+                                                <div class="form-group col-md-8">
+                                                    <label for="Luas">Jenis tanaman</label>
+                                                    <input type="text" class="form-control" id="formSubjectJenisTanaman" aria-describedby="jenisTanamanHelp" placeholder="Masukan jenis tanaman">
+                                                    <small id="jenisTanamanHelp" class="form-text text-muted"></small>
+                                                </div>
                                             
 
                                         </div>
@@ -389,7 +394,7 @@
                     <div class="modal-footer">
                         <div class="pr-4">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="button" class="btn btn-primary">Simpan</button>
+                            <button type="button" class="btn btn-primary">Simpan data</button>
                         </div>
                     </div>
                 </div>
@@ -405,15 +410,15 @@
                     <tr>
                         <th><input type="checkbox"></th>
                         <th (click)="sorted('Lokasi')">Lokasi</th>
-                        <th (click)="sorted('Penggarap')">#Penggarap</th>
                         <th (click)="sorted('Luas')">Luas</th>
+                        <th (click)="sorted('Penggarap')">Penggarap</th>
                         <th (click)="sorted('Status')">Status Tanah</th>
                         <th (click)="sorted('Usulan')">Usulan Skema</th>
                         <th>Koordinat</th>
                         <th>Tahapan</th>
                         <th></th>
                         <th></th>
-                        
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>   
@@ -432,7 +437,6 @@
                                 <td><input type="checkbox"></td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)"><a href="#">{{object.name}}</a></td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.totalTenants}}</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.size | number}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{LandStatus[object.landStatus]}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable text-success" (click)="onToggle('toggle-' + object.id)">{{object.proposedTreatment}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">Image</td>
@@ -466,7 +470,7 @@
                                         <div class="tab-content" id="subjekObjekTabContent">
                                             <div class="tab-pane fade show active" id="{{'dataObjek-' + object.id}}" role="tabpanel" aria-labelledby="dataObjek">
 
-                                                <table width="800" class="table table-bordered table-responsive bg-light my-3 table-object">
+                                                <table class="table table-bordered table-responsive bg-light my-3 table-object">
                                                     <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
 
                                                     <thead>
@@ -620,7 +624,7 @@
                                                             <td>{{subject.totalFamilyMembers}}</td>
                                                             <td>{{LandStatus[subject.landStatus]}}</td>
                                                             <td>{{subject.landLocation}}</td>
-                                                            <td>{{subject.size | number}}</td>
+                                                            <td>{{subject.size}}</td>
                                                             <td>{{subject.plantTypes}}</td>
                                                         </tr>
                                                     </tbody>
