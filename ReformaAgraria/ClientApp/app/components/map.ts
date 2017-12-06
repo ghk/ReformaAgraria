@@ -65,10 +65,7 @@ export class MapComponent implements OnInit, OnDestroy {
         }
 
     }
-
-    createControlBar() {
-    }
-
+    
     setupControlBar() {
         L.control.zoom({
             position: 'bottomright'

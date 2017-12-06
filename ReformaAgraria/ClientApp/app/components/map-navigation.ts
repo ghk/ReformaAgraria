@@ -1,31 +1,32 @@
-import { Component, OnInit, OnDestroy, ViewChild  } from '@angular/core';
-import { MapComponent } from "./map";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MapNavigationService } from '../services/mapNavigation';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'ra-map-navigation',
     templateUrl: '../templates/map-navigation.html',
 })
 export class MapNavigationComponent implements OnInit, OnDestroy {
-
-    @ViewChild(MapComponent)
-    private map: MapComponent
-
-    viewMode: string;
-
-    constructor() { }
+    
+    constructor(private mapNavigation: MapNavigationService, private toastr: ToastrService) { }
 
     ngOnInit(): void {
-        this.viewMode = 'map';
-        this.map.setMap(true);
+
     }
 
     ngOnDestroy(): void {
 
     }
-
-    uploadedFile(e) {
-        console.log(e)
-
+    
+    uploadFile(event) {
+        this.mapNavigation.import(event)
+            .subscribe(
+            data => {
+                this.toastr.success('File is successfully uploaded', null)
+            },
+            error => {
+                this.toastr.error('Unable to upload the file', null)
+            });
     }
 
 }
