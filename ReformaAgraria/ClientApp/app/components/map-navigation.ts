@@ -23,4 +23,9 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
 
     }
 
+    uploadedFile(e) {
+        console.log(e)
+
+    }
+
 }

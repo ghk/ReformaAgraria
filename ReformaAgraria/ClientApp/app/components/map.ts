@@ -16,8 +16,8 @@ const LAYERS = {
     templateUrl: '../templates/map.html',
 })
 export class MapComponent implements OnInit, OnDestroy {
-    private _indicator: any;
-    private _bigConfig: any;                          
+    
+    @Output() uploadedFile = new EventEmitter<any>();
 
     map: L.Map;
     snapShotMap: L.Map;
@@ -105,7 +105,7 @@ export class MapComponent implements OnInit, OnDestroy {
                 div.style.lineHeight = '30px';
 
                 let input = div.getElementsByTagName('input')[0];
-                input.onchange = (e) => this.uploadFile(e);
+                input.onchange = (e) => this.uploadedFile.emit(e);
 
                 return div;
             }
@@ -169,10 +169,6 @@ export class MapComponent implements OnInit, OnDestroy {
     fullScreenToggle(e) {
         console.log('clicked');
 
-    }
-
-    uploadFile(e) {
-        
     }
 
     selectOverlay() {
