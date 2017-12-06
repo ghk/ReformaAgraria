@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171206052355_AddBaseLayersClass")]
+    partial class AddBaseLayersClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

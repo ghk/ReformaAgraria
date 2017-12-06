@@ -27,6 +27,7 @@ namespace ReformaAgraria.Models
         public DbSet<ActProposalDocumentCheckList> ActProposalDocumentCheckList { get; set; }
         public DbSet<VillageProfile> VillageProfile { get; set; }
         public DbSet<TipologyOfAgrarianProblem> TipologyOfAgrarianProblem { get; set; }
+        public DbSet<BaseLayers> BaseLayers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

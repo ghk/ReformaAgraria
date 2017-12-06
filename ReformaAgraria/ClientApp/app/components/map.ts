@@ -1,6 +1,7 @@
 ﻿import { OnInit, OnDestroy, Component, ApplicationRef, EventEmitter, Input, Output, Injector, ComponentRef, ComponentFactoryResolver } from "@angular/core";
 import * as L from 'leaflet';
 import * as $ from 'jquery';
+import { MapService } from '../services/mapService';
 
 const DATA_SOURCES = 'data';
 const LAYERS = {
@@ -10,39 +11,34 @@ const LAYERS = {
     'MapboxSatellite': new L.TileLayer('https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZ2hrIiwiYSI6ImUxYmUxZDU3MTllY2ZkMGQ3OTAwNTg1MmNlMWUyYWIyIn0.qZKc1XfW236NeD0qAKBf9A')
 };
 
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'ra-map',
     templateUrl: '../templates/map.html',
 })
-export class MapComponent implements OnInit, OnDestroy {
-    
-    @Output() uploadedFile = new EventEmitter<any>();
-
+export class MapComponent implements OnInit, OnDestroy {    
     map: L.Map;
     snapShotMap: L.Map;
+    geoJSONLayer: L.GeoJSON;
     options: any;
     drawOptions: any;
     center: any;
-    zoom: number;
-    geoJSONLayer: L.GeoJSON;
-    smallSizeLayers: L.LayerGroup = L.layerGroup([]);
-    mediumSizeLayers: L.LayerGroup = L.layerGroup([]);
-    bigSizeLayers: L.LayerGroup = L.layerGroup([]);
-    mapData: any;
-    perkabigConfig: any;
-    markers = [];
+    zoom: number;    
+    perkabigConfig: any;    
     isExportingMap: boolean;
     layers: any;
     layersControl: any;
     controlOverlayShowing: any;
     afterInit: boolean;
+    model = {};
+    markers = [];
 
-    constructor() { }
+    constructor(private mapService: MapService, private toastr: ToastrService) { }
 
     ngOnInit(): void {
-        this.center = L.latLng(-6.174668, 106.8271269);
-        this.zoom = 5;
+        this.center = L.latLng(-1.374581, 119.977618);
+        this.zoom = 8;
         this.options = {
             layers: null,
             zoomControl: false           
@@ -95,14 +91,9 @@ export class MapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<label for="files" class="btn" style="padding-top:3px;">Upload File</label><input id= "files" style="display:none" type= "file" >';
-               
-                div.style.height = '30px';
-                div.style.textAlign = 'center';
-                div.style.lineHeight = '30px';
-
-                let input = div.getElementsByTagName('input')[0];
-                input.onchange = (e) => this.uploadedFile.emit(e);
+                div.innerHTML = '<button type="button" class="btn btn-light btn-sm">Upload File</button>';
+                
+                div.onclick = (e) => $("#upload-modal")['modal']("show");
 
                 return div;
             }
@@ -114,8 +105,8 @@ export class MapComponent implements OnInit, OnDestroy {
                 position: 'topright'
             },
             onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-1');
-                div.innerHTML = `<div class="btn-group btn-group-sm" role="group" aria-label="First group"><button type="button" class="btn btn-light">Kawasan Dan Perizinan</button><button type="button" class="btn btn-secondary">+</button></div>`;
+                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
+                div.innerHTML = `<button type="button" class="btn btn-light btn-sm">Kawasan Dan Perizinan</button>`;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
                 buttonOverlay.onclick = (e) => this.toggleControlLayers(3);
@@ -131,7 +122,7 @@ export class MapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-2');
-                div.innerHTML = `<div class="btn-group btn-group-sm" role="group" aria-label="First group"><button type="button" class="btn btn-light">Wilayah Kelola</button><button type="button" class="btn btn-secondary">+</button></div>`;
+                div.innerHTML = `<button type="button" class="btn btn-light btn-sm">Wilayah Kelola</button>`;
                 window['div'] = div;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
@@ -165,24 +156,12 @@ export class MapComponent implements OnInit, OnDestroy {
 
     fullScreenToggle(e) {
         console.log('clicked');
-
     }
 
-    selectOverlay() {
+    openUploadDialog() {
 
     }
-
-    addProperty() {
-
-    }
-
-    setMap(recenter = true): void {
-    }
-
-    setMapData(data): void {
-        this.mapData = data;
-    }
-
+    
     setLayer(name): void {
         this.map.addLayer(LAYERS[name]);
     }
@@ -221,4 +200,21 @@ export class MapComponent implements OnInit, OnDestroy {
             });
         });
     }
+
+    uploadFile() {
+        $("#upload-modal")['modal']("hide");
+        this.mapService.import(this.model)
+            .subscribe(
+            data => {
+                this.toastr.success('File is successfully uploaded', null)
+            },
+            error => {
+                this.toastr.error('Unable to upload the file', null)
+            });
+    }
+
+    onChangeFile(event) {        
+        this.model['file'] = event.srcElement.files
+    }
+    
 }
