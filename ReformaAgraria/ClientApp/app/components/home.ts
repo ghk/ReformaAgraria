@@ -1,13 +1,14 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy} from '@angular/core';
 import { SharedService } from '../services/shared';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'ra-home',
     templateUrl: '../templates/home.html',
 })
 export class HomeComponent implements OnInit, OnDestroy {
-    sub: any;
+    sub: Subscription;
 
     constructor(
         private sharedService: SharedService,
@@ -17,13 +18,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
+            console.log(params)
             this.sharedService.setRegionId(params['id'] != null ? params['id'] : '72.1');
+
             });
     }
 
 
     ngOnDestroy(): void {
-
+        this.sub.unsubscribe();
     }
 
 }

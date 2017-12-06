@@ -247,8 +247,8 @@ ol.breadcrumb li a:hover {
     transform: translate(-50%, -50%);
 }
 
-/*spin css table*/
 
+/*spin css table*/
 
 .spin-icon {
 animation-name: spin;
@@ -263,7 +263,7 @@ animation: spin 1100ms linear both;
     4.66% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     4.76% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     7.81% { transform: matrix3d(0.525, 0.851, 0, 0, -0.851, 0.525, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    10.77% { transform: matrix3d(-0.12, 0.993, q0, 0, -0.993, -0.12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+    10.77% { transform: matrix3d(-0.12, 0.993, 0, 0, -0.993, -0.12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     16.68% { transform: matrix3d(-0.783, 0.622, 0, 0, -0.622, -0.783, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     22.68% { transform: matrix3d(-0.954, 0.299, 0, 0, -0.299, -0.954, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     28.6% { transform: matrix3d(-0.991, 0.137, 0, 0, -0.137, -0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
@@ -273,7 +273,6 @@ animation: spin 1100ms linear both;
   }
   
   
-
 .back-spin {
     animation-name: back-spin;
     animation: back-spin 1100ms linear both;
@@ -318,12 +317,27 @@ animation: spin 1100ms linear both;
     box-shadow: none;
 }
 
+// table style
+
+table, td, th {    
+    
+}
+
+.table-region table {
+    border-collapse: collapse;
+    
+}
+
+table#table-region td {
+    padding-right: 50px !important
+}
+
+table#table-region th {
+    padding-right: 10px !important
+}
 
 
-// tab style
-
-
-// loader
+// loader animation
 
 /* Center the loader */
 #loader {
@@ -346,8 +360,8 @@ animation: spin 1100ms linear both;
   border-top: 16px solid #3498db;
   width: 100px;
   height: 100px;
-  -webkit-animation: spin 1.5s linear infinite;
-  animation: spin 1.5s linear infinite;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
 @-webkit-keyframes spin {
@@ -385,5 +399,32 @@ animation: spin 1100ms linear both;
 }
 
 
+// pointer
 
+.btn {
+    cursor: pointer;
+}
+
+
+//control bar leaflet
+.leaflet-control-layers.leaflet-control.control-1 {
+    position: absolute;
+    right: 2px;
+}
+.leaflet-control-layers.leaflet-control.control-2 {
+    position: absolute;
+    right: 250px;
+}
+.leaflet-control-layers-expanded:nth-child(3) {
+    right: 26px;
+    top: 33px;
+    width: 172px;
+    position: absolute;
+}
+.leaflet-control-layers-expanded:nth-child(4) {
+    right: 275px;
+    top: 33px;
+    width: 115px;
+    position: absolute;
+}
 

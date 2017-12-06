@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
     templateUrl: '../templates/map-navigation.html',
 })
 export class MapNavigationComponent implements OnInit, OnDestroy {
-
+    
     constructor(private mapNavigation: MapNavigationService, private toastr: ToastrService) { }
 
     ngOnInit(): void {
