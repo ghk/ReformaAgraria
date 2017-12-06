@@ -249,7 +249,22 @@ namespace ReformaAgraria.Controllers
                               TotalSize = r.Sum(_ => _.Size),
                               TotalToraObjects = r.Count()
                           };
-            
+
+
+            //var results = from desa in dbContext.Set<Region>()
+            //              join kec in dbContext.Set<Region>() on desa.FkParentId equals kec.Id
+            //              join objects in dbContext.Set<ToraObject>() on desa.Id equals objects.FkRegionId
+            //              join subjects in dbContext.Set<ToraSubject>() on objects.Id equals subjects.FkToraObjectId
+            //              where objects.FkRegionId.StartsWith(id)
+            //              group objects by region.Type == RegionType.Kabupaten ? kec.Id : desa.Id into r
+            //              select new DashboardData
+            //              {
+            //                  Region = children.First(c => c.Id == r.Key),
+            //                  TotalSize = r.Sum(_ => _.Size),
+            //                  TotalToraObjects = objects.Id.Distinct().Count(),
+            //                  TotalToraSubjects = subjects.Id.Distinct().Count()
+            //              };
+
             return children
                 .Select(c => results.FirstOrDefault(g => g.Region.Id == c.Id)
                     ?? new DashboardData { Region = c } )

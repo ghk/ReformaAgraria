@@ -410,6 +410,7 @@
                         <th><input type="checkbox"></th>
                         <th (click)="sorted('Lokasi')">Lokasi</th>
                         <th (click)="sorted('Penggarap')">#Penggarap</th>
+                        <th (click)="sorted('Luas')">Luas</th>
                         <th (click)="sorted('Status')">Status Tanah</th>
                         <th (click)="sorted('Usulan')">Usulan Skema</th>
                         <th>Koordinat</th>
@@ -435,6 +436,7 @@
                                 <td><input type="checkbox"></td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.name}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.totalTenants}}</td>
+                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.size | number}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{LandStatus[object.landStatus]}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable text-success" (click)="onToggle('toggle-' + object.id)">{{object.proposedTreatment}}</td>
                                 <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">Image</td>
@@ -622,7 +624,7 @@
                                                             <td>{{subject.totalFamilyMembers}}</td>
                                                             <td>{{LandStatus[subject.landStatus]}}</td>
                                                             <td>{{subject.landLocation}}</td>
-                                                            <td>{{subject.size}}</td>
+                                                            <td>{{subject.size | number}}</td>
                                                             <td>{{subject.plantTypes}}</td>
                                                         </tr>
                                                     </tbody>
