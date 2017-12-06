@@ -77,7 +77,9 @@ import './styles/app.scss';
         RegionComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
+        AgrariaIssuesListObjectSubjectComponent,
         MapComponent        
+        
     ],
     imports: [
         LeafletModule,
