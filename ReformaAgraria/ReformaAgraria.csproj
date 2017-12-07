@@ -9,10 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.2" />
+    <PackageReference Include="Gdal.Core" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.0" />
+    <PackageReference Include="NuGet.Modules.JObjectExtensions" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
