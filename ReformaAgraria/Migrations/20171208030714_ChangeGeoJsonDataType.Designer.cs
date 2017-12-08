@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171208030714_ChangeGeoJsonDataType")]
+    partial class ChangeGeoJsonDataType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,8 +232,9 @@ namespace ReformaAgraria.Migrations
                     b.Property<DateTime?>("DateModified")
                         .HasColumnName("date_modified");
 
-                    b.Property<string>("Geojson")
-                        .HasColumnName("geojson");
+                    b.Property<string>("GeoJson")
+                        .HasColumnName("geo_json")
+                        .HasMaxLength(4010);
 
                     b.Property<string>("Label")
                         .HasColumnName("label");

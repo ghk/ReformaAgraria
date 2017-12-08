@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using MicrovacWebCore;
 using ReformaAgraria.Models;
-using Microsoft.AspNetCore.Http;               
+using Microsoft.AspNetCore.Http;
 using System.IO.Compression;
 using System;
 using OSGeo.OGR;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using ReformaAgraria.Models.ViewModels;
+using ReformaAgraria.Security;
+using System.Linq;
 
 namespace ReformaAgraria.Controllers
 {
@@ -26,7 +28,7 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("import")]
-        public void Import()
+        public async System.Threading.Tasks.Task ImportAsync()
         {
             var results = HttpContext.Request.ReadFormAsync().Result;
             var label = results["label"];
@@ -47,6 +49,7 @@ namespace ReformaAgraria.Controllers
 
             if (shapeFiles.Length == 0)
             {
+                System.IO.File.Delete(zipPath);
                 return;
             }
 
@@ -60,7 +63,7 @@ namespace ReformaAgraria.Controllers
             Layer layer = ds.GetLayerByIndex(0);
             Feature f;
             layer.ResetReading();
-            
+
             var geoJsons = new List<string>();
 
             while ((f = layer.GetNextFeature()) != null)
@@ -76,8 +79,27 @@ namespace ReformaAgraria.Controllers
             GeoJsonViewModel featureCollections = CreateFeatureCollection(geoJsons);
             string geoJsonModel = JsonConvert.SerializeObject(featureCollections);
 
-            DeleteDirectory(tempPath);
+            var baseLayerContent = new BaseLayers
+            {
+                Label = label,
+                Color = color,
+                Geojson = geoJsonModel,
+            };
+
+            dbContext.Add(baseLayerContent);
+            await dbContext.SaveChangesAsync();
+
+            DeleteDirectory(tempPath);            
         }
+
+        [HttpGet("get")]
+        public List<BaseLayers> GetBaseLayerContent()
+        {
+            var results = from content in dbContext.Set<BaseLayers>()
+                          select content;
+            return results.ToList();
+        }
+
 
         public void StreamCopy(string filePath,IFormFile file)
         {
@@ -109,25 +131,21 @@ namespace ReformaAgraria.Controllers
             return geoJson;
         }
 
-        public static void DeleteFileOrDirectory(string path)
+        
+        private static void DeleteDirectory(string directory)
         {
             try
             {
-                Directory.Delete(path, true);
+                Directory.Delete(directory, true);
             }
             catch (IOException)
             {
-                Directory.Delete(path, true);
+                Directory.Delete(directory, true);
             }
             catch (UnauthorizedAccessException)
             {
-                Directory.Delete(path, true);
+                Directory.Delete(directory, true);
             }
-        }
-
-        private static void DeleteDirectory(string directory)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -43,11 +43,18 @@ export class MapComponent implements OnInit, OnDestroy {
             layers: null,
             zoomControl: false           
         };
+        this.getContent()
         
     }    
 
     ngOnDestroy() {
 
+    }
+
+    getContent() {
+        this.mapService.getContent(result => {
+
+        });
     }
 
     ngAfterViewChecked() {

@@ -14,7 +14,7 @@ namespace ReformaAgraria.Models
         public string Label { get; set; }
 
         public string Color { get; set; }
-
-        public long GeoJson { get; set; }
+        
+        public string Geojson { get; set; }
     }
 }
