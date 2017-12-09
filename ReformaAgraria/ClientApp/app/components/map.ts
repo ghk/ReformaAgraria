@@ -1,8 +1,9 @@
 ﻿import { OnInit, OnDestroy, Component, ApplicationRef, EventEmitter, Input, Output, Injector, ComponentRef, ComponentFactoryResolver } from "@angular/core";
 import * as L from 'leaflet';
 import * as $ from 'jquery';
-import { MapService } from '../services/mapService';
+import { MapService } from '../services/map';
 
+import MapUtils from '../helpers/mapUtils';
 const DATA_SOURCES = 'data';
 const LAYERS = {
     "OpenStreetMap": new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
@@ -31,6 +32,9 @@ export class MapComponent implements OnInit, OnDestroy {
     layersControl: any;
     controlOverlayShowing: any;
     afterInit: boolean;
+    mapData: any;
+    baseLayers: any;
+    overlays: any;
     model = {};
     markers = [];
 
@@ -40,23 +44,29 @@ export class MapComponent implements OnInit, OnDestroy {
         this.center = L.latLng(-1.374581, 119.977618);
         this.zoom = 8;
         this.options = {
-            layers: null,
             zoomControl: false           
         };
-        this.getContent()
+        this.mapService.getContent(result => {
+            let overlays = {};
+            result.forEach((content, i) => {
+                let geoJson = this.getGeoJson(content.geojson);
+                overlays[content.label] = geoJson;
+                if (i == 0) {
+                    this.getGeoJson = geoJson;
+                }
+            })
+            this.setOverlay(overlays);
+            this.setCenter();
+            this.setMap;
+            
+        });
         
     }    
 
     ngOnDestroy() {
 
     }
-
-    getContent() {
-        this.mapService.getContent(result => {
-
-        });
-    }
-
+    
     ngAfterViewChecked() {
         if (this.afterInit) {
             let elements = $(`.leaflet-control-layers-expanded`)
@@ -129,7 +139,7 @@ export class MapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-2');
-                div.innerHTML = `<button type="button" class="btn btn-light btn-sm">Wilayah Kelola</button>`;
+                div.innerHTML = `<button type="button" class="btn btn-light btn-sm">Base Layers</button>`;
                 window['div'] = div;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
@@ -137,10 +147,8 @@ export class MapComponent implements OnInit, OnDestroy {
                 return div;
             }
         });
-        this.map.addControl(new buttonListSector2());        
-        L.control.layers(null, null,{ collapsed: false }).addTo(this.map);        
-        L.control.layers(null, null, { collapsed: false }).addTo(this.map);
-        this.afterInit = true;
+        this.map.addControl(new buttonListSector2());
+       
         
     }
 
@@ -177,28 +185,15 @@ export class MapComponent implements OnInit, OnDestroy {
         this.map.removeLayer(LAYERS[name]);
     }
       
-    loadGeoJson(): void {
-     
-    }
-
     addMarker(marker): void {
         this.markers.push(marker);
     }
 
-    clearMap() {
-        this.geoJSONLayer ? this.map.removeLayer(this.geoJSONLayer) : null;                 
-        for (let i = 0; i < this.markers.length; i++)
-            this.map.removeLayer(this.markers[i]);
-
-        this.markers = [];
-    }
-
     onMapReady(map: L.Map): void {
+        console.log('map ready')
         this.map = map;
         this.setLayer('OpenStreetMap');
         this.setupControlBar();
-
-        this.map.setView(this.center, this.zoom, this.options);
 
         //RESIZE ICON
         this.map.on('zoomend', () => {
@@ -222,6 +217,155 @@ export class MapComponent implements OnInit, OnDestroy {
 
     onChangeFile(event) {        
         this.model['file'] = event.srcElement.files
+    }
+
+    setCenter(): void {
+        if (!this.geoJSONLayer)
+            this.setMap(true);
+        else
+            this.center = this.geoJSONLayer.getBounds().getCenter();
+    }
+
+    setMap(recenter = true): void {
+        this.clearMap();
+        this.loadGeoJson();
+
+        try {
+            if (recenter)
+                this.map.setView(this.geoJSONLayer.getBounds().getCenter(), 14);
+        }
+        catch (error) {
+            console.log('Something wrong with this geojson either the structure is error or null');
+        }
+    }
+
+    clearMap() {
+        this.geoJSONLayer ? this.map.removeLayer(this.geoJSONLayer) : null;
+
+        for (let i = 0; i < this.markers.length; i++)
+            this.map.removeLayer(this.markers[i]);
+
+        this.markers = [];
+    }
+
+    loadGeoJson(): void {
+        let geoJson = this.mapData;
+
+        let geoJsonOptions = {
+            style: (feature) => {
+                return { color: '#000', weight: feature.geometry.type === 'LineString' ? 3 : 1 }
+            },
+            pointToLayer: (feature, latlng) => {
+                return new L.CircleMarker(latlng, {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+            },
+            onEachFeature: (feature, layer: L.FeatureGroup) => {
+                layer.on({
+                    "click": (e) => {
+                    }
+                });
+
+                let center = null;
+
+                if (layer.feature['geometry'].type === 'Point') {
+                    center = layer.feature['geometry'].coordinates;
+                }
+                else {
+                    let bounds = layer.getBounds();
+                    center = bounds.getCenter();
+                }
+
+                let element = null;
+
+                if (!element)
+                    return;
+
+               if (feature.properties['icon']) {
+                    let icon = L.icon({
+                        iconUrl: 'assets/markers/' + feature.properties['icon'],
+                        iconSize: [15, 15],
+                        shadowSize: [50, 64],
+                        iconAnchor: [22, 24],
+                        shadowAnchor: [4, 62],
+                        popupAnchor: [-3, -76]
+                    });
+
+                    let marker = L.marker(center, { icon: icon }).addTo(this.map);
+
+                    this.addMarker(marker);
+                }
+            }
+        };
+
+        this.geoJSONLayer = MapUtils.setGeoJsonLayer(geoJson).addTo(this.map);
+    }
+
+    getGeoJson(geoJson): any {
+        let geoJsonOptions = {
+            style: (feature) => {
+                return { color: '#000', weight: feature.geometry.type === 'LineString' ? 3 : 1 }
+            },
+            pointToLayer: (feature, latlng) => {
+                return new L.CircleMarker(latlng, {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+            },
+            onEachFeature: (feature, layer: L.FeatureGroup) => {
+                layer.on({
+                    "click": (e) => {
+                    }
+                });
+
+                let center = null;
+
+                if (layer.feature['geometry'].type === 'Point') {
+                    center = layer.feature['geometry'].coordinates;
+                }
+                else {
+                    let bounds = layer.getBounds();
+                    center = bounds.getCenter();
+                }
+
+                let element = null;
+
+                if (!element)
+                    return;
+
+                if (feature.properties['icon']) {
+                    let icon = L.icon({
+                        iconUrl: 'assets/markers/' + feature.properties['icon'],
+                        iconSize: [15, 15],
+                        shadowSize: [50, 64],
+                        iconAnchor: [22, 24],
+                        shadowAnchor: [4, 62],
+                        popupAnchor: [-3, -76]
+                    });
+
+                    let marker = L.marker(center, { icon: icon }).addTo(this.map);
+
+                    this.addMarker(marker);
+                }
+            }
+        };
+
+        return  MapUtils.setGeoJsonLayer(geoJson);
+    }
+
+    setOverlay(data) {
+        this.overlays = L.control.layers(null, data, { collapsed: false }).addTo(this.map);
+        this.baseLayers = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);
+        this.afterInit = true;
     }
     
 }

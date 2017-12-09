@@ -44,7 +44,7 @@ export class MapService {
 
     getContent(callback){
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        return this.http.get('/api/map/get/', requestOptions)
+        return this.http.get('/api/map/getall/', requestOptions)
             .subscribe(response => {
                 let data = response.json();
 

@@ -92,7 +92,7 @@ namespace ReformaAgraria.Controllers
             DeleteDirectory(tempPath);            
         }
 
-        [HttpGet("get")]
+        [HttpGet("getall")]
         public List<BaseLayers> GetBaseLayerContent()
         {
             var results = from content in dbContext.Set<BaseLayers>()
