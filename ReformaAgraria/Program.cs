@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using ReformaAgraria.Models;
 using System;
 using System.IO;
+using Serilog;
+using ReformaAgraria.Helpers;
 
 namespace ReformaAgraria
 {
@@ -11,20 +13,31 @@ namespace ReformaAgraria
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args);
+            Log.Logger = LogConfiguration.GetConfiguration();
 
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            var isDevelopment = environment == EnvironmentName.Development;
-            if (isDevelopment)
+            try
             {
-                using (var scope = host.Services.CreateScope())
+                var host = BuildWebHost(args);
+                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                var isDevelopment = environment == EnvironmentName.Development;
+                if (isDevelopment)
                 {
-                    var services = scope.ServiceProvider;
-                    DbInitializer.InitializeAsync(services).Wait();
+                    using (var scope = host.Services.CreateScope())
+                    {
+                        var services = scope.ServiceProvider;
+                        DbInitializer.InitializeAsync(services).Wait();
+                    }
                 }
+                host.Run();
+            } 
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
             }
-
-            host.Run();
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
@@ -33,6 +46,7 @@ namespace ReformaAgraria
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
+                .UseSerilog()
                 .Build();
     }
 }

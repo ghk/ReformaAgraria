@@ -12,19 +12,19 @@ using Newtonsoft.Json;
 using ReformaAgraria.Models.ViewModels;
 using ReformaAgraria.Security;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
     [Route("api/[controller]")]
     public class MapController : CrudController<ToraObject, int>
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ILogger<MapController> _logger;
 
-        public MapController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment, IHttpContextAccessor contextAccessor) : base(dbContext)
+        public MapController(ReformaAgrariaDbContext dbContext, 
+            ILogger<MapController> logger) : base(dbContext)
         {
-            _hostingEnvironment = hostingEnvironment;
-            _contextAccessor = contextAccessor;
+            _logger = logger;
         }
 
         [HttpPost("import")]
