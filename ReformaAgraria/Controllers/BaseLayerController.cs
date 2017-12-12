@@ -32,13 +32,6 @@ namespace ReformaAgraria.Controllers
 
         protected override IQueryable<BaseLayer> ApplyQuery(IQueryable<BaseLayer> query)
         {
-            var type = GetQueryString<string>("type");
-            if (type == "upload")
-            {
-                var label = GetQueryString<string>("label");
-                var color = GetQueryString<string>("color");
-
-            }
             return query;
         }
 
@@ -49,8 +42,32 @@ namespace ReformaAgraria.Controllers
             var label = results["label"];
             var color = results["color"];
             var file = results.Files[0];
-            
-            var tempFolderName = "reforma_agraria" + DateTime.Now.ToString("yyyyMMddHHmmssffff");
+            var geoJsonModel = GetGeoJson(file);
+
+            if (geoJsonModel == null)
+            {
+                return null;
+            }
+
+            var baseLayerContent = new BaseLayer
+            {
+                Label = label,
+                Color = color,
+                Geojson = geoJsonModel,
+            };
+
+            dbContext.Add(baseLayerContent);
+            await dbContext.SaveChangesAsync();
+
+            var destinationFile = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "base_layer", (baseLayerContent.Id.ToString() + '_' +".zip"));
+            StreamCopy(destinationFile, file);
+
+            return baseLayerContent;
+        }
+
+        public string GetGeoJson(IFormFile file)
+        {
+            var tempFolderName = "reforma_agraria_" + DateTime.Now.ToString("yyyyMMddHHmmssffff");
             var tempPath = Path.Combine(Path.GetTempPath(), tempFolderName);
             var zipPath = Path.Combine(tempPath, file.FileName);
 
@@ -62,7 +79,7 @@ namespace ReformaAgraria.Controllers
 
             if (shapeFiles.Length == 0)
             {
-                DeleteDirectory(tempPath);
+                //DeleteDirectory(tempPath);
                 return null;
             }
 
@@ -92,21 +109,10 @@ namespace ReformaAgraria.Controllers
             GeoJsonViewModel featureCollections = CreateFeatureCollection(geoJsons);
             string geoJsonModel = JsonConvert.SerializeObject(featureCollections);
 
-            var baseLayerContent = new BaseLayer
-            {
-                Label = label,
-                Color = color,
-                Geojson = geoJsonModel,
-            };
-
-            dbContext.Add(baseLayerContent);
-            await dbContext.SaveChangesAsync();
-
-            var destinationFile = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "base_layer", (baseLayerContent.Id.ToString() + '_' + file.FileName));
-            System.IO.File.Copy(zipPath, destinationFile, true);
-            DeleteDirectory(tempPath);
-            return baseLayerContent;
+            //Directory.Delete(tempPath, true);
+            return geoJsonModel;
         }
+
         public void StreamCopy(string filePath, IFormFile file)
         {
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -139,17 +145,15 @@ namespace ReformaAgraria.Controllers
 
        private void DeleteDirectory(string directory)
         {
-            try
+            DirectoryInfo di = new DirectoryInfo(directory);
+
+            foreach (FileInfo file in di.GetFiles())
             {
-                Directory.Delete(directory, true);
+                file.Delete();
             }
-            catch (IOException)
+            foreach (DirectoryInfo dir in di.GetDirectories())
             {
-                Directory.Delete(directory, true);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Directory.Delete(directory, true);
+                dir.Delete(true);
             }
         }
     }

@@ -4,8 +4,9 @@ import * as $ from 'jquery';
 import { BaseLayerService } from '../services/gen/baseLayer';
 import { MapService } from '../services/map';
 import { BaseLayer } from '../models/gen/baseLayer';
-
 import MapUtils from '../helpers/mapUtils';
+
+
 const DATA_SOURCES = 'data';
 const LAYERS = {
     "OpenStreetMap": new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
@@ -51,42 +52,43 @@ export class MapComponent implements OnInit, OnDestroy {
         this.options = {
             zoomControl: false           
         };
+        this.getContent()        
+    }    
+
+    ngOnDestroy() {
+        
+    }
+
+    getContent() {
         let query = {};
-        let me = this;
         this.baseLayerService.getAll(query, null).subscribe(data => {
             let results = [];
             if (data.length && data.length > 0) {
                 data.forEach(result => {
                     let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
-                    let innerHtml = `<a href="javascript:void(0)"><span class="oi oi-pencil overlay-editing"  style="float:right;"value="${result.id}"></span></a>`;
-                    try {
-                        me.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
-                    }
-                    catch (e) {
-                        console.log(e);
-                    }
-                    
+                    let innerHtml = `<a href="javascript:void(0)">
+                                        <span class="oi oi-x overlay-action" id="delete" style="float:right;" data-value="${result.id}"></span>
+                                     </a>
+                                    <a href="javascript:void(0)" >
+                                        <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
+                                    </a>
+                                      `;
+                    this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
 
                     result.geojson = geojson;
                     results.push(result);
                 })
             }
-            me.initialData = results;
-            me.isOverlayAdded = true;
+            this.initialData = results;
+            this.isOverlayAdded = true;
         });
-    }    
-
-    ngOnDestroy() {
-
-    }
-
-    getContent() {
-        
     }
 
 
-    onclickEditOverlay(event) {
-        console.log("anton");
+    onclickActionOverlay = (event) =>{
+        $(`#${event.target.id}-modal`)['modal']("show");
+        let id = event.target.dataset.value;
+        this.model = this.initialData.find(o => o.id == parseInt(id));
     }
 
     ngAfterViewChecked() {
@@ -97,14 +99,15 @@ export class MapComponent implements OnInit, OnDestroy {
                 element.style.visibility = 'hidden';
             }
 
-            let toggleEditing = $('.overlay-editing').click(e => this.onclickEditOverlay(e));
             this.afterInit = false;
         }
         if (this.isOverlayAdded) {
-            let elements = $(".overlay-editing");
-            for (let i = 0; i < elements.length; i++) {
-                let element = elements[i];
-                element.addEventListener('click', this.onclickEditOverlay, false);
+            let elemenets = $(".overlay-action");
+
+            for (let i = 0; i < elemenets.length; i++) {
+                let element = elemenets[i];
+
+                element.addEventListener('click', this.onclickActionOverlay, false);
             }
             this.isOverlayAdded = false;
         }
@@ -187,7 +190,7 @@ export class MapComponent implements OnInit, OnDestroy {
             }
         }
 
-        let status = '';
+        let status = '';    
         let element = $(`.leaflet-control-layers-expanded:nth-child(${id})`)[0];
         if (element) {
             status = element.style.visibility === 'hidden' ? '' : 'hidden';
@@ -198,11 +201,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     fullScreenToggle(e) {
     }
-
-    openUploadDialog() {
-
-    }
-    
+        
     setLayer(name): void {
         this.map.addLayer(LAYERS[name]);
     }
@@ -230,8 +229,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
     uploadFile() {
         $("#upload-modal")['modal']("hide");
-        let query = { data: {'type': 'upload', 'color': this.model.color, 'label': this.model.label, 'file': this.model['file'] } }
-        
         this.mapService.import(this.model)
             .subscribe(
             data => {
@@ -242,8 +239,24 @@ export class MapComponent implements OnInit, OnDestroy {
             });
     }
 
+    editOverlay(model) {
+        $("#edit-modal")['modal']("hide");
+        let baselayerModel: BaseLayer = model;
+        
+    }
+
+    deleteOverlay(model) {
+        $("#edit-modal")['modal']("hide");
+        let baselayerModel: BaseLayer = model;
+
+        this.baseLayerService.deleteById(model.id).subscribe(result => {
+            this.overlays.remove();
+            this.getContent();
+        })
+    }
+
     onChangeFile(event) {        
-        this.model['file'] = event.srcElement.files
+        this.model['file'] = event.srcElement.files;
     }
 
     setCenter(): void {
@@ -308,12 +321,10 @@ export class MapComponent implements OnInit, OnDestroy {
                     });
 
                     let marker = L.marker(center, { icon: icon }).addTo(this.map);
-
                     this.addMarker(marker);
                 }
             }
         };
         return MapUtils.setGeoJsonLayer(geoJson, geoJsonOptions);
     } 
-    
 }

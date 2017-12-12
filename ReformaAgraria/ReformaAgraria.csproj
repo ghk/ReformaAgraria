@@ -43,6 +43,7 @@
 
   <ItemGroup>
     <Folder Include="Docs\" />
+    <Folder Include="wwwroot\base_layer\" />
   </ItemGroup>
 
   <ItemGroup>
