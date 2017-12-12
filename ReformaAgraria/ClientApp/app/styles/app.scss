@@ -329,12 +329,17 @@ table, td, th {
 }
 
 table#table-region td {
-    padding-right: 50px !important
+    padding-right: 45px !important
 }
 
 table#table-region th {
     padding-right: 10px !important
 }
+
+.table-object-subject {
+    font-size: 14px;
+}
+
 
 
 // loader animation
@@ -406,25 +411,73 @@ table#table-region th {
 }
 
 
-//control bar leaflet
-.leaflet-control-layers.leaflet-control.control-1 {
+// vertical line
+
+.Vline {
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    height: 80px;
     position: absolute;
-    right: 2px;
+    left: 24%;
+    
 }
-.leaflet-control-layers.leaflet-control.control-2 {
+
+// header indicator
+
+.header-list-problem, .header-list-object {
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.header-list-problem h2 {
+    color: #FF0058;
+    
+}
+
+.header-list-problem p {
+    
+    
+}
+
+.header-list-object h2 {
+    color: #4835E8;
+    
+
+}
+
+.header-list-large h2 {
+    color: rgb(54, 160, 9);
+    
+
+}
+
+.header-list-problem .header-list-object p {
+   margin-top: 20px;
+}
+//control bar leaflet
+.leaflet-control-layers.leaflet-control.control-right-1 {
+    position: relative;
+    right: 5px;
+}
+.leaflet-control-layers.leaflet-control.control-right-2 {
     position: absolute;
-    right: 250px;
+    right: 253px;
 }
 .leaflet-control-layers-expanded:nth-child(3) {
-    right: 26px;
+    right: 5px;
     top: 33px;
-    width: 172px;
+    width: 239px;
     position: absolute;
 }
+
 .leaflet-control-layers-expanded:nth-child(4) {
-    right: 275px;
+    right: 253px;
     top: 33px;
-    width: 115px;
+    width: 218px;
     position: absolute;
+}
+.fullscreen-button {
+    width: 33px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
 }
 

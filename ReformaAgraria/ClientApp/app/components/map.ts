@@ -1,7 +1,11 @@
 ﻿import { OnInit, OnDestroy, Component, ApplicationRef, EventEmitter, Input, Output, Injector, ComponentRef, ComponentFactoryResolver } from "@angular/core";
 import * as L from 'leaflet';
 import * as $ from 'jquery';
+import { BaseLayerService } from '../services/gen/baseLayer';
+import { MapService } from '../services/map';
+import { BaseLayer } from '../models/gen/baseLayer';
 
+import MapUtils from '../helpers/mapUtils';
 const DATA_SOURCES = 'data';
 const LAYERS = {
     "OpenStreetMap": new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
@@ -10,48 +14,79 @@ const LAYERS = {
     'MapboxSatellite': new L.TileLayer('https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZ2hrIiwiYSI6ImUxYmUxZDU3MTllY2ZkMGQ3OTAwNTg1MmNlMWUyYWIyIn0.qZKc1XfW236NeD0qAKBf9A')
 };
 
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'ra-map',
     templateUrl: '../templates/map.html',
 })
-export class MapComponent implements OnInit, OnDestroy {
-    private _indicator: any;
-    private _bigConfig: any;                          
-
+export class MapComponent implements OnInit, OnDestroy {    
     map: L.Map;
     snapShotMap: L.Map;
+    geoJSONLayer: L.GeoJSON;
     options: any;
     drawOptions: any;
     center: any;
-    zoom: number;
-    geoJSONLayer: L.GeoJSON;
-    smallSizeLayers: L.LayerGroup = L.layerGroup([]);
-    mediumSizeLayers: L.LayerGroup = L.layerGroup([]);
-    bigSizeLayers: L.LayerGroup = L.layerGroup([]);
-    mapData: any;
-    perkabigConfig: any;
-    markers = [];
+    zoom: number;    
+    perkabigConfig: any;    
     isExportingMap: boolean;
     layers: any;
     layersControl: any;
     controlOverlayShowing: any;
     afterInit: boolean;
+    mapData: any;
+    baseLayers: any;
+    overlays: L.Control.Layers;
+    model: any =  {};
+    markers = [];
+    initialData: any[] = [];
+    isOverlayAdded: boolean;
+    BaseLayer: BaseLayer;
 
-    constructor() { }
-
+    constructor(private baseLayerService: BaseLayerService, private mapService: MapService, private toastr: ToastrService) { }
+    
     ngOnInit(): void {
-        this.center = L.latLng(-6.174668, 106.8271269);
-        this.zoom = 5;
+        this.center = L.latLng(-1.374581, 119.977618);
+        this.zoom = 10;
         this.options = {
-            layers: null,
             zoomControl: false           
         };
-        
+        let query = {};
+        let me = this;
+        this.baseLayerService.getAll(query, null).subscribe(data => {
+            let results = [];
+            if (data.length && data.length > 0) {
+                data.forEach(result => {
+                    let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
+                    let innerHtml = `<a href="javascript:void(0)"><span class="oi oi-pencil overlay-editing"  style="float:right;"value="${result.id}"></span></a>`;
+                    try {
+                        me.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                    
+
+                    result.geojson = geojson;
+                    results.push(result);
+                })
+            }
+            me.initialData = results;
+            me.isOverlayAdded = true;
+        });
     }    
 
     ngOnDestroy() {
 
+    }
+
+    getContent() {
+        
+    }
+
+
+    onclickEditOverlay(event) {
+        console.log("anton");
     }
 
     ngAfterViewChecked() {
@@ -61,64 +96,60 @@ export class MapComponent implements OnInit, OnDestroy {
                 let element = elements[i];
                 element.style.visibility = 'hidden';
             }
+
+            let toggleEditing = $('.overlay-editing').click(e => this.onclickEditOverlay(e));
             this.afterInit = false;
         }
-
+        if (this.isOverlayAdded) {
+            let elements = $(".overlay-editing");
+            for (let i = 0; i < elements.length; i++) {
+                let element = elements[i];
+                element.addEventListener('click', this.onclickEditOverlay, false);
+            }
+            this.isOverlayAdded = false;
+        }
     }
-
-    createControlBar() {
-    }
-
+    
     setupControlBar() {
         L.control.zoom({
             position: 'bottomright'
         }).addTo(this.map);
 
         
-        let buttonFullscreen = L.Control.extend({
+        let button = L.Control.extend({
             options: {
                 position: 'bottomright'
             },
             onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<a href="javascript:void(0);" style="color:black"><i class="oi oi-fullscreen-enter"></i></a>';
-                div.style.width = '33px';
-                div.style.height = '30px';
-                div.style.textAlign = 'center';
-                div.style.lineHeight = '30px';
+                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control fullscreen-button');
+                div.innerHTML = '<a href="javascript:void(0);" style="color:black"><i class="oi oi-fullscreen-enter"></i></a>';                
                 div.onclick = (e) => this.fullScreenToggle(e);
                 return div;
             }
         });
-        this.map.addControl(new buttonFullscreen());
 
-        let buttonUploadDialog = L.Control.extend({
+        this.map.addControl(new button());
+
+        button = L.Control.extend({
             options: {
                 position: 'topleft'
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<label for="files" class="btn" style="padding-top:3px;">Upload File</label><input id= "files" style="display:none" type= "file" >';
-               
-                div.style.height = '30px';
-                div.style.textAlign = 'center';
-                div.style.lineHeight = '30px';
-
-                let input = div.getElementsByTagName('input')[0];
-                input.onchange = (e) => this.uploadFile(e);
-
+                div.innerHTML = '<button type="button" class="btn btn-light btn-sm">Upload File</button>';                
+                div.onclick = (e) => $("#upload-modal")['modal']("show");
                 return div;
             }
         });
-        this.map.addControl(new buttonUploadDialog());
+        this.map.addControl(new button());
 
-        let buttonListSector1 = L.Control.extend({
+        button = L.Control.extend({
             options: {
                 position: 'topright'
             },
             onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-1');
-                div.innerHTML = `<div class="btn-group btn-group-sm" role="group" aria-label="First group"><button type="button" class="btn btn-light">Kawasan Dan Perizinan</button><button type="button" class="btn btn-secondary">+</button></div>`;
+                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-1');
+                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: 232px; position: relative;">Kawasan Dan Perizinan</button>`;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
                 buttonOverlay.onclick = (e) => this.toggleControlLayers(3);
@@ -126,27 +157,26 @@ export class MapComponent implements OnInit, OnDestroy {
                 return div;
             }
         });
-        this.map.addControl(new buttonListSector1());
+        this.map.addControl(new button());
 
-        let buttonListSector2 = L.Control.extend({
+        button = L.Control.extend({
             options: {
                 position: 'topright'
             },
             onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-2');
-                div.innerHTML = `<div class="btn-group btn-group-sm" role="group" aria-label="First group"><button type="button" class="btn btn-light">Wilayah Kelola</button><button type="button" class="btn btn-secondary">+</button></div>`;
-                window['div'] = div;
+                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-2');
+                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: 214px; position: relative;">Base Layers</button>`;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
                 buttonOverlay.onclick = (e) => this.toggleControlLayers(4);
                 return div;
             }
         });
-        this.map.addControl(new buttonListSector2());        
-        L.control.layers(null, null,{ collapsed: false }).addTo(this.map);        
-        L.control.layers(null, null, { collapsed: false }).addTo(this.map);
+
+        this.map.addControl(new button());      
+        this.overlays = L.control.layers(null, null, { collapsed: false }).addTo(this.map);
+        this.baseLayers = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);        
         this.afterInit = true;
-        
     }
 
     toggleControlLayers(id) {
@@ -167,29 +197,12 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     fullScreenToggle(e) {
-        console.log('clicked');
-
     }
 
-    uploadFile(e) {
-        
-    }
-
-    selectOverlay() {
+    openUploadDialog() {
 
     }
-
-    addProperty() {
-
-    }
-
-    setMap(recenter = true): void {
-    }
-
-    setMapData(data): void {
-        this.mapData = data;
-    }
-
+    
     setLayer(name): void {
         this.map.addLayer(LAYERS[name]);
     }
@@ -198,28 +211,14 @@ export class MapComponent implements OnInit, OnDestroy {
         this.map.removeLayer(LAYERS[name]);
     }
       
-    loadGeoJson(): void {
-     
-    }
-
     addMarker(marker): void {
         this.markers.push(marker);
-    }
-
-    clearMap() {
-        this.geoJSONLayer ? this.map.removeLayer(this.geoJSONLayer) : null;                 
-        for (let i = 0; i < this.markers.length; i++)
-            this.map.removeLayer(this.markers[i]);
-
-        this.markers = [];
     }
 
     onMapReady(map: L.Map): void {
         this.map = map;
         this.setLayer('OpenStreetMap');
         this.setupControlBar();
-
-        this.map.setView(this.center, this.zoom, this.options);
 
         //RESIZE ICON
         this.map.on('zoomend', () => {
@@ -228,4 +227,93 @@ export class MapComponent implements OnInit, OnDestroy {
             });
         });
     }
+
+    uploadFile() {
+        $("#upload-modal")['modal']("hide");
+        let query = { data: {'type': 'upload', 'color': this.model.color, 'label': this.model.label, 'file': this.model['file'] } }
+        
+        this.mapService.import(this.model)
+            .subscribe(
+            data => {
+                this.toastr.success('File is successfully uploaded', null)
+            },
+            error => {
+                this.toastr.error('Unable to upload the file', null)
+            });
+    }
+
+    onChangeFile(event) {        
+        this.model['file'] = event.srcElement.files
+    }
+
+    setCenter(): void {
+        if (!this.geoJSONLayer)
+            this.setMap(true);
+        else
+            this.center = this.geoJSONLayer.getBounds().getCenter();
+    }
+
+    setMap(recenter = true): void {
+        try {
+            if (recenter)
+                this.map.setView(this.geoJSONLayer.getBounds().getCenter(), 14);
+        }
+        catch (error) {
+            console.log('Something wrong with this geojson either the structure is error or null');
+        }
+    }
+
+    getGeoJson(geoJson, currentColor): any {
+        let geoJsonOptions = {
+            style: (feature) => {
+                let color = "#000";
+                if (color !== "" && color) {
+                    color = currentColor;
+                }
+                return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
+            },
+            pointToLayer: (feature, latlng) => {
+                return new L.CircleMarker(latlng, {
+                    radius: 8,
+                    fillColor: "red",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+            },
+            onEachFeature: (feature, layer: L.FeatureGroup) => {
+                let center = null;
+
+                if (layer.feature['geometry'].type === 'Point') {
+                    center = layer.feature['geometry'].coordinates;
+                }
+                else {
+                    let bounds = layer.getBounds();
+                    center = bounds.getCenter();
+                }
+                
+                let element = null;
+
+                if (!element)
+                    return;
+
+                if (feature.properties['icon']) {
+                    let icon = L.icon({
+                        iconUrl: 'assets/markers/' + feature.properties['icon'],
+                        iconSize: [15, 15],
+                        shadowSize: [50, 64],
+                        iconAnchor: [22, 24],
+                        shadowAnchor: [4, 62],
+                        popupAnchor: [-3, -76]
+                    });
+
+                    let marker = L.marker(center, { icon: icon }).addTo(this.map);
+
+                    this.addMarker(marker);
+                }
+            }
+        };
+        return MapUtils.setGeoJsonLayer(geoJson, geoJsonOptions);
+    } 
+    
 }

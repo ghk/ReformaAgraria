@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171206052355_AddBaseLayersClass")]
+    partial class AddBaseLayersClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,7 +217,7 @@ namespace ReformaAgraria.Migrations
                     b.ToTable("act_proposal_document_check_list");
                 });
 
-            modelBuilder.Entity("ReformaAgraria.Models.BaseLayer", b =>
+            modelBuilder.Entity("ReformaAgraria.Models.BaseLayers", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -231,16 +232,16 @@ namespace ReformaAgraria.Migrations
                     b.Property<DateTime?>("DateModified")
                         .HasColumnName("date_modified");
 
-                    b.Property<string>("Geojson")
-                        .HasColumnName("geojson");
+                    b.Property<long>("GeoJson")
+                        .HasColumnName("geo_json");
 
                     b.Property<string>("Label")
                         .HasColumnName("label");
 
                     b.HasKey("Id")
-                        .HasName("pk_base_layer");
+                        .HasName("pk_base_layers");
 
-                    b.ToTable("base_layer");
+                    b.ToTable("base_layers");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.Coordinate", b =>

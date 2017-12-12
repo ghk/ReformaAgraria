@@ -1,8 +1,41 @@
 ﻿<div leaflet 
-     style=" height:900px"
+     style=" height:100vh"
      [leafletOptions]="options"
-     [leafletZoom]="zoom"
-     [leafletCenter]="center"
-     (leafletMapReady)="onMapReady($event)"
+    [leafletCenter]="center"
+    [leafletZoom]="zoom"
+    (leafletMapReady)="onMapReady($event)" 
      >
+</div>
+
+<div id="upload-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <form class="form-horizontal" (ngSubmit)="uploadFile()">
+            <div class="modal-content" style="border-radius: 0">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload File</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-control-label" for="label">Nama Layer</label>
+                        <input id="label" class="form-control" type="text" [(ngModel)]="model.label" name="label">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="color">Warna</label>
+                        <input id="color" class="form-control" type="text" [(ngModel)]="model.color" name="color">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="file">File (*.zip)</label>
+                        <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event)" name="file">
+                    </div>
+                </div>
+                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-backdrop="false" data-dismiss="modal"><i class="fa fa-save"></i> Batal</button>
+                    <button type="submit" class="btn btn-primary" data-backdrop="false"><i class="fa fa-repeat"></i>&nbsp;<i class="fa fa-save"></i> Upload</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>

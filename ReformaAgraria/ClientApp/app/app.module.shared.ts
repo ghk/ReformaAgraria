@@ -45,6 +45,8 @@ import { AuthGuard } from './services/authGuard';
 import { RegionService } from './services/gen/region';
 import { AgrariaIssuesListService } from './services/agrariaIssuesList';
 import { MapNavigationService } from './services/mapNavigation';
+import { BaseLayerService } from './services/gen/baseLayer';
+import { MapService } from './services/map';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum'; 
@@ -76,7 +78,9 @@ import './styles/app.scss';
         RegionComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
+        AgrariaIssuesListObjectSubjectComponent,
         MapComponent        
+        
     ],
     imports: [
         LeafletModule,
@@ -96,7 +100,7 @@ import './styles/app.scss';
                     { path: 'region', component: RegionComponent },
                     { path: 'region/:id', component: RegionComponent },
                     { path: 'event', component: EventComponent },
-                    { path: 'map', component: MapNavigationComponent },
+                    { path: 'map', component: MapComponent },
                     //{ path: 'crud', children: [
                     //        //{ path: 'region', component: RegionCrudComponent }
                     //    ]
@@ -123,7 +127,9 @@ import './styles/app.scss';
         AuthGuard,
         RegionService,
         AgrariaIssuesListService,
-        MapNavigationService
+        MapNavigationService,
+        BaseLayerService,
+        MapService
     ]
 })
 export class AppModuleShared {

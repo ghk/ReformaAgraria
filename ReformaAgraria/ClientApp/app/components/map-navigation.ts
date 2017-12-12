@@ -22,7 +22,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
 
     }
-
+    
     uploadFile(event) {
         this.mapNavigation.import(event, this.region.name)
             .subscribe(

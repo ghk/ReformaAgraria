@@ -24,7 +24,7 @@ namespace ReformaAgraria.Controllers
         private readonly ReformaAgrariaDbContext _context;
         private readonly UserManager<ReformaAgrariaUser> _userManager;
         private readonly SignInManager<ReformaAgrariaUser> _signInManager;
-        private readonly ILogger _logger;
+        private readonly ILogger<AccountController> _logger;
         private readonly TokenAuthOption _tokenOptions;
         private readonly IConfiguration _iconfiguration;
 
@@ -32,7 +32,7 @@ namespace ReformaAgraria.Controllers
             ReformaAgrariaDbContext context,
             UserManager<ReformaAgrariaUser> userManager,
             SignInManager<ReformaAgrariaUser> signInManager,
-            ILoggerFactory loggerFactory,
+            ILogger<AccountController> logger,
             IConfiguration iconfiguration,
             IOptions<TokenAuthOption> tokenOptions)
 
@@ -40,7 +40,7 @@ namespace ReformaAgraria.Controllers
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = loggerFactory.CreateLogger<AccountController>();
+            _logger = logger;
             _tokenOptions = tokenOptions.Value;
             _iconfiguration = iconfiguration;
         }
