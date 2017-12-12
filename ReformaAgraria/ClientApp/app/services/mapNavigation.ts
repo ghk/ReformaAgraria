@@ -24,12 +24,13 @@ export class MapNavigationService {
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     }
     
-    import(event) {
+    import(event, toraName) {
         let fileList: FileList = event.target.files;
         if (fileList.length > 0) {
             let file: File = fileList[0];
             let formData: FormData = new FormData();
             formData.append('uploadFile', file, file.name);
+            formData.append('toraName', toraName);
             let headers = new Headers();
             headers.append('Accept', 'application/json');
             let requestOptions = new RequestOptions({ headers: headers });
