@@ -2,6 +2,8 @@
 import * as L from 'leaflet';
 import * as $ from 'jquery';
 import { BaseLayerService } from '../services/gen/baseLayer';
+import { MapService } from '../services/map';
+import { BaseLayer } from '../models/gen/baseLayer';
 
 import MapUtils from '../helpers/mapUtils';
 const DATA_SOURCES = 'data';
@@ -33,14 +35,15 @@ export class MapComponent implements OnInit, OnDestroy {
     controlOverlayShowing: any;
     afterInit: boolean;
     mapData: any;
-    baseLayers: L.Control.Layers;
+    baseLayers: any;
     overlays: L.Control.Layers;
-    model = {};
+    model: any =  {};
     markers = [];
-    initialData: any;
+    initialData: any[] = [];
     isOverlayAdded: boolean;
+    BaseLayer: BaseLayer;
 
-    constructor(private baseLayerService: BaseLayerService, private toastr: ToastrService) { }
+    constructor(private baseLayerService: BaseLayerService, private mapService: MapService, private toastr: ToastrService) { }
     
     ngOnInit(): void {
         this.center = L.latLng(-1.374581, 119.977618);
@@ -48,19 +51,29 @@ export class MapComponent implements OnInit, OnDestroy {
         this.options = {
             zoomControl: false           
         };
-        this.getContent();
-        /*
-        this.mapService.getContent(result => {
-            let overlays = {};
-            result.forEach((content, i) => {
-                let geoJson = this.getGeoJson(content.geojson, content.color);
-                let innerHtml = `<a href="javascript:void(0)"><span class="oi oi-pencil overlay-editing"  style="float:right;"value="${content.id}"></span></a>`;
-                this.overlays.addOverlay(geoJson, `${content.label} ${innerHtml}`);
-            });
-            this.isOverlayAdded = true;
+        let query = {};
+        let me = this;
+        this.baseLayerService.getAll(query, null).subscribe(data => {
+            let results = [];
+            if (data.length && data.length > 0) {
+                data.forEach(result => {
+                    let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
+                    let innerHtml = `<a href="javascript:void(0)"><span class="oi oi-pencil overlay-editing"  style="float:right;"value="${result.id}"></span></a>`;
+                    try {
+                        me.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                    
+
+                    result.geojson = geojson;
+                    results.push(result);
+                })
+            }
+            me.initialData = results;
+            me.isOverlayAdded = true;
         });
-        */
-                
     }    
 
     ngOnDestroy() {
@@ -68,16 +81,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     getContent() {
-        let query = {}
-        this.baseLayerService.getAll(query, null).subscribe(data => {
-            let results = [];
-            if (data.length && data.length > 0) {
-                data.forEach(result => {
-                    let geojson = JSON.parse(result.geojson);
-                    results.push(result);
-                })
-            }
-        });
+        
     }
 
 
@@ -168,8 +172,8 @@ export class MapComponent implements OnInit, OnDestroy {
                 return div;
             }
         });
-        this.map.addControl(new button());      
 
+        this.map.addControl(new button());      
         this.overlays = L.control.layers(null, null, { collapsed: false }).addTo(this.map);
         this.baseLayers = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);        
         this.afterInit = true;
@@ -226,7 +230,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
     uploadFile() {
         $("#upload-modal")['modal']("hide");
-        /*
+        let query = { data: {'type': 'upload', 'color': this.model.color, 'label': this.model.label, 'file': this.model['file'] } }
+        
         this.mapService.import(this.model)
             .subscribe(
             data => {
@@ -235,7 +240,6 @@ export class MapComponent implements OnInit, OnDestroy {
             error => {
                 this.toastr.error('Unable to upload the file', null)
             });
-        */
     }
 
     onChangeFile(event) {        
