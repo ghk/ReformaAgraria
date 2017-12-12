@@ -69,9 +69,10 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("import")]
-        public void Import(string toraName)
+        public void Import()
         {
             var formFile = HttpContext.Request.ReadFormAsync().Result.Files[0];
+            var toraName = HttpContext.Request.ReadFormAsync().Result["toraName"];
             var folderPath = Path.Combine(
                         Directory.GetCurrentDirectory(), "wwwroot",
                         toraName);
@@ -89,7 +90,18 @@ namespace ReformaAgraria.Controllers
                 formFile.CopyTo(stream);
             }
 
-            ZipFile.ExtractToDirectory(filePath, folderPath);
+            var extractedPath = Path.Combine(folderPath, toraName);
+
+            if (!Directory.Exists(extractedPath))
+            {
+                Directory.CreateDirectory(extractedPath);
+            }
+
+            ZipFile.ExtractToDirectory(filePath, extractedPath);
+
+            //read shp and insert to db
+
+            //Directory.Delete(extractedPath);
         }
     }
 }
