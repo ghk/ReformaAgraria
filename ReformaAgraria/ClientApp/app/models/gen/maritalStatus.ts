@@ -2,4 +2,5 @@
 	Single,
 	Married,
 	Divorced,
+	NotSpecified,
 }

@@ -6,4 +6,5 @@
 	BachelorDegree,
 	MasterDegree,
 	DoctorateDegree,
+	Others,
 }

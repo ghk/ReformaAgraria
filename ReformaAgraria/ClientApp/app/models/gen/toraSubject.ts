@@ -1,6 +1,7 @@
 ﻿import { MaritalStatus } from './maritalStatus';
 import { Gender } from './gender';
 import { EducationalAttainment } from './educationalAttainment';
+import { LandStatus } from './landStatus';
 import { ToraObject } from './toraObject';
 import { BaseEntity } from './baseEntity';
 
@@ -13,7 +14,7 @@ export interface ToraSubject extends BaseEntity<number> {
     age?: number;
     educationalAttainment: EducationalAttainment;
     totalFamilyMembers: number;
-    landStatus: string;
+    landStatus: LandStatus;
     landLocation: string;
     size: number;
     plantTypes: string;

@@ -11,9 +11,33 @@ import * as urljoin from 'url-join';
 
 import { RequestHelper } from '../helpers/request';
 import { Query } from "../models/query";
+import { CrudService } from "./crud";
+import { BaseLayer } from "../models/gen/baselayer";
+/*
 
 @Injectable()
-export class MapService {
+export class MapService implements CrudService<BaseLayer, string>{  
+    getAll(query: Query, progressListener: any): Observable<BaseLayer[]> {
+        throw new Error("Method not implemented.");
+    }
+    count(query: Query, progressListener: any): Observable<number> {
+        throw new Error("Method not implemented.");
+    }
+    getById(id: string, progressListener: any): Observable<BaseLayer> {
+        throw new Error("Method not implemented.");
+    }
+    createOrUpdate(model: BaseLayer, progressListener: any): Observable<number> {
+        throw new Error("Method not implemented.");
+    }
+    create(model: BaseLayer, progressListener: any): Observable<number> {
+        throw new Error("Method not implemented.");
+    }
+    update(model: BaseLayer, progressListener: any): Observable<number> {
+        throw new Error("Method not implemented.");
+    }
+    deleteById(id: string, progressListener: any): Observable<number> {
+        throw new Error("Method not implemented.");
+    }
     private serverUrl: string;
 
     constructor(
@@ -88,3 +112,4 @@ export class MapService {
         return Observable.throw(errMsg);
     }
 }
+*/

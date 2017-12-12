@@ -45,7 +45,7 @@ import { AuthGuard } from './services/authGuard';
 import { RegionService } from './services/gen/region';
 import { AgrariaIssuesListService } from './services/agrariaIssuesList';
 import { MapNavigationService } from './services/mapNavigation';
-import { MapService } from './services/map';
+import { BaseLayerService } from './services/gen/baseLayer';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum'; 
@@ -127,7 +127,7 @@ import './styles/app.scss';
         RegionService,
         AgrariaIssuesListService,
         MapNavigationService,
-        MapService
+        BaseLayerService
     ]
 })
 export class AppModuleShared {
