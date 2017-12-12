@@ -12,6 +12,7 @@ using System.Data;
 using MicrovacWebCore;
 using ReformaAgraria.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
@@ -19,10 +20,14 @@ namespace ReformaAgraria.Controllers
     public class ToraSubjectController : CrudController<ToraSubject, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly ILogger<ToraSubjectController> _logger;
 
-        public ToraSubjectController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment): base(dbContext)
+        public ToraSubjectController(ReformaAgrariaDbContext dbContext, 
+            IHostingEnvironment hostingEnvironment,
+            ILogger<ToraSubjectController> logger): base(dbContext)
         {
             _hostingEnvironment = hostingEnvironment;
+            _logger = logger;
         }
         
         [HttpPost("import")]

@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using ReformaAgraria.Models.ViewModels;
 using ReformaAgraria.Security;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
@@ -20,7 +21,13 @@ namespace ReformaAgraria.Controllers
     //[Authorize(Policy = "Bearer")]
     public class BaseLayerController : CrudController<BaseLayer, int>
     {
-        public BaseLayerController(ReformaAgrariaDbContext dbContext) : base(dbContext) { }
+        private readonly ILogger<BaseLayerController> _logger;
+
+        public BaseLayerController(ReformaAgrariaDbContext dbContext,
+            ILogger<BaseLayerController> logger): base(dbContext)
+        {
+            _logger = logger;
+        }
 
         protected override IQueryable<BaseLayer> ApplyQuery(IQueryable<BaseLayer> query)
         {
