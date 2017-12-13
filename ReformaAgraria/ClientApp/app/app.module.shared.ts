@@ -45,6 +45,7 @@ import { AuthGuard } from './services/authGuard';
 import { RegionService } from './services/gen/region';
 import { AgrariaIssuesListService } from './services/agrariaIssuesList';
 import { MapNavigationService } from './services/mapNavigation';
+import { BaseLayerService } from './services/gen/baseLayer';
 import { MapService } from './services/map';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
@@ -127,6 +128,7 @@ import './styles/app.scss';
         RegionService,
         AgrariaIssuesListService,
         MapNavigationService,
+        BaseLayerService,
         MapService
     ]
 })

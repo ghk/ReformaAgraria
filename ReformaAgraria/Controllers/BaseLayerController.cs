@@ -13,35 +13,65 @@ using ReformaAgraria.Models.ViewModels;
 using ReformaAgraria.Security;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace ReformaAgraria.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
-    public class MapController : CrudController<ToraObject, int>
+    //[Authorize(Policy = "Bearer")]
+    public class BaseLayerController : CrudController<BaseLayer, int>
     {
-        private readonly ILogger<MapController> _logger;
+        private readonly ILogger<BaseLayerController> _logger;
 
-        public MapController(ReformaAgrariaDbContext dbContext, 
-            ILogger<MapController> logger) : base(dbContext)
+        public BaseLayerController(ReformaAgrariaDbContext dbContext,
+            ILogger<BaseLayerController> logger) : base(dbContext)
         {
             _logger = logger;
         }
 
+        protected override IQueryable<BaseLayer> ApplyQuery(IQueryable<BaseLayer> query)
+        {
+            return query;
+        }
+
         [HttpPost("import")]
-        public async System.Threading.Tasks.Task ImportAsync()
+        public async Task<BaseLayer> ImportAsync()
         {
             var results = HttpContext.Request.ReadFormAsync().Result;
             var label = results["label"];
             var color = results["color"];
             var file = results.Files[0];
+            var geoJsonModel = GetGeoJson(file);
 
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "base_layer");
-            var tempPath = Path.Combine(Path.GetTempPath(), "reforma_agraria" + DateTime.Now.ToString("yyyyMMddHHmmssffff"));
+            if (geoJsonModel == null)
+            {
+                return null;
+            }
 
-            ValidateAndCreateFolder(folderPath);
-            ValidateAndCreateFolder(Path.Combine(Path.GetTempPath(), tempPath));
+            var baseLayerContent = new BaseLayer
+            {
+                Label = label,
+                Color = color,
+                Geojson = geoJsonModel,
+            };
 
-            var zipPath = Path.Combine(folderPath, file.FileName);
+            dbContext.Add(baseLayerContent);
+            await dbContext.SaveChangesAsync();
+
+            var destinationFile = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "base_layer", (baseLayerContent.Id.ToString() + '_' +".zip"));
+            StreamCopy(destinationFile, file);
+
+            return baseLayerContent;
+        }
+
+        public string GetGeoJson(IFormFile file)
+        {
+            var tempFolderName = "reforma_agraria_" + DateTime.Now.ToString("yyyyMMddHHmmssffff");
+            var tempPath = Path.Combine(Path.GetTempPath(), tempFolderName);
+            var zipPath = Path.Combine(tempPath, file.FileName);
+
+            ValidateAndCreateFolder(tempPath);
             StreamCopy(zipPath, file);
 
             ZipFile.ExtractToDirectory(zipPath, tempPath);
@@ -49,8 +79,8 @@ namespace ReformaAgraria.Controllers
 
             if (shapeFiles.Length == 0)
             {
-                System.IO.File.Delete(zipPath);
-                return;
+                //DeleteDirectory(tempPath);
+                return null;
             }
 
             string fileName = Path.Combine(tempPath, shapeFiles[0]);
@@ -79,34 +109,16 @@ namespace ReformaAgraria.Controllers
             GeoJsonViewModel featureCollections = CreateFeatureCollection(geoJsons);
             string geoJsonModel = JsonConvert.SerializeObject(featureCollections);
 
-            var baseLayerContent = new BaseLayers
-            {
-                Label = label,
-                Color = color,
-                Geojson = geoJsonModel,
-            };
-
-            dbContext.Add(baseLayerContent);
-            await dbContext.SaveChangesAsync();
-
-            DeleteDirectory(tempPath);            
+            //Directory.Delete(tempPath, true);
+            return geoJsonModel;
         }
 
-        [HttpGet("getall")]
-        public List<BaseLayers> GetBaseLayerContent()
-        {
-            var results = from content in dbContext.Set<BaseLayers>()
-                          select content;
-            return results.ToList();
-        }
-
-
-        public void StreamCopy(string filePath,IFormFile file)
+        public void StreamCopy(string filePath, IFormFile file)
         {
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 file.CopyTo(stream);
-            }            
+            }
         }
 
         public string ValidateAndCreateFolder(string path)
@@ -123,29 +135,28 @@ namespace ReformaAgraria.Controllers
             GeoJsonViewModel geoJson = JsonConvert.DeserializeObject<GeoJsonViewModel>("{'type': 'FeatureCollections', 'features': [] }");
             geoJson.features = new object[data.Count];
 
-            for(var i=0; i < data.Count; i++)
+            for (var i = 0; i < data.Count; i++)
             {
                 geoJson.features[i] = JsonConvert.DeserializeObject(data[i]);
             }
-            
+
             return geoJson;
         }
 
-        
-        private static void DeleteDirectory(string directory)
+       private void DeleteDirectory(string directory)
         {
-            try
+            DirectoryInfo di = new DirectoryInfo(directory);
+
+            foreach (FileInfo file in di.GetFiles())
             {
-                Directory.Delete(directory, true);
+                file.Delete();
             }
-            catch (IOException)
+            foreach (DirectoryInfo dir in di.GetDirectories())
             {
-                Directory.Delete(directory, true);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Directory.Delete(directory, true);
+                dir.Delete(true);
             }
         }
     }
 }
+          
+            

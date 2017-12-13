@@ -1,20 +1,22 @@
 ﻿import { RegionalStatus } from './regionalStatus';
-import { LandType } from './landType';
-import { ProposedTreatment } from './proposedTreatment';
 import { LandStatus } from './landStatus';
 import { Region } from './region';
 import { BaseEntity } from './baseEntity';
 
 export interface ToraObject extends BaseEntity<number> { 
     id: number;
+    name: string;
     size: number;
     totalTenants: string;
     regionalStatus: RegionalStatus;
-    landType: LandType;
+    landType: string;
     livelihood: string;
-    proposedTreatment: ProposedTreatment;
+    proposedTreatment: string;
     landStatus: LandStatus;
     landTenureHistory: string;
+    conflictChronology: string;
+    formalAdvocacyProgress: string;
+    nonFormalAdvocacyProgress: string;
     fkRegionId: string;
     region?: Region;
 }

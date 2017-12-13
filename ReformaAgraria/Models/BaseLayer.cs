@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class BaseLayers : BaseEntity<int>
+    public class BaseLayer : BaseEntity<int>
     {
-        public BaseLayers() { }
+        public BaseLayer() { }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

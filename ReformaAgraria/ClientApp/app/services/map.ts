@@ -11,9 +11,11 @@ import * as urljoin from 'url-join';
 
 import { RequestHelper } from '../helpers/request';
 import { Query } from "../models/query";
+import { CrudService } from "./crud";
+import { BaseLayerService } from "./gen/baselayer";
 
 @Injectable()
-export class MapService {
+export class MapService {  
     private serverUrl: string;
 
     constructor(
@@ -24,7 +26,7 @@ export class MapService {
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     }
 
-    import(model) {
+    import(model): Observable<any> {
         let fileList: FileList = model.file;
         if (fileList.length > 0) {
             let file: File = fileList[0];
@@ -37,31 +39,11 @@ export class MapService {
             formData.append('color', model.color);
             formData.append('uploadFile', file, file.name);            
             
-            return this.http.post('/api/map/import', formData, requestOptions)
+            return this.http.post('/api/baselayer/import', formData, requestOptions)
                 .map(res => res.json())
         }
     }
-
-    getContent(callback){
-        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        return this.http.get('/api/map/getall/', requestOptions)
-            .subscribe(response => {
-                let data = response.json();
-
-                if (data.length && data.length > 0) {
-                    data.forEach(result => {
-                        result.geojson = JSON.parse(result.geojson);
-                    })
-                }
-                console.log(data)
-                callback(data);
-            },
-            error => {
-                console.error(error);
-            })
-            
-    }
-
+    
     private handleError(error: Response | any) {
         let errMsg: string;
         if (error instanceof Response) {
