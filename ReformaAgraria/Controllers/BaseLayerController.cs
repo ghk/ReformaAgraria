@@ -39,8 +39,11 @@ namespace ReformaAgraria.Controllers
         public async Task<BaseLayer> ImportAsync()
         {
             var results = HttpContext.Request.ReadFormAsync().Result;
-            var label = results["label"];
-            var color = results["color"];
+            var baseLayerContent = new BaseLayer
+            {
+                Label = results["label"],
+                Color = results["color"],
+            };
             var file = results.Files[0];
             var geoJsonModel = GetGeoJson(file);
 
@@ -49,13 +52,7 @@ namespace ReformaAgraria.Controllers
                 return null;
             }
 
-            var baseLayerContent = new BaseLayer
-            {
-                Label = label,
-                Color = color,
-                Geojson = geoJsonModel,
-            };
-
+            baseLayerContent.Geojson = geoJsonModel;
             dbContext.Add(baseLayerContent);
             await dbContext.SaveChangesAsync();
 
@@ -63,6 +60,34 @@ namespace ReformaAgraria.Controllers
             StreamCopy(destinationFile, file);
 
             return baseLayerContent;
+        }
+
+        [HttpPost("edit")]
+        public async Task<BaseLayer> EditAsync()
+        {
+            var results = HttpContext.Request.ReadFormAsync().Result;
+            int id = Int32.Parse(results["id"]);
+            var content = dbContext.Set<BaseLayer>().Where(o => o.Id == id).FirstOrDefault();
+            content.Label = results["label"];
+            content.Color = results["color"];
+
+            IFormFile file = null;
+            string geoJsonModel = "";
+            if(results.Files.Count != 0)
+            {
+                file = results.Files[0];
+                geoJsonModel = GetGeoJson(file);
+                if (geoJsonModel != null)
+                {
+                    content.Geojson = geoJsonModel;
+                    var destinationFile = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "base_layer", (content.Id.ToString() + '_' + ".zip"));
+                    StreamCopy(destinationFile, file);
+                }
+            }
+
+            dbContext.Update(content);
+            await dbContext.SaveChangesAsync();
+            return content;
         }
 
         public string GetGeoJson(IFormFile file)

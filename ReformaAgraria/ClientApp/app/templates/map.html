@@ -1,5 +1,5 @@
-﻿<div leaflet 
-     style=" height:100vh"
+﻿<div id="map" leaflet 
+     style="height: 561px; position: relative;"
      [leafletOptions]="options"
     [leafletCenter]="center"
     [leafletZoom]="zoom"
@@ -42,10 +42,10 @@
 
 <div id="edit-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">
-        <form class="form-horizontal" (ngSubmit)="updateOverlay(model)">
+        <form class="form-horizontal" (ngSubmit)="editOverlay(model)">
             <div class="modal-content" style="border-radius: 0">
                 <div class="modal-header">
-                    <h5 class="modal-title">Update</h5>
+                    <h5 class="modal-title">Edit</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-backdrop="false" data-dismiss="modal"><i class="fa fa-save"></i> Batal</button>
-                    <button type="submit" class="btn btn-primary" data-backdrop="false"><i class="fa fa-repeat"></i>&nbsp;<i class="fa fa-save"></i> Update</button>
+                    <button type="submit" class="btn btn-primary" data-backdrop="false"><i class="fa fa-repeat"></i>&nbsp;<i class="fa fa-save"></i> Edit</button>
                 </div>
             </div>
         </form>
