@@ -1,11 +1,4 @@
-﻿<div leaflet 
-     style=" height:100vh"
-     [leafletOptions]="options"
-    [leafletCenter]="center"
-    [leafletZoom]="zoom"
-    (leafletMapReady)="onMapReady($event)" 
-     >
-</div>
+﻿<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 <div id="upload-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">
@@ -39,3 +32,15 @@
         </form>
     </div>
 </div>
+
+
+<div class="pt-0 img-fluid container-fluid">
+    <div leaflet class="mainMap"
+        style="height:609px; position:relative; outline:none;"
+        [leafletOptions]="options"
+        [leafletCenter]="center"
+        [leafletZoom]="zoom"
+        (leafletMapReady)="onMapReady($event)">
+    </div>
+</div>
+    
