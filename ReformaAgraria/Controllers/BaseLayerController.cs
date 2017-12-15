@@ -14,7 +14,9 @@ using ReformaAgraria.Security;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using GeoJSON.Net.Geometry;
+using GeoJSON.Net;
+using System.Dynamic;
+using Newtonsoft.Json.Linq;
 
 namespace ReformaAgraria.Controllers
 {
@@ -113,35 +115,49 @@ namespace ReformaAgraria.Controllers
 
             Ogr.RegisterAll();
             Driver drv = Ogr.GetDriverByName("ESRI Shapefile");
-            
-            
-            //foreach(var an in shape.Features)
-            //{
-            //    var prop = an.Properties;
-            //}
-            //var anu = shape.FeaturesAsJson();
 
-             var ds = drv.Open(tempPath, 0);
+            var ds = drv.Open(tempPath, 0);
 
             Layer layer = ds.GetLayerByIndex(0);
             Feature f;
             layer.ResetReading();            
-            var geoJsons = new List<string>();     
-
+            var geoJsons = new List<string>();
+            
             while ((f = layer.GetNextFeature()) != null)
-            {               
+            {
+                
+                var geometry = new Dictionary<string, object>();
+                var properties = new Dictionary<string, object>();
+
                 for (var i = 0; i <= f.GetFieldCount() - 1; i++) {
-                    var anu = f.GetFieldDefnRef(i);
-                    var anu3 = f.GetFieldType(i);
-                    var anu4 = f.GetFieldDefnRef(i).GetName();
-                    var anu2 = f.GetFieldAsString(i);
+                    FieldType type = f.GetFieldType(i);
+                    var propName = f.GetFieldDefnRef(i).GetName();
+
+                    switch (type)
+                    {
+                        case FieldType.OFTString:
+                            properties.Add(propName, f.GetFieldAsString(i));
+                            break;
+                        case FieldType.OFTReal:
+                            properties.Add(propName,f.GetFieldAsDouble(i));
+                            break;
+                        case FieldType.OFTInteger64:
+                            properties.Add(propName,f.GetFieldAsInteger64(i));
+                            break;
+                    }
                 }
+
                 var geom = f.GetGeometryRef();                
                 if (geom != null)
                 {
-                    var geometryJson = geom.ExportToJson(null);
-                    geoJsons.Add(geometryJson);
+                    var json = geom.ExportToJson(null);
+                    var converter = new GeoJSON.Net.Converters.GeometryConverter();
+                    JTokenReader reader = new JTokenReader((JToken)JsonConvert.DeserializeObject(json));
+                    
+                    var obj = converter.ReadJson(reader,null,null , null);
+                    geometry.Add("geometry", JsonConvert.DeserializeObject(json));
                 }
+                //GeoJSON.Net.Feature.Feature feat = new GeoJSON.Net.Feature.Feature()
             }
 
             GeoJsonViewModel featureCollections = CreateFeatureCollection(geoJsons);
@@ -194,6 +210,17 @@ namespace ReformaAgraria.Controllers
                 dir.Delete(true);
             }
         }
+
+        public void AddProperty(ExpandoObject expando, string propertyName, object propertyValue)
+        {
+            // ExpandoObject supports IDictionary so we can extend it like this
+            var expandoDict = expando as IDictionary<string, object>;
+            if (expandoDict.ContainsKey(propertyName))
+                expandoDict[propertyName] = propertyValue;
+            else
+                expandoDict.Add(propertyName, propertyValue);
+        }
+        
     }
 }
           

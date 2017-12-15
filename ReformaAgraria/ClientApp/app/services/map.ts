@@ -22,13 +22,13 @@ export class MapService {
         private http: ProgressHttp,
         private cookieService: CookieService,
         private sharedService: SharedService
-    ) {
+    ) { 
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     }
 
     import(model): Observable<any> {
         let fileList: FileList = model.file;
-        if (fileList.length > 0) {
+        if (fileList.length && fileList.length > 0) {
             let file: File = fileList[0];
             let formData: FormData = new FormData();
             let headers = new Headers();
