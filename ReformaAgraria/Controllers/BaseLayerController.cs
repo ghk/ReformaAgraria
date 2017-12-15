@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using GeoJSON.Net;
 using System.Dynamic;
 using Newtonsoft.Json.Linq;
+using GeoJSON.Net.Geometry;
+using GeoJSON.Net.Converters;
 
 namespace ReformaAgraria.Controllers
 {
@@ -25,11 +27,15 @@ namespace ReformaAgraria.Controllers
     //[Authorize(Policy = "Bearer")]
     public class BaseLayerController : CrudController<BaseLayer, int>
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger<BaseLayerController> _logger;
+        
 
         public BaseLayerController(ReformaAgrariaDbContext dbContext,
+            IHostingEnvironment hostingEnvironment,
             ILogger<BaseLayerController> logger) : base(dbContext)
         {
+            _hostingEnvironment = hostingEnvironment;
             _logger = logger;
         }
 
@@ -83,7 +89,8 @@ namespace ReformaAgraria.Controllers
                 if (geoJsonModel != null)
                 {
                     content.Geojson = geoJsonModel;
-                    var destinationFile = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "base_layer", (content.Id.ToString() + '_' + ".zip"));
+                    var webRootPath = _hostingEnvironment.WebRootPath;
+                    var destinationFile = Path.Combine(webRootPath "base_layer", (content.Id.ToString() + '_' + ".zip"));
                     StreamCopy(destinationFile, file);
                 }
             }
@@ -95,76 +102,61 @@ namespace ReformaAgraria.Controllers
 
         public string GetGeoJson(IFormFile file)
         {
-            var tempFolderName = "reforma_agraria_" + DateTime.Now.ToString("yyyyMMddHHmmssffff");
+            string result = null;
+            var tempFolderName = "reforma_agraria_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + Guid.NewGuid().ToString("N");
             var tempPath = Path.Combine(Path.GetTempPath(), tempFolderName);
             var zipPath = Path.Combine(tempPath, file.FileName);
 
             ValidateAndCreateFolder(tempPath);
             StreamCopy(zipPath, file);
-
             ZipFile.ExtractToDirectory(zipPath, tempPath);
-            string[] shapeFiles = Directory.GetFiles(tempPath, "*.shp");
-
-            if (shapeFiles.Length == 0)
-            {
-                //DeleteDirectory(tempPath);
-                return null;
-            }
-
-            string fileName = Path.Combine(tempPath, shapeFiles[0]);
 
             Ogr.RegisterAll();
-            Driver drv = Ogr.GetDriverByName("ESRI Shapefile");
-
-            var ds = drv.Open(tempPath, 0);
-
-            Layer layer = ds.GetLayerByIndex(0);
-            Feature f;
-            layer.ResetReading();            
-            var geoJsons = new List<string>();
-            
-            while ((f = layer.GetNextFeature()) != null)
+            Driver driver = Ogr.GetDriverByName("ESRI Shapefile");
+            using (var dataSource = driver.Open(tempPath, 0))
             {
-                
-                var geometry = new Dictionary<string, object>();
-                var properties = new Dictionary<string, object>();
+                Layer layer = dataSource.GetLayerByIndex(0);
+                layer.ResetReading();
 
-                for (var i = 0; i <= f.GetFieldCount() - 1; i++) {
-                    FieldType type = f.GetFieldType(i);
-                    var propName = f.GetFieldDefnRef(i).GetName();
-
-                    switch (type)
-                    {
-                        case FieldType.OFTString:
-                            properties.Add(propName, f.GetFieldAsString(i));
-                            break;
-                        case FieldType.OFTReal:
-                            properties.Add(propName,f.GetFieldAsDouble(i));
-                            break;
-                        case FieldType.OFTInteger64:
-                            properties.Add(propName,f.GetFieldAsInteger64(i));
-                            break;
-                    }
-                }
-
-                var geom = f.GetGeometryRef();                
-                if (geom != null)
+                var features = new List<GeoJSON.Net.Feature.Feature>();
+                Feature f;
+                while ((f = layer.GetNextFeature()) != null)
                 {
-                    var json = geom.ExportToJson(null);
-                    var converter = new GeoJSON.Net.Converters.GeometryConverter();
-                    JTokenReader reader = new JTokenReader((JToken)JsonConvert.DeserializeObject(json));
-                    
-                    var obj = converter.ReadJson(reader,null,null , null);
-                    geometry.Add("geometry", JsonConvert.DeserializeObject(json));
+                    var geometryRef = f.GetGeometryRef();
+                    if (geometryRef == null)
+                        continue;
+
+                    var properties = new Dictionary<string, object>();
+
+                    for (var i = 0; i <= f.GetFieldCount() - 1; i++)
+                    {
+                        FieldType type = f.GetFieldType(i);
+                        var propName = f.GetFieldDefnRef(i).GetName();
+
+                        switch (type)
+                        {
+                            case FieldType.OFTString:
+                                properties.Add(propName, f.GetFieldAsString(i));
+                                break;
+                            case FieldType.OFTReal:
+                                properties.Add(propName, f.GetFieldAsDouble(i));
+                                break;
+                            case FieldType.OFTInteger64:
+                                properties.Add(propName, f.GetFieldAsInteger64(i));
+                                break;
+                        }
+                    }
+
+                    var json = geometryRef.ExportToJson(null);
+                    var geometry = JsonConvert.DeserializeObject<IGeometryObject>(json, new GeometryConverter());
+                    features.Add(new GeoJSON.Net.Feature.Feature(geometry, properties));
                 }
-                //GeoJSON.Net.Feature.Feature feat = new GeoJSON.Net.Feature.Feature()
+
+                result = new GeoJSON.Net.Feature.FeatureCollection(features);
             }
-
-            GeoJsonViewModel featureCollections = CreateFeatureCollection(geoJsons);
-            string geoJsonModel = JsonConvert.SerializeObject(featureCollections);
-
-            //Directory.Delete(tempPath, true);
-            return geoJsonModel;
+                
+            Directory.Delete(tempPath, true);
+            return JsonConvert.SerializeObject(result);
         }
 
         public void StreamCopy(string filePath, IFormFile file)
@@ -184,43 +176,6 @@ namespace ReformaAgraria.Controllers
             return path;
         }
 
-        public GeoJsonViewModel CreateFeatureCollection(List<string> data)
-        {
-            GeoJsonViewModel geoJson = JsonConvert.DeserializeObject<GeoJsonViewModel>("{'type': 'FeatureCollection', 'features': [] }");
-            geoJson.features = new object[data.Count];
-
-            for (var i = 0; i < data.Count; i++)
-            {
-                geoJson.features[i] = JsonConvert.DeserializeObject(data[i]);
-            }
-
-            return geoJson;
-        }
-
-       private void DeleteDirectory(string directory)
-        {
-            DirectoryInfo di = new DirectoryInfo(directory);
-
-            foreach (FileInfo file in di.GetFiles())
-            {
-                file.Delete();
-            }
-            foreach (DirectoryInfo dir in di.GetDirectories())
-            {
-                dir.Delete(true);
-            }
-        }
-
-        public void AddProperty(ExpandoObject expando, string propertyName, object propertyValue)
-        {
-            // ExpandoObject supports IDictionary so we can extend it like this
-            var expandoDict = expando as IDictionary<string, object>;
-            if (expandoDict.ContainsKey(propertyName))
-                expandoDict[propertyName] = propertyValue;
-            else
-                expandoDict.Add(propertyName, propertyValue);
-        }
-        
     }
 }
           
