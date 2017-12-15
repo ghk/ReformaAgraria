@@ -48,7 +48,7 @@ namespace ReformaAgraria.Controllers
         public async Task<BaseLayer> ImportAsync()
         {
             var results = HttpContext.Request.ReadFormAsync().Result;
-            var baseLayerContent = new BaseLayer
+            var content = new BaseLayer
             {
                 Label = results["label"],
                 Color = results["color"],
@@ -61,14 +61,15 @@ namespace ReformaAgraria.Controllers
                 return null;
             }
 
-            baseLayerContent.Geojson = geoJsonModel;
-            dbContext.Add(baseLayerContent);
+            content.Geojson = geoJsonModel;
+            dbContext.Add(content);
             await dbContext.SaveChangesAsync();
 
-            var destinationFile = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "base_layer", (baseLayerContent.Id.ToString() + '_' +".zip"));
+            var webRootPath = _hostingEnvironment.WebRootPath;
+            var destinationFile = Path.Combine(webRootPath , "baseLayer", (content.Id.ToString() + '_' + ".zip"));
             StreamCopy(destinationFile, file);
 
-            return baseLayerContent;
+            return content;
         }
 
         [HttpPost("edit")]
@@ -90,7 +91,7 @@ namespace ReformaAgraria.Controllers
                 {
                     content.Geojson = geoJsonModel;
                     var webRootPath = _hostingEnvironment.WebRootPath;
-                    var destinationFile = Path.Combine(webRootPath "base_layer", (content.Id.ToString() + '_' + ".zip"));
+                    var destinationFile = Path.Combine(webRootPath +  "baseLayer", (content.Id.ToString() + '_' + ".zip"));
                     StreamCopy(destinationFile, file);
                 }
             }
@@ -102,7 +103,7 @@ namespace ReformaAgraria.Controllers
 
         public string GetGeoJson(IFormFile file)
         {
-            string result = null;
+            GeoJSON.Net.Feature.FeatureCollection result = null;
             var tempFolderName = "reforma_agraria_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + Guid.NewGuid().ToString("N");
             var tempPath = Path.Combine(Path.GetTempPath(), tempFolderName);
             var zipPath = Path.Combine(tempPath, file.FileName);

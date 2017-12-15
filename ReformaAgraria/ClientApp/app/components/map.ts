@@ -193,7 +193,7 @@ export class MapComponent implements OnInit, OnDestroy {
         if (this.controlOverlayShowing) {
             if (this.controlOverlayShowing.id != id && this.controlOverlayShowing.status === '') {
                 let element = $(`.leaflet-control-layers-expanded:nth-child(${this.controlOverlayShowing.id})`)[0];
-                element.style.visibility == 'hidden';
+                element.style.visibility = 'hidden';
             }
         }
 
@@ -222,6 +222,7 @@ export class MapComponent implements OnInit, OnDestroy {
         this.map.removeLayer(currentOverlay.layer);
         this.layers.splice(currentOverlay, 1);
         this.initialData.splice(currentData, 1);
+        this.isOverlayAdded = true;
     }
       
     addMarker(marker): void {
@@ -276,8 +277,6 @@ export class MapComponent implements OnInit, OnDestroy {
     onChangeFile(event) {        
         this.model['file'] = event.srcElement.files;
     }
-
-    
 
     setCenter(): void {
         if (!this.geoJSONLayer)
