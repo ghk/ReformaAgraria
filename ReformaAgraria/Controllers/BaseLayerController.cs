@@ -14,6 +14,7 @@ using ReformaAgraria.Security;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using GeoJSON.Net.Geometry;
 
 namespace ReformaAgraria.Controllers
 {
@@ -112,19 +113,30 @@ namespace ReformaAgraria.Controllers
 
             Ogr.RegisterAll();
             Driver drv = Ogr.GetDriverByName("ESRI Shapefile");
+            
+            
+            //foreach(var an in shape.Features)
+            //{
+            //    var prop = an.Properties;
+            //}
+            //var anu = shape.FeaturesAsJson();
 
-            var ds = drv.Open(fileName, 0);
-           
+             var ds = drv.Open(tempPath, 0);
+
             Layer layer = ds.GetLayerByIndex(0);
             Feature f;
-            layer.ResetReading();
-            var x = layer.GetSpatialRef();
-
-            var geoJsons = new List<string>();
+            layer.ResetReading();            
+            var geoJsons = new List<string>();     
 
             while ((f = layer.GetNextFeature()) != null)
-            {
-                var geom = f.GetGeometryRef();
+            {               
+                for (var i = 0; i <= f.GetFieldCount() - 1; i++) {
+                    var anu = f.GetFieldDefnRef(i);
+                    var anu3 = f.GetFieldType(i);
+                    var anu4 = f.GetFieldDefnRef(i).GetName();
+                    var anu2 = f.GetFieldAsString(i);
+                }
+                var geom = f.GetGeometryRef();                
                 if (geom != null)
                 {
                     var geometryJson = geom.ExportToJson(null);
