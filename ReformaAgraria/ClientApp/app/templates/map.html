@@ -24,7 +24,11 @@
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="color">Warna</label>
-                        <input id="color" class="form-control" type="text" [(ngModel)]="model.color" name="color">
+                        <input id="color" name="color" class="form-control"
+                                [(colorPicker)]="color"
+                                [style.background]="color"
+                                [value]="color"
+                                [cpPosition]="'right'" [cpPositionOffset]="'0%'"/>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="file">File (*.zip)</label>
@@ -57,7 +61,11 @@
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="color">Warna</label>
-                        <input id="color" class="form-control" type="text" [(ngModel)]="model.color" name="color">
+                        <input id="color" name="color" class="form-control"
+                               [(colorPicker)]="color"
+                               [style.background]="color"
+                               [value]="color"
+                               [cpPosition]="'right'" [cpPositionOffset]="'0%'" />
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="file">File (*.zip)</label>

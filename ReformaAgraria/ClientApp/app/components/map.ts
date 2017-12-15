@@ -1,10 +1,13 @@
-﻿import { OnInit, OnDestroy, Component, ApplicationRef, EventEmitter, Input, Output, Injector, ComponentRef, ComponentFactoryResolver } from "@angular/core";
-import * as L from 'leaflet';
-import * as $ from 'jquery';
+﻿import { OnInit, NgZone, OnDestroy, Component, ApplicationRef, EventEmitter, Input, Output, Injector, ComponentRef, ComponentFactoryResolver } from "@angular/core";
+import { ColorPickerService } from 'angular4-color-picker';
+
 import { BaseLayerService } from '../services/gen/baseLayer';
 import { MapService } from '../services/map';
 import { BaseLayer } from '../models/gen/baseLayer';
 import MapUtils from '../helpers/mapUtils';
+
+import * as L from 'leaflet';
+import * as $ from 'jquery';
 
 
 const DATA_SOURCES = 'data';
@@ -23,14 +26,10 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MapComponent implements OnInit, OnDestroy {    
     map: L.Map;
-    snapShotMap: L.Map;
     geoJSONLayer: L.GeoJSON;
     options: any;
-    drawOptions: any;
     center: any;
     zoom: number;    
-    perkabigConfig: any;    
-    isExportingMap: boolean;
     layers: any[] = [];
     layersControl: any;
     controlOverlayShowing: any;
@@ -43,8 +42,14 @@ export class MapComponent implements OnInit, OnDestroy {
     initialData: any[] = [];
     isOverlayAdded: boolean;
     BaseLayer: BaseLayer;
+    private color: string = "#127bdc";
 
-    constructor(private baseLayerService: BaseLayerService, private mapService: MapService, private toastr: ToastrService) { }
+    constructor(
+        private baseLayerService: BaseLayerService,
+        private mapService: MapService,
+        private toastr: ToastrService,
+        private cpService: ColorPickerService
+        ) { }
     
     ngOnInit(): void {
         this.center = L.latLng(-1.374581, 119.977618);
@@ -90,6 +95,7 @@ export class MapComponent implements OnInit, OnDestroy {
         let id = event.target.dataset.value;
         let currentModel = this.initialData.find(o => o.id == parseInt(id));
         this.model = Object.assign({}, currentModel);
+        this.color = currentModel.color ? currentModel.color : this.color;
     }
 
     ngAfterViewChecked() {
@@ -140,8 +146,8 @@ export class MapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<button type="button" class="btn btn-light btn-sm">Upload File</button>';                
-                div.onclick = (e) => $("#upload-modal")['modal']("show");
+                div.innerHTML = '<button type="button" class="btn btn-light btn-sm">Upload File</button>';
+                div.onclick = (e) => { this.model = {}; $("#upload-modal")['modal']("show") };
                 return div;
             }
         });
@@ -185,7 +191,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     toggleControlLayers(id) {
         if (this.controlOverlayShowing) {
-            if (this.controlOverlayShowing.id != id && this.controlOverlayShowing.status == '') {
+            if (this.controlOverlayShowing.id != id && this.controlOverlayShowing.status === '') {
                 let element = $(`.leaflet-control-layers-expanded:nth-child(${this.controlOverlayShowing.id})`)[0];
                 element.style.visibility == 'hidden';
             }
@@ -206,8 +212,6 @@ export class MapComponent implements OnInit, OnDestroy {
     setLayer(name): void {
         let layer: L.Layer = LAYERS[name];
         layer.addTo(this.map);
-        //LAYERS[name].addTo(this.map);
-        //this.map.addLayer(LAYERS[name]);
     }
 
     removeLayer(id): void {
@@ -215,6 +219,7 @@ export class MapComponent implements OnInit, OnDestroy {
         let currentData = this.initialData.find(o => o.id == id);
         
         this.overlays.removeLayer(currentOverlay.layer);
+        this.map.removeLayer(currentOverlay.layer);
         this.layers.splice(currentOverlay, 1);
         this.initialData.splice(currentData, 1);
     }
@@ -238,6 +243,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     uploadFile() {
         $("#upload-modal")['modal']("hide");
+        this.model['color'] = this.color;
         this.mapService.import(this.model)
             .subscribe(
             data => {
@@ -248,21 +254,21 @@ export class MapComponent implements OnInit, OnDestroy {
 
     editOverlay(model) {
         $("#edit-modal")['modal']("hide");
+        this.model.color = this.color;
         
         this.mapService.edit(model).subscribe(data => {
             this.toastr.success("Pengeditan Berhasil", null);
             this.removeLayer(data.id);
             this.applyOverlay([data]);
         });
-        
     }
 
     deleteOverlay(model) {
         $("#delete-modal")['modal']("hide");
         let baselayerModel: BaseLayer = model;
 
-        this.baseLayerService.deleteById(model.id)
-            .subscribe(result => {
+        this.baseLayerService.deleteById(model.id).subscribe(result => {
+            this.toastr.success("Penghapusan berhasil", null)
             this.removeLayer(model.id);
         })
     }
@@ -270,6 +276,8 @@ export class MapComponent implements OnInit, OnDestroy {
     onChangeFile(event) {        
         this.model['file'] = event.srcElement.files;
     }
+
+    
 
     setCenter(): void {
         if (!this.geoJSONLayer)
@@ -300,7 +308,7 @@ export class MapComponent implements OnInit, OnDestroy {
             pointToLayer: (feature, latlng) => {
                 return new L.CircleMarker(latlng, {
                     radius: 8,
-                    fillColor: "red",
+                    fillColor: "#000",
                     weight: 1,
                     opacity: 1,
                     fillOpacity: 0.8

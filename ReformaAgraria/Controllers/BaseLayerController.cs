@@ -114,10 +114,11 @@ namespace ReformaAgraria.Controllers
             Driver drv = Ogr.GetDriverByName("ESRI Shapefile");
 
             var ds = drv.Open(fileName, 0);
-
+           
             Layer layer = ds.GetLayerByIndex(0);
             Feature f;
             layer.ResetReading();
+            var x = layer.GetSpatialRef();
 
             var geoJsons = new List<string>();
 
@@ -157,7 +158,7 @@ namespace ReformaAgraria.Controllers
 
         public GeoJsonViewModel CreateFeatureCollection(List<string> data)
         {
-            GeoJsonViewModel geoJson = JsonConvert.DeserializeObject<GeoJsonViewModel>("{'type': 'FeatureCollections', 'features': [] }");
+            GeoJsonViewModel geoJson = JsonConvert.DeserializeObject<GeoJsonViewModel>("{'type': 'FeatureCollection', 'features': [] }");
             geoJson.features = new object[data.Count];
 
             for (var i = 0; i < data.Count; i++)
