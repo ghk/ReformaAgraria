@@ -146,8 +146,8 @@ export class MapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<button type="button" class="btn btn-light btn-sm">Upload File</button>';
-                div.onclick = (e) => { this.model = {}; $("#upload-modal")['modal']("show") };
+                div.innerHTML = '<button type="button" class="btn btn-outline-dark btn-sm" style="font-size:22px; width:35px;"><strong>+</strong></button>';                
+                div.onclick = (e) => $("#upload-modal")['modal']("show");
                 return div;
             }
         });
@@ -159,7 +159,7 @@ export class MapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-1');
-                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: 232px; position: relative;">Kawasan Dan Perizinan</button>`;
+                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: auto; position: relative;">Kawasan Dan Perizinan</button>`;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
                 buttonOverlay.onclick = (e) => this.toggleControlLayers(3);
