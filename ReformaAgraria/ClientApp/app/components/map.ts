@@ -1,10 +1,13 @@
-﻿import { OnInit, OnDestroy, Component, ApplicationRef, EventEmitter, Input, Output, Injector, ComponentRef, ComponentFactoryResolver } from "@angular/core";
-import * as L from 'leaflet';
-import * as $ from 'jquery';
+﻿import { OnInit, NgZone, OnDestroy, Component, ApplicationRef, EventEmitter, Input, Output, Injector, ComponentRef, ComponentFactoryResolver } from "@angular/core";
+import { ColorPickerService } from 'angular4-color-picker';
+
 import { BaseLayerService } from '../services/gen/baseLayer';
 import { MapService } from '../services/map';
 import { BaseLayer } from '../models/gen/baseLayer';
 import MapUtils from '../helpers/mapUtils';
+
+import * as L from 'leaflet';
+import * as $ from 'jquery';
 
 
 const DATA_SOURCES = 'data';
@@ -23,72 +26,76 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MapComponent implements OnInit, OnDestroy {    
     map: L.Map;
-    snapShotMap: L.Map;
     geoJSONLayer: L.GeoJSON;
     options: any;
-    drawOptions: any;
     center: any;
     zoom: number;    
-    perkabigConfig: any;    
-    isExportingMap: boolean;
-    layers: any;
+    layers: any[] = [];
     layersControl: any;
     controlOverlayShowing: any;
     afterInit: boolean;
     mapData: any;
     baseLayers: any;
-    overlays: L.Control.Layers;
+    overlays: L.Control.Layers;    
     model: any =  {};
     markers = [];
     initialData: any[] = [];
     isOverlayAdded: boolean;
     BaseLayer: BaseLayer;
+    private color: string = "#127bdc";
 
-    constructor(private baseLayerService: BaseLayerService, private mapService: MapService, private toastr: ToastrService) { }
+    constructor(
+        private baseLayerService: BaseLayerService,
+        private mapService: MapService,
+        private toastr: ToastrService,
+        private cpService: ColorPickerService
+        ) { }
     
     ngOnInit(): void {
         this.center = L.latLng(-1.374581, 119.977618);
         this.zoom = 10;
         this.options = {
-            zoomControl: false           
+            zoomControl: false,
+            layers: [LAYERS["OpenStreetMap"]]
         };
-        this.getContent()        
+        let query = {};
+        this.baseLayerService.getAll(query, null).subscribe(data => {
+            this.applyOverlay(data);
+        });        
     }    
 
     ngOnDestroy() {
-        
+        this.map.remove();        
     }
-
-    getContent() {
-        let query = {};
-        this.baseLayerService.getAll(query, null).subscribe(data => {
-            let results = [];
-            if (data.length && data.length > 0) {
-                data.forEach(result => {
-                    let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
-                    let innerHtml = `<a href="javascript:void(0)">
-                                        <span class="oi oi-x overlay-action" id="delete" style="float:right;" data-value="${result.id}"></span>
-                                     </a>
-                                    <a href="javascript:void(0)" >
-                                        <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
+     
+    applyOverlay(data) {
+        if (data.length && data.length == 0) {
+            return
+        }
+        data.forEach(result => {
+            let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
+            console.log(geojson._layers);
+            let innerHtml = `<a href="javascript:void(0)">
+                                    <span class="oi oi-x overlay-action" id="delete" style="float:right;" data-value="${result.id}"></span>
                                     </a>
-                                      `;
-                    this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
-
-                    result.geojson = geojson;
-                    results.push(result);
-                })
-            }
-            this.initialData = results;
-            this.isOverlayAdded = true;
+                                <a href="javascript:void(0)" >
+                                    <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
+                                </a>
+                                    `;
+            let layer = this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
+            this.layers.push({ id: result.id, layer: geojson });
+            this.initialData.push(result);
         });
+        this.isOverlayAdded = true;
     }
 
 
     onclickActionOverlay = (event) =>{
         $(`#${event.target.id}-modal`)['modal']("show");
         let id = event.target.dataset.value;
-        this.model = this.initialData.find(o => o.id == parseInt(id));
+        let currentModel = this.initialData.find(o => o.id == parseInt(id));
+        this.model = Object.assign({}, currentModel);
+        this.color = currentModel.color ? currentModel.color : this.color;
     }
 
     ngAfterViewChecked() {
@@ -184,7 +191,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     toggleControlLayers(id) {
         if (this.controlOverlayShowing) {
-            if (this.controlOverlayShowing.id != id && this.controlOverlayShowing.status == '') {
+            if (this.controlOverlayShowing.id != id && this.controlOverlayShowing.status === '') {
                 let element = $(`.leaflet-control-layers-expanded:nth-child(${this.controlOverlayShowing.id})`)[0];
                 element.style.visibility == 'hidden';
             }
@@ -203,11 +210,18 @@ export class MapComponent implements OnInit, OnDestroy {
     }
         
     setLayer(name): void {
-        this.map.addLayer(LAYERS[name]);
+        let layer: L.Layer = LAYERS[name];
+        layer.addTo(this.map);
     }
 
-    removeLayer(name): void {
-        this.map.removeLayer(LAYERS[name]);
+    removeLayer(id): void {
+        let currentOverlay = this.layers.find(o => o.id == id);
+        let currentData = this.initialData.find(o => o.id == id);
+        
+        this.overlays.removeLayer(currentOverlay.layer);
+        this.map.removeLayer(currentOverlay.layer);
+        this.layers.splice(currentOverlay, 1);
+        this.initialData.splice(currentData, 1);
     }
       
     addMarker(marker): void {
@@ -229,35 +243,41 @@ export class MapComponent implements OnInit, OnDestroy {
 
     uploadFile() {
         $("#upload-modal")['modal']("hide");
+        this.model['color'] = this.color;
         this.mapService.import(this.model)
             .subscribe(
             data => {
-                this.toastr.success('File is successfully uploaded', null)
-            },
-            error => {
-                this.toastr.error('Unable to upload the file', null)
+                this.toastr.success("Upload File Berhasil", null);
+                this.applyOverlay([data]);
             });
     }
 
     editOverlay(model) {
         $("#edit-modal")['modal']("hide");
-        let baselayerModel: BaseLayer = model;
+        this.model.color = this.color;
         
+        this.mapService.edit(model).subscribe(data => {
+            this.toastr.success("Pengeditan Berhasil", null);
+            this.removeLayer(data.id);
+            this.applyOverlay([data]);
+        });
     }
 
     deleteOverlay(model) {
-        $("#edit-modal")['modal']("hide");
+        $("#delete-modal")['modal']("hide");
         let baselayerModel: BaseLayer = model;
 
         this.baseLayerService.deleteById(model.id).subscribe(result => {
-            this.overlays.remove();
-            this.getContent();
+            this.toastr.success("Penghapusan berhasil", null)
+            this.removeLayer(model.id);
         })
     }
 
     onChangeFile(event) {        
         this.model['file'] = event.srcElement.files;
     }
+
+    
 
     setCenter(): void {
         if (!this.geoJSONLayer)
@@ -288,7 +308,7 @@ export class MapComponent implements OnInit, OnDestroy {
             pointToLayer: (feature, latlng) => {
                 return new L.CircleMarker(latlng, {
                     radius: 8,
-                    fillColor: "red",
+                    fillColor: "#000",
                     weight: 1,
                     opacity: 1,
                     fillOpacity: 0.8

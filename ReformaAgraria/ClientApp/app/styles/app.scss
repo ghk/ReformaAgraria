@@ -491,6 +491,10 @@ table#table-region th {
 
 }
 
+#map{
+    height:inherit;
+    width:auto;
+}
 .header-list-problem .header-list-object p {
    margin-top: 20px;
 }
@@ -519,10 +523,12 @@ table#table-region th {
 .leaflet-control-layers.leaflet-control.control-right-1 {
     position: relative;
     right: 5px;
+    pointer-events: visiblePainted;
 }
 .leaflet-control-layers.leaflet-control.control-right-2 {
     position: absolute;
     right: 253px;
+    pointer-events: visiblePainted;
 }
 .leaflet-control-layers-expanded:nth-child(3) {
     right: 5px;

@@ -19,6 +19,7 @@
     "@angular/router": "4.4.5",
     "@asymmetrik/ngx-leaflet": "^2.5.3",
     "angular-progress-http": "^0.5.1",
+    "angular4-color-picker": "^1.4.2",
     "bootstrap": "4.0.0-beta",
     "es6-shim": "0.35.3",
     "event-source-polyfill": "0.0.11",

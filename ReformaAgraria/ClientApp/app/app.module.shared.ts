@@ -9,6 +9,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { OrderModule } from 'ngx-order-pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { ColorPickerModule } from 'angular4-color-picker';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
@@ -92,6 +93,7 @@ import './styles/app.scss';
         OrderModule,
         BrowserAnimationsModule,
         ToastrModule.forRoot(), 
+        ColorPickerModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [

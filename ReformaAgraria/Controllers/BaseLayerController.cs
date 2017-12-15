@@ -14,6 +14,7 @@ using ReformaAgraria.Security;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using GeoJSON.Net.Geometry;
 
 namespace ReformaAgraria.Controllers
 {
@@ -39,8 +40,11 @@ namespace ReformaAgraria.Controllers
         public async Task<BaseLayer> ImportAsync()
         {
             var results = HttpContext.Request.ReadFormAsync().Result;
-            var label = results["label"];
-            var color = results["color"];
+            var baseLayerContent = new BaseLayer
+            {
+                Label = results["label"],
+                Color = results["color"],
+            };
             var file = results.Files[0];
             var geoJsonModel = GetGeoJson(file);
 
@@ -49,13 +53,7 @@ namespace ReformaAgraria.Controllers
                 return null;
             }
 
-            var baseLayerContent = new BaseLayer
-            {
-                Label = label,
-                Color = color,
-                Geojson = geoJsonModel,
-            };
-
+            baseLayerContent.Geojson = geoJsonModel;
             dbContext.Add(baseLayerContent);
             await dbContext.SaveChangesAsync();
 
@@ -63,6 +61,34 @@ namespace ReformaAgraria.Controllers
             StreamCopy(destinationFile, file);
 
             return baseLayerContent;
+        }
+
+        [HttpPost("edit")]
+        public async Task<BaseLayer> EditAsync()
+        {
+            var results = HttpContext.Request.ReadFormAsync().Result;
+            int id = Int32.Parse(results["id"]);
+            var content = dbContext.Set<BaseLayer>().Where(o => o.Id == id).FirstOrDefault();
+            content.Label = results["label"];
+            content.Color = results["color"];
+
+            IFormFile file = null;
+            string geoJsonModel = "";
+            if(results.Files.Count != 0)
+            {
+                file = results.Files[0];
+                geoJsonModel = GetGeoJson(file);
+                if (geoJsonModel != null)
+                {
+                    content.Geojson = geoJsonModel;
+                    var destinationFile = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "base_layer", (content.Id.ToString() + '_' + ".zip"));
+                    StreamCopy(destinationFile, file);
+                }
+            }
+
+            dbContext.Update(content);
+            await dbContext.SaveChangesAsync();
+            return content;
         }
 
         public string GetGeoJson(IFormFile file)
@@ -87,18 +113,30 @@ namespace ReformaAgraria.Controllers
 
             Ogr.RegisterAll();
             Driver drv = Ogr.GetDriverByName("ESRI Shapefile");
+            
+            
+            //foreach(var an in shape.Features)
+            //{
+            //    var prop = an.Properties;
+            //}
+            //var anu = shape.FeaturesAsJson();
 
-            var ds = drv.Open(fileName, 0);
+             var ds = drv.Open(tempPath, 0);
 
             Layer layer = ds.GetLayerByIndex(0);
             Feature f;
-            layer.ResetReading();
-
-            var geoJsons = new List<string>();
+            layer.ResetReading();            
+            var geoJsons = new List<string>();     
 
             while ((f = layer.GetNextFeature()) != null)
-            {
-                var geom = f.GetGeometryRef();
+            {               
+                for (var i = 0; i <= f.GetFieldCount() - 1; i++) {
+                    var anu = f.GetFieldDefnRef(i);
+                    var anu3 = f.GetFieldType(i);
+                    var anu4 = f.GetFieldDefnRef(i).GetName();
+                    var anu2 = f.GetFieldAsString(i);
+                }
+                var geom = f.GetGeometryRef();                
                 if (geom != null)
                 {
                     var geometryJson = geom.ExportToJson(null);
@@ -132,7 +170,7 @@ namespace ReformaAgraria.Controllers
 
         public GeoJsonViewModel CreateFeatureCollection(List<string> data)
         {
-            GeoJsonViewModel geoJson = JsonConvert.DeserializeObject<GeoJsonViewModel>("{'type': 'FeatureCollections', 'features': [] }");
+            GeoJsonViewModel geoJson = JsonConvert.DeserializeObject<GeoJsonViewModel>("{'type': 'FeatureCollection', 'features': [] }");
             geoJson.features = new object[data.Count];
 
             for (var i = 0; i < data.Count; i++)

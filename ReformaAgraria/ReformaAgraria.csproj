@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
     <PackageReference Include="Gdal.Core" Version="1.0.0" />
+    <PackageReference Include="GeoJSON.Net" Version="1.1.64" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" />
@@ -51,6 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Harlow\Harlow.csproj" />
     <ProjectReference Include="..\MicrovacWebCore\MicrovacWebCore.csproj" />
   </ItemGroup>
 
