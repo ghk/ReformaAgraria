@@ -114,7 +114,7 @@ h1 {
 
 .navbar {
     background-color: #1976d2;
-    box-shadow: 12px 0px 8px;
+    // box-shadow: 12px 0px 8px;
     
 }
 
@@ -132,6 +132,48 @@ h1 {
 .nav-link .oi {
     margin-right: 1em;
 }
+
+// sidenavDrawer
+.sidenavDrawer {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenavDrawer a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenavDrawer a:hover {
+    color: #f1f1f1;
+}
+
+.sidenavDrawer .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenavDrawer {padding-top: 15px;}
+  .sidenavDrawer a {font-size: 18px;}
+}
+
+
 
 .breadcrumb {
     background-color: #1976d2;
@@ -452,6 +494,27 @@ table#table-region th {
 .header-list-problem .header-list-object p {
    margin-top: 20px;
 }
+
+#map {
+    width: auto;
+    
+}
+
+.mainMap {
+    display: block;
+    height: 600px;
+    
+}
+
+.box {
+    height: 100%;
+    position: relative;
+    outline: none;
+    margin-right: -15px;
+    margin-left: -15px;
+    margin-top: -8px;
+}
+
 //control bar leaflet
 .leaflet-control-layers.leaflet-control.control-right-1 {
     position: relative;
@@ -481,24 +544,3 @@ table#table-region th {
     line-height: 30px;
 }
 
-
-
-
-
-
-// Extra small devices (portrait phones, less than 576px)
-// No media query since this is the default in Bootstrap
-
-// Small devices (landscape phones, 576px and up)
-@media (min-width: 576px) {
-    
- }
-
-// Medium devices (tablets, 768px and up)
-@media (min-width: 768px) {  }
-
-// Large devices (desktops, 992px and up)
-@media (min-width: 992px) {  }
-
-// Extra large devices (large desktops, 1200px and up)
-@media (min-width: 1200px) {  }
