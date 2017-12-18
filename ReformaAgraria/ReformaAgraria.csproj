@@ -52,7 +52,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Harlow\Harlow.csproj" />
     <ProjectReference Include="..\MicrovacWebCore\MicrovacWebCore.csproj" />
   </ItemGroup>
 
