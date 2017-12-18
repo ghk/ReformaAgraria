@@ -10,6 +10,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO.Compression;
+using OSGeo.OGR;
+using Newtonsoft.Json;
+using GeoJSON.Net.Geometry;
+using GeoJSON.Net.Converters;
 
 namespace ReformaAgraria.Controllers
 {
@@ -24,7 +28,7 @@ namespace ReformaAgraria.Controllers
             _hostingEnvironment = hostingEnvironment;
             _contextAccessor = contextAccessor;
         }
-        
+
         [HttpGet("export")]
         public string Export()
         {
@@ -69,39 +73,85 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("import")]
-        public void Import()
+        public string Import()
         {
+            GeoJSON.Net.Feature.FeatureCollection result = null;
             var formFile = HttpContext.Request.ReadFormAsync().Result.Files[0];
             var toraName = HttpContext.Request.ReadFormAsync().Result["toraName"];
-            var folderPath = Path.Combine(
+            var tempFolderName = "reforma_agraria_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + Guid.NewGuid().ToString("N");
+            //var tempPath = Path.Combine(Path.GetTempPath(), tempFolderName);
+            var tempPath = Path.Combine(
                         Directory.GetCurrentDirectory(), "wwwroot",
-                        toraName);
+                        tempFolderName);
+            var zipPath = Path.Combine(tempPath, formFile.FileName);
 
-            if (!Directory.Exists(folderPath))
+            ValidateAndCreateFolder(tempPath);
+            StreamCopy(zipPath, formFile);
+            ZipFile.ExtractToDirectory(zipPath, tempPath);
+
+            Ogr.RegisterAll();
+            Driver driver = Ogr.GetDriverByName("ESRI Shapefile");
+            using (var dataSource = driver.Open(tempPath, 0))
             {
-                Directory.CreateDirectory(folderPath);
+                Layer layer = dataSource.GetLayerByIndex(0);
+                layer.ResetReading();
+
+                var features = new List<GeoJSON.Net.Feature.Feature>();
+                Feature f;
+                while ((f = layer.GetNextFeature()) != null)
+                {
+                    var geometryRef = f.GetGeometryRef();
+                    if (geometryRef == null)
+                        continue;
+
+                    var properties = new Dictionary<string, object>();
+
+                    for (var i = 0; i <= f.GetFieldCount() - 1; i++)
+                    {
+                        FieldType type = f.GetFieldType(i);
+                        var propName = f.GetFieldDefnRef(i).GetName();
+
+                        switch (type)
+                        {
+                            case FieldType.OFTString:
+                                properties.Add(propName, f.GetFieldAsString(i));
+                                break;
+                            case FieldType.OFTReal:
+                                properties.Add(propName, f.GetFieldAsDouble(i));
+                                break;
+                            case FieldType.OFTInteger64:
+                                properties.Add(propName, f.GetFieldAsInteger64(i));
+                                break;
+                        }
+                    }
+
+                    var json = geometryRef.ExportToJson(null);
+                    var geometry = JsonConvert.DeserializeObject<IGeometryObject>(json, new GeometryConverter());
+                    features.Add(new GeoJSON.Net.Feature.Feature(geometry, properties));
+                }
+
+                result = new GeoJSON.Net.Feature.FeatureCollection(features);
+
+                Directory.Delete(tempPath, true);
+                return JsonConvert.SerializeObject(result);
             }
+        }
 
-            var filePath = Path.Combine(folderPath,
-                        toraName);
+        public string ValidateAndCreateFolder(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
+        }
 
+        public void StreamCopy(string filePath, IFormFile file)
+        {
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                formFile.CopyTo(stream);
+                file.CopyTo(stream);
             }
-            
-            var extractedPath = Path.Combine(folderPath, toraName);
-
-            if (!Directory.Exists(extractedPath))
-            {
-                Directory.CreateDirectory(extractedPath);
-            }
-
-            ZipFile.ExtractToDirectory(filePath, extractedPath);
-
-            //read shp and insert to db
-
-            //Directory.Delete(extractedPath);
         }
     }
 }

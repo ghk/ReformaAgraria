@@ -14,6 +14,12 @@
         </div>
     <input type="file" class="custom-file-input" (change)="uploadFile($event)" placeholder="Upload file" accept=".zip" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
         <div class="card-body">
-          <img src="/images/map.png" class="img-fluid" alt="Responsive image">
+            <div id="map" leaflet
+                 style="height: 561px; position: relative;"
+                 [leafletOptions]="options"
+                 [leafletCenter]="center"
+                 [leafletZoom]="zoom"
+                 (leafletMapReady)="onMapReady($event)">
+            </div>
         </div>
   </div>
