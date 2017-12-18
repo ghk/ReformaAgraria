@@ -49,10 +49,12 @@
 
   <ItemGroup>
     <None Include="appsettings.json" />
+    <None Include="ProjNET.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MicrovacWebCore\MicrovacWebCore.csproj" />
+    <ProjectReference Include="..\SharpMap.CoordinateSystems\ProjNET.csproj" />
   </ItemGroup>
 
   <ItemGroup>

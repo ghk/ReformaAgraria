@@ -19,6 +19,8 @@ using System.Dynamic;
 using Newtonsoft.Json.Linq;
 using GeoJSON.Net.Geometry;
 using GeoJSON.Net.Converters;
+using ProjNet.CoordinateSystems.Transformations;
+using ProjNet.CoordinateSystems;
 
 namespace ReformaAgraria.Controllers
 {
@@ -116,9 +118,17 @@ namespace ReformaAgraria.Controllers
             Driver driver = Ogr.GetDriverByName("ESRI Shapefile");
             using (var dataSource = driver.Open(tempPath, 0))
             {
-                Layer layer = dataSource.GetLayerByIndex(0);
+                Layer layer = dataSource.GetLayerByIndex(0);                
                 layer.ResetReading();
 
+                var sourceSpatialRef = layer.GetSpatialRef();
+                sourceSpatialRef.ExportToWkt(out string sourceWkt);
+
+                CoordinateTransformationFactory ctfac = new CoordinateTransformationFactory();
+                CoordinateSystemFactory cfac = new CoordinateSystemFactory();                
+                GeographicCoordinateSystem wgs84 = GeographicCoordinateSystem.WGS84;
+                var transformer = ctfac.CreateFromCoordinateSystems(cfac.CreateFromWkt(sourceWkt), wgs84);
+                
                 var features = new List<GeoJSON.Net.Feature.Feature>();
                 Feature f;
                 while ((f = layer.GetNextFeature()) != null)
@@ -148,9 +158,13 @@ namespace ReformaAgraria.Controllers
                         }
                     }
 
+                    TransformGeometry(geometryRef, transformer);
+
                     var json = geometryRef.ExportToJson(null);
-                    var geometry = JsonConvert.DeserializeObject<IGeometryObject>(json, new GeometryConverter());
-                    features.Add(new GeoJSON.Net.Feature.Feature(geometry, properties));
+                    var geometry = JsonConvert.DeserializeObject<IGeometryObject>(json, new GeometryConverter());                
+                    var feature = new GeoJSON.Net.Feature.Feature(geometry, properties);                    
+                    features.Add(feature);
+                    
                 }
 
                 result = new GeoJSON.Net.Feature.FeatureCollection(features);
@@ -158,6 +172,27 @@ namespace ReformaAgraria.Controllers
                 
             Directory.Delete(tempPath, true);
             return JsonConvert.SerializeObject(result);
+        }
+       
+        private void TransformGeometry(Geometry geometry, ICoordinateTransformation transformer)
+        {
+            if (geometry.GetGeometryCount() == 0)
+            {
+                for (var i = 0; i <= geometry.GetPointCount() - 1; i++)
+                {
+                    var outPoint = new double[3];
+                    geometry.GetPoint(i, outPoint);
+                    var transformedPoint = transformer.MathTransform.Transform(outPoint);
+                    geometry.SetPoint_2D(i, transformedPoint[0], transformedPoint[1]);
+                }
+            }
+            else
+            {
+                for (var i = 0; i <= geometry.GetGeometryCount() - 1; i++)
+                {
+                    TransformGeometry(geometry.GetGeometryRef(i), transformer);
+                }
+            }
         }
 
         public void StreamCopy(string filePath, IFormFile file)
