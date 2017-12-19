@@ -1,10 +1,12 @@
-﻿<div id="map" leaflet 
-     style="height: 561px; position: relative;"
-     [leafletOptions]="options"
-    [leafletCenter]="center"
-    [leafletZoom]="zoom"
-    (leafletMapReady)="onMapReady($event)" 
-     >
+﻿
+﻿<div class="d-flex align-items-stretch">
+    <div leaflet id="map"
+         [leafletOptions]="options"
+         [leafletCenter]="center"
+         [leafletZoom]="zoom"
+         (leafletMapReady)="onMapReady($event)"
+         >
+    </div>
 </div>
 
 <div id="upload-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
@@ -24,11 +26,13 @@
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="color">Warna</label>
-                        <input id="color" name="color" class="form-control"
+                        <input id="color" name="color" class="form-control" autocomplete="off"
                                 [(colorPicker)]="color"
                                 [style.background]="color"
                                 [value]="color"
-                                [cpPosition]="'left'" [cpPositionOffset]="'0%'"/>
+                                [cpPosition]="'left'" 
+                                [cpPositionOffset]="'0%'"
+                                [cpOutputFormat]="'hex'"/>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="file">File (*.zip)</label>
@@ -61,16 +65,18 @@
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="color">Warna</label>
-                        <input id="color" name="color" class="form-control"
+                        <input id="color" name="color" class="form-control" autocomplete="off"
                                [(colorPicker)]="color"
                                [style.background]="color"
                                [value]="color"
-                               [cpPosition]="'left'" [cpPositionOffset]="'0%'" />
+                               [cpPosition]="'left'" 
+                               [cpPositionOffset]="'0%'" 
+                               [cpOutputFormat]="'hex'"/>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="file">File (*.zip)</label>
                         <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event)" name="file">
-                        <a href="">Download File</a>
+                        <a href="{{model.linkDownload}}">Download File</a>
                     </div>
                 </div>
                 <div class="modal-footer">

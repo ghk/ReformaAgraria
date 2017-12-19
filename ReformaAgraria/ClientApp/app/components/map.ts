@@ -42,6 +42,7 @@ export class MapComponent implements OnInit, OnDestroy {
     initialData: any[] = [];
     isOverlayAdded: boolean;
     BaseLayer: BaseLayer;
+    leafletHeight: any;
     private color: string = "#127bdc";
 
     constructor(
@@ -59,15 +60,18 @@ export class MapComponent implements OnInit, OnDestroy {
             layers: [LAYERS["OpenStreetMap"]]
         };
         let query = {};
+        window.addEventListener('resize', this.onResize);
+        window.dispatchEvent(new Event('resize'));
         this.baseLayerService.getAll(query, null).subscribe(data => {
             this.applyOverlay(data);
         });        
     }    
 
     ngOnDestroy() {
-        this.map.remove();        
+        this.map.remove();
+        window.removeEventListener('resize', this.onResize);
     }
-     
+    
     applyOverlay(data) {
         if (data.length && data.length == 0) {
             return
@@ -92,10 +96,17 @@ export class MapComponent implements OnInit, OnDestroy {
 
     onclickActionOverlay = (event) =>{
         $(`#${event.target.id}-modal`)['modal']("show");
+
         let id = event.target.dataset.value;
         let currentModel = this.initialData.find(o => o.id == parseInt(id));
+
+
         this.model = Object.assign({}, currentModel);
         this.color = currentModel.color ? currentModel.color : this.color;
+        if (event.target.id == "edit") {
+            this.model["linkDownload"] = [window.location.origin, 'baseLayer',id+"_.zip"].join("/")
+        }
+        
     }
 
     ngAfterViewChecked() {
@@ -124,30 +135,15 @@ export class MapComponent implements OnInit, OnDestroy {
         L.control.zoom({
             position: 'bottomright'
         }).addTo(this.map);
-
         
         let button = L.Control.extend({
-            options: {
-                position: 'bottomright'
-            },
-            onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control fullscreen-button');
-                div.innerHTML = '<a href="javascript:void(0);" style="color:black"><i class="oi oi-fullscreen-enter"></i></a>';                
-                div.onclick = (e) => this.fullScreenToggle(e);
-                return div;
-            }
-        });
-
-        this.map.addControl(new button());
-
-        button = L.Control.extend({
             options: {
                 position: 'topleft'
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<button type="button" class="btn btn-outline-dark btn-sm" style="font-size:22px; width:35px;"><strong>+</strong></button>';                
-                div.onclick = (e) => $("#upload-modal")['modal']("show");
+                div.innerHTML = '<button type="button" class="btn btn-outline-dark btn-sm" style="font-size:22px; width:35px;"><strong>+</strong></button>';
+                div.onclick = (e) => { this.model = {}; $("#form-upload")[0]["reset"](); $("#upload-modal")['modal']("show") };
                 return div;
             }
         });
@@ -159,33 +155,16 @@ export class MapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-1');
-                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: auto; position: relative;">Kawasan Dan Perizinan</button>`;
+                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: auto; position: relative;">Layers</button>`;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
-                buttonOverlay.onclick = (e) => this.toggleControlLayers(3);
+                buttonOverlay.onclick = (e) => this.toggleControlLayers(2);
                 
                 return div;
             }
         });
-        this.map.addControl(new button());
-
-        button = L.Control.extend({
-            options: {
-                position: 'topright'
-            },
-            onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-2');
-                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: 214px; position: relative;">Base Layers</button>`;
-
-                let buttonOverlay = div.getElementsByTagName('button')[0];
-                buttonOverlay.onclick = (e) => this.toggleControlLayers(4);
-                return div;
-            }
-        });
-
-        this.map.addControl(new button());      
-        this.overlays = L.control.layers(null, null, { collapsed: false }).addTo(this.map);
-        this.baseLayers = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);        
+        this.map.addControl(new button());     
+        this.overlays = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);        
         this.afterInit = true;
     }
 
@@ -206,9 +185,6 @@ export class MapComponent implements OnInit, OnDestroy {
         this.controlOverlayShowing = { id: id, status: status }
     }
 
-    fullScreenToggle(e) {
-    }
-        
     setLayer(name): void {
         let layer: L.Layer = LAYERS[name];
         layer.addTo(this.map);
@@ -346,4 +322,12 @@ export class MapComponent implements OnInit, OnDestroy {
         };
         return MapUtils.setGeoJsonLayer(geoJson, geoJsonOptions);
     } 
+
+    onResize = (e) => {
+        let height = e.target.innerHeight - 88;
+        $("#map").height(height);
+        this.map.invalidateSize();
+    }
+
+
 }

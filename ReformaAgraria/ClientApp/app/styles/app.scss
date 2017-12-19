@@ -114,8 +114,7 @@ h1 {
 
 .navbar {
     background-color: #1976d2;
-    // box-shadow: 12px 0px 8px;
-    
+    // box-shadow: 12px 0px 8px; 
 }
 
 .navbar-brand {
@@ -141,7 +140,7 @@ h1 {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #343a40;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -172,8 +171,6 @@ h1 {
   .sidenavDrawer {padding-top: 15px;}
   .sidenavDrawer a {font-size: 18px;}
 }
-
-
 
 .breadcrumb {
     background-color: #1976d2;
@@ -487,27 +484,21 @@ table#table-region th {
 
 .header-list-large h2 {
     color: rgb(54, 160, 9);
-    
-
 }
 
-#map{
-    height:inherit;
-    width:auto;
+#map {
+    width: 100%;
+    position: relative;
 }
+
 .header-list-problem .header-list-object p {
    margin-top: 20px;
 }
 
-#map {
-    width: auto;
-    
-}
 
 .mainMap {
     display: block;
-    height: 600px;
-    
+    height: 600px;    
 }
 
 .box {
@@ -525,28 +516,16 @@ table#table-region th {
     right: 5px;
     pointer-events: visiblePainted;
 }
-.leaflet-control-layers.leaflet-control.control-right-2 {
-    position: absolute;
-    right: 253px;
-    pointer-events: visiblePainted;
-}
-.leaflet-control-layers-expanded:nth-child(3) {
+.leaflet-control-layers-expanded:nth-child(2) {
     right: 5px;
     top: 33px;
     width: 239px;
     position: absolute;
 }
 
-.leaflet-control-layers-expanded:nth-child(4) {
-    right: 253px;
-    top: 33px;
-    width: 218px;
-    position: absolute;
-}
 .fullscreen-button {
     width: 33px;
     height: 30px;
     text-align: center;
     line-height: 30px;
 }
-
