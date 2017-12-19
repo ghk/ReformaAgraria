@@ -487,18 +487,18 @@ table#table-region th {
 }
 
 #map {
-    height:100vh;
-    width:100vw;
-    display: block;
+    width: 100%;
+    position: relative;
 }
 
 .header-list-problem .header-list-object p {
    margin-top: 20px;
 }
 
+
 .mainMap {
-    position: relative;
-  
+    display: block;
+    height: 600px;    
 }
 
 .box {
@@ -540,4 +540,3 @@ table#table-region th {
     text-align: center;
     line-height: 30px;
 }
-

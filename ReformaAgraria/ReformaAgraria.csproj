@@ -44,16 +44,17 @@
 
   <ItemGroup>
     <Folder Include="Docs\" />
-    <Folder Include="wwwroot\base_layer\" />
+    <Folder Include="wwwroot\baseLayer\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="appsettings.json" />
+    <None Include="ProjNET.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Harlow\Harlow.csproj" />
     <ProjectReference Include="..\MicrovacWebCore\MicrovacWebCore.csproj" />
+    <ProjectReference Include="..\SharpMap.CoordinateSystems\ProjNET.csproj" />
   </ItemGroup>
 
   <ItemGroup>

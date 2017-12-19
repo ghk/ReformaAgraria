@@ -42,6 +42,7 @@ export class MapComponent implements OnInit, OnDestroy {
     initialData: any[] = [];
     isOverlayAdded: boolean;
     BaseLayer: BaseLayer;
+    leafletHeight: any;
     private color: string = "#127bdc";
 
     constructor(
@@ -59,15 +60,18 @@ export class MapComponent implements OnInit, OnDestroy {
             layers: [LAYERS["OpenStreetMap"]]
         };
         let query = {};
+        window.addEventListener('resize', this.onResize);
+        window.dispatchEvent(new Event('resize'));
         this.baseLayerService.getAll(query, null).subscribe(data => {
             this.applyOverlay(data);
         });        
     }    
 
     ngOnDestroy() {
-        this.map.remove();        
+        this.map.remove();
+        window.removeEventListener('resize', this.onResize);
     }
-     
+    
     applyOverlay(data) {
         if (data.length && data.length == 0) {
             return
@@ -92,10 +96,17 @@ export class MapComponent implements OnInit, OnDestroy {
 
     onclickActionOverlay = (event) =>{
         $(`#${event.target.id}-modal`)['modal']("show");
+
         let id = event.target.dataset.value;
         let currentModel = this.initialData.find(o => o.id == parseInt(id));
+
+
         this.model = Object.assign({}, currentModel);
         this.color = currentModel.color ? currentModel.color : this.color;
+        if (event.target.id == "edit") {
+            this.model["linkDownload"] = [window.location.origin, 'baseLayer',id+"_.zip"].join("/")
+        }
+        
     }
 
     ngAfterViewChecked() {
@@ -124,30 +135,15 @@ export class MapComponent implements OnInit, OnDestroy {
         L.control.zoom({
             position: 'bottomright'
         }).addTo(this.map);
-
         
         let button = L.Control.extend({
-            options: {
-                position: 'bottomright'
-            },
-            onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control fullscreen-button');
-                div.innerHTML = '<a href="javascript:void(0);" style="color:black"><i class="oi oi-fullscreen-enter"></i></a>';                
-                div.onclick = (e) => this.fullScreenToggle(e);
-                return div;
-            }
-        });
-
-        this.map.addControl(new button());
-
-        button = L.Control.extend({
             options: {
                 position: 'topleft'
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<button type="button" class="btn btn-outline-dark btn-sm" style="font-size:22px; width:35px;"><strong>+</strong></button>';                
-                div.onclick = (e) => $("#upload-modal")['modal']("show");
+                div.innerHTML = '<button type="button" class="btn btn-outline-dark btn-sm" style="font-size:22px; width:35px;"><strong>+</strong></button>';
+                div.onclick = (e) => { this.model = {}; $("#form-upload")[0]["reset"](); $("#upload-modal")['modal']("show") };
                 return div;
             }
         });
@@ -193,7 +189,7 @@ export class MapComponent implements OnInit, OnDestroy {
         if (this.controlOverlayShowing) {
             if (this.controlOverlayShowing.id != id && this.controlOverlayShowing.status === '') {
                 let element = $(`.leaflet-control-layers-expanded:nth-child(${this.controlOverlayShowing.id})`)[0];
-                element.style.visibility == 'hidden';
+                element.style.visibility = 'hidden';
             }
         }
 
@@ -206,9 +202,6 @@ export class MapComponent implements OnInit, OnDestroy {
         this.controlOverlayShowing = { id: id, status: status }
     }
 
-    fullScreenToggle(e) {
-    }
-        
     setLayer(name): void {
         let layer: L.Layer = LAYERS[name];
         layer.addTo(this.map);
@@ -222,6 +215,7 @@ export class MapComponent implements OnInit, OnDestroy {
         this.map.removeLayer(currentOverlay.layer);
         this.layers.splice(currentOverlay, 1);
         this.initialData.splice(currentData, 1);
+        this.isOverlayAdded = true;
     }
       
     addMarker(marker): void {
@@ -276,8 +270,6 @@ export class MapComponent implements OnInit, OnDestroy {
     onChangeFile(event) {        
         this.model['file'] = event.srcElement.files;
     }
-
-    
 
     setCenter(): void {
         if (!this.geoJSONLayer)
@@ -347,4 +339,12 @@ export class MapComponent implements OnInit, OnDestroy {
         };
         return MapUtils.setGeoJsonLayer(geoJson, geoJsonOptions);
     } 
+
+    onResize = (e) => {
+        let height = e.target.innerHeight - 88;
+        $("#map").height(height);
+        this.map.invalidateSize();
+    }
+
+
 }
