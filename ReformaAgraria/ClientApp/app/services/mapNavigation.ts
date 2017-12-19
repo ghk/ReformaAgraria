@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+﻿import { OnInit, NgZone, OnDestroy, Component, ApplicationRef, EventEmitter, Input, Output, Injector, ComponentRef, Injectable, ComponentFactoryResolver } from "@angular/core"
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { CookieService } from 'ngx-cookie-service';
@@ -175,7 +175,7 @@ export class MapNavigationService {
     fullScreenToggle(e) {
     }
 
-    onMapReady(map: L.Map): void {
+    onMapReady(map: L.Map) {
         this.map = map;
         this.setLayer('OpenStreetMap');
         this.setupControlBar();
