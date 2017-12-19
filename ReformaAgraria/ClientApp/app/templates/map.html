@@ -1,10 +1,8 @@
-﻿<div id="map" leaflet 
-     style="height: 561px; position: relative;"
-     [leafletOptions]="options"
+﻿<div id="map" leaflet
+    [leafletOptions]="options"
     [leafletCenter]="center"
     [leafletZoom]="zoom"
-    (leafletMapReady)="onMapReady($event)" 
-     >
+    (leafletMapReady)="onMapReady($event)">
 </div>
 
 <div id="upload-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
