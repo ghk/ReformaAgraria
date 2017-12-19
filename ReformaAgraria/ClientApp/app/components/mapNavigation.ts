@@ -218,6 +218,10 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         return MapUtils.setGeoJsonLayer(geoJson, geoJsonOptions);
     } 
 
+    addMarker(marker): void {
+        this.markers.push(marker);
+    }
+
     applyOverlay(data) {
         if (data.length && data.length == 0) {
             return
