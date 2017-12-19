@@ -516,24 +516,13 @@ table#table-region th {
     right: 5px;
     pointer-events: visiblePainted;
 }
-.leaflet-control-layers.leaflet-control.control-right-2 {
-    position: absolute;
-    right: 253px;
-    pointer-events: visiblePainted;
-}
-.leaflet-control-layers-expanded:nth-child(3) {
+.leaflet-control-layers-expanded:nth-child(2) {
     right: 5px;
     top: 33px;
     width: 239px;
     position: absolute;
 }
 
-.leaflet-control-layers-expanded:nth-child(4) {
-    right: 253px;
-    top: 33px;
-    width: 218px;
-    position: absolute;
-}
 .fullscreen-button {
     width: 33px;
     height: 30px;
