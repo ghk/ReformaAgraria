@@ -20,75 +20,59 @@ using ProjNet.CoordinateSystems;
 namespace ReformaAgraria.Controllers
 {
     [Route("api/[controller]")]
-    public class VillageMapAttributeController : CrudController<ToraObject, int>
+    public class ToraMapController : CrudController<ToraObject, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public VillageMapAttributeController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment, IHttpContextAccessor contextAccessor) : base(dbContext)
+        public ToraMapController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment, IHttpContextAccessor contextAccessor) : base(dbContext)
         {
             _hostingEnvironment = hostingEnvironment;
             _contextAccessor = contextAccessor;
         }
 
-        [HttpGet("export")]
-        public string Export()
+        [HttpPost("import")]
+        public async Task<ToraMap> ImportAsync()
         {
-            string sWebRootFolder = _hostingEnvironment.WebRootPath;
-            string sFileName = @"demo.xlsx";
-            string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
-            FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
-            if (file.Exists)
+            var results = HttpContext.Request.ReadFormAsync().Result;
+            var content = new ToraMap
             {
-                file.Delete();
-                file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
-            }
-            using (ExcelPackage package = new ExcelPackage(file))
+                FkRegionId = results["regionId"]
+            };
+
+            var file = results.Files[0];
+            var geoJsonModel = GetGeoJson(file);
+
+            if (geoJsonModel == null)
             {
-                // add a new worksheet to the empty workbook
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employee");
-                //First add the headers
-                worksheet.Cells[1, 1].Value = "ID";
-                worksheet.Cells[1, 2].Value = "Name";
-                worksheet.Cells[1, 3].Value = "Gender";
-                worksheet.Cells[1, 4].Value = "Salary (in $)";
-
-                //Add values
-                worksheet.Cells["A2"].Value = 1000;
-                worksheet.Cells["B2"].Value = "Jon";
-                worksheet.Cells["C2"].Value = "M";
-                worksheet.Cells["D2"].Value = 5000;
-
-                worksheet.Cells["A3"].Value = 1001;
-                worksheet.Cells["B3"].Value = "Graham";
-                worksheet.Cells["C3"].Value = "M";
-                worksheet.Cells["D3"].Value = 10000;
-
-                worksheet.Cells["A4"].Value = 1002;
-                worksheet.Cells["B4"].Value = "Jenny";
-                worksheet.Cells["C4"].Value = "F";
-                worksheet.Cells["D4"].Value = 5000;
-
-                package.Save(); //Save the workbook.
+                return null;
             }
-            return URL;
+
+            content.Geojson = geoJsonModel;
+            dbContext.Add(content);
+            await dbContext.SaveChangesAsync();
+
+            var rootFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "TORA");
+            ValidateAndCreateFolder(rootFolderPath);
+
+            var regionFolderPath = Path.Combine(rootFolderPath, results["label"].ToString().ToUpper());
+            ValidateAndCreateFolder(regionFolderPath);
+            
+            var destinationFile = Path.Combine(regionFolderPath, (content.Id.ToString() + '_' + ".zip"));
+            StreamCopy(destinationFile, file);
+
+            return content;
         }
 
-        [HttpPost("import")]
-        public string Import()
+        public string GetGeoJson(IFormFile file)
         {
             GeoJSON.Net.Feature.FeatureCollection result = null;
-            var formFile = HttpContext.Request.ReadFormAsync().Result.Files[0];
-            var toraName = HttpContext.Request.ReadFormAsync().Result["toraName"];
-            var tempFolderName = "reforma_agraria_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + Guid.NewGuid().ToString("N");
-            //var tempPath = Path.Combine(Path.GetTempPath(), tempFolderName);
-            var tempPath = Path.Combine(
-                        Directory.GetCurrentDirectory(), "wwwroot",
-                        tempFolderName);
-            var zipPath = Path.Combine(tempPath, formFile.FileName);
+            var tempFolderName = "reforma_agraria_tora_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + Guid.NewGuid().ToString("N");
+            var tempPath = Path.Combine(Path.GetTempPath(), tempFolderName);
+            var zipPath = Path.Combine(tempPath, file.FileName);
 
             ValidateAndCreateFolder(tempPath);
-            StreamCopy(zipPath, formFile);
+            StreamCopy(zipPath, file);
             ZipFile.ExtractToDirectory(zipPath, tempPath);
 
             Ogr.RegisterAll();
@@ -144,10 +128,10 @@ namespace ReformaAgraria.Controllers
                 }
 
                 result = new GeoJSON.Net.Feature.FeatureCollection(features);
-
-                Directory.Delete(tempPath, true);
-                return JsonConvert.SerializeObject(result);
             }
+
+            Directory.Delete(tempPath, true);
+            return JsonConvert.SerializeObject(result);
         }
 
         private void TransformGeometry(Geometry geometry, ICoordinateTransformation transformer)
