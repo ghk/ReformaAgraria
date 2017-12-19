@@ -155,33 +155,16 @@ export class MapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-1');
-                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: auto; position: relative;">Kawasan Dan Perizinan</button>`;
+                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: auto; position: relative;">Layers</button>`;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
-                buttonOverlay.onclick = (e) => this.toggleControlLayers(3);
+                buttonOverlay.onclick = (e) => this.toggleControlLayers(2);
                 
                 return div;
             }
         });
-        this.map.addControl(new button());
-
-        button = L.Control.extend({
-            options: {
-                position: 'topright'
-            },
-            onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-2');
-                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: 214px; position: relative;">Base Layers</button>`;
-
-                let buttonOverlay = div.getElementsByTagName('button')[0];
-                buttonOverlay.onclick = (e) => this.toggleControlLayers(4);
-                return div;
-            }
-        });
-
-        this.map.addControl(new button());      
-        this.overlays = L.control.layers(null, null, { collapsed: false }).addTo(this.map);
-        this.baseLayers = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);        
+        this.map.addControl(new button());     
+        this.overlays = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);        
         this.afterInit = true;
     }
 
