@@ -491,23 +491,18 @@ table#table-region th {
 
 }
 
-#map{
-    height:inherit;
-    width:auto;
+#map {
+    width: 100%;
+    position: relative;
 }
 .header-list-problem .header-list-object p {
    margin-top: 20px;
 }
 
-#map {
-    width: auto;
-    
-}
 
 .mainMap {
     display: block;
-    height: 600px;
-    
+    height: 600px;    
 }
 
 .box {
@@ -549,4 +544,3 @@ table#table-region th {
     text-align: center;
     line-height: 30px;
 }
-

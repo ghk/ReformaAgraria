@@ -241,4 +241,4 @@ _Pvt_Extensions
 .fake/
 
 #test upload
-/wwwroot/base_layer
+/wwwroot/baseLayer/*.*
