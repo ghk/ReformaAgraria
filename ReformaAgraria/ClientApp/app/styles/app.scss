@@ -533,3 +533,7 @@ table#table-region th {
     text-align: center;
     line-height: 30px;
 }
+.leaflet-control-layers-expanded {
+    overflow: auto;
+    max-height: 322px;
+}

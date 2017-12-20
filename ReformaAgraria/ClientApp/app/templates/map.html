@@ -1,5 +1,5 @@
 ﻿<div id="leaflet-box" style="height:100%; width:100%; overflow: hidden">
-    <div leaflet id="map" style="height:888px"
+    <div leaflet id="map" 
          [leafletOptions]="options"
          [leafletCenter]="center"
          [leafletZoom]="zoom"
@@ -25,12 +25,11 @@
                     <div class="form-group">
                         <label class="form-control-label" for="color">Warna</label>
                         <input id="color" name="color" class="form-control" autocomplete="off"
-                                [(colorPicker)]="color"
-                                [style.background]="color"
-                                [value]="color"
-                                [cpPosition]="'left'" 
-                                [cpPositionOffset]="'0%'"
-                                [cpOutputFormat]="'hex'"/>
+                               [(colorPicker)]="color" 
+                               [style.background]="color" 
+                               [value]="color"
+                               [cpOutputFormat]="'hex'"
+                               [cpPosition]="'left'" />
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="file">File (*.zip)</label>
