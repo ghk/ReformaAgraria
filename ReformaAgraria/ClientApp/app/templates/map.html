@@ -1,4 +1,4 @@
-﻿
+
 ﻿<div class="d-flex align-items-stretch">
     <div leaflet id="map"
          [leafletOptions]="options"
@@ -27,12 +27,11 @@
                     <div class="form-group">
                         <label class="form-control-label" for="color">Warna</label>
                         <input id="color" name="color" class="form-control" autocomplete="off"
-                                [(colorPicker)]="color"
-                                [style.background]="color"
-                                [value]="color"
-                                [cpPosition]="'left'" 
-                                [cpPositionOffset]="'0%'"
-                                [cpOutputFormat]="'hex'"/>
+                               [(colorPicker)]="color" 
+                               [style.background]="color" 
+                               [value]="color"
+                               [cpOutputFormat]="'hex'"
+                               [cpPosition]="'left'" />
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="file">File (*.zip)</label>
