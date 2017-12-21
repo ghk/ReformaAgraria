@@ -1,9 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MapNavigationService } from '../services/mapNavigation';
+import { RegionType } from '../models/gen/regionType';
+import { RegionService } from '../services/gen/region';
+import { ToraMapService } from '../services/gen/toraMap';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../services/shared';
 import { Region } from "../models/gen/region";
 import MapUtils from '../helpers/mapUtils';
+import { ToraMap } from '../models/gen/toraMap';
 
 import * as L from 'leaflet';
 import * as $ from 'jquery';
@@ -41,22 +45,100 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     initialData: any[] = [];
     isOverlayAdded: boolean;
     leafletHeight: any;
+    kecUpload: string = 'kecamatan';
+    desaUpload: string = 'desa';
+    kecDownload: string = 'kecamatan';
+    desaDownload: string = 'desa';
+    kecamatanU: any[] = [];
+    desaU: any[] = [];
+    kecamatanD: any[] = [];
+    desaD: any[] = [];
+    ToraMap: ToraMap;
+    tora = [];
 
-    constructor(private mapNavigation: MapNavigationService,
+    constructor(private mapNavigationService: MapNavigationService,
         private toastr: ToastrService,
-        private sharedService: SharedService) { }
+        private sharedService: SharedService,
+        private regionService: RegionService,
+        private toraMapService: ToraMapService) { }
 
     ngOnInit(): void {
+        this.getRegion(3, '72.1', "all");
         this.center = L.latLng(-1.374581, 119.977618);
         this.zoom = 10;
         this.options = {
             zoomControl: false,
             layers: [LAYERS["OpenStreetMap"]]
         };
+        this.sharedService.getRegionId().subscribe(id => {
+            console.log(id);
+            let query = { data: { 'type': 'parent', 'parentId': id } }
+            this.toraMapService.getAll(query, null).subscribe(data => {
+                this.applyOverlay(data);
+            });     
+        });
     }
 
     ngOnDestroy(): void {
         this.map.remove()
+    }
+
+    onChangeUpload(value, region, parentId) {
+        console.log(value);
+        console.log(parentId);
+        console.log(region);
+        if (region == 'kecamatan') {
+            this.kecUpload = value;
+            console.log(this.kecUpload);
+            this.desaUpload = 'desa';
+            if (value != 'kecamatan') {
+                this.getRegion(4, parentId, "upload");
+            }
+        }
+        else {
+            this.desaUpload = value;
+            this.model.regionId = parentId;
+            this.model.regionName = value;
+        }
+    }
+    
+    onChangeDownload(value, region, parentId) {
+        console.log(value);
+        console.log(parentId);
+        console.log(region);
+        if (region == 'kecamatan') {
+            this.kecDownload = value;
+            console.log(this.kecDownload);
+            this.desaDownload = 'desa';
+            if (value != 'kecamatan') {
+                this.getRegion(4, parentId, "download");
+            }
+        }
+        else if ((region == 'desa')) {
+            this.desaDownload = value;
+        }
+        else {
+            this.getToraMapList();
+            this.model.toraId = value;
+            this.model.regionName = this.desaDownload;
+            this.model["linkDownload"] = [window.location.origin, 'TORA', this.model.regionName, this.model.toraId + "_.zip"].join("/");
+        }
+    }
+
+    clearModal() {
+        this.kecUpload = 'kecamatan';
+        this.desaUpload = 'desa';
+        this.kecDownload = 'kecamatan';
+        this.desaDownload = 'desa';
+        this.model.name = '';
+    }
+
+    getToraMapList() {
+        this.tora = [];
+        let query = { data: { 'type': 'parent', 'parentId': this.sharedService.getRegionId() } }
+        this.toraMapService.getAll(query, null).subscribe(data => {
+            data.forEach(result => { this.tora.push(`${result.name}`) })
+        });     
     }
 
     setLayer(name): void {
@@ -64,34 +146,45 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         layer.addTo(this.map);
     }
 
+    getRegion(regionType: RegionType, parentId: string, uploadDownload: string) {
+        let query = { data: { 'type': 'parent', 'regionType': regionType, 'parentId': parentId } }
+        this.regionService.getAll(query, null).subscribe(data => {
+            if (uploadDownload == "upload") {
+                if (regionType == 3) {
+                    this.kecamatanU = data;
+                }
+                else {
+                    this.desaU = data;
+                }
+            }
+            else if (uploadDownload == "download") {
+                if (regionType == 3) {
+                    this.kecamatanD = data;
+                }
+                else {
+                    this.desaD = data;
+                }
+            }
+            else {
+                this.kecamatanU = data;
+                this.kecamatanD = data;
+            }
+        });
+    }
+    
     setupControlBar() {
         L.control.zoom({
             position: 'bottomright'
         }).addTo(this.map);
 
-
         let button = L.Control.extend({
-            options: {
-                position: 'bottomright'
-            },
-            onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control fullscreen-button');
-                div.innerHTML = '<a href="javascript:void(0);" style="color:black"><i class="oi oi-fullscreen-enter"></i></a>';
-                div.onclick = (e) => this.fullScreenToggle(e);
-                return div;
-            }
-        });
-
-        this.map.addControl(new button());
-
-        button = L.Control.extend({
             options: {
                 position: 'topleft'
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
                 div.innerHTML = '<button type="button" class="btn btn-outline-dark btn-sm" style="font-size:22px; width:35px;"><strong>+</strong></button>';
-                div.onclick = (e) => $("#upload-modal")['modal']("show");
+                div.onclick = (e) => { this.model = {}; $("#form-upload")[0]["reset"](); $("#upload-modal")['modal']("show") };
                 return div;
             }
         });
@@ -103,33 +196,16 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-1');
-                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: auto; position: relative;">Kawasan Dan Perizinan</button>`;
+                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: auto; position: relative;">Layers</button>`;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
-                buttonOverlay.onclick = (e) => this.toggleControlLayers(3);
+                buttonOverlay.onclick = (e) => this.toggleControlLayers(2);
 
                 return div;
             }
         });
         this.map.addControl(new button());
-
-        button = L.Control.extend({
-            options: {
-                position: 'topright'
-            },
-            onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-2');
-                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: 214px; position: relative;">Base Layers</button>`;
-
-                let buttonOverlay = div.getElementsByTagName('button')[0];
-                buttonOverlay.onclick = (e) => this.toggleControlLayers(4);
-                return div;
-            }
-        });
-
-        this.map.addControl(new button());
-        this.overlays = L.control.layers(null, null, { collapsed: false }).addTo(this.map);
-        this.baseLayers = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);
+        this.overlays = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);
         this.afterInit = true;
     }
 
@@ -228,40 +304,52 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         }
         data.forEach(result => {
             let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
-            console.log(geojson._layers);
             let innerHtml = `<a href="javascript:void(0)">
                                     <span class="oi oi-x overlay-action" id="delete" style="float:right;" data-value="${result.id}"></span>
                                     </a>
-                                <a href="javascript:void(0)" >
-                                    <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
-                                </a>
                                     `;
-            let layer = this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
+            let layer = this.overlays.addOverlay(geojson, `${result.name} ${innerHtml}`);
+            this.tora = [];
+            this.tora.push(`${result.name}`);
             this.layers.push({ id: result.id, layer: geojson });
             this.initialData.push(result);
         });
         this.isOverlayAdded = true;
     }
 
+    deleteOverlay(model) {
+        $("#delete-modal")['modal']("hide");
+        let toraMapModel: ToraMap = model;
+
+        this.toraMapService.deleteById(model.id).subscribe(result => {
+            this.toastr.success("Penghapusan berhasil", null)
+            this.removeLayer(model.id);
+        })
+    }
+
+    removeLayer(id): void {
+        let currentOverlay = this.layers.find(o => o.id == id);
+        let currentData = this.initialData.find(o => o.id == id);
+
+        this.overlays.removeLayer(currentOverlay.layer);
+        this.map.removeLayer(currentOverlay.layer);
+        this.layers.splice(currentOverlay, 1);
+        this.initialData.splice(currentData, 1);
+        this.isOverlayAdded = true;
+    }
+
+    onChangeFile(event) {
+        this.model['file'] = event.srcElement.files;
+    }
+
     uploadFile() {
         $("#upload-modal")['modal']("hide");
-        this.mapNavigation.import(this.model)
+        this.mapNavigationService.import(this.model)
             .subscribe(
             data => {
                 this.toastr.success("Upload File Berhasil", null);
                 this.applyOverlay([data]);
+                this.clearModal();
             });
     }
-
-    //uploadFile(event) {
-    //    this.mapNavigation.import(event, this.region.name)
-    //        .subscribe(
-    //        data => {
-    //            this.toastr.success('File is successfully uploaded', null)
-    //        },
-    //        error => {
-    //            this.toastr.error('Unable to upload the file', null)
-    //        });
-    //}
-
 }

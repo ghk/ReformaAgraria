@@ -9,8 +9,10 @@ namespace ReformaAgraria.Models
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public override int Id { get; set; }        
-        
+        public override int Id { get; set; }
+
+        public string Name { get; set; }
+
         public string Geojson { get; set; }
 
         public string FkRegionId { get; set; }

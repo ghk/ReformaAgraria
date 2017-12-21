@@ -16,11 +16,12 @@ using GeoJSON.Net.Geometry;
 using GeoJSON.Net.Converters;
 using ProjNet.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems;
+using System.Net;
 
 namespace ReformaAgraria.Controllers
 {
     [Route("api/[controller]")]
-    public class ToraMapController : CrudController<ToraObject, int>
+    public class ToraMapController : CrudController<ToraMap, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _contextAccessor;
@@ -31,13 +32,33 @@ namespace ReformaAgraria.Controllers
             _contextAccessor = contextAccessor;
         }
 
+        protected override IQueryable<ToraMap> ApplyQuery(IQueryable<ToraMap> query)
+        {
+            var type = GetQueryString<string>("type");
+            if (type != null)
+            {
+                if (type == "parent")
+                {
+                    var parentId = GetQueryString<string>("parentId");;
+
+                    if (!string.IsNullOrWhiteSpace(parentId))
+                    {
+                        query = query.Where(r => r.FkRegionId.StartsWith(parentId));
+                    }
+                }
+            }
+
+            return query;
+        }
+
         [HttpPost("import")]
         public async Task<ToraMap> ImportAsync()
         {
             var results = HttpContext.Request.ReadFormAsync().Result;
             var content = new ToraMap
             {
-                FkRegionId = results["regionId"]
+                FkRegionId = results["regionId"],
+                Name = results["name"]
             };
 
             var file = results.Files[0];
@@ -55,13 +76,25 @@ namespace ReformaAgraria.Controllers
             var rootFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "TORA");
             ValidateAndCreateFolder(rootFolderPath);
 
-            var regionFolderPath = Path.Combine(rootFolderPath, results["label"].ToString().ToUpper());
+            var regionFolderPath = Path.Combine(rootFolderPath, results["regionName"].ToString().ToUpper());
             ValidateAndCreateFolder(regionFolderPath);
             
             var destinationFile = Path.Combine(regionFolderPath, (content.Id.ToString() + '_' + ".zip"));
             StreamCopy(destinationFile, file);
 
             return content;
+        }
+
+        [HttpPost("download")]
+        public void Download()
+        {
+            var results = HttpContext.Request.ReadFormAsync().Result;
+            using (var client = new WebClient())
+            {
+                string a = Path.Combine(_hostingEnvironment.WebRootPath, "TORA", results["regionName"].ToString().ToUpper(), results["toraId"].ToString().ToUpper() + "_.zip");
+                string b = Path.Combine(_hostingEnvironment.WebRootPath, "TORA", "KAMARORA A");
+                client.DownloadFile(b,"5_.zip");
+            }
         }
 
         public string GetGeoJson(IFormFile file)
@@ -154,7 +187,6 @@ namespace ReformaAgraria.Controllers
                 }
             }
         }
-
 
         public string ValidateAndCreateFolder(string path)
         {

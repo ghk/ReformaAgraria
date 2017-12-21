@@ -24,21 +24,6 @@ export class MapNavigationService {
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     }
 
-    //import(event, toraName) {
-    //    let fileList: FileList = event.target.files;
-    //    if (fileList.length > 0) {
-    //        let file: File = fileList[0];
-    //        let formData: FormData = new FormData();
-    //        formData.append('uploadFile', file, file.name);
-    //        formData.append('toraName', toraName);
-    //        let headers = new Headers();
-    //        headers.append('Accept', 'application/json');
-    //        let requestOptions = new RequestOptions({ headers: headers });
-    //        return this.http.post('/api/villagemapattribute/import', formData, requestOptions)
-    //            .map(res => res.json())
-    //    }
-    //}
-
     import(model): Observable<any> {
         let fileList: FileList = model.file;
         if (fileList.length && fileList.length > 0) {
@@ -48,7 +33,9 @@ export class MapNavigationService {
             let requestOptions = new RequestOptions({ headers: headers });
 
             headers.append('Accept', 'application/json');
+            formData.append('name', model.name);
             formData.append('regionName', model.regionName);
+            formData.append('regionId', model.regionId);
             formData.append('uploadFile', file, file.name);
 
             return this.http.post('/api/toramap/import', formData, requestOptions)

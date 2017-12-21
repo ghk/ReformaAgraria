@@ -48,6 +48,7 @@ import { AgrariaIssuesListService } from './services/agrariaIssuesList';
 import { MapNavigationService } from './services/mapNavigation';
 import { BaseLayerService } from './services/gen/baseLayer';
 import { MapService } from './services/map';
+import { ToraMapService } from './services/gen/toraMap';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum'; 
@@ -131,7 +132,8 @@ import './styles/app.scss';
         AgrariaIssuesListService,
         MapNavigationService,
         BaseLayerService,
-        MapService
+        MapService,
+        ToraMapService
     ]
 })
 export class AppModuleShared {
