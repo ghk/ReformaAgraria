@@ -380,6 +380,8 @@ table#table-region th {
     font-size: 14px;
 }
 
+
+
 // loader animation
 
 /* Center the loader */
@@ -447,6 +449,7 @@ table#table-region th {
     cursor: pointer;
 }
 
+
 // vertical line
 
 .Vline {
@@ -468,12 +471,19 @@ table#table-region th {
     color: #FF0058;
 }
 
-.header-list-problem p {
 
+.header-list-problem h2 {
+    color: #FF0058;
+    
+}
+
+.header-list-problem p {
 }
 
 .header-list-object h2 {
     color: #4835E8;
+    
+
 }
 
 .header-list-large h2 {
@@ -490,6 +500,7 @@ table#table-region th {
    margin-top: 20px;
 }
 
+
 .mainMap {
     display: block;
     height: 600px;    
@@ -503,6 +514,7 @@ table#table-region th {
     margin-right: -15px;
     margin-left: -15px;
     margin-top: -31px;
+    margin-top: -8px;
 }
 
 //control bar leaflet
@@ -597,3 +609,7 @@ table#table-region th {
   }
 
 
+.leaflet-control-layers-expanded {
+    overflow: auto;
+    max-height: 322px;
+}

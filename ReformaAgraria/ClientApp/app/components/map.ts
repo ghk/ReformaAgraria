@@ -91,6 +91,11 @@ export class MapComponent implements OnInit, OnDestroy {
                                 </label>
                                 
 
+                                    <span class="oi oi-x overlay-action" id="delete" style="float:right;" data-value="${result.id}"></span>
+                                    </a>
+                                <a href="javascript:void(0)" >
+                                    <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
+                                </a>
                                     `;
             let layer = this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
             this.layers.push({ id: result.id, layer: geojson });
