@@ -94,7 +94,7 @@ namespace ReformaAgraria.Controllers
                 {
                     content.Geojson = geoJsonModel;
                     var webRootPath = _hostingEnvironment.WebRootPath;
-                    var destinationFile = Path.Combine(webRootPath +  "baseLayer", (content.Id.ToString() + '_' + ".zip"));
+                    var destinationFile = Path.Combine(webRootPath, "baseLayer", (content.Id.ToString() + '_' + ".zip"));
                     StreamCopy(destinationFile, file);
                 }
             }
@@ -102,6 +102,18 @@ namespace ReformaAgraria.Controllers
             dbContext.Update(content);
             await dbContext.SaveChangesAsync();
             return content;
+        }
+
+        [HttpDelete("{id}")]
+        public override void Delete(int id)
+        {
+            base.Delete(id);
+            var webRootPath = _hostingEnvironment.WebRootPath;
+            var targetFile = Path.Combine(webRootPath, "baseLayer", (id.ToString() + '_' + ".zip"));
+
+            if (System.IO.File.Exists(targetFile)) { 
+                System.IO.File.Delete(targetFile);
+            }
         }
 
         public string GetGeoJson(IFormFile file)
