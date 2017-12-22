@@ -80,6 +80,17 @@ export class MapComponent implements OnInit, OnDestroy {
             let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
             console.log(geojson._layers);
             let innerHtml = `<a href="javascript:void(0)">
+                                    <span class="oi oi-x overlay-action" id="delete" style="float:right; padding-right:10px;" data-value="${result.id}"></span>
+                                    </a>
+                                <a href="javascript:void(0)">
+                                    <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
+                                </a>
+                                <label class="switch">
+                                    <input type="checkbox" class="form-check-input form-control">
+                                    <span class="slider round"></span>
+                                </label>
+                                
+
                                     <span class="oi oi-x overlay-action" id="delete" style="float:right;" data-value="${result.id}"></span>
                                     </a>
                                 <a href="javascript:void(0)" >
@@ -142,7 +153,7 @@ export class MapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<button type="button" class="btn btn-outline-dark btn-sm" style="font-size:22px; width:35px;"><strong>+</strong></button>';
+                div.innerHTML = '<button type="button" class="btn btn-outline-secondary btn-sm" style="height:35px;"><strong><i class="material-icons">library_add</i></strong></button>';
                 div.onclick = (e) => { this.model = {}; $("#form-upload")[0]["reset"](); $("#upload-modal")['modal']("show") };
                 return div;
             }
@@ -155,7 +166,7 @@ export class MapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-1');
-                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: auto; position: relative;">Layers</button>`;
+                div.innerHTML = `<button type="button"class="btn btn-outline-secondary btn-sm" style="height:35px;"><i class="material-icons">layers</i></button>`;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
                 buttonOverlay.onclick = (e) => this.toggleControlLayers(2);
@@ -163,6 +174,7 @@ export class MapComponent implements OnInit, OnDestroy {
                 return div;
             }
         });
+        
         this.map.addControl(new button());     
         this.overlays = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);        
         this.afterInit = true;
@@ -324,10 +336,13 @@ export class MapComponent implements OnInit, OnDestroy {
     } 
 
     onResize = (e) => {
-        let height = e.target.innerHeight - 88;
+        let height = e.target.innerHeight - 85;
         $("#map").height(height);
         this.map.invalidateSize();
     }
 
 
 }
+
+
+// <img src="/images/ic_layers_black_24px.svg">
