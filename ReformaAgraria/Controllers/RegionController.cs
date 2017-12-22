@@ -10,6 +10,7 @@ using MicrovacWebCore;
 using ReformaAgraria.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
@@ -18,7 +19,13 @@ namespace ReformaAgraria.Controllers
     //[Authorize(Policy = "Bearer")]
     public class RegionController : ReadOnlyController<Region, string>
     {
-        public RegionController(ReformaAgrariaDbContext dbContext): base(dbContext) { }
+        private readonly ILogger<RegionController> _logger;
+
+        public RegionController(ReformaAgrariaDbContext dbContext, 
+            ILogger<RegionController> logger): base(dbContext)
+        {
+            _logger = logger;
+        }
 
         protected override IQueryable<Region> ApplyQuery(IQueryable<Region> query)
         {

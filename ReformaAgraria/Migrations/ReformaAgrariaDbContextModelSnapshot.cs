@@ -216,6 +216,33 @@ namespace ReformaAgraria.Migrations
                     b.ToTable("act_proposal_document_check_list");
                 });
 
+            modelBuilder.Entity("ReformaAgraria.Models.BaseLayer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
+
+                    b.Property<string>("Color")
+                        .HasColumnName("color");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnName("date_created");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnName("date_modified");
+
+                    b.Property<string>("Geojson")
+                        .HasColumnName("geojson");
+
+                    b.Property<string>("Label")
+                        .HasColumnName("label");
+
+                    b.HasKey("Id")
+                        .HasName("pk_base_layer");
+
+                    b.ToTable("base_layer");
+                });
+
             modelBuilder.Entity("ReformaAgraria.Models.Coordinate", b =>
                 {
                     b.Property<int>("Id")

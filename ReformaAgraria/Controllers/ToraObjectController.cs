@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
@@ -17,11 +18,16 @@ namespace ReformaAgraria.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ILogger<ToraObjectController> _logger;
 
-        public ToraObjectController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment, IHttpContextAccessor contextAccessor) : base(dbContext)
+        public ToraObjectController(ReformaAgrariaDbContext dbContext, 
+            IHostingEnvironment hostingEnvironment, 
+            IHttpContextAccessor contextAccessor,
+            ILogger<ToraObjectController> logger) : base(dbContext)
         {
             _hostingEnvironment = hostingEnvironment;
             _contextAccessor = contextAccessor;
+            _logger = logger;
         }
 
         public class DashboardData
@@ -216,7 +222,7 @@ namespace ReformaAgraria.Controllers
 
                         if (objectIdList.Count > 0 && workbook.Worksheets.Count > 1)
                         {
-                            ToraSubjectController ts = new ToraSubjectController((ReformaAgrariaDbContext)dbContext, _hostingEnvironment);
+                            ToraSubjectController ts = (ToraSubjectController)HttpContext.RequestServices.GetService(typeof(ToraSubjectController));
                             ts.Import(objectIdList, package);
                         }
                     }
@@ -249,7 +255,22 @@ namespace ReformaAgraria.Controllers
                               TotalSize = r.Sum(_ => _.Size),
                               TotalToraObjects = r.Count()
                           };
-            
+
+
+            //var results = from desa in dbContext.Set<Region>()
+            //              join kec in dbContext.Set<Region>() on desa.FkParentId equals kec.Id
+            //              join objects in dbContext.Set<ToraObject>() on desa.Id equals objects.FkRegionId
+            //              join subjects in dbContext.Set<ToraSubject>() on objects.Id equals subjects.FkToraObjectId
+            //              where objects.FkRegionId.StartsWith(id)
+            //              group objects by region.Type == RegionType.Kabupaten ? kec.Id : desa.Id into r
+            //              select new DashboardData
+            //              {
+            //                  Region = children.First(c => c.Id == r.Key),
+            //                  TotalSize = r.Sum(_ => _.Size),
+            //                  TotalToraObjects = objects.Id.Distinct().Count(),
+            //                  TotalToraSubjects = subjects.Id.Distinct().Count()
+            //              };
+
             return children
                 .Select(c => results.FirstOrDefault(g => g.Region.Id == c.Id)
                     ?? new DashboardData { Region = c } )

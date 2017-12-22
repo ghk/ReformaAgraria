@@ -8,11 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus.Core" Version="1.5.2" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="EPPlus.Core" Version="1.5.4" />
+    <PackageReference Include="Gdal.Core" Version="1.0.0" />
+    <PackageReference Include="GeoJSON.Net" Version="1.1.64" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.0" />
+    <PackageReference Include="NuGet.Modules.JObjectExtensions" Version="1.0.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="2.1.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,14 +44,17 @@
 
   <ItemGroup>
     <Folder Include="Docs\" />
+    <Folder Include="wwwroot\baseLayer\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="appsettings.json" />
+    <None Include="ProjNET.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MicrovacWebCore\MicrovacWebCore.csproj" />
+    <ProjectReference Include="..\SharpMap.CoordinateSystems\ProjNET.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,14 +75,32 @@
     <None Update="ClientApp\app\models\gen\baseEntity.ts">
       <CustomToolNamespace>Models\BaseEntity.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\baseLayer.ts">
+      <CustomToolNamespace>Models\BaseLayer.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\coordinate.ts">
       <CustomToolNamespace>Models\Coordinate.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\educationalAttainment.ts">
+      <CustomToolNamespace>Models\EducationalAttainment.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\event.ts">
       <CustomToolNamespace>Models\Event.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\gender.ts">
+      <CustomToolNamespace>Models\Gender.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\geoJsonViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\GeoJsonViewModel.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\landStatus.ts">
+      <CustomToolNamespace>Models\LandStatus.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\loginViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\LoginViewModel.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\maritalStatus.ts">
+      <CustomToolNamespace>Models\MaritalStatus.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\meetingAttendee.ts">
       <CustomToolNamespace>Models\MeetingAttendee.cs</CustomToolNamespace>
@@ -86,6 +113,9 @@
     </None>
     <None Update="ClientApp\app\models\gen\region.ts">
       <CustomToolNamespace>Models\Region.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\regionalStatus.ts">
+      <CustomToolNamespace>Models\RegionalStatus.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\tipologyOfAgrarianProblem.ts">
       <CustomToolNamespace>Models\TipologyOfAgrarianProblem.cs</CustomToolNamespace>
@@ -108,11 +138,23 @@
     <None Update="ClientApp\app\models\gen\villageProfile.ts">
       <CustomToolNamespace>Models\VillageProfile.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\services\gen\baseLayer.ts">
+      <CustomToolNamespace>Controllers\BaseLayerController.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\services\gen\event.ts">
       <CustomToolNamespace>Controllers\EventController.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\services\gen\region.ts">
       <CustomToolNamespace>Controllers\RegionController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\services\gen\toraObject.ts">
+      <CustomToolNamespace>Controllers\ToraObjectController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\services\gen\toraSubject .ts">
+      <CustomToolNamespace>Controllers\ToraSubjectController .cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\services\gen\villageMapAttribute.ts">
+      <CustomToolNamespace>Controllers\VillageMapAttributeController.cs</CustomToolNamespace>
     </None>
   </ItemGroup>
 

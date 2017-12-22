@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { OrderModule } from 'ngx-order-pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { ColorPickerModule } from 'angular4-color-picker';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
@@ -29,6 +31,7 @@ import { ForgotPasswordComponent } from './components/forgotPassword';
 import { ResetPasswordComponent } from './components/resetPassword';
 import { UserManagementComponent } from './components/userManagement';
 import { RegionComponent } from './components/region';
+import { MapComponent } from './components/map';
 
 //import { LoaderComponent } from './components/loader';
 
@@ -42,6 +45,9 @@ import { AccountService } from './services/account';
 import { AuthGuard } from './services/authGuard';
 import { RegionService } from './services/gen/region';
 import { AgrariaIssuesListService } from './services/agrariaIssuesList';
+import { MapNavigationService } from './services/mapNavigation';
+import { BaseLayerService } from './services/gen/baseLayer';
+import { MapService } from './services/map';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum'; 
@@ -72,9 +78,13 @@ import './styles/app.scss';
         RegionCrudComponent,
         RegionComponent,
         RegionBreadcrumbPipe,
-        EnumPipe
+        EnumPipe,
+        AgrariaIssuesListObjectSubjectComponent,
+        MapComponent        
+        
     ],
     imports: [
+        LeafletModule,
         HttpModule,
         BrowserModule,
         FormsModule,
@@ -82,15 +92,17 @@ import './styles/app.scss';
         CommonModule,
         OrderModule,
         BrowserAnimationsModule,
-        ToastrModule.forRoot(),
+        ToastrModule.forRoot(), 
+        ColorPickerModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
-                    { path: 'home', component: HomeComponent },
+                    { path: 'home', component: HomeComponent  },
                     { path: 'home/:id', component: HomeComponent },
                     { path: 'region', component: RegionComponent },
                     { path: 'region/:id', component: RegionComponent },
                     { path: 'event', component: EventComponent },
+                    { path: 'map', component: MapComponent },
                     //{ path: 'crud', children: [
                     //        //{ path: 'region', component: RegionCrudComponent }
                     //    ]
@@ -105,7 +117,7 @@ import './styles/app.scss';
                     { path: 'usermanagement', component: UserManagementComponent }
                 ]
             },
-            { path: '**', redirectTo: ''  }
+            { path: '**', redirectTo: 'home'  }
         ])
     ],
     providers: [
@@ -116,7 +128,10 @@ import './styles/app.scss';
         AlertService,
         AuthGuard,
         RegionService,
-        AgrariaIssuesListService
+        AgrariaIssuesListService,
+        MapNavigationService,
+        BaseLayerService,
+        MapService
     ]
 })
 export class AppModuleShared {

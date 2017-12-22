@@ -30,6 +30,7 @@ module.exports = (env) => {
         plugins: [
             new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery', 'window.jQuery': 'jquery', Popper: ['popper.js', 'default'] }),
             new webpack.DefinePlugin({ ENV: isDevBuild ? JSON.stringify('Development') : JSON.stringify('Production') }),
+            new webpack.ContextReplacementPlugin(/(.+)?angular(\\|\/)core(.+)?/, path.join(__dirname, './ClientApp')),
             new CheckerPlugin(),
             new ExtractTextPlugin('styles.css')
         ]
