@@ -16,11 +16,13 @@ export class SharedService {
     private _region$: ReplaySubject<Region>;
     private _regionId$: ReplaySubject<string>;
     private _isAgrariaIssuesListReloaded$: ReplaySubject<boolean>;
+    private _toraSummary$: ReplaySubject<any[]>;
 
     constructor() {
         this._environment = ENVIRONMENT;
         this._region$ = new ReplaySubject(1);
         this._regionId$ = new ReplaySubject(1);
+        this._toraSummary$ = new ReplaySubject(1);
         this._isAgrariaIssuesListReloaded$ = new ReplaySubject<false>(1);
     }
 
@@ -42,6 +44,14 @@ export class SharedService {
 
     public setRegionId(id: string) {
         this._regionId$.next(id);
+    }
+
+    public getToraSummary() {
+        return this._toraSummary$;
+    }
+
+    public setToraSummary(tora: any[]) {
+        this._toraSummary$.next(tora);
     }
 
     public setIsAgrariaIssuesListReloaded(reloaded: boolean) {

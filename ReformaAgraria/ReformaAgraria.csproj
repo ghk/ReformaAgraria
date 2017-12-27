@@ -5,6 +5,7 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
+    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -120,6 +121,9 @@
     <None Update="ClientApp\app\models\gen\tipologyOfAgrarianProblem.ts">
       <CustomToolNamespace>Models\TipologyOfAgrarianProblem.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\toraMap.ts">
+      <CustomToolNamespace>Models\ToraMap.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\toraMapAttribute.ts">
       <CustomToolNamespace>Models\ToraMapAttribute.cs</CustomToolNamespace>
     </None>
@@ -146,6 +150,9 @@
     </None>
     <None Update="ClientApp\app\services\gen\region.ts">
       <CustomToolNamespace>Controllers\RegionController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\services\gen\toraMap.ts">
+      <CustomToolNamespace>Controllers\ToraMapController.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\services\gen\toraObject.ts">
       <CustomToolNamespace>Controllers\ToraObjectController.cs</CustomToolNamespace>

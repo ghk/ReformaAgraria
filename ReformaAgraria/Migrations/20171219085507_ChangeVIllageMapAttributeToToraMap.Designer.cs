@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171219085507_ChangeVIllageMapAttributeToToraMap")]
+    partial class ChangeVIllageMapAttributeToToraMap
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -596,9 +597,6 @@ namespace ReformaAgraria.Migrations
 
                     b.Property<string>("Geojson")
                         .HasColumnName("geojson");
-
-                    b.Property<string>("Name")
-                        .HasColumnName("name");
 
                     b.HasKey("Id")
                         .HasName("pk_tora_map");

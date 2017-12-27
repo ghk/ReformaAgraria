@@ -1,61 +1,66 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using OfficeOpenXml;
 using MicrovacWebCore;
 using ReformaAgraria.Models;
 using Microsoft.AspNetCore.Http;
-using System.IO.Compression;
-using System;
-using OSGeo.OGR;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using ReformaAgraria.Models.ViewModels;
-using ReformaAgraria.Security;
 using System.Linq;
-using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using GeoJSON.Net;
-using System.Dynamic;
-using Newtonsoft.Json.Linq;
+using System.IO.Compression;
+using OSGeo.OGR;
+using Newtonsoft.Json;
 using GeoJSON.Net.Geometry;
 using GeoJSON.Net.Converters;
 using ProjNet.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems;
-using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace ReformaAgraria.Controllers
 {
-    [Produces("application/json")]
     [Route("api/[controller]")]
-    //[Authorize(Policy = "Bearer")]
-    public class BaseLayerController : CrudController<BaseLayer, int>
+    public class ToraMapController : CrudController<ToraMap, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly ILogger<BaseLayerController> _logger;
-        
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public BaseLayerController(ReformaAgrariaDbContext dbContext,
-            IHostingEnvironment hostingEnvironment,
-            ILogger<BaseLayerController> logger) : base(dbContext)
+        public ToraMapController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment, IHttpContextAccessor contextAccessor) : base(dbContext)
         {
             _hostingEnvironment = hostingEnvironment;
-            _logger = logger;
+            _contextAccessor = contextAccessor;
         }
 
-        protected override IQueryable<BaseLayer> ApplyQuery(IQueryable<BaseLayer> query)
+        protected override IQueryable<ToraMap> ApplyQuery(IQueryable<ToraMap> query)
         {
+            var type = GetQueryString<string>("type");
+            if (type != null)
+            {
+                if (type == "parent")
+                {
+                    var parentId = GetQueryString<string>("parentId");;
+
+                    if (!string.IsNullOrWhiteSpace(parentId))
+                    {
+                        query = query.Where(r => r.FkRegionId.StartsWith(parentId));
+                    }
+                }
+            }
+
             return query;
         }
 
         [HttpPost("import")]
-        public async Task<BaseLayer> ImportAsync()
+        public async Task<ToraMap> ImportAsync()
         {
             var results = HttpContext.Request.ReadFormAsync().Result;
-            var content = new BaseLayer
+            var content = new ToraMap
             {
-                Label = results["label"],
-                Color = results["color"],
+                FkRegionId = results["regionId"],
+                Name = results["name"]
             };
+
             var file = results.Files[0];
             var geoJsonModel = GetGeoJson(file);
 
@@ -68,58 +73,34 @@ namespace ReformaAgraria.Controllers
             dbContext.Add(content);
             await dbContext.SaveChangesAsync();
 
-            var webRootPath = _hostingEnvironment.WebRootPath;
-            var destinationFile = Path.Combine(webRootPath , "baseLayer", (content.Id.ToString() + '_' + ".zip"));
+            var rootFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "TORA");
+            ValidateAndCreateFolder(rootFolderPath);
+
+            var regionFolderPath = Path.Combine(rootFolderPath, results["regionName"].ToString().ToUpper());
+            ValidateAndCreateFolder(regionFolderPath);
+            
+            var destinationFile = Path.Combine(regionFolderPath, (content.Id.ToString() + '_' + ".zip"));
             StreamCopy(destinationFile, file);
 
             return content;
         }
 
-        [HttpPost("edit")]
-        public async Task<BaseLayer> EditAsync()
+        [HttpPost("download")]
+        public void Download()
         {
             var results = HttpContext.Request.ReadFormAsync().Result;
-            int id = Int32.Parse(results["id"]);
-            var content = dbContext.Set<BaseLayer>().Where(o => o.Id == id).FirstOrDefault();
-            content.Label = results["label"];
-            content.Color = results["color"];
-
-            IFormFile file = null;
-            string geoJsonModel = "";
-            if(results.Files.Count != 0)
+            using (var client = new WebClient())
             {
-                file = results.Files[0];
-                geoJsonModel = GetGeoJson(file);
-                if (geoJsonModel != null)
-                {
-                    content.Geojson = geoJsonModel;
-                    var webRootPath = _hostingEnvironment.WebRootPath;
-                    var destinationFile = Path.Combine(webRootPath, "baseLayer", (content.Id.ToString() + '_' + ".zip"));
-                    StreamCopy(destinationFile, file);
-                }
-            }
-
-            dbContext.Update(content);
-            await dbContext.SaveChangesAsync();
-            return content;
-        }
-
-        [HttpDelete("{id}")]
-        public override void Delete(int id)
-        {
-            base.Delete(id);
-            var webRootPath = _hostingEnvironment.WebRootPath;
-            var targetFile = Path.Combine(webRootPath, "baseLayer", (id.ToString() + '_' + ".zip"));
-
-            if (System.IO.File.Exists(targetFile)) { 
-                System.IO.File.Delete(targetFile);
+                string a = Path.Combine(_hostingEnvironment.WebRootPath, "TORA", results["regionName"].ToString().ToUpper(), results["toraId"].ToString().ToUpper() + "_.zip");
+                string b = Path.Combine(_hostingEnvironment.WebRootPath, "TORA", "KAMARORA A");
+                client.DownloadFile(b,"5_.zip");
             }
         }
 
         public string GetGeoJson(IFormFile file)
         {
             GeoJSON.Net.Feature.FeatureCollection result = null;
-            var tempFolderName = "reforma_agraria_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + Guid.NewGuid().ToString("N");
+            var tempFolderName = "reforma_agraria_tora_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + Guid.NewGuid().ToString("N");
             var tempPath = Path.Combine(Path.GetTempPath(), tempFolderName);
             var zipPath = Path.Combine(tempPath, file.FileName);
 
@@ -131,17 +112,17 @@ namespace ReformaAgraria.Controllers
             Driver driver = Ogr.GetDriverByName("ESRI Shapefile");
             using (var dataSource = driver.Open(tempPath, 0))
             {
-                Layer layer = dataSource.GetLayerByIndex(0);                
+                Layer layer = dataSource.GetLayerByIndex(0);
                 layer.ResetReading();
 
                 var sourceSpatialRef = layer.GetSpatialRef();
                 sourceSpatialRef.ExportToWkt(out string sourceWkt);
 
                 CoordinateTransformationFactory ctfac = new CoordinateTransformationFactory();
-                CoordinateSystemFactory cfac = new CoordinateSystemFactory();                
+                CoordinateSystemFactory cfac = new CoordinateSystemFactory();
                 GeographicCoordinateSystem wgs84 = GeographicCoordinateSystem.WGS84;
                 var transformer = ctfac.CreateFromCoordinateSystems(cfac.CreateFromWkt(sourceWkt), wgs84);
-                
+
                 var features = new List<GeoJSON.Net.Feature.Feature>();
                 Feature f;
                 while ((f = layer.GetNextFeature()) != null)
@@ -174,19 +155,18 @@ namespace ReformaAgraria.Controllers
                     TransformGeometry(geometryRef, transformer);
 
                     var json = geometryRef.ExportToJson(null);
-                    var geometry = JsonConvert.DeserializeObject<IGeometryObject>(json, new GeometryConverter());                
-                    var feature = new GeoJSON.Net.Feature.Feature(geometry, properties);                    
+                    var geometry = JsonConvert.DeserializeObject<IGeometryObject>(json, new GeometryConverter());
+                    var feature = new GeoJSON.Net.Feature.Feature(geometry, properties);
                     features.Add(feature);
-                    
                 }
 
                 result = new GeoJSON.Net.Feature.FeatureCollection(features);
             }
-                
+
             Directory.Delete(tempPath, true);
             return JsonConvert.SerializeObject(result);
         }
-       
+
         private void TransformGeometry(Geometry geometry, ICoordinateTransformation transformer)
         {
             if (geometry.GetGeometryCount() == 0)
@@ -208,14 +188,6 @@ namespace ReformaAgraria.Controllers
             }
         }
 
-        public void StreamCopy(string filePath, IFormFile file)
-        {
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-        }
-
         public string ValidateAndCreateFolder(string path)
         {
             if (!Directory.Exists(path))
@@ -225,7 +197,12 @@ namespace ReformaAgraria.Controllers
             return path;
         }
 
+        public void StreamCopy(string filePath, IFormFile file)
+        {
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+        }
     }
 }
-          
-            

@@ -21,7 +21,7 @@ import { EventComponent } from './components/event';
 import { VillageComponent } from './components/village'; 
 import { TeamComponent } from './components/team';
 import { VillageBorderComponent } from './components/village-border';
-import { MapNavigationComponent } from './components/map-navigation';
+import { MapNavigationComponent } from './components/mapNavigation';
 import { AgrariaIssuesHeaderComponent } from './components/agraria-issues-header';
 import { AgrariaIssuesListComponent } from './components/agraria-issues-list';
 import { AgrariaIssuesListObjectSubjectComponent } from './components/agraria-issues-list-object-subject';
@@ -48,6 +48,7 @@ import { AgrariaIssuesListService } from './services/agrariaIssuesList';
 import { MapNavigationService } from './services/mapNavigation';
 import { BaseLayerService } from './services/gen/baseLayer';
 import { MapService } from './services/map';
+import { ToraMapService } from './services/gen/toraMap';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum'; 
@@ -131,7 +132,8 @@ import './styles/app.scss';
         AgrariaIssuesListService,
         MapNavigationService,
         BaseLayerService,
-        MapService
+        MapService,
+        ToraMapService
     ]
 })
 export class AppModuleShared {
