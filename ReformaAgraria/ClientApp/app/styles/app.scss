@@ -62,7 +62,7 @@ h1 {
     overflow-x: hidden;
     overflow-y: auto;
     /* Scrollable contents if viewport is shorter than content. */
-    border-right: 1px solid #eee;
+    // border-right: 1px solid #eee;
     min-height: 100vh;
 }
 
@@ -507,14 +507,13 @@ table#table-region th {
 }
 
 .box {
-    color: red;
     height: 100%;
     position: relative;
     outline: none;
     margin-right: -15px;
     margin-left: -15px;
     margin-top: -31px;
-    margin-top: -8px;
+    margin-top: -55px;
 }
 
 //control bar leaflet
@@ -537,7 +536,6 @@ table#table-region th {
     text-align: center;
     line-height: 30px;
 }
-
 
 .color-picker {
     z-index: 1 !important;
