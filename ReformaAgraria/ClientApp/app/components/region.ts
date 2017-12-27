@@ -81,6 +81,7 @@ export class RegionComponent implements OnInit {
          this.showPage = false;
          this.agrariaIssuesListService.getToraObjectSummary(id).subscribe(data => {
              this.regions = data;
+             this.sharedService.setToraSummary(data);
              this.region = RegionType[this.regions[0].region.type];
              this.loading = false;
              this.showPage = true;

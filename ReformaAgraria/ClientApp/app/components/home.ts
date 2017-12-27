@@ -18,9 +18,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
-            console.log(params)
             this.sharedService.setRegionId(params['id'] != null ? params['id'] : '72.1');
-
             });
     }
 
