@@ -1,3 +1,5 @@
+﻿﻿
+﻿<div class="box">
 
 ﻿<div class="d-flex align-items-stretch">
     <div leaflet id="map"
@@ -20,22 +22,67 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="form-control-label" for="label">Nama Layer</label>
-                        <input id="label" class="form-control" type="text" [(ngModel)]="model.label" name="label">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-control-label" for="color">Warna</label>
-                        <input id="color" name="color" class="form-control" autocomplete="off"
-                               [(colorPicker)]="color" 
-                               [style.background]="color" 
-                               [value]="color"
-                               [cpOutputFormat]="'hex'"
-                               [cpPosition]="'left'" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-control-label" for="file">File (*.zip)</label>
-                        <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event)" name="file">
+                    <div class="form-row was-validated">
+                        <div class="form-group col-md-12">
+                            <label class="form-control-label" for="label">Nama Layer</label>
+                            <input id="label" class="form-control" type="text" [(ngModel)]="model.label" name="label" required>
+                         </div>
+
+                        <!-- <div class="form-group col-md-4">
+                            <label for="disabledKabupatenMap">Kabupaten</label>
+                            <select class="form-control" id="exampleFormControlSelect1" disabled>
+                                <option value="1">Sigi</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="exampleFormControlSelect1">Kecamatan</label>
+                            <select class="form-control" id="exampleFormControlSelect1" required>
+                                <option value="">Pilih kecamatan</option>
+                                <option value="1">Dolo</option>
+                                <option value="2">Dolo Barat</option>
+                                <option value="3">Dolo Selatan</option>
+                                <option value="4">Gumbasa</option>
+                                <option value="5">Kinovaro</option>
+                                <option value="6">Kulawi</option>
+                                <option value="7">Kulawi Selatan</option>
+                                <option value="8">Lindu</option>
+                                <option value="9">Marawola</option>
+                                <option value="10">Marawola Barat</option>
+                                <option value="11">Nokilalaki</option>
+                                <option value="12">Palolo</option>
+                                <option value="13">Pipikoro</option>
+                                <option value="14">Sigi Biromaru</option>
+                                <option value="15">Tanambulava</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="exampleFormControlSelect1">Desa</label>
+                            <select class="form-control" id="exampleFormControlSelect1" required>
+                                <option value="">Pilih desa</option>
+                                <option value="1">Kabobona</option>
+                                <option value="2">Karawana</option>
+                                <option value="3">Kotapulu</option>
+                                <option value="4">Kotarindau</option>
+                                <option value="5">Langaleso</option>
+                            </select>
+                        </div> -->
+                    
+                        <div class="form-group col-md-6">
+                            <label class="form-control-label" for="color">Warna</label>
+                            <input id="color" name="color" class="form-control" autocomplete="off"
+                                    [(colorPicker)]="color"
+                                    [style.background]="color"
+                                    [value]="color"
+                                    [cpPosition]="'bottom'" 
+                                    [cpPositionOffset]="'20%'"
+                                    [cpOutputFormat]="'hex'"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-control-label" for="file">Unggah File (*.zip)</label>
+                            <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event)" name="file" required>
+                        </div>
                     </div>
                 </div>
                  <div class="modal-footer">
@@ -58,49 +105,56 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="form-control-label" for="label">Nama Layer</label>
-                        <input id="label" class="form-control" type="text" [(ngModel)]="model.label" name="label">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-control-label" for="color">Warna</label>
-                        <input id="color" name="color" class="form-control" autocomplete="off"
-                               [(colorPicker)]="color"
-                               [style.background]="color"
-                               [value]="color"
-                               [cpPosition]="'left'" 
-                               [cpPositionOffset]="'0%'" 
-                               [cpOutputFormat]="'hex'"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-control-label" for="file">File (*.zip)</label>
-                        <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event)" name="file">
-                        <a href="{{model.linkDownload}}">Download File</a>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label class="form-control-label" for="label">Nama Layer</label>
+                            <input id="label" class="form-control" type="text" [(ngModel)]="model.label" name="label">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-control-label" for="color">Warna</label>
+                            <input id="color" name="color" class="form-control" autocomplete="off"
+                                [(colorPicker)]="color"
+                                [style.background]="color"
+                                [value]="color"
+                                [cpPosition]="'bottom'" 
+                                [cpPositionOffset]="'20%'" 
+                                [cpOutputFormat]="'hex'"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-control-label" for="file">File (*.zip)</label>
+                            <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event)" name="file">
+                            
+                        </div>
+                        <div class="form-group col-md-6">
+                            <a href="{{model.linkDownload}}" class="btn btn-link" role="button" aria-pressed="true" style="margin-top:4px;"><span class="oi oi-data-transfer-download iconsMapUpload"></span>Unduh file</a>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-backdrop="false" data-dismiss="modal"><i class="fa fa-save"></i> Batal</button>
-                    <button type="submit" class="btn btn-primary" data-backdrop="false"><i class="fa fa-repeat"></i>&nbsp;<i class="fa fa-save"></i> Edit</button>
+                    <button type="button" class="btn btn-secondary" data-backdrop="false" data-dismiss="modal"><i class="fa fa-save"></i>Batal</button>
+                    <button type="submit" class="btn btn-primary" data-backdrop="false"><i class="fa fa-repeat"></i>&nbsp;<i class="fa fa-save"></i>Edit</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
 <div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
-    <div class="modal-dialog modal-lg" role="document">
-        <form class="form-horizontal" (ngSubmit)="deleteOverlay(model)">
-            <div class="modal-content" style="border-radius: 0">
-                <div class="modal-header">
-                    <h5 class="modal-title">Apakah Anda Yakin Akan Menghapus {{model.label}} ? </h5>
+    <div class="modal-dialog" role="document">
+        <div class="alert alert-light alert-dismissible fade show" role="alert">
+            <form class="form-horizontal" (ngSubmit)="deleteOverlay(model)">
+                <div class="modal-header" style="border-bottom:none;">
+                    <h2 class="modal-title alert-heading">Hapus {{model.label}} ?</h2>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary focus" data-backdrop="false" data-dismiss="modal"><i class="fa fa-save"></i> Batal</button>
-                    <button type="submit" class="btn btn-danger" data-backdrop="false"><i class="fa fa-repeat"></i>&nbsp;<i class="fa fa-save"></i> Delete</button>
+                <div class="modal-footer" style="border-top:none;">
+                    <button type="button" class="btn btn-secondary focus" data-backdrop="false" data-dismiss="modal"><i class="fa fa-save"></i>Batal</button>
+                    <button type="submit" class="btn btn-danger" data-backdrop="false"><i class="fa fa-repeat"></i>&nbsp;<i class="fa fa-save"></i>Hapus</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
+

@@ -212,11 +212,11 @@ ol.breadcrumb li a:hover {
  * Dashboard
  */
 
-.material-icons {
-    margin-right: 1.5rem;
-    object-position: center;
-    color: rgba(255, 255, 255, 1);
-}
+// .material-icons {
+//     margin-right: 1.5rem;
+//     object-position: center;
+//     color: rgba(255, 255, 255, 1);
+// }
 
 /*
  *  Tabel batas desa warna icon dan spec
@@ -286,8 +286,8 @@ ol.breadcrumb li a:hover {
     transform: translate(-50%, -50%);
 }
 
-
 /*spin css table*/
+
 
 .spin-icon {
 animation-name: spin;
@@ -302,7 +302,7 @@ animation: spin 1100ms linear both;
     4.66% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     4.76% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     7.81% { transform: matrix3d(0.525, 0.851, 0, 0, -0.851, 0.525, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    10.77% { transform: matrix3d(-0.12, 0.993, 0, 0, -0.993, -0.12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+    10.77% { transform: matrix3d(-0.12, 0.993, q0, 0, -0.993, -0.12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     16.68% { transform: matrix3d(-0.783, 0.622, 0, 0, -0.622, -0.783, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     22.68% { transform: matrix3d(-0.954, 0.299, 0, 0, -0.299, -0.954, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
     28.6% { transform: matrix3d(-0.991, 0.137, 0, 0, -0.137, -0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
@@ -312,6 +312,7 @@ animation: spin 1100ms linear both;
   }
   
   
+
 .back-spin {
     animation-name: back-spin;
     animation: back-spin 1100ms linear both;
@@ -356,7 +357,7 @@ animation: spin 1100ms linear both;
     box-shadow: none;
 }
 
-// table style
+// tab style
 
 table, td, th {    
     
@@ -404,8 +405,8 @@ table#table-region th {
   border-top: 16px solid #3498db;
   width: 100px;
   height: 100px;
-  -webkit-animation: spin 1s linear infinite;
-  animation: spin 1s linear infinite;
+  -webkit-animation: spin 1.5s linear infinite;
+  animation: spin 1.5s linear infinite;
 }
 
 @-webkit-keyframes spin {
@@ -442,7 +443,6 @@ table#table-region th {
   text-align: center;
 }
 
-
 // pointer
 
 .btn {
@@ -466,14 +466,18 @@ table#table-region th {
     border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
 
+
+.header-list-problem h2 {
+    color: #FF0058;
+}
+
+
 .header-list-problem h2 {
     color: #FF0058;
     
 }
 
 .header-list-problem p {
-    
-    
 }
 
 .header-list-object h2 {
@@ -488,6 +492,7 @@ table#table-region th {
 
 #map {
     width: 100%;
+    height: 800px;
     position: relative;
 }
 
@@ -502,11 +507,13 @@ table#table-region th {
 }
 
 .box {
+    color: red;
     height: 100%;
     position: relative;
     outline: none;
     margin-right: -15px;
     margin-left: -15px;
+    margin-top: -31px;
     margin-top: -8px;
 }
 
@@ -516,6 +523,7 @@ table#table-region th {
     right: 5px;
     pointer-events: visiblePainted;
 }
+
 .leaflet-control-layers-expanded:nth-child(2) {
     right: 5px;
     top: 33px;
@@ -529,6 +537,78 @@ table#table-region th {
     text-align: center;
     line-height: 30px;
 }
+
+
+.color-picker {
+    z-index: 1 !important;
+    top: 248px !important;
+    left: 30px !important;
+}
+
+// map icons properti
+.iconsMapUpload { 
+    margin-right: 10px;
+}
+
+// button toggle
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+  }
+  
+  .switch input {display:none;}
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .2s;
+    transition: .2s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .2s;
+    transition: .2s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(24px);
+    -ms-transform: translateX(26px);
+    transform: translateX(20px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 33px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+
 .leaflet-control-layers-expanded {
     overflow: auto;
     max-height: 322px;
