@@ -8,6 +8,7 @@ import { SharedService } from '../services/shared';
 import { Region } from "../models/gen/region";
 import MapUtils from '../helpers/mapUtils';
 import { ToraMap } from '../models/gen/toraMap';
+import { Subscription } from 'rxjs';
 
 import * as L from 'leaflet';
 import * as $ from 'jquery';
@@ -55,6 +56,9 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     desaD: any[] = [];
     ToraMap: ToraMap;
     tora = [];
+    subscription: Subscription;
+
+    
 
     constructor(private mapNavigationService: MapNavigationService,
         private toastr: ToastrService,
@@ -70,7 +74,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
             zoomControl: false,
             layers: [LAYERS["OpenStreetMap"]]
         };
-        this.sharedService.getRegionId().subscribe(id => {
+        this.subscription = this.sharedService.getRegionId().subscribe(id => {
             console.log(id);
             let query = { data: { 'type': 'parent', 'parentId': id } }
             this.toraMapService.getAll(query, null).subscribe(data => {
@@ -80,7 +84,8 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.map.remove()
+        this.map.remove();
+        this.subscription.unsubscribe();
     }
 
     onChangeUpload(value, region, parentId) {

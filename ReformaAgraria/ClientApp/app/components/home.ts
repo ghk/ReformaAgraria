@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
     templateUrl: '../templates/home.html',
 })
 export class HomeComponent implements OnInit, OnDestroy {
-    sub: Subscription;
+    subscription: Subscription;
 
     constructor(
         private sharedService: SharedService,
@@ -17,14 +17,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.sub = this.route.params.subscribe(params => {
-            this.sharedService.setRegionId(params['id'] != null ? params['id'] : '72.1');
-            });
+        this.subscription = this.route.params.subscribe(params => {
+            this.sharedService.setRegionId(params['id'] != null ? params['id'] : '72_1');
+        });
     }
 
 
     ngOnDestroy(): void {
-        this.sub.unsubscribe();
+        this.subscription.unsubscribe();
     }
 
 }

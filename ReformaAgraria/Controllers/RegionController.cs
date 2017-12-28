@@ -45,7 +45,8 @@ namespace ReformaAgraria.Controllers
 
                 if (type == "parent")
                 {
-                    var parentId = GetQueryString<string>("parentId");
+                    var id = GetQueryString<string>("parentId");
+                    var parentId = (id == null) ? null : id.Replace('_', '.');                    
                     var regionType = GetQueryString<int?>("regionType");
 
                     if (!string.IsNullOrWhiteSpace(parentId))

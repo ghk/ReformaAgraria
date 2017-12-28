@@ -1,16 +1,17 @@
-﻿import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { RegionType } from '../models/gen/regionType';
 import { RegionService } from '../services/gen/region';
 import { AgrariaIssuesListService } from '../services/agrariaIssuesList';
 import { SharedService } from '../services/shared';
 import { CookieService } from 'ngx-cookie-service';
 import { DecimalPipe } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'ra-region',
     templateUrl: '../templates/region.html'
 })
-export class RegionComponent implements OnInit {
+export class RegionComponent implements OnInit, OnDestroy {
     regions: any = [];
     region: string = 'Lokasi';
     id: string;
@@ -23,6 +24,7 @@ export class RegionComponent implements OnInit {
     orderBy: string = "region.name";
     isDesc: boolean = false;
     prevColumn: string = "";
+    subscription: Subscription;
 
     constructor(
         private regionService: RegionService,
@@ -34,8 +36,8 @@ export class RegionComponent implements OnInit {
     ngOnInit() {
         this.loading = true;
         this.showPage = false;
-        this.sharedService.getRegionId().subscribe(id =>
-            this.regionService.getById(id).subscribe(data => {
+        this.subscription = this.sharedService.getRegionId().subscribe(id =>
+            this.regionService.getById(id.split('_').join('.')).subscribe(data => {
                 this.cookieService.set('regionId', data.id);
                 this.cookieService.set('regionName', data.name);
                 this.cookieService.set('fkParentId', data.fkParentId);
@@ -57,6 +59,9 @@ export class RegionComponent implements OnInit {
             })
         )
     };
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
     
     getRegion(regionType: RegionType, parentId: string) {
         let query = { data: { 'type': 'parent', 'regionType': regionType, 'parentId': parentId } }
@@ -112,5 +117,9 @@ export class RegionComponent implements OnInit {
          }
 
          this.prevColumn = this.orderBy;
+     }
+
+     convertRegionId(text) {
+         return text.split('.').join('_');
      }
 }
