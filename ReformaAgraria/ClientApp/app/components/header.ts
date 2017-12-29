@@ -42,4 +42,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         document.getElementById("mySidenav").style.width = "0";
     }
 
+    convertRegionId(text) {
+        return text.split('.').join('_');
+    }
+
 }

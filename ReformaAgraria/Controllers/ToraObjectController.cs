@@ -240,14 +240,15 @@ namespace ReformaAgraria.Controllers
         [HttpGet("gettoraobjectsummary/{id}")]
         public List<DashboardData> GetToraObjectSummary(string id)
         {
-            var region = dbContext.Set<Region>().First(r => r.Id == id);
-            var children = dbContext.Set<Region>().Where(r => r.FkParentId == id).OrderBy(x => x.Name).ToList();
+            var regionId = (id == null) ? null : id.Replace('_', '.');
+            var region = dbContext.Set<Region>().First(r => r.Id == regionId);
+            var children = dbContext.Set<Region>().Where(r => r.FkParentId == regionId).OrderBy(x => x.Name).ToList();
 
             var results = from objects in dbContext.Set<ToraObject>()
                           join desa in dbContext.Set<Region>() on objects.FkRegionId equals desa.Id
                           join kec in dbContext.Set<Region>() on desa.FkParentId equals kec.Id
                           join kab in dbContext.Set<Region>() on kec.FkParentId equals kab.Id
-                          where objects.FkRegionId.StartsWith(id)
+                          where objects.FkRegionId.StartsWith(regionId)
                           group objects by region.Type == RegionType.Kabupaten ? kec.Id : desa.Id into r
                           select new DashboardData
                           {
@@ -284,7 +285,8 @@ namespace ReformaAgraria.Controllers
             if (type == "getAllById")
             {
                 var id = GetQueryString<string>("id");
-                query = query.Where(to => to.FkRegionId == id);
+                var regionId = (id == null) ? null : id.Replace('_', '.');
+                query = query.Where(to => to.FkRegionId == regionId);
             }
             
             return query;

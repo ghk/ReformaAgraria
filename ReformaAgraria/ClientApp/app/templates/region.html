@@ -6,9 +6,27 @@
             <table class="table table-sm" id="table-region">
                 <thead>
                     <tr>
-                        <th (click)="sorted('Name')" style="cursor:pointer;">{{region}}<img src="/images/ic_swap_vert_black_24px.svg" class="ml-3 mb-1" style="width:18px; color:#bdbdbd"></th>
-                        <th (click)="sorted('Luas')" class="text-right" style="cursor:pointer;">Luas<img src="/images/ic_swap_vert_black_24px.svg" class="ml-3 mb-1" style="width:18px;"></th>
-                        <th (click)="sorted('Total Objek')" class="text-right table-head-padding" style="cursor:pointer;">Total Objek<img src="/images/ic_swap_vert_black_24px.svg" class="ml-3 mb-1" style="width:18px;"></th>
+                        <th (click)="sort('region.name')" style="cursor: pointer;">
+                            {{region}}
+                            <ng-container *ngIf="order.includes('region.name')">
+                                <span [hidden]="order.startsWith('-')">▲</span>
+                                <span [hidden]="!order.startsWith('-')">▼</span>
+                            </ng-container>
+                        </th>
+                        <th (click)="sort('totalSize')" style="cursor: pointer;" class="text-right">
+                            Luas
+                            <ng-container *ngIf="order.includes('totalSize')">
+                                <span [hidden]="order.startsWith('-')">▲</span>
+                                <span [hidden]="!order.startsWith('-')">▼</span>
+                            </ng-container>
+                        </th>
+                        <th (click)="sort('totalToraObjects')" style="cursor: pointer;" class="text-right">
+                            Total Object
+                            <ng-container *ngIf="order.includes('totalToraObjects')">
+                                <span [hidden]="order.startsWith('-')">▲</span>
+                                <span [hidden]="!order.startsWith('-')">▼</span>
+                            </ng-container>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,8 +40,8 @@
                         </tr>
                     </ng-container>
                     <ng-container *ngIf="showPage">
-                        <tr *ngFor="let reg of regions | orderBy: orderBy : isDesc" >
-                            <td class="text-left"><a [routerLink]="['/home', reg.region.id]" href="javascript:void(0)">{{reg.region.name}}</a></td>
+                        <tr *ngFor="let reg of regions | orderBy: order" >
+                            <td class="text-left"><a [routerLink]="['/home', convertRegionId(reg.region.id)]" href="javascript:void(0)">{{reg.region.name}}</a></td>
                             <td class="table-data-padding text-right">{{reg.totalSize | number}} Ha</td>
                             <td class="text-right">{{reg.totalToraObjects}}</td>
                         </tr>

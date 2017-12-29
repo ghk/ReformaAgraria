@@ -1,16 +1,17 @@
-﻿import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { RegionType } from '../models/gen/regionType';
 import { RegionService } from '../services/gen/region';
 import { AgrariaIssuesListService } from '../services/agrariaIssuesList';
 import { SharedService } from '../services/shared';
 import { CookieService } from 'ngx-cookie-service';
 import { DecimalPipe } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'ra-region',
     templateUrl: '../templates/region.html'
 })
-export class RegionComponent implements OnInit {
+export class RegionComponent implements OnInit, OnDestroy {
     regions: any = [];
     region: string = 'Lokasi';
     id: string;
@@ -20,9 +21,11 @@ export class RegionComponent implements OnInit {
     showDiv: boolean = true;
     loading: boolean = false;
     showPage: boolean = true;
-    orderBy: string = "region.name";
     isDesc: boolean = false;
     prevColumn: string = "";
+    subscription: Subscription;
+    agrariaSubscription: Subscription;
+    order: string = "region.name";
 
     constructor(
         private regionService: RegionService,
@@ -34,8 +37,8 @@ export class RegionComponent implements OnInit {
     ngOnInit() {
         this.loading = true;
         this.showPage = false;
-        this.sharedService.getRegionId().subscribe(id =>
-            this.regionService.getById(id).subscribe(data => {
+        this.subscription = this.sharedService.getRegionId().subscribe(id =>
+            this.regionService.getById(id.split('_').join('.')).subscribe(data => {
                 this.cookieService.set('regionId', data.id);
                 this.cookieService.set('regionName', data.name);
                 this.cookieService.set('fkParentId', data.fkParentId);
@@ -57,6 +60,11 @@ export class RegionComponent implements OnInit {
             })
         )
     };
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+        this.agrariaSubscription.unsubscribe();
+    }
     
     getRegion(regionType: RegionType, parentId: string) {
         let query = { data: { 'type': 'parent', 'regionType': regionType, 'parentId': parentId } }
@@ -79,7 +87,7 @@ export class RegionComponent implements OnInit {
      getToraObjectSummary(id: string) {
          this.loading = true;
          this.showPage = false;
-         this.agrariaIssuesListService.getToraObjectSummary(id).subscribe(data => {
+         this.agrariaSubscription = this.agrariaIssuesListService.getToraObjectSummary(id).subscribe(data => {
              this.regions = data;
              this.sharedService.setToraSummary(data);
              this.region = RegionType[this.regions[0].region.type];
@@ -88,29 +96,18 @@ export class RegionComponent implements OnInit {
          })
      }
 
-     sorted(sortedBy: string) {
-         if (sortedBy == "Total Objek") {
-             this.orderBy = 'totalToraObjects';
+     sort(order: string) {
+         if (this.order.includes(order)) {
+             if (this.order.startsWith('-'))
+                 this.order = this.order.substr(1);
+             else
+                 this.order = '-' + this.order;
+         } else {
+             this.order = order;
          }
-         else if (sortedBy == "Luas") {
-             this.orderBy = 'totalSize';
-         }
-         else {
-             this.orderBy = 'region.name';
-         }
+     }
 
-         if (this.prevColumn != this.orderBy) {
-             this.isDesc = false;
-         }
-         else {
-             if (this.isDesc == false) {
-                 this.isDesc = true;
-             }
-             else {
-                 this.isDesc = false;
-             }
-         }
-
-         this.prevColumn = this.orderBy;
+     convertRegionId(text) {
+         return text.split('.').join('_');
      }
 }
