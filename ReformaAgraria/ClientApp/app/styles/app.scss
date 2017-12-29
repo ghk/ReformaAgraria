@@ -589,7 +589,7 @@ table#table-region th {
   
   input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
-  }
+  } 
   
   input:checked + .slider:before {
     -webkit-transform: translateX(24px);
@@ -611,3 +611,5 @@ table#table-region th {
     overflow: auto;
     max-height: 322px;
 }
+
+
