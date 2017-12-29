@@ -29,6 +29,7 @@
     "leaflet-groupedlayercontrol": "^0.6.0",
     "ngx-cookie-service": "^1.0.9",
     "ngx-order-pipe": "^1.1.0",
+    "ngx-pipes": "^2.1.0",
     "ngx-toastr": "^6.5.0",
     "open-iconic": "^1.1.1",
     "popper.js": "^1.12.5",

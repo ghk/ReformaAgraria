@@ -21,10 +21,11 @@ export class RegionComponent implements OnInit, OnDestroy {
     showDiv: boolean = true;
     loading: boolean = false;
     showPage: boolean = true;
-    orderBy: string = "region.name";
     isDesc: boolean = false;
     prevColumn: string = "";
     subscription: Subscription;
+    agrariaSubscription: Subscription;
+    order: string = "region.name";
 
     constructor(
         private regionService: RegionService,
@@ -59,8 +60,10 @@ export class RegionComponent implements OnInit, OnDestroy {
             })
         )
     };
+
     ngOnDestroy() {
         this.subscription.unsubscribe();
+        this.agrariaSubscription.unsubscribe();
     }
     
     getRegion(regionType: RegionType, parentId: string) {
@@ -84,7 +87,7 @@ export class RegionComponent implements OnInit, OnDestroy {
      getToraObjectSummary(id: string) {
          this.loading = true;
          this.showPage = false;
-         this.agrariaIssuesListService.getToraObjectSummary(id).subscribe(data => {
+         this.agrariaSubscription = this.agrariaIssuesListService.getToraObjectSummary(id).subscribe(data => {
              this.regions = data;
              this.sharedService.setToraSummary(data);
              this.region = RegionType[this.regions[0].region.type];
@@ -93,30 +96,15 @@ export class RegionComponent implements OnInit, OnDestroy {
          })
      }
 
-     sorted(sortedBy: string) {
-         if (sortedBy == "Total Objek") {
-             this.orderBy = 'totalToraObjects';
+     sort(order: string) {
+         if (this.order.includes(order)) {
+             if (this.order.startsWith('-'))
+                 this.order = this.order.substr(1);
+             else
+                 this.order = '-' + this.order;
+         } else {
+             this.order = order;
          }
-         else if (sortedBy == "Luas") {
-             this.orderBy = 'totalSize';
-         }
-         else {
-             this.orderBy = 'region.name';
-         }
-
-         if (this.prevColumn != this.orderBy) {
-             this.isDesc = false;
-         }
-         else {
-             if (this.isDesc == false) {
-                 this.isDesc = true;
-             }
-             else {
-                 this.isDesc = false;
-             }
-         }
-
-         this.prevColumn = this.orderBy;
      }
 
      convertRegionId(text) {

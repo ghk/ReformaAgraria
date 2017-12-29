@@ -10,6 +10,7 @@ import { OrderModule } from 'ngx-order-pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { ColorPickerModule } from 'angular4-color-picker';
+import { NgPipesModule } from 'ngx-pipes';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
@@ -95,6 +96,7 @@ import './styles/app.scss';
         BrowserAnimationsModule,
         ToastrModule.forRoot(), 
         ColorPickerModule,
+        NgPipesModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
