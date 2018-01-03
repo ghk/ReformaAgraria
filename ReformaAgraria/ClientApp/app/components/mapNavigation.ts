@@ -303,6 +303,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         this.markers.push(marker);
     }
 
+
     applyOverlay(data) {
         if (data.length && data.length == 0) {
             return
@@ -320,6 +321,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
             this.initialData.push(result);
         });
         this.isOverlayAdded = true;
+        $("input.leaflet-control-layers-selector:checkbox").click();
     }
 
     deleteOverlay(model) {

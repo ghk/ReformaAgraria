@@ -39,11 +39,12 @@ namespace ReformaAgraria.Controllers
             {
                 if (type == "parent")
                 {
-                    var parentId = GetQueryString<string>("parentId");;
+                    var parentId = GetQueryString<string>("parentId").ToString().Trim().Replace("_", ".");
+
 
                     if (!string.IsNullOrWhiteSpace(parentId))
                     {
-                        query = query.Where(r => r.FkRegionId.StartsWith(parentId));
+                        query = query.Where(r => r.FkRegionId.Contains(parentId));
                     }
                 }
             }
