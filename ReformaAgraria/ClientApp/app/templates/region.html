@@ -21,8 +21,15 @@
                             </ng-container>
                         </th>
                         <th (click)="sort('totalToraObjects')" style="cursor: pointer;" class="text-right">
-                            Total Object
+                            Total Objek
                             <ng-container *ngIf="order.includes('totalToraObjects')">
+                                <span [hidden]="order.startsWith('-')">▲</span>
+                                <span [hidden]="!order.startsWith('-')">▼</span>
+                            </ng-container>
+                        </th>
+                        <th (click)="sort('totalToraSubjects')" style="cursor: pointer;" class="text-right">
+                            Total Subjek
+                            <ng-container *ngIf="order.includes('totalToraSubjects')">
                                 <span [hidden]="order.startsWith('-')">▲</span>
                                 <span [hidden]="!order.startsWith('-')">▼</span>
                             </ng-container>
@@ -44,6 +51,7 @@
                             <td class="text-left"><a [routerLink]="['/home', convertRegionId(reg.region.id)]" href="javascript:void(0)">{{reg.region.name}}</a></td>
                             <td class="table-data-padding text-right">{{reg.totalSize | number}} Ha</td>
                             <td class="text-right">{{reg.totalToraObjects}}</td>
+                            <td class="text-right">{{reg.totalToraSubjects}}</td>
                         </tr>
                     </ng-container>
                 </tbody>

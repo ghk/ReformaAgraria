@@ -11,6 +11,7 @@ import { SharedService } from '../services/shared';
 export class AgrariaIssuesHeaderComponent implements OnInit, OnDestroy {
     toraSummary: any[];
     totalObjects: number;
+    totalSubjects: number;
     totalSize: number;
 
     constructor(
@@ -26,6 +27,7 @@ export class AgrariaIssuesHeaderComponent implements OnInit, OnDestroy {
 
             for (var i = 0; i < this.toraSummary.length; i++) {
                 this.totalObjects += this.toraSummary[i].totalToraObjects;
+                this.totalSubjects += this.toraSummary[i].totalToraSubjects;
                 this.totalSize += this.toraSummary[i].totalSize;
             }
         })

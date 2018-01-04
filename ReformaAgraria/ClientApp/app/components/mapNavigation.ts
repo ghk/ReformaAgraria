@@ -188,7 +188,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<button type="button" class="btn btn-outline-dark btn-sm" style="font-size:22px; width:35px;"><strong>+</strong></button>';
+                div.innerHTML = '<button type="button" class="btn btn-outline-secondary btn-sm" style="height:35px;"><strong><i class="material-icons">library_add</i></strong></button>';
                 div.onclick = (e) => { this.model = {}; $("#form-upload")[0]["reset"](); $("#upload-modal")['modal']("show") };
                 return div;
             }
@@ -201,7 +201,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-1');
-                div.innerHTML = `<button type="button" class="btn btn-light btn-sm" style="width: auto; position: relative;">Layers</button>`;
+                div.innerHTML = `<button id="btn-layer" type="button"class="btn btn-outline-secondary btn-sm" style="height:35px;"><i class="material-icons">layers</i></button>`;
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
                 buttonOverlay.onclick = (e) => this.toggleControlLayers(2);
@@ -322,6 +322,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         });
         this.isOverlayAdded = true;
         $("input.leaflet-control-layers-selector:checkbox").click();
+        $("#btn-layer").click();
     }
 
     deleteOverlay(model) {

@@ -257,25 +257,35 @@ namespace ReformaAgraria.Controllers
                               TotalToraObjects = r.Count()
                           };
 
-
-            //var results = from desa in dbContext.Set<Region>()
+            //var results2 = from subjects in dbContext.Set<ToraSubject>()
+            //              join objects in dbContext.Set<ToraObject>() on subjects.FkToraObjectId equals objects.Id
+            //              join desa in dbContext.Set<Region>() on objects.FkRegionId equals desa.Id
             //              join kec in dbContext.Set<Region>() on desa.FkParentId equals kec.Id
-            //              join objects in dbContext.Set<ToraObject>() on desa.Id equals objects.FkRegionId
-            //              join subjects in dbContext.Set<ToraSubject>() on objects.Id equals subjects.FkToraObjectId
-            //              where objects.FkRegionId.StartsWith(id)
+            //              join kab in dbContext.Set<Region>() on kec.FkParentId equals kab.Id
+            //              where objects.FkRegionId.StartsWith(regionId)
             //              group objects by region.Type == RegionType.Kabupaten ? kec.Id : desa.Id into r
             //              select new DashboardData
             //              {
             //                  Region = children.First(c => c.Id == r.Key),
             //                  TotalSize = r.Sum(_ => _.Size),
-            //                  TotalToraObjects = objects.Id.Distinct().Count(),
-            //                  TotalToraSubjects = subjects.Id.Distinct().Count()
+            //                  TotalToraSubjects = r.Count()
             //              };
 
-            return children
+
+            //foreach (var item in results)
+            //{
+            //    if (results2.Any(i => i.Region.Id == item.Region.Id))
+            //    {
+            //        item.TotalToraSubjects = results2.FirstOrDefault(i => i.Region.Id == item.Region.Id).TotalToraSubjects;
+            //    }
+            //}
+
+            var finalResult = children
                 .Select(c => results.FirstOrDefault(g => g.Region.Id == c.Id)
-                    ?? new DashboardData { Region = c } )
+                    ?? new DashboardData { Region = c })
                 .ToList();
+
+            return finalResult;
         }
 
         protected override IQueryable<ToraObject> ApplyQuery(IQueryable<ToraObject> query)
