@@ -13,7 +13,7 @@
         </button>
     </div>
 
-    <a class="navbar-brand" [routerLink]="['/home']" href="javascript:void(0)">Reforma Agraria</a>
+    <a class="navbar-brand" [routerLink]="['/home']">Reforma Agraria</a>
     <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>    
@@ -21,7 +21,7 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ol class="breadcrumb mr-auto" style="background-color:#1976D2; margin-top:20px; padding: 0 0 0 0;">
             <li class="breadcrumb-item active" *ngFor="let r of (region | regionBreadcrumb)">
-                <a [routerLink]="['/home', convertRegionId(r.id)]" href="javascript:void(0)">{{ r.name }}</a>
+                <a [routerLink]="['/home', convertRegionId(r.id)]">{{ r.name }}</a>
             </li>
         </ol>
         

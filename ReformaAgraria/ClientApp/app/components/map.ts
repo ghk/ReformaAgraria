@@ -24,20 +24,20 @@ import { ToastrService } from 'ngx-toastr';
     selector: 'ra-map',
     templateUrl: '../templates/map.html',
 })
-export class MapComponent implements OnInit, OnDestroy {    
+export class MapComponent implements OnInit, OnDestroy {
     map: L.Map;
     geoJSONLayer: L.GeoJSON;
     options: any;
     center: any;
-    zoom: number;    
+    zoom: number;
     layers: any[] = [];
     layersControl: any;
     controlOverlayShowing: any;
     afterInit: boolean;
     mapData: any;
     baseLayers: any;
-    overlays: L.Control.Layers;    
-    model: any =  {};
+    overlays: L.Control.Layers;
+    model: any = {};
     markers = [];
     initialData: any[] = [];
     isOverlayAdded: boolean;
@@ -50,8 +50,8 @@ export class MapComponent implements OnInit, OnDestroy {
         private mapService: MapService,
         private toastr: ToastrService,
         private cpService: ColorPickerService
-        ) { }
-    
+    ) { }
+
     ngOnInit(): void {
         this.center = L.latLng(-1.374581, 119.977618);
         this.zoom = 10;
@@ -59,44 +59,39 @@ export class MapComponent implements OnInit, OnDestroy {
             zoomControl: false,
             layers: [LAYERS["OpenStreetMap"]]
         };
-        let query = {};
+        
         window.addEventListener('resize', this.onResize);
         window.dispatchEvent(new Event('resize'));
+        
+        let query = {};
         this.baseLayerService.getAll(query, null).subscribe(data => {
             this.applyOverlay(data);
-        });        
-    }    
+        });
+    }
 
     ngOnDestroy() {
         this.map.remove();
         window.removeEventListener('resize', this.onResize);
     }
-    
+
     applyOverlay(data) {
         if (data.length && data.length == 0) {
             return
         }
         data.forEach(result => {
             let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
-            console.log(geojson._layers);
-            let innerHtml = `<a href="javascript:void(0)">
-                                    <span class="oi oi-x overlay-action" id="delete" style="float:right; padding-right:10px;" data-value="${result.id}"></span>
-                                    </a>
-                                <a href="javascript:void(0)">
-                                    <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
-                                </a>
-                                <label class="switch">
-                                    <input type="checkbox" class="form-check-input form-control">
-                                    <span class="slider round"></span>
-                                </label>
-                                
-
-                                    <span class="oi oi-x overlay-action" id="delete" style="float:right;" data-value="${result.id}"></span>
-                                    </a>
-                                <a href="javascript:void(0)" >
-                                    <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
-                                </a>
-                                    `;
+            let innerHtml = `
+            <a href="javascript:void(0)">
+                <span class="oi oi-x overlay-action" id="delete" style="float:right; padding-right:10px;" data-value="${result.id}"></span>
+            </a>
+            <a href="javascript:void(0)">
+                <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
+            </a>
+            <label class="switch">
+                <input type="checkbox" class="form-check-input form-control">
+                <span class="slider round"></span>
+            </label>           
+            `;
             let layer = this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
             this.layers.push({ id: result.id, layer: geojson });
             this.initialData.push(result);
@@ -105,19 +100,17 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
 
-    onclickActionOverlay = (event) =>{
+    onclickActionOverlay = (event) => {
         $(`#${event.target.id}-modal`)['modal']("show");
 
         let id = event.target.dataset.value;
         let currentModel = this.initialData.find(o => o.id == parseInt(id));
 
-
         this.model = Object.assign({}, currentModel);
         this.color = currentModel.color ? currentModel.color : this.color;
         if (event.target.id == "edit") {
-            this.model["linkDownload"] = [window.location.origin, 'baseLayer',id+"_.zip"].join("/")
+            this.model["linkDownload"] = [window.location.origin, 'baseLayer', id + "_.zip"].join("/")
         }
-        
     }
 
     ngAfterViewChecked() {
@@ -127,26 +120,24 @@ export class MapComponent implements OnInit, OnDestroy {
                 let element = elements[i];
                 element.style.visibility = 'hidden';
             }
-
             this.afterInit = false;
         }
+
         if (this.isOverlayAdded) {
-            let elemenets = $(".overlay-action");
-
-            for (let i = 0; i < elemenets.length; i++) {
-                let element = elemenets[i];
-
+            let elements = $(".overlay-action");
+            for (let i = 0; i < elements.length; i++) {
+                let element = elements[i];
                 element.addEventListener('click', this.onclickActionOverlay, false);
             }
             this.isOverlayAdded = false;
         }
     }
-    
+
     setupControlBar() {
         L.control.zoom({
             position: 'bottomright'
         }).addTo(this.map);
-        
+
         let button = L.Control.extend({
             options: {
                 position: 'topleft'
@@ -170,13 +161,13 @@ export class MapComponent implements OnInit, OnDestroy {
 
                 let buttonOverlay = div.getElementsByTagName('button')[0];
                 buttonOverlay.onclick = (e) => this.toggleControlLayers(2);
-                
+
                 return div;
             }
         });
-        
-        this.map.addControl(new button());     
-        this.overlays = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);        
+
+        this.map.addControl(new button());
+        this.overlays = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);
         this.afterInit = true;
     }
 
@@ -188,7 +179,7 @@ export class MapComponent implements OnInit, OnDestroy {
             }
         }
 
-        let status = '';    
+        let status = '';
         let element = $(`.leaflet-control-layers-expanded:nth-child(${id})`)[0];
         if (element) {
             status = element.style.visibility === 'hidden' ? '' : 'hidden';
@@ -205,14 +196,14 @@ export class MapComponent implements OnInit, OnDestroy {
     removeLayer(id): void {
         let currentOverlay = this.layers.find(o => o.id == id);
         let currentData = this.initialData.find(o => o.id == id);
-        
+
         this.overlays.removeLayer(currentOverlay.layer);
         this.map.removeLayer(currentOverlay.layer);
         this.layers.splice(currentOverlay, 1);
         this.initialData.splice(currentData, 1);
         this.isOverlayAdded = true;
     }
-      
+
     addMarker(marker): void {
         this.markers.push(marker);
     }
@@ -244,7 +235,7 @@ export class MapComponent implements OnInit, OnDestroy {
     editOverlay(model) {
         $("#edit-modal")['modal']("hide");
         this.model.color = this.color;
-        
+
         this.mapService.edit(model).subscribe(data => {
             this.toastr.success("Pengeditan Berhasil", null);
             this.removeLayer(data.id);
@@ -262,7 +253,7 @@ export class MapComponent implements OnInit, OnDestroy {
         })
     }
 
-    onChangeFile(event) {        
+    onChangeFile(event) {
         this.model['file'] = event.srcElement.files;
     }
 
@@ -311,7 +302,7 @@ export class MapComponent implements OnInit, OnDestroy {
                     let bounds = layer.getBounds();
                     center = bounds.getCenter();
                 }
-                
+
                 let element = null;
 
                 if (!element)
@@ -333,16 +324,14 @@ export class MapComponent implements OnInit, OnDestroy {
             }
         };
         return MapUtils.setGeoJsonLayer(geoJson, geoJsonOptions);
-    } 
+    }
 
     onResize = (e) => {
         let height = e.target.innerHeight - 85;
         $("#map").height(height);
-        this.map.invalidateSize();
+        if (this.map)
+            this.map.invalidateSize();
     }
 
 
 }
-
-
-// <img src="/images/ic_layers_black_24px.svg">
