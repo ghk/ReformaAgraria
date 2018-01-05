@@ -36,7 +36,6 @@ import { MapComponent } from './components/map';
 //import { LoaderComponent } from './components/loader';
 
 import { CookieService } from 'ngx-cookie-service';
-import { DataService } from './services/data';
 import { SharedService } from './services/shared';
 import { AlertService } from './services/alert';
 import { AccountService } from './services/account';
@@ -116,7 +115,6 @@ import './styles/app.scss';
         ])
     ],
     providers: [
-        DataService,
         SharedService,
         CookieService,
         AccountService,
