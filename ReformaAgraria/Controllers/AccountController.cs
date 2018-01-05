@@ -153,7 +153,7 @@ namespace ReformaAgraria.Controllers
             return handler.WriteToken(securityToken);
         }
 
-        [HttpPost("sendpasswordrecoverylink")]
+        [HttpPost("password/recovery")]
         [AllowAnonymous]
         public async Task<IActionResult> SendPasswordRecoveryLink([FromBody] LoginViewModel model)
         {
@@ -170,7 +170,7 @@ namespace ReformaAgraria.Controllers
             return Ok();
         }
 
-        [HttpPost("resetpassword")]
+        [HttpPost("password/reset")]
         public async Task<IActionResult> ResetPassword(string id, string token, string password)
         {
             var user = _userManager.FindByIdAsync(id).Result;
@@ -183,7 +183,7 @@ namespace ReformaAgraria.Controllers
             return BadRequest(result.Errors);
         }
 
-        [HttpPost("changepassword")]
+        [HttpPost("password/change")]
         public async Task<IActionResult> ChangePassword(string id, string newPassword)
         {
             var user = _userManager.FindByIdAsync(id).Result;

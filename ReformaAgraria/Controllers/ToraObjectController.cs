@@ -13,7 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
+    //[Authorize(Policy = "Bearer")]
     public class ToraObjectController : CrudController<ToraObject, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
@@ -237,8 +239,8 @@ namespace ReformaAgraria.Controllers
             }
         }
 
-        [HttpGet("gettoraobjectsummary/{id}")]
-        public List<DashboardData> GetToraObjectSummary(string id)
+        [HttpGet("summary/{id}")]
+        public List<DashboardData> GetSummary(string id)
         {
             var regionId = (id == null) ? null : id.Replace('_', '.');
             var region = dbContext.Set<Region>().First(r => r.Id == regionId);
@@ -256,29 +258,6 @@ namespace ReformaAgraria.Controllers
                               TotalSize = r.Sum(_ => _.Size),
                               TotalToraObjects = r.Count()
                           };
-
-            //var results2 = from subjects in dbContext.Set<ToraSubject>()
-            //              join objects in dbContext.Set<ToraObject>() on subjects.FkToraObjectId equals objects.Id
-            //              join desa in dbContext.Set<Region>() on objects.FkRegionId equals desa.Id
-            //              join kec in dbContext.Set<Region>() on desa.FkParentId equals kec.Id
-            //              join kab in dbContext.Set<Region>() on kec.FkParentId equals kab.Id
-            //              where objects.FkRegionId.StartsWith(regionId)
-            //              group objects by region.Type == RegionType.Kabupaten ? kec.Id : desa.Id into r
-            //              select new DashboardData
-            //              {
-            //                  Region = children.First(c => c.Id == r.Key),
-            //                  TotalSize = r.Sum(_ => _.Size),
-            //                  TotalToraSubjects = r.Count()
-            //              };
-
-
-            //foreach (var item in results)
-            //{
-            //    if (results2.Any(i => i.Region.Id == item.Region.Id))
-            //    {
-            //        item.TotalToraSubjects = results2.FirstOrDefault(i => i.Region.Id == item.Region.Id).TotalToraSubjects;
-            //    }
-            //}
 
             var finalResult = children
                 .Select(c => results.FirstOrDefault(g => g.Region.Id == c.Id)

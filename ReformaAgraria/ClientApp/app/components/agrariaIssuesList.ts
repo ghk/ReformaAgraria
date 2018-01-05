@@ -16,7 +16,7 @@ import { DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'ra-agraria-issues-list',
-    templateUrl: '../templates/agraria-issues-list.html',
+    templateUrl: '../templates/agrariaIssuesList.html',
 })
 export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     objectList: any = [];

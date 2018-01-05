@@ -71,7 +71,7 @@ export class AgrariaIssuesListService {
 
     public getToraObjectSummary(id: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        return this.http.get('/api/toraobject/gettoraobjectsummary/' + id, requestOptions)
+        return this.http.get('/api/toraobject/summary/' + id, requestOptions)
             .map(res => res.json())
     }
 

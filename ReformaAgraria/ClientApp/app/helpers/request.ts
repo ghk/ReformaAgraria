@@ -4,8 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Observable } from "rxjs/Observable";
 import { Query } from '../models/query';
 
-export class RequestHelper
-{
+export class RequestHelper {
     static getRequestOptions(cookieService: CookieService, query: Query): RequestOptions {
         var result = new RequestOptions();
         let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -32,7 +31,7 @@ export class RequestHelper
                 params.append(key, query.data[key]);
             })
         }
-            
+
         result.params = params;
 
         return result;

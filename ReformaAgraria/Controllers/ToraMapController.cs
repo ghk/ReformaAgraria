@@ -20,7 +20,9 @@ using System.Net;
 
 namespace ReformaAgraria.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
+    //[Authorize(Policy = "Bearer")]
     public class ToraMapController : CrudController<ToraMap, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
@@ -32,28 +34,8 @@ namespace ReformaAgraria.Controllers
             _contextAccessor = contextAccessor;
         }
 
-        protected override IQueryable<ToraMap> ApplyQuery(IQueryable<ToraMap> query)
-        {
-            var type = GetQueryString<string>("type");
-            if (type != null)
-            {
-                if (type == "parent")
-                {
-                    var parentId = GetQueryString<string>("parentId").ToString().Trim().Replace("_", ".");
-
-
-                    if (!string.IsNullOrWhiteSpace(parentId))
-                    {
-                        query = query.Where(r => r.FkRegionId.Contains(parentId));
-                    }
-                }
-            }
-
-            return query;
-        }
-
         [HttpPost("import")]
-        public async Task<ToraMap> ImportAsync()
+        public async Task<ToraMap> Import()
         {
             var results = HttpContext.Request.ReadFormAsync().Result;
             var content = new ToraMap
@@ -98,7 +80,27 @@ namespace ReformaAgraria.Controllers
             }
         }
 
-        public string GetGeoJson(IFormFile file)
+        protected override IQueryable<ToraMap> ApplyQuery(IQueryable<ToraMap> query)
+        {
+            var type = GetQueryString<string>("type");
+            if (type != null)
+            {
+                if (type == "parent")
+                {
+                    var parentId = GetQueryString<string>("parentId").ToString().Trim().Replace("_", ".");
+
+
+                    if (!string.IsNullOrWhiteSpace(parentId))
+                    {
+                        query = query.Where(r => r.FkRegionId.Contains(parentId));
+                    }
+                }
+            }
+
+            return query;
+        }
+
+        private string GetGeoJson(IFormFile file)
         {
             GeoJSON.Net.Feature.FeatureCollection result = null;
             var tempFolderName = "reforma_agraria_tora_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + Guid.NewGuid().ToString("N");
@@ -189,7 +191,7 @@ namespace ReformaAgraria.Controllers
             }
         }
 
-        public string ValidateAndCreateFolder(string path)
+        private string ValidateAndCreateFolder(string path)
         {
             if (!Directory.Exists(path))
             {
@@ -198,7 +200,7 @@ namespace ReformaAgraria.Controllers
             return path;
         }
 
-        public void StreamCopy(string filePath, IFormFile file)
+        private void StreamCopy(string filePath, IFormFile file)
         {
             using (var stream = new FileStream(filePath, FileMode.Create))
             {

@@ -3,7 +3,7 @@ import { DataService } from '../services/data';
 
 @Component({
     selector: 'ra-agraria-issues-list-object-subject',
-    templateUrl: '../templates/agraria-issues-list-object-subject.html',
+    templateUrl: '../templates/agrariaIssuesListObjectSubject.html',
 })
 export class AgrariaIssuesListObjectSubjectComponent implements OnInit, OnDestroy {
 

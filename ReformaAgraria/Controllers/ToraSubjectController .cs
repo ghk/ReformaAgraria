@@ -16,7 +16,9 @@ using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
+    //[Authorize(Policy = "Bearer")]
     public class ToraSubjectController : CrudController<ToraSubject, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;

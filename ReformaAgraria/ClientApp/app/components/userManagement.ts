@@ -60,16 +60,16 @@ export class UserManagementComponent {
     getAllUser() {
         this.accountService.getAllUser()
             .subscribe(
-                data => {
-                    this.allUsers = data;
-                    this.loading = false;
-                    this.showPage = true;
-                },
-                error => {
-                    this.toastr.error(error, null);
-                    this.loading = false;
-                    this.showPage = true;
-                });
+            data => {
+                this.allUsers = data;
+                this.loading = false;
+                this.showPage = true;
+            },
+            error => {
+                this.toastr.error(error, null);
+                this.loading = false;
+                this.showPage = true;
+            });
     }
 
     delete(id: string, email: string) {
@@ -80,20 +80,20 @@ export class UserManagementComponent {
     deleteUser() {
         this.loadingDeleteUserModal = true;
         this.showDeleteUserModal = false;
-            this.accountService.deleteUser(this.id)
-                .subscribe(
-                data => {
-                    this.toastr.success('User ' + this.email + ' is successfully deleted.', null);
-                    this.showListUser();
-                    this.loadingDeleteUserModal = false;
-                    this.showDeleteUserModal = true;
-                    (<any>$('#modalDelete')).modal('hide');
-                },
-                error => {
-                    this.loadingDeleteUserModal = false;
-                    this.showDeleteUserModal = true;
-                    this.toastr.error(error, null);
-                });
+        this.accountService.deleteUser(this.id)
+            .subscribe(
+            data => {
+                this.toastr.success('User ' + this.email + ' is successfully deleted.', null);
+                this.showListUser();
+                this.loadingDeleteUserModal = false;
+                this.showDeleteUserModal = true;
+                (<any>$('#modalDelete')).modal('hide');
+            },
+            error => {
+                this.loadingDeleteUserModal = false;
+                this.showDeleteUserModal = true;
+                this.toastr.error(error, null);
+            });
     }
 
     update(id: string, email: string) {
@@ -109,9 +109,9 @@ export class UserManagementComponent {
             this.showListUser();
             this.loadingEditEmailModal = false;
             this.showEditEmailModal = true;
-                (<any>$('#modalEditEmail')).modal('hide');
-                this.toastr.success('User is successfully updated.', null);
-            },
+            (<any>$('#modalEditEmail')).modal('hide');
+            this.toastr.success('User is successfully updated.', null);
+        },
             error => {
                 this.loadingEditEmailModal = false;
                 this.showEditEmailModal = true;
@@ -156,7 +156,7 @@ export class UserManagementComponent {
                 this.toastr.error(error, null);
             });
     }
-    
+
     showListUser() {
         this.clearForm();
         this.getAllUser();

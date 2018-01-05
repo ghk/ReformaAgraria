@@ -6,7 +6,7 @@ import { SharedService } from '../services/shared';
 
 @Component({
     selector: 'ra-agraria-issues-header',
-    templateUrl: '../templates/agraria-issues-header.html',
+    templateUrl: '../templates/agrariaIssuesHeader.html',
 })
 export class AgrariaIssuesHeaderComponent implements OnInit, OnDestroy {
     toraSummary: any[];

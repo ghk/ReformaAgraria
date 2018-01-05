@@ -47,7 +47,7 @@ export class AccountService {
 
     sendPasswordRecoveryLink(user: User) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        return this.http.post('/api/account/sendpasswordrecoverylink', user, requestOptions)
+        return this.http.post('/api/account/password/recovery', user, requestOptions)
             .catch(this.handleError);
     }
 
@@ -58,7 +58,7 @@ export class AccountService {
         params.append('token', token);
         params.append('password', password);
         requestOptions.params = params;
-        return this.http.post('/api/account/resetpassword', params);
+        return this.http.post('/api/account/password/reset', params);
     }
 
     changePassword(id: string, newPassword: string) {
@@ -67,7 +67,7 @@ export class AccountService {
         params.append('id', id);
         params.append('newPassword', newPassword);
         requestOptions.params = params;
-        return this.http.post('/api/account/changepassword', params);
+        return this.http.post('/api/account/password/change', params);
     }
 
     getAllUser() {
@@ -104,7 +104,6 @@ export class AccountService {
                 var err = null;
                 if (body.message != undefined) {
                     err = body.message;
-                    //errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
                 }
                 else if (body.description != undefined) {
                     err = body.description;
