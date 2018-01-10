@@ -241,4 +241,7 @@ _Pvt_Extensions
 .fake/
 
 #test upload
-/wwwroot/baseLayer/*.*
+/wwwroot/baseLayer/*
+
+# exception to the rule
+!/wwwroot/baseLayer/.gitkeep 

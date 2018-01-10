@@ -243,7 +243,7 @@ export class MapComponent implements OnInit, OnDestroy {
         $("#delete-modal")['modal']("hide");
         let baselayerModel: BaseLayer = model;
 
-        this.baseLayerService.deleteById(model.id).subscribe(result => {
+        this.baseLayerService.deleteById(model.id.toString()).subscribe(result => {
             this.toastr.success("Penghapusan berhasil", null)
             this.removeLayer(model.id);
         })
@@ -325,8 +325,6 @@ export class MapComponent implements OnInit, OnDestroy {
     onResize = (e) => {
         let height = e.target.innerHeight - 85;
         $("#map").height(height);
-        if (this.map)
-            this.map.invalidateSize();
     }
 
 
