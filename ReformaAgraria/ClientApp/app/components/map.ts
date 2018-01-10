@@ -86,11 +86,7 @@ export class MapComponent implements OnInit, OnDestroy {
             </a>
             <a href="javascript:void(0)">
                 <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
-            </a>
-            <label class="switch">
-                <input type="checkbox" class="form-check-input form-control">
-                <span class="slider round"></span>
-            </label>           
+            </a>          
             `;
             let layer = this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
             this.layers.push({ id: result.id, layer: geojson });
@@ -247,7 +243,7 @@ export class MapComponent implements OnInit, OnDestroy {
         $("#delete-modal")['modal']("hide");
         let baselayerModel: BaseLayer = model;
 
-        this.baseLayerService.deleteById(model.id).subscribe(result => {
+        this.baseLayerService.deleteById(model.id.toString()).subscribe(result => {
             this.toastr.success("Penghapusan berhasil", null)
             this.removeLayer(model.id);
         })
@@ -329,8 +325,6 @@ export class MapComponent implements OnInit, OnDestroy {
     onResize = (e) => {
         let height = e.target.innerHeight - 85;
         $("#map").height(height);
-        if (this.map)
-            this.map.invalidateSize();
     }
 
 
