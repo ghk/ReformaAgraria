@@ -234,25 +234,45 @@ namespace ReformaAgraria.Controllers
         [HttpGet("summary/{id}")]
         public List<DashboardData> GetSummary(string id)
         {
+            var results = new List<DashboardData>();
             var region = dbContext.Set<Region>().First(r => r.Id == id);
-            var children = dbContext.Set<Region>().Where(r => r.FkParentId == id).OrderBy(x => x.Name).ToList();
+            var children = dbContext.Set<Region>()
+                .Where(r => r.FkParentId == id)
+                .OrderBy(x => x.Name)
+                .ToList();
 
-            var results = from objects in dbContext.Set<ToraObject>()
+            if (children.Count == 0)
+                children.Add(region);
+
+            var toraObjects = from objects in dbContext.Set<ToraObject>()
                           join desa in dbContext.Set<Region>() on objects.FkRegionId equals desa.Id
                           join kec in dbContext.Set<Region>() on desa.FkParentId equals kec.Id
                           join kab in dbContext.Set<Region>() on kec.FkParentId equals kab.Id
                           where objects.FkRegionId.StartsWith(id)
                           group objects by region.Type == RegionType.Kabupaten ? kec.Id : desa.Id into r
-                          select new DashboardData
-                          {
-                              Region = children.First(c => c.Id == r.Key),
-                              TotalSize = r.Sum(_ => _.Size),
-                              TotalToraObjects = r.Count()
-                          };
+                          select new { Data = r };
+            
+            foreach (var toraObject in toraObjects)
+            {
+                var toraObjectIds = toraObject.Data.Select(t => t.Id);
+                var totalToraSubjects = dbContext.Set<ToraSubject>()
+                        .Where(ts => toraObjectIds.Contains(ts.FkToraObjectId))
+                        .Count();
+
+                var dashboardData = new DashboardData
+                {
+                    Region = children.First(c => c.Id == toraObject.Data.Key),
+                    TotalSize = toraObject.Data.Sum(t => t.Size),
+                    TotalToraObjects = toraObject.Data.Count(),
+                    TotalToraSubjects = totalToraSubjects
+                };
+
+                results.Add(dashboardData);
+            }
 
             var finalResult = children
                 .Select(c => results.FirstOrDefault(g => g.Region.Id == c.Id)
-                    ?? new DashboardData { Region = c })
+                   ?? new DashboardData { Region = c })
                 .ToList();
 
             return finalResult;

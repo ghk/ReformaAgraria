@@ -93,7 +93,7 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     }
 
     getObjectList(id) {
-        let query = { data: { 'type': 'getAllById', 'id': id } }
+        let query = { data: { 'type': 'getAllByRegionId', 'regionId': id } }
         this.agrariaIssuesListService.getAllObject(query, null).subscribe(data => {
             this.objectList = data;
             this.loading = false;
@@ -102,7 +102,7 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     }
 
     getSubjectList(id) {
-        let query = { data: { 'type': 'getAllById', 'id': id } }
+        let query = { data: { 'type': 'getAllByRegionId', 'regionId': id } }
         this.agrariaIssuesListService.getAllSubject(query, null).subscribe(data => this.subjectList = data);
     }
 

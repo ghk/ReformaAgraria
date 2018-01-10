@@ -44,13 +44,11 @@ export class RegionComponent implements OnInit, OnDestroy {
     }
 
     getToraObjectSummary(region: Region) {
-        if (region.type < 4) {
-            this.agrariaIssuesListService.getToraObjectSummary(region.id).subscribe(data => {
-                this.regions = data;
-                this.sharedService.setToraSummary(data);
-                this.loading = false;
-            })
-        }
+        this.agrariaIssuesListService.getToraObjectSummary(region.id).subscribe(data => {
+            this.regions = data;
+            this.sharedService.setToraSummary(data);
+            this.loading = false;
+        })
     }
 
     sort(order: string) {

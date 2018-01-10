@@ -50,7 +50,6 @@
 
   <ItemGroup>
     <None Include="appsettings.json" />
-    <None Include="ProjNET.csproj" />
   </ItemGroup>
 
   <ItemGroup>
