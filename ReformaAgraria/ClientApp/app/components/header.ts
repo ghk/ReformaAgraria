@@ -2,9 +2,10 @@
 import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 
-import { AccountService } from '../services/account'; 
+import { AccountService } from '../services/account';
 import { SharedService } from '../services/shared';
 import { Region } from "../models/gen/region";
+import { RegionService } from '../services/gen/region';
 
 @Component({
     selector: 'ra-header',
@@ -16,12 +17,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
+        private regionService: RegionService,
         private accountService: AccountService,
         private sharedService: SharedService
     ) { }
 
     ngOnInit(): void {
-        this.subscription = this.sharedService.getRegion().subscribe(region => this.region = region);
+        this.subscription = this.sharedService.getRegion().subscribe(region => {
+            let depth = region.type - 2;
+            let breadcrumbQuery = { 
+                'data': {
+                    'type': 'breadcrumb',
+                    'depth': depth
+                }
+            };
+            
+            this.regionService.getById(region.id, breadcrumbQuery, null).subscribe(region => {
+                this.region = region;
+            })
+        });
     }
 
     ngOnDestroy(): void {
@@ -33,11 +47,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/account/login');
     }
 
-
     openNav() {
         document.getElementById("mySidenav").style.width = "250px";
     }
-    
+
     closeNav() {
         document.getElementById("mySidenav").style.width = "0";
     }

@@ -39,15 +39,7 @@ namespace ReformaAgraria.Controllers
             public int TotalToraObjects { get; set; }
             public int TotalToraSubjects { get; set; }
 
-        }
-
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteObject(int id)
-        {
-            Delete(id);
-
-            return Ok();
-        }
+        }       
 
         [HttpGet("export")]
         public string Export()
@@ -242,15 +234,14 @@ namespace ReformaAgraria.Controllers
         [HttpGet("summary/{id}")]
         public List<DashboardData> GetSummary(string id)
         {
-            var regionId = (id == null) ? null : id.Replace('_', '.');
-            var region = dbContext.Set<Region>().First(r => r.Id == regionId);
-            var children = dbContext.Set<Region>().Where(r => r.FkParentId == regionId).OrderBy(x => x.Name).ToList();
+            var region = dbContext.Set<Region>().First(r => r.Id == id);
+            var children = dbContext.Set<Region>().Where(r => r.FkParentId == id).OrderBy(x => x.Name).ToList();
 
             var results = from objects in dbContext.Set<ToraObject>()
                           join desa in dbContext.Set<Region>() on objects.FkRegionId equals desa.Id
                           join kec in dbContext.Set<Region>() on desa.FkParentId equals kec.Id
                           join kab in dbContext.Set<Region>() on kec.FkParentId equals kab.Id
-                          where objects.FkRegionId.StartsWith(regionId)
+                          where objects.FkRegionId.StartsWith(id)
                           group objects by region.Type == RegionType.Kabupaten ? kec.Id : desa.Id into r
                           select new DashboardData
                           {
@@ -271,10 +262,9 @@ namespace ReformaAgraria.Controllers
         {
             var type = GetQueryString<string>("type");
 
-            if (type == "getAllById")
+            if (type == "getAllByRegionId")
             {
-                var id = GetQueryString<string>("id");
-                var regionId = (id == null) ? null : id.Replace('_', '.');
+                var regionId = GetQueryString<string>("regionId");
                 query = query.Where(to => to.FkRegionId == regionId);
             }
             

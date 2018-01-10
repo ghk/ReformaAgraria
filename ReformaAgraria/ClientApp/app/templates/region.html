@@ -1,13 +1,12 @@
-﻿<div class="card w-100" *ngIf="showDiv">
+﻿<div class="card w-100">
     <div class="card-body">
-        <h4 class="card-title">Permasalahan Agraria di {{region}}</h4>
-                
+        <h4 class="card-title">Permasalahan Agraria di {{ region?.name }}</h4>                
         <div class="table-responsive pt-2">
             <table class="table table-sm" id="table-region">
                 <thead>
                     <tr>
                         <th (click)="sort('region.name')" style="cursor: pointer;">
-                            {{region}}
+                            {{ region?.name }}
                             <ng-container *ngIf="order.includes('region.name')">
                                 <span [hidden]="order.startsWith('-')">▲</span>
                                 <span [hidden]="!order.startsWith('-')">▼</span>
@@ -46,7 +45,7 @@
                             </td>
                         </tr>
                     </ng-container>
-                    <ng-container *ngIf="showPage">
+                    <ng-container *ngIf="!loading">
                         <tr *ngFor="let reg of regions | orderBy: order" >
                             <td class="text-left"><a [routerLink]="['/home', convertRegionId(reg.region.id)]" href="javascript:void(0)">{{reg.region.name}}</a></td>
                             <td class="table-data-padding text-right">{{reg.totalSize | number}} Ha</td>

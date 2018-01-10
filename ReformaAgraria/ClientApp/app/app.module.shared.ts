@@ -17,7 +17,6 @@ import { HeaderComponent } from './components/header';
 import { SidenavComponent } from './components/sidenav';
 import { DashboardComponent } from './components/dashboard';
 import { HomeComponent } from './components/home';
-import { BreadcrumbComponent } from './components/breadcrumb';
 import { EventComponent } from './components/event';
 import { VillageComponent } from './components/village';
 import { TeamComponent } from './components/team';
@@ -60,7 +59,6 @@ import './styles/app.scss';
         SidenavComponent,
         DashboardComponent,
         HomeComponent,
-        BreadcrumbComponent,
         EventComponent,
         VillageComponent,
         TeamComponent,
@@ -92,10 +90,9 @@ import './styles/app.scss';
         ColorPickerModule,
         NgPipesModule,
         RouterModule.forRoot([
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: '', redirectTo: 'home/72_1', pathMatch: 'full' },
             {
                 path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
-                    { path: 'home', component: HomeComponent },
                     { path: 'home/:id', component: HomeComponent },
                     { path: 'region', component: RegionComponent },
                     { path: 'region/:id', component: RegionComponent },

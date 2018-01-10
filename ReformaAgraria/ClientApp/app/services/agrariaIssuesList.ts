@@ -64,7 +64,7 @@ export class AgrariaIssuesListService {
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public deleteObject(id: number) {
+    public delete(id: number) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         return this.http.delete('/api/toraobject/delete/' + id, requestOptions);
     }

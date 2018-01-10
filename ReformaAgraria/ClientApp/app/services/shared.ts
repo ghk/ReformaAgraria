@@ -38,28 +38,12 @@ export class SharedService {
         this._region$.next(region);
     }
 
-    public getRegionId() {
-        return this._regionId$;
-    }
-
-    public setRegionId(id: string) {
-        this._regionId$.next(id);
-    }
-
     public getToraSummary() {
         return this._toraSummary$;
     }
 
     public setToraSummary(tora: any[]) {
         this._toraSummary$.next(tora);
-    }
-
-    public setIsAgrariaIssuesListReloaded(reloaded: boolean) {
-        this._isAgrariaIssuesListReloaded$.next(reloaded);
-    }
-
-    public getIsAgrariaIssuesListReloaded() {
-        return this._isAgrariaIssuesListReloaded$;
     }
 
     private handleError(error: Response | any) {

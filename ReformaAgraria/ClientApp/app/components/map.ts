@@ -86,11 +86,7 @@ export class MapComponent implements OnInit, OnDestroy {
             </a>
             <a href="javascript:void(0)">
                 <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
-            </a>
-            <label class="switch">
-                <input type="checkbox" class="form-check-input form-control">
-                <span class="slider round"></span>
-            </label>           
+            </a>                     
             `;
             let layer = this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
             this.layers.push({ id: result.id, layer: geojson });

@@ -13,21 +13,23 @@ import { EducationalAttainment } from '../models/gen/educationalAttainment';
 import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
 import { DecimalPipe } from '@angular/common';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'ra-agraria-issues-list',
     templateUrl: '../templates/agrariaIssuesList.html',
 })
 export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
-    objectList: any = [];
-    subjectList: any = [];
+    subscription: Subscription;
+
     LandStatus = LandStatus;
     EducationalAttainment = EducationalAttainment;
     MaritalStatus = MaritalStatus;
     Gender = Gender;
     RegionalStatus = RegionalStatus;
-    regionId = "";
-    reloaded: boolean = false;
+
+    objectList: any = [];
+    subjectList: any = [];
     loading: boolean = false;
     showPage: boolean = true;
     loadingUploadModal: boolean = false;
@@ -37,8 +39,10 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     prevColumn: string = "";
     objectId: number = 0;
 
+    region: any;
+
     constructor(
-        private agrariaIssuesList: AgrariaIssuesListService,
+        private agrariaIssuesListService: AgrariaIssuesListService,
         private cookieService: CookieService,
         private alertService: AlertService,
         private sharedService: SharedService,
@@ -48,41 +52,38 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loading = true;
         this.showPage = false;
-        this.sharedService.getRegionId().subscribe(id => this.regionId = id);
-        this.sharedService.getIsAgrariaIssuesListReloaded().subscribe(reloaded => {
-            this.reloaded = reloaded;
-            this.sharedService.getRegionId().subscribe(id => {
-                this.getObjectList(id);
-            });
+        this.subscription = this.sharedService.getRegion().subscribe(region => {
+            this.region = region;
+            this.getObjectList(region.id);
         });
     }
 
     ngOnDestroy(): void {
-
+        this.subscription.unsubscribe();
     }
 
     onToggle(id) {
         (<any>$("tr")).find('.collapse.show').collapse('hide');
-         let img = $("#" + id + " img");
-         if(img.hasClass("spin-icon")){
-             img.removeClass("spin-icon");
-             img.addClass("back-spin");
-         } else {
-             img.removeClass("back-spin");
-             img.addClass("spin-icon");
-         }
-     }
+        let img = $("#" + id + " img");
+        if (img.hasClass("spin-icon")) {
+            img.removeClass("spin-icon");
+            img.addClass("back-spin");
+        } else {
+            img.removeClass("back-spin");
+            img.addClass("spin-icon");
+        }
+    }
 
-     uploadFile(event) {
-         this.loadingUploadModal = true;
-         this.showUploadModal = false;
-        this.agrariaIssuesList.import(event, this.regionId)
+    uploadFile(event) {
+        this.loadingUploadModal = true;
+        this.showUploadModal = false;
+        this.agrariaIssuesListService.import(event, this.region.id)
             .subscribe(
             data => {
                 this.loadingUploadModal = false;
                 this.showUploadModal = true;
                 this.toastr.success('File is successfully uploaded', null)
-                this.getObjectList(this.regionId);
+                this.getObjectList(this.region.id);
             },
             error => {
                 this.loadingUploadModal = false;
@@ -90,10 +91,10 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
                 this.toastr.error('Unable to upload the file', null)
             });
     }
-    
+
     getObjectList(id) {
         let query = { data: { 'type': 'getAllById', 'id': id } }
-        this.agrariaIssuesList.getAllObject(query, null).subscribe(data => {
+        this.agrariaIssuesListService.getAllObject(query, null).subscribe(data => {
             this.objectList = data;
             this.loading = false;
             this.showPage = true;
@@ -102,7 +103,7 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
 
     getSubjectList(id) {
         let query = { data: { 'type': 'getAllById', 'id': id } }
-        this.agrariaIssuesList.getAllSubject(query, null).subscribe(data => this.subjectList = data);
+        this.agrariaIssuesListService.getAllSubject(query, null).subscribe(data => this.subjectList = data);
     }
 
     delete(id) {
@@ -110,11 +111,11 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     }
 
     deleteObject() {
-        this.agrariaIssuesList.deleteObject(this.objectId)
+        this.agrariaIssuesListService.delete(this.objectId)
             .subscribe(
             data => {
                 this.toastr.success('Data is successfully deleted.', null);
-                this.getObjectList(this.regionId);
+                this.getObjectList(this.region.id);
                 (<any>$('#exampleModal1')).modal('hide');
             },
             error => {

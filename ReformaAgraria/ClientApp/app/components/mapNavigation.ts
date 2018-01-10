@@ -58,8 +58,6 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     tora = [];
     subscription: Subscription;
 
-    
-
     constructor(private mapNavigationService: MapNavigationService,
         private toastr: ToastrService,
         private sharedService: SharedService,
@@ -74,9 +72,9 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
             zoomControl: false,
             layers: [LAYERS["OpenStreetMap"]]
         };
-        this.subscription = this.sharedService.getRegionId().subscribe(id => {
-            console.log(id);
-            let query = { data: { 'type': 'parent', 'parentId': id } }
+        this.subscription = this.sharedService.getRegion().subscribe(region => {
+            this.region = region;
+            let query = { data: { 'type': 'parent', 'parentId': region.id } }
             this.toraMapService.getAll(query, null).subscribe(data => {
                 this.applyOverlay(data);
             });     
@@ -140,7 +138,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
 
     getToraMapList() {
         this.tora = [];
-        let query = { data: { 'type': 'parent', 'parentId': this.sharedService.getRegionId() } }
+        let query = { data: { 'type': 'parent', 'parentId': this.region.id } }
         this.toraMapService.getAll(query, null).subscribe(data => {
             data.forEach(result => { this.tora.push(`${result.name}`) })
         });     

@@ -3,12 +3,14 @@ import { RequestHelper } from "../helpers/request";
 import { Http, Headers, Response, URLSearchParams } from '@angular/http';
 import { CookieService } from 'ngx-cookie-service';
 import { SharedService } from '../services/shared';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'ra-agraria-issues-header',
     templateUrl: '../templates/agrariaIssuesHeader.html',
 })
 export class AgrariaIssuesHeaderComponent implements OnInit, OnDestroy {
+    subscription: Subscription;
     toraSummary: any[];
     totalObjects: number;
     totalSubjects: number;
@@ -20,7 +22,7 @@ export class AgrariaIssuesHeaderComponent implements OnInit, OnDestroy {
         private sharedService: SharedService) { }
 
     ngOnInit(): void {
-        this.sharedService.getToraSummary().subscribe(data => {
+        this.subscription = this.sharedService.getToraSummary().subscribe(data => {
             this.toraSummary = data;
             this.totalObjects = 0;
             this.totalSize = 0;
@@ -30,11 +32,11 @@ export class AgrariaIssuesHeaderComponent implements OnInit, OnDestroy {
                 this.totalSubjects += this.toraSummary[i].totalToraSubjects;
                 this.totalSize += this.toraSummary[i].totalSize;
             }
-        })
+        });
     }
 
     ngOnDestroy(): void {
-
+        this.subscription.unsubscribe();
     }
 
     import() {
