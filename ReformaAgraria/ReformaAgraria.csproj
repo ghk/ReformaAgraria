@@ -124,6 +124,12 @@
     <None Update="ClientApp\app\models\gen\regionalStatus.ts">
       <CustomToolNamespace>Models\RegionalStatus.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\searchType.ts">
+      <CustomToolNamespace>Models\SearchType.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\searchViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\SearchViewModel.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\tipologyOfAgrarianProblem.ts">
       <CustomToolNamespace>Models\TipologyOfAgrarianProblem.cs</CustomToolNamespace>
     </None>

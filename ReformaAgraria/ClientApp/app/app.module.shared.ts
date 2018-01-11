@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { ColorPickerModule } from 'angular4-color-picker';
 import { NgPipesModule } from 'ngx-pipes';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 
 import { AppComponent } from './components/app';
@@ -47,6 +48,7 @@ import { MapNavigationService } from './services/mapNavigation';
 import { BaseLayerService } from './services/gen/baseLayer';
 import { MapService } from './services/map';
 import { ToraMapService } from './services/gen/toraMap';
+import { SearchService } from './services/search';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
@@ -93,6 +95,7 @@ import './styles/app.scss';
         ToastrModule.forRoot(),
         ColorPickerModule,
         NgPipesModule,
+        TypeaheadModule.forRoot(),
         TabsModule.forRoot(),
         RouterModule.forRoot([
             { path: '', redirectTo: 'home/72_1', pathMatch: 'full' },
@@ -128,7 +131,8 @@ import './styles/app.scss';
         MapNavigationService,
         BaseLayerService,
         MapService,
-        ToraMapService
+        ToraMapService,
+        SearchService
     ]
 })
 export class AppModuleShared {
