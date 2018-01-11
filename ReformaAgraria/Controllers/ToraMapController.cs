@@ -41,7 +41,8 @@ namespace ReformaAgraria.Controllers
             var content = new ToraMap
             {
                 FkRegionId = results["regionId"],
-                Name = results["name"]
+                FkToraObjectId = int.Parse(results["toraObjectId"]),
+                Name = results["toraObjectName"]
             };
 
             var file = results.Files[0];

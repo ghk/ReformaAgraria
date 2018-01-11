@@ -44,6 +44,8 @@ import { MapNavigationService } from './services/mapNavigation';
 import { BaseLayerService } from './services/gen/baseLayer';
 import { MapService } from './services/map';
 import { ToraMapService } from './services/gen/toraMap';
+import { ToraObjectService } from './services/gen/toraObject';
+
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
@@ -121,7 +123,8 @@ import './styles/app.scss';
         MapNavigationService,
         BaseLayerService,
         MapService,
-        ToraMapService
+        ToraMapService,
+        ToraObjectService
     ]
 })
 export class AppModuleShared {

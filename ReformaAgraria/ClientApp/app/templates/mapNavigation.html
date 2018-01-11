@@ -47,8 +47,14 @@
                                     </div>
                                 </div>
                                 <div class="row" style="padding-top:10px; padding-bottom:10px">
-                                    <div class="col-md-6">
+                                    <!--<div class="col-md-6">
                                         <input id="label" class="form-control" type="text" [(ngModel)]="model.name" name="name" placeholder="Nama">
+                                    </div>-->
+                                    <div class="col-md-6">
+                                        <select class="form-control" [disabled]="desaUpload == 'desa'" (change)="onChangeUpload($event.target.value, 'tora', $event.target.options[$event.target.selectedIndex].getAttribute('fkToraObjectId'))">
+                                            <option value="tora">OBJEK TORA</option>
+                                            <option *ngFor="let t of toU" value="{{t.name}}" [attr.fkToraObjectId]="t.id">{{t.name}}</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-6">
                                         <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event)" name="file" [disabled]="desaUpload == 'desa'">
