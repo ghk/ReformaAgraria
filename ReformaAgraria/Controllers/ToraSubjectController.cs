@@ -257,6 +257,12 @@ namespace ReformaAgraria.Controllers
                 query = query.Where(ts => ts.FkToraObjectId == regionId);
             }
 
+            if (type == "getAllByToraObjectId")
+            {
+                var toraObjectId = GetQueryString<int>("toraObjectId");
+                query = query.Where(ts => ts.FkToraObjectId == toraObjectId);
+            }
+
             return query;
         }
     }

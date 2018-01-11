@@ -3,10 +3,10 @@ import { SharedService } from '../services/shared';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-    selector: 'ra-agraria-issues-header',
-    templateUrl: '../templates/agrariaIssuesHeader.html',
+    selector: 'ra-tora-header',
+    templateUrl: '../templates/toraHeader.html',
 })
-export class AgrariaIssuesHeaderComponent implements OnInit, OnDestroy {
+export class ToraHeaderComponent implements OnInit, OnDestroy {
     subscription: Subscription;
     toraSummary: any[];
     totalObjects: number;
