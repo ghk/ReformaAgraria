@@ -33,8 +33,8 @@ export class MapNavigationService {
             let requestOptions = new RequestOptions({ headers: headers });
 
             headers.append('Accept', 'application/json');
-            formData.append('name', model.name);
-            formData.append('regionName', model.regionName);
+            formData.append('toraObjectId', model.toraObjectId);
+            formData.append('toraObjectName', model.toraObjectName);
             formData.append('regionId', model.regionId);
             formData.append('uploadFile', file, file.name);
 

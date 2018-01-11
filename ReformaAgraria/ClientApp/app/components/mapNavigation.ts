@@ -3,11 +3,13 @@ import { MapNavigationService } from '../services/mapNavigation';
 import { RegionType } from '../models/gen/regionType';
 import { RegionService } from '../services/gen/region';
 import { ToraMapService } from '../services/gen/toraMap';
+import { ToraObjectService } from '../services/gen/toraObject';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from '../services/shared';
 import { Region } from "../models/gen/region";
 import MapUtils from '../helpers/mapUtils';
 import { ToraMap } from '../models/gen/toraMap';
+import { ToraObject } from '../models/gen/toraObject';
 import { Subscription } from 'rxjs';
 
 import * as L from 'leaflet';
@@ -48,21 +50,33 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     leafletHeight: any;
     kecUpload: string = 'kecamatan';
     desaUpload: string = 'desa';
+    toraUpload: string = 'objek tora';
     kecDownload: string = 'kecamatan';
     desaDownload: string = 'desa';
+    toraDownload: string = 'objek tora';
     kecamatanU: any[] = [];
     desaU: any[] = [];
+    toU: any[] = [];
     kecamatanD: any[] = [];
     desaD: any[] = [];
+    toD: any[] = [];
     ToraMap: ToraMap;
     tora = [];
+    ToraObject: ToraObject;
     subscription: Subscription;
+    regionSubscription: Subscription;
+    toraSubscription: Subscription;
+    kabupaten: string;
+    kecamatan: string;
+    desa: string;
+
 
     constructor(private mapNavigationService: MapNavigationService,
         private toastr: ToastrService,
         private sharedService: SharedService,
         private regionService: RegionService,
-        private toraMapService: ToraMapService) { }
+        private toraMapService: ToraMapService,
+        private toraObjectService: ToraObjectService) { }
 
     ngOnInit(): void {
         this.getRegion(3, '72.1', "all");
@@ -84,34 +98,35 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.map.remove();
         this.subscription.unsubscribe();
+        this.regionSubscription.unsubscribe();
+        this.toraSubscription.unsubscribe();
     }
 
     onChangeUpload(value, region, parentId) {
-        console.log(value);
-        console.log(parentId);
-        console.log(region);
         if (region == 'kecamatan') {
             this.kecUpload = value;
-            console.log(this.kecUpload);
             this.desaUpload = 'desa';
             if (value != 'kecamatan') {
                 this.getRegion(4, parentId, "upload");
             }
         }
-        else {
+        else if (region == 'desa') {
             this.desaUpload = value;
             this.model.regionId = parentId;
-            this.model.regionName = value;
+            if (value != 'desa') {
+                this.getToraObjectList(parentId);
+            }
+        }
+        else {
+            this.toraUpload = value;
+            this.model.toraObjectName = value;
+            this.model.toraObjectId = parentId;
         }
     }
     
     onChangeDownload(value, region, parentId) {
-        console.log(value);
-        console.log(parentId);
-        console.log(region);
         if (region == 'kecamatan') {
             this.kecDownload = value;
-            console.log(this.kecDownload);
             this.desaDownload = 'desa';
             if (value != 'kecamatan') {
                 this.getRegion(4, parentId, "download");
@@ -142,6 +157,14 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         this.toraMapService.getAll(query, null).subscribe(data => {
             data.forEach(result => { this.tora.push(`${result.name}`) })
         });     
+    }
+
+    getToraObjectList(regionId) {
+        this.tora = [];
+        let query = { data: { 'type': 'getAllByRegionId', 'regionId': regionId } }
+        this.toraObjectService.getAll(query, null).subscribe(data => {
+            this.toU = data;
+        });
     }
 
     setLayer(name): void {
@@ -245,7 +268,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         });
     }
 
-    getGeoJson(geoJson, currentColor): any {
+    getGeoJson(data, currentColor, tora): any {
         let geoJsonOptions = {
             style: (feature) => {
                 let color = "#000";
@@ -264,37 +287,59 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
                 });
             },
             onEachFeature: (feature, layer: L.FeatureGroup) => {
-                let center = null;
+                this.regionSubscription = this.regionService.getById(tora.fkRegionId, null, null).subscribe(desa =>
+                {
+                    this.desa = desa.name;
+                    this.regionService.getById(desa.fkParentId, null, null).subscribe(kec =>
+                    {   
+                        this.kecamatan = kec.name;
+                        this.regionService.getById(kec.fkParentId, null, null).subscribe(kab =>
+                        {
+                            this.kabupaten = kab.name;
+                            layer.bindPopup('<table class=\'table table-sm\'><thead><tr><th colspan=3 style=\'text-align:center\'>' + data.name + '</th></tr></thead>' +
+                                '<tbody><tr><td>Kabupaten</td><td>:</td><td>' + this.kabupaten + '</td></tr>' +
+                                '<tr><td>Kecamatan</td><td>:</td><td>' + this.kecamatan + '</td></tr>' +
+                                '<tr><td>Desa</td><td>:</td><td>' + this.desa + '</td></tr>' +
+                                '<tr><td>Luas</td><td>:</td><td>' + tora.size + ' ha</td></tr>' +
+                                '<tr><td>Jumlah Penduduk</td><td>:</td><td>' + tora.totalTenants + '</td></tr></tbody></table>');
 
-                if (layer.feature['geometry'].type === 'Point') {
-                    center = layer.feature['geometry'].coordinates;
-                }
-                else {
-                    let bounds = layer.getBounds();
-                    center = bounds.getCenter();
-                }
+                            layer.on('click', function (e) {
+                            });
 
-                let element = null;
+                            let center = null;
 
-                if (!element)
-                    return;
+                            if (layer.feature['geometry'].type === 'Point') {
+                                center = layer.feature['geometry'].coordinates;
+                            }
+                            else {
+                                let bounds = layer.getBounds();
+                                center = bounds.getCenter();
+                            }
 
-                if (feature.properties['icon']) {
-                    let icon = L.icon({
-                        iconUrl: 'assets/markers/' + feature.properties['icon'],
-                        iconSize: [15, 15],
-                        shadowSize: [50, 64],
-                        iconAnchor: [22, 24],
-                        shadowAnchor: [4, 62],
-                        popupAnchor: [-3, -76]
-                    });
+                            let element = null;
 
-                    let marker = L.marker(center, { icon: icon }).addTo(this.map);
-                    this.addMarker(marker);
-                }
+                            if (!element)
+                                return;
+
+                            if (feature.properties['icon']) {
+                                let icon = L.icon({
+                                    iconUrl: 'assets/markers/' + feature.properties['icon'],
+                                    iconSize: [15, 15],
+                                    shadowSize: [50, 64],
+                                    iconAnchor: [22, 24],
+                                    shadowAnchor: [4, 62],
+                                    popupAnchor: [-3, -76]
+                                });
+
+                                let marker = L.marker(center, { icon: icon }).addTo(this.map);
+                                this.addMarker(marker);
+                            }
+                        });
+                    })
+                })
             }
         };
-        return MapUtils.setGeoJsonLayer(geoJson, geoJsonOptions);
+        return MapUtils.setGeoJsonLayer(JSON.parse(data.geojson), geoJsonOptions);
     } 
 
     addMarker(marker): void {
@@ -307,16 +352,19 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
             return
         }
         data.forEach(result => {
-            let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
-            let innerHtml = `<a href="javascript:void(0)">
+            this.toraSubscription = this.toraObjectService.getById(result.fkToraObjectId).subscribe(tora =>
+            {
+                let geojson = this.getGeoJson(result, '#FF0000', tora);
+                let innerHtml = `<a href="javascript:void(0)">
                                     <span class="oi oi-x overlay-action" id="delete" style="float:right;" data-value="${result.id}"></span>
                                     </a>
                                     `;
-            let layer = this.overlays.addOverlay(geojson, `${result.name} ${innerHtml}`);
-            this.tora = [];
-            this.tora.push(`${result.name}`);
-            this.layers.push({ id: result.id, layer: geojson });
-            this.initialData.push(result);
+                let layer = this.overlays.addOverlay(geojson, `${result.name} ${innerHtml}`);
+                this.tora = [];
+                this.tora.push(`${result.name}`);
+                this.layers.push({ id: result.id, layer: geojson });
+                this.initialData.push(result);
+            })
         });
         this.isOverlayAdded = true;
         $("input.leaflet-control-layers-selector:checkbox").click();
