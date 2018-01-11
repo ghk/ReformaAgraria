@@ -32,7 +32,6 @@ import { ResetPasswordComponent } from './components/resetPassword';
 import { UserManagementComponent } from './components/userManagement';
 import { RegionComponent } from './components/region';
 import { MapComponent } from './components/map';
-//import { LoaderComponent } from './components/loader';
 
 import { CookieService } from 'ngx-cookie-service';
 import { SharedService } from './services/shared';

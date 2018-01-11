@@ -430,13 +430,13 @@
                         <ng-container *ngFor="let object of objectList">
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)"><a href="#">{{object.name}}</a></td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.totalTenants}}</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{object.size | number}}</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">{{LandStatus[object.landStatus]}}</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable text-success" (click)="onToggle('toggle-' + object.id)">{{object.proposedTreatment}}</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">Image</td>
-                                <td data-toggle="collapse" [attr.data-target]="'#accordion-' + object.id" class="clickable" (click)="onToggle('toggle-' + object.id)">Penetapan</td>
+                                <td><a routerLink="/toraList/{{object.fk_region_id}}">{{object.name}}</a></td>
+                                <td>{{object.totalTenants}}</td>
+                                <td>{{object.size | number}}</td>
+                                <td>{{LandStatus[object.landStatus]}}</td>
+                                <td>{{object.proposedTreatment}}</td>
+                                <td>Image</td>
+                                <td>Penetapan</td>
                                 <td data-toggle="tooltip" data-placement="top" title="edit">
                                     <div class="dropdown">
                                         <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuEdit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -453,182 +453,7 @@
                             </tr>
                             <tr>
                                 <td colspan="12">
-                                    <div id="{{ 'accordion-' + object.id }}" class="collapse">
-                                        <ul class="nav nav-tabs my-3 navObjekSUbjek" id="objekSubjekTab" role="tablist">
-                                            <li class="nav-item">
-                                                <a class="nav-link active" id="dataObjekTab" data-toggle="tab" [attr.href]="'#dataObjek-' + object.id" role="tab" aria-controls="dataObjek" aria-selected="true">Data objek</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="dataSubjekTab" data-toggle="tab" [attr.href]="'#dataSubjek-' + object.id" role="tab" aria-controls="dataSubjek" aria-selected="false" (click)="getSubjectList(object.id)">Data subjek</a>
-                                            </li>
-                                        </ul>
-
-                                        <div class="tab-content" id="subjekObjekTabContent">
-                                            <div class="tab-pane fade show active" id="{{'dataObjek-' + object.id}}" role="tabpanel" aria-labelledby="dataObjek">
-
-                                                <table width="800" class="table table-bordered table-responsive bg-light my-3 table-object">
-                                                    <caption><button type="button" class="btn btn-primary" title="Print"><span class="oi oi-print" style="margin-right: 10px;"></span>Print</button></caption>
-
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">No</th>
-                                                            <th scope="col" colspan="4">Informasi Umum</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td scope="row" colspan="1">Nama Lokasi</td>
-                                                            <td colspan="2">{{object.name}}</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">2</th>
-                                                            <td>Desa</td>
-                                                            <td colspan="2">Desa</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">3</th>
-                                                            <td>Kecamatan</td>
-                                                            <td colspan="2">Kecamatan</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">4</th>
-                                                            <td>Kabupaten/Provinsi</td>
-                                                            <td colspan="2">Kabupaten/Provinsi</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">5</th>
-                                                            <td>Luas Wilayah Objek</td>
-                                                            <td colspan="2">{{object.size}}</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">6</th>
-                                                            <td>Jumlah Penggarap</td>
-                                                            <td colspan="2">{{object.totalTenants}}</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">7</th>
-                                                            <td>Status Kawasan</td>
-                                                            <td colspan="2">{{RegionalStatus[object.regionalStatus]}}</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">8</th>
-                                                            <td>Klasifikasi bentang Lahan</td>
-                                                            <td colspan="2">{{object.landType}}</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">9</th>
-                                                            <td>Tipe Penggunaan Lahan</td>
-                                                            <td colspan="2">{{object.livelihood}}</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">10</th>
-                                                            <td>Usulan Skema</td>
-                                                            <td colspan="2">{{object.proposedTreatment}}</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">11</th>
-                                                            <td>Tahapan</td>
-                                                            <td colspan="2">Tahapan</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="col">No</th>
-                                                            <th scope="col" colspan="4">Data Pendukung</th>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>Status Tanah</td>
-                                                            <td colspan="2">{{LandStatus[object.landStatus]}}</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">2</th>
-                                                            <td>Sejarah Penguasaan Tanah</td>
-                                                            <td colspan="2">{{object.landTenureHistory}}</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row">3</th>
-                                                            <td>Kronologi Konflik</td>
-                                                            <td colspan="2">{{object.conflictChronology}}</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row" rowspan="4">4</th>
-                                                            <td rowspan="4">Progres Langkah Advokasi</td>
-                                                            <td rowspan="2">Jalur Formal: </td>
-                                                            <td rowspan="2">{{object.formalAdvocacyProgress}}</td>
-                                                        </tr>
-
-                                                        <tr></tr>
-
-                                                        <tr>
-                                                            <td rowspan="2">Non Formal: </td>
-                                                            <td rowspan="2">{{object.nonFormalAdvocacyProgress}}</td>
-                                                        </tr>
-
-                                                        <tr></tr>
-
-                                                        <tr>
-                                                            <th scope="row">3</th>
-                                                            <td>Koordinat peta</td>
-                                                            <td colspan="2">isi koordinat peta</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                            </div>
-                                            <div class="tab-pane fade" id="{{'dataSubjek-' + object.id}}" role="tabpanel" aria-labelledby="dataSubjek">
-                                                <table class="table table-bordered table-striped table-sm table-subject">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">#</th>
-                                                            <th scope="col">Nama</th>
-                                                            <th scope="col">Status pernikahan</th>
-                                                            <th scope="col">Alamat</th>
-                                                            <th scope="col">Jenis kelamin</th>
-                                                            <th scope="col">Umur</th>
-                                                            <th scope="col">Pendidikan</th>
-                                                            <th scope="col">Jumlah keluarga</th>
-                                                            <th scope="col">Status tanah</th>
-                                                            <th scope="col">Lokasi lahan garapan</th>
-                                                            <th scope="col">Luas (ha)</th>
-                                                            <th scope="col">Jenis tanaman</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody *ngFor="let subject of subjectList; let i = index">
-                                                        <tr>
-                                                            <th scope="row">{{i + 1}}</th>
-                                                            <td>{{subject.name}}</td>
-                                                            <td>{{MaritalStatus[subject.maritalStatus]}}</td>
-                                                            <td>{{subject.address}}</td>
-                                                            <td>{{Gender[subject.gender]}}</td>
-                                                            <td>{{subject.age}}</td>
-                                                            <td>{{EducationalAttainment[subject.educationalAttainment]}}</td>
-                                                            <td>{{subject.totalFamilyMembers}}</td>
-                                                            <td>{{LandStatus[subject.landStatus]}}</td>
-                                                            <td>{{subject.landLocation}}</td>
-                                                            <td>{{subject.size | number}}</td>
-                                                            <td>{{subject.plantTypes}}</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     
                                 </td>
                             </tr>

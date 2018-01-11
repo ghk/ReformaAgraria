@@ -34,6 +34,7 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
     showPage: boolean = true;
     loadingUploadModal: boolean = false;
     showUploadModal: boolean = true;
+    order: string = "region.name";
     orderBy: string = "region.name";
     isDesc: boolean = false;
     prevColumn: string = "";
@@ -121,6 +122,17 @@ export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
             error => {
                 this.toastr.error(error, null);
             });
+    }
+
+    sort(order: string) {
+        if (this.order.includes(order)) {
+            if (this.order.startsWith('-'))
+                this.order = this.order.substr(1);
+            else
+                this.order = '-' + this.order;
+        } else {
+            this.order = order;
+        }
     }
 
     sorted(sortedBy: string) {

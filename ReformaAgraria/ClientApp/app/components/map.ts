@@ -9,7 +9,6 @@ import MapUtils from '../helpers/mapUtils';
 import * as L from 'leaflet';
 import * as $ from 'jquery';
 
-
 const DATA_SOURCES = 'data';
 const LAYERS = {
     "OpenStreetMap": new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
@@ -78,6 +77,7 @@ export class MapComponent implements OnInit, OnDestroy {
         if (data.length && data.length == 0) {
             return
         }
+
         data.forEach(result => {
             let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
             let innerHtml = `

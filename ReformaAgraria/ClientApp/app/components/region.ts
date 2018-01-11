@@ -13,17 +13,10 @@ import { Region } from '../models/gen/region';
     templateUrl: '../templates/region.html'
 })
 export class RegionComponent implements OnInit, OnDestroy {
-    regions: any = [];
-    region: Region;
-
-    id: string;
-    parentId: string;
-    model: any = {};
-    breadcrumbs: any = [];
-    loading: boolean = true;
-    isDesc: boolean = false;
-    prevColumn: string = "";
     subscription: Subscription;
+    summaries: any = [];
+    region: Region;
+    loading: boolean = true;    
     order: string = "region.name";
 
     constructor(
@@ -45,7 +38,7 @@ export class RegionComponent implements OnInit, OnDestroy {
 
     getToraObjectSummary(region: Region) {
         this.agrariaIssuesListService.getToraObjectSummary(region.id).subscribe(data => {
-            this.regions = data;
+            this.summaries = data;
             this.sharedService.setToraSummary(data);
             this.loading = false;
         })
