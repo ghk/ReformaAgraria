@@ -23,15 +23,15 @@ import { VillageComponent } from './components/village';
 import { TeamComponent } from './components/team';
 import { VillageBorderComponent } from './components/village-border';
 import { MapNavigationComponent } from './components/mapNavigation';
-import { AgrariaIssuesHeaderComponent } from './components/agrariaIssuesHeader';
-import { AgrariaIssuesListComponent } from './components/agrariaIssuesList';
+import { ToraHeaderComponent } from './components/toraHeader';
+import { ToraSummaryComponent } from './components/toraSummary';
+import { ToraListComponent } from './components/toraList';
 import { ToraDetailComponent } from './components/toraDetail';
 import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
 import { ForgotPasswordComponent } from './components/forgotPassword';
 import { ResetPasswordComponent } from './components/resetPassword';
 import { UserManagementComponent } from './components/userManagement';
-import { RegionComponent } from './components/region';
 import { MapComponent } from './components/map';
 
 import { CookieService } from 'ngx-cookie-service';
@@ -50,6 +50,7 @@ import { ToraMapService } from './services/gen/toraMap';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
+import { TranslatePipe } from './pipes/translate';
 
 import 'bootstrap';
 import './styles/app.scss';
@@ -65,8 +66,9 @@ import './styles/app.scss';
         VillageComponent,
         TeamComponent,
         VillageBorderComponent,
-        AgrariaIssuesHeaderComponent,
-        AgrariaIssuesListComponent,
+        ToraHeaderComponent,
+        ToraSummaryComponent,
+        ToraListComponent,
         ToraDetailComponent,
         MapComponent,
         AlertComponent,
@@ -75,9 +77,9 @@ import './styles/app.scss';
         ForgotPasswordComponent,
         ResetPasswordComponent,
         UserManagementComponent,
-        RegionComponent,
         RegionBreadcrumbPipe,
-        EnumPipe      
+        EnumPipe,
+        TranslatePipe
     ],
     imports: [
         LeafletModule,

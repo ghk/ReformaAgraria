@@ -9,10 +9,10 @@ import { Subscription } from 'rxjs';
 import { Region } from '../models/gen/region';
 
 @Component({
-    selector: 'ra-region',
-    templateUrl: '../templates/region.html'
+    selector: 'ra-tora-summary',
+    templateUrl: '../templates/toraSummary.html'
 })
-export class RegionComponent implements OnInit, OnDestroy {
+export class ToraSummaryComponent implements OnInit, OnDestroy {
     subscription: Subscription;
     summaries: any = [];
     region: Region;

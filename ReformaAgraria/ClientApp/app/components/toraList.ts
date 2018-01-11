@@ -13,10 +13,10 @@ import * as $ from 'jquery';
 import { ToraObjectService } from '../services/gen/toraObject';
 
 @Component({
-    selector: 'ra-agraria-issues-list',
-    templateUrl: '../templates/agrariaIssuesList.html',
+    selector: 'ra-tora-list',
+    templateUrl: '../templates/toraList.html',
 })
-export class AgrariaIssuesListComponent implements OnInit, OnDestroy {
+export class ToraListComponent implements OnInit, OnDestroy {
     subscription: Subscription;
 
     LandStatus = LandStatus;
