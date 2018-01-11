@@ -6,6 +6,9 @@ import { AccountService } from '../services/account';
 import { SharedService } from '../services/shared';
 import { Region } from "../models/gen/region";
 import { RegionService } from '../services/gen/region';
+import { Observable } from 'rxjs/Observable';
+import { SearchService } from '../services/search';
+import { SearchViewModel } from '../models/gen/searchViewModel';
 
 @Component({
     selector: 'ra-header',
@@ -13,12 +16,15 @@ import { RegionService } from '../services/gen/region';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
     region: Region;
+    selected: any;
+    dataSource: any;
     subscription: Subscription;
 
     constructor(
         private router: Router,
         private regionService: RegionService,
         private accountService: AccountService,
+        private searchService: SearchService,
         private sharedService: SharedService
     ) { }
 
@@ -36,10 +42,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.region = region;
             })
         });
+
+        this.dataSource = Observable.create((observer: any) => {
+            observer.next(this.selected);
+        }).mergeMap((keywords: string) => this.searchService.search(keywords));
     }
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    onSearchSelected(model: any) {
+        let svm: SearchViewModel = model.item;
+        if (svm.type === 3)        
+            this.router.navigateByUrl('toradetail/' + svm.value);
+        else {
+            let regionId = svm.value.replace(/\./g, '_');
+            this.router.navigateByUrl('home/' + regionId);
+        }
     }
 
     logout(): void {

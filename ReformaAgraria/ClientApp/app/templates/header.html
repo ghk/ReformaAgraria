@@ -30,9 +30,29 @@
                 <a class="nav-link m-auto" href="javascript:void(0)"><span class="oi oi-people" aria-hidden="true"></span></a>
             </li>
         </ul>
+        
+        <ng-template #searchItemTemplate let-model="item" let-index="index">
+            <div>
+                <span>{{ model.label }}</span>
+                <span style="font-size:0.6rem;" *ngIf="model.type === 0"><i>Kabupaten</i></span>
+                <span style="font-size:0.6rem;" *ngIf="model.type === 1"><i>Kecamatan</i></span>
+                <span style="font-size:0.6rem;" *ngIf="model.type === 2"><i>Desa</i></span>
+                <span style="font-size:0.6rem;" *ngIf="model.type === 3"><i>TORA Objek</i></span>
+            </div>
+        </ng-template>
 
-        <form class="form-inline mt-2 mt-md-0">
-            <input class="typehead form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        <form class="form-inline mt-2 mt-md-0">            
+            <input [(ngModel)]="selected" 
+                [typeahead]="dataSource"
+                [typeaheadMinLength]="3"
+                [typeaheadItemTemplate]="searchItemTemplate"
+                typeaheadOptionField="label"
+                (typeaheadOnSelect)="onSearchSelected($event)"
+                name="search"
+                class="typehead form-control mr-sm-2" 
+                type="text" 
+                placeholder="Search" 
+                aria-label="Search">
             <button type="submit" class="btn btn-sml btn-outline-light my-2 my-sm-0">Search</button>
             <button type="button" style="margin-left:10px" class="btn btn-sml btn-outline-warning my-2 my-sm-0" (click)="logout()">Logout</button>
         </form>
