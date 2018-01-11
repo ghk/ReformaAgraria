@@ -15,7 +15,12 @@ namespace ReformaAgraria.Models
 
         public string Geojson { get; set; }
 
+        public int FkToraObjectId { get; set; }
+
         public string FkRegionId { get; set; }
+
+        [ForeignKey("FkToraObjectId")]
+        public ToraObject ToraObject { get; set; }
 
         [ForeignKey("FkRegionId")]
         public Region Region { get; set; }
