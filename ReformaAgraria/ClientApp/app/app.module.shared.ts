@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { ColorPickerModule } from 'angular4-color-picker';
 import { NgPipesModule } from 'ngx-pipes';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
@@ -24,7 +25,7 @@ import { VillageBorderComponent } from './components/village-border';
 import { MapNavigationComponent } from './components/mapNavigation';
 import { AgrariaIssuesHeaderComponent } from './components/agrariaIssuesHeader';
 import { AgrariaIssuesListComponent } from './components/agrariaIssuesList';
-import { AgrariaIssuesListObjectSubjectComponent } from './components/agrariaIssuesListObjectSubject';
+import { ToraDetailComponent } from './components/toraDetail';
 import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
 import { ForgotPasswordComponent } from './components/forgotPassword';
@@ -39,7 +40,9 @@ import { AlertService } from './services/alert';
 import { AccountService } from './services/account';
 import { AuthGuard } from './services/authGuard';
 import { RegionService } from './services/gen/region';
-import { AgrariaIssuesListService } from './services/agrariaIssuesList';
+import { ToraService } from './services/tora';
+import { ToraObjectService } from './services/gen/toraObject';
+import { ToraSubjectService } from './services/gen/toraSubject';
 import { MapNavigationService } from './services/mapNavigation';
 import { BaseLayerService } from './services/gen/baseLayer';
 import { MapService } from './services/map';
@@ -64,6 +67,8 @@ import './styles/app.scss';
         VillageBorderComponent,
         AgrariaIssuesHeaderComponent,
         AgrariaIssuesListComponent,
+        ToraDetailComponent,
+        MapComponent,
         AlertComponent,
         LoginComponent,
         MapNavigationComponent,
@@ -72,9 +77,7 @@ import './styles/app.scss';
         UserManagementComponent,
         RegionComponent,
         RegionBreadcrumbPipe,
-        EnumPipe,
-        AgrariaIssuesListObjectSubjectComponent,
-        MapComponent
+        EnumPipe      
     ],
     imports: [
         LeafletModule,
@@ -88,13 +91,13 @@ import './styles/app.scss';
         ToastrModule.forRoot(),
         ColorPickerModule,
         NgPipesModule,
+        TabsModule.forRoot(),
         RouterModule.forRoot([
             { path: '', redirectTo: 'home/72_1', pathMatch: 'full' },
             {
                 path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
                     { path: 'home/:id', component: HomeComponent },
-                    { path: 'region', component: RegionComponent },
-                    { path: 'region/:id', component: RegionComponent },
+                    { path: 'toradetail/:id', component: ToraDetailComponent },
                     { path: 'event', component: EventComponent },
                     { path: 'map', component: MapComponent },
                 ]
@@ -117,7 +120,9 @@ import './styles/app.scss';
         AlertService,
         AuthGuard,
         RegionService,
-        AgrariaIssuesListService,
+        ToraService,
+        ToraObjectService,
+        ToraSubjectService,
         MapNavigationService,
         BaseLayerService,
         MapService,

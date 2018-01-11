@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {        
         this.subscription = this.route.params.subscribe(params => {
-            let regionId: string = params['id'] != null ? params['id'] : '72.1';
+            let regionId: string = params['id'] !== null ? params['id'] : '72.1';
             regionId = regionId.replace(/_/g, '.');
             this.regionService.getById(regionId, null, null).subscribe(region => {
                 this.region = region;

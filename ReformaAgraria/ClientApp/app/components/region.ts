@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { RegionType } from '../models/gen/regionType';
 import { RegionService } from '../services/gen/region';
-import { AgrariaIssuesListService } from '../services/agrariaIssuesList';
+import { ToraService } from '../services/tora';
 import { SharedService } from '../services/shared';
 import { CookieService } from 'ngx-cookie-service';
 import { DecimalPipe } from '@angular/common';
@@ -22,7 +22,7 @@ export class RegionComponent implements OnInit, OnDestroy {
     constructor(
         private regionService: RegionService,
         private sharedService: SharedService,
-        private agrariaIssuesListService: AgrariaIssuesListService
+        private toraService: ToraService
     ) { }
 
     ngOnInit() {
@@ -37,7 +37,7 @@ export class RegionComponent implements OnInit, OnDestroy {
     }
 
     getToraObjectSummary(region: Region) {
-        this.agrariaIssuesListService.getToraObjectSummary(region.id).subscribe(data => {
+        this.toraService.getToraObjectSummaries(region.id).subscribe(data => {
             this.summaries = data;
             this.sharedService.setToraSummary(data);
             this.loading = false;
