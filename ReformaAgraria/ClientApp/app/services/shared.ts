@@ -12,16 +12,15 @@ if ('Production' === ENV)
 @Injectable()
 export class SharedService {
 
-    private _environment: any;
+    public region: Region;
+    private _environment: any;    
     private _region$: ReplaySubject<Region>;
-    private _regionId$: ReplaySubject<string>;
     private _isAgrariaIssuesListReloaded$: ReplaySubject<boolean>;
     private _toraSummary$: ReplaySubject<any[]>;
 
     constructor() {
         this._environment = ENVIRONMENT;
         this._region$ = new ReplaySubject(1);
-        this._regionId$ = new ReplaySubject(1);
         this._toraSummary$ = new ReplaySubject(1);
         this._isAgrariaIssuesListReloaded$ = new ReplaySubject<false>(1);
     }
@@ -35,6 +34,7 @@ export class SharedService {
     }
 
     public setRegion(region: Region) {
+        this.region = region;
         this._region$.next(region);
     }
 

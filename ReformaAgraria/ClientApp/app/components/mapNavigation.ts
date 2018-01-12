@@ -65,20 +65,21 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     tora = [];
     ToraObject: ToraObject;
     subscription: Subscription;
-    regionSubscription: Subscription;
     toraSubscription: Subscription;
     kabupaten: string;
     kecamatan: string;
     desa: string;
 
 
-    constructor(private mapNavigationService: MapNavigationService,
+    constructor(
+        private mapNavigationService: MapNavigationService,
         private toastr: ToastrService,
         private sharedService: SharedService,
         private regionService: RegionService,
         private toraMapService: ToraMapService,
         private toraObjectService: ToraObjectService,
-        private baseLayerService: BaseLayerService) { }
+        private baseLayerService: BaseLayerService
+    ) { }
 
     ngOnInit(): void {
         this.getRegion(3, '72.1', "all");
@@ -103,7 +104,6 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.map.remove();
         this.subscription.unsubscribe();
-        this.regionSubscription.unsubscribe();
     }
 
     onChangeUpload(value, region, parentId) {
@@ -291,7 +291,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
                 });
             },
             onEachFeature: (feature, layer: L.FeatureGroup) => {
-                this.regionSubscription = this.regionService.getById(tora.fkRegionId, null, null).subscribe(desa =>
+                this.regionService.getById(tora.fkRegionId, null, null).subscribe(desa =>
                 {
                     this.desa = desa.name;
                     this.regionService.getById(desa.fkParentId, null, null).subscribe(kec =>

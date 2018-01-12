@@ -2,7 +2,7 @@
     <div class="card-body">
         <h4 class="card-title">Permasalahan Agraria di {{ region?.name }}</h4>
         <div class="table-responsive pt-2">
-            <table class="table table-sm" id="table-region">
+            <table class="table table-responsive table-hover table-sm" id="table-region">
                 <thead>
                     <tr>
                         <th (click)="sort('region.name')" style="cursor: pointer;">
@@ -13,7 +13,7 @@
                             </ng-container>
                         </th>
                         <th (click)="sort('totalSize')" style="cursor: pointer;" class="text-right">
-                            Luas
+                            Luas (ha)
                             <ng-container *ngIf="order.includes('totalSize')">
                                 <span [hidden]="order.startsWith('-')">▲</span>
                                 <span [hidden]="!order.startsWith('-')">▼</span>
@@ -50,7 +50,7 @@
                             <td class="text-left">
                                 <a [routerLink]="['/home', convertRegionId(summary.region.id)]" href="javascript:void(0)">{{summary.region.name}}</a>
                             </td>
-                            <td class="table-data-padding text-right">{{summary.totalSize | number}} Ha</td>
+                            <td class="table-data-padding text-right">{{summary.totalSize > 0 ? (summary.totalSize | number) : '-'}}</td>
                             <td class="text-right">{{summary.totalToraObjects}}</td>
                             <td class="text-right">{{summary.totalToraSubjects}}</td>
                         </tr>

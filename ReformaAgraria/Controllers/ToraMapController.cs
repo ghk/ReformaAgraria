@@ -17,6 +17,7 @@ using GeoJSON.Net.Converters;
 using ProjNet.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems;
 using System.Net;
+using ReformaAgraria.Security;
 
 namespace ReformaAgraria.Controllers
 {
@@ -60,10 +61,10 @@ namespace ReformaAgraria.Controllers
             var rootFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "TORA");
             ValidateAndCreateFolder(rootFolderPath);
 
-            var regionFolderPath = Path.Combine(rootFolderPath, results["regionName"].ToString().ToUpper());
+            var regionFolderPath = Path.Combine(rootFolderPath, results["regionId"].ToString().ToUpper());
             ValidateAndCreateFolder(regionFolderPath);
             
-            var destinationFile = Path.Combine(regionFolderPath, (content.Id.ToString() + '_' + ".zip"));
+            var destinationFile = Path.Combine(regionFolderPath, (content.Id.ToString() + ".zip"));
             StreamCopy(destinationFile, file);
 
             return content;
@@ -75,9 +76,36 @@ namespace ReformaAgraria.Controllers
             var results = HttpContext.Request.ReadFormAsync().Result;
             using (var client = new WebClient())
             {
-                string a = Path.Combine(_hostingEnvironment.WebRootPath, "TORA", results["regionName"].ToString().ToUpper(), results["toraId"].ToString().ToUpper() + "_.zip");
+                string a = Path.Combine(_hostingEnvironment.WebRootPath, "TORA", results["regionId"].ToString().ToUpper(), results["toraId"].ToString().ToUpper() + ".zip");
                 string b = Path.Combine(_hostingEnvironment.WebRootPath, "TORA", "KAMARORA A");
-                client.DownloadFile(b,"5_.zip");
+                client.DownloadFile(b,"5.zip");
+            }
+        }
+
+        [HttpGet("download/{toraId}")]
+        public async Task<IActionResult> Download(int toraId)
+        {
+            var toraObject = dbContext.Set<ToraObject>()
+                .Where(to => to.Id == toraId)
+                .FirstOrDefault();
+
+            if (toraObject == null)
+                return NotFound(new RequestResult
+                {
+                    State = RequestState.Failed,
+                    Message = "TORA not found"
+                });
+
+            var toraPath = Path.Combine(_hostingEnvironment.WebRootPath, "TORA");
+            var filePath = Path.Combine(toraPath, toraObject.FkRegionId, toraObject.Id.ToString() + ".zip");
+            using (var memory = new MemoryStream())
+            {
+                using (var stream = new FileStream(filePath, FileMode.Open))
+                {
+                    await stream.CopyToAsync(memory);
+                }
+                memory.Position = 0;
+                return File(memory, "application/zip", Path.GetFileName(filePath));
             }
         }
 

@@ -34,6 +34,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private sharedService: SharedService,
+        private regionService: RegionService,
         private toraService: ToraService,
         private toraObjectService: ToraObjectService,
         private toraSubjectService: ToraSubjectService
@@ -55,7 +56,15 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         };
 
         this.toraObjectService.getById(toraId, null, null).subscribe(toraObject => {
+            if (!toraObject)
+                return;                
+
             this.toraObject = toraObject;
+
+            if (!this.sharedService.region)
+                this.regionService.getById(toraObject.fkRegionId).subscribe(region => {
+                    this.sharedService.setRegion(region);
+                });
             
             this.toraSubjectService.getAll(toraSubjectQuery, null).subscribe(toraSubjects => {
                 this.toraSubjects = toraSubjects;
@@ -63,7 +72,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
 
             this.toraService.getToraObjectSummaries(toraObject.fkRegionId).subscribe(summary => {
                 this.sharedService.setToraSummary(summary);
-            })
+            });
         });
 
 

@@ -94,7 +94,7 @@ namespace ReformaAgraria.Controllers
                 {
                     content.Geojson = geoJsonModel;
                     var webRootPath = _hostingEnvironment.WebRootPath;
-                    var destinationFile = Path.Combine(webRootPath, "baseLayer", (content.Id.ToString() + '_' + ".zip"));
+                    var destinationFile = Path.Combine(webRootPath, "baseLayer", (content.Id.ToString() + ".zip"));
                     StreamCopy(destinationFile, file);
                 }
             }
