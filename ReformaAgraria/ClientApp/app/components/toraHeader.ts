@@ -21,6 +21,7 @@ export class ToraHeaderComponent implements OnInit, OnDestroy {
         this.subscription = this.sharedService.getToraSummary().subscribe(data => {
             this.toraSummary = data;
             this.totalObjects = 0;
+            this.totalSubjects = 0;
             this.totalSize = 0;
 
             for (var i = 0; i < this.toraSummary.length; i++) {

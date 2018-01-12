@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 
 import * as L from 'leaflet';
 import * as $ from 'jquery';
+import { BaseLayerService } from "../services/gen/baseLayer";
 
 
 const DATA_SOURCES = 'data';
@@ -76,7 +77,8 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         private sharedService: SharedService,
         private regionService: RegionService,
         private toraMapService: ToraMapService,
-        private toraObjectService: ToraObjectService) { }
+        private toraObjectService: ToraObjectService,
+        private baseLayerService: BaseLayerService) { }
 
     ngOnInit(): void {
         this.getRegion(3, '72.1', "all");
@@ -90,7 +92,10 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
             this.region = region;
             let query = { data: { 'type': 'parent', 'parentId': region.id } }
             this.toraMapService.getAll(query, null).subscribe(data => {
-                this.applyOverlay(data);
+                this.applyOverlayTora(data);
+                this.baseLayerService.getAll(query, null).subscribe(base => {
+                    this.applyOverlayBaseLayer(base);
+                });
             });     
         });
     }
@@ -99,7 +104,6 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         this.map.remove();
         this.subscription.unsubscribe();
         this.regionSubscription.unsubscribe();
-        this.toraSubscription.unsubscribe();
     }
 
     onChangeUpload(value, region, parentId) {
@@ -268,7 +272,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         });
     }
 
-    getGeoJson(data, currentColor, tora): any {
+    getGeoJsonTora(data, currentColor, tora): any {
         let geoJsonOptions = {
             style: (feature) => {
                 let color = "#000";
@@ -306,6 +310,8 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
                             layer.on('click', function (e) {
                             });
 
+                            layer.addTo(this.map);
+
                             let center = null;
 
                             if (layer.feature['geometry'].type === 'Point') {
@@ -342,33 +348,97 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         return MapUtils.setGeoJsonLayer(JSON.parse(data.geojson), geoJsonOptions);
     } 
 
+    getGeoJsonBaseLayer(geoJson, currentColor): any {
+        let geoJsonOptions = {
+            style: (feature) => {
+                let color = "#000";
+                if (color !== "" && color) {
+                    color = currentColor;
+                }
+                return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
+            },
+            pointToLayer: (feature, latlng) => {
+                return new L.CircleMarker(latlng, {
+                    radius: 8,
+                    fillColor: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+            },
+            onEachFeature: (feature, layer: L.FeatureGroup) => {
+                let center = null;
+
+                if (layer.feature['geometry'].type === 'Point') {
+                    center = layer.feature['geometry'].coordinates;
+                }
+                else {
+                    let bounds = layer.getBounds();
+                    center = bounds.getCenter();
+                }
+
+                let element = null;
+
+                if (!element)
+                    return;
+
+                if (feature.properties['icon']) {
+                    let icon = L.icon({
+                        iconUrl: 'assets/markers/' + feature.properties['icon'],
+                        iconSize: [15, 15],
+                        shadowSize: [50, 64],
+                        iconAnchor: [22, 24],
+                        shadowAnchor: [4, 62],
+                        popupAnchor: [-3, -76]
+                    });
+
+                    let marker = L.marker(center, { icon: icon }).addTo(this.map);
+                    this.addMarker(marker);
+                }
+            }
+        };
+        return MapUtils.setGeoJsonLayer(geoJson, geoJsonOptions);
+    }
+
     addMarker(marker): void {
         this.markers.push(marker);
     }
 
 
-    applyOverlay(data) {
+    applyOverlayTora(data) {
         if (data.length && data.length == 0) {
             return
         }
         data.forEach(result => {
-            this.toraSubscription = this.toraObjectService.getById(result.fkToraObjectId).subscribe(tora =>
+            this.toraObjectService.getById(result.fkToraObjectId).subscribe(tora =>
             {
-                let geojson = this.getGeoJson(result, '#FF0000', tora);
-                let innerHtml = `<a href="javascript:void(0)">
-                                    <span class="oi oi-x overlay-action" id="delete" style="float:right;" data-value="${result.id}"></span>
-                                    </a>
-                                    `;
-                let layer = this.overlays.addOverlay(geojson, `${result.name} ${innerHtml}`);
-                this.tora = [];
-                this.tora.push(`${result.name}`);
-                this.layers.push({ id: result.id, layer: geojson });
-                this.initialData.push(result);
+                let geojson = this.getGeoJsonTora(result, '#FF0000', tora);
             })
         });
         this.isOverlayAdded = true;
-        $("input.leaflet-control-layers-selector:checkbox").click();
-        $("#btn-layer").click();
+    }
+
+    applyOverlayBaseLayer(data) {
+        if (data.length && data.length == 0) {
+            return
+        }
+
+        data.forEach(result => {
+            
+            let geojson = this.getGeoJsonBaseLayer(JSON.parse(result.geojson), result.color);
+            let innerHtml = `
+            <a href="javascript:void(0)">
+                <span class="oi oi-x overlay-action" id="delete" style="float:right; padding-right:10px;" data-value="${result.id}"></span>
+            </a>
+            <a href="javascript:void(0)">
+                <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
+            </a>                     
+            `;
+            let layer = this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
+            this.layers.push({ id: result.id, layer: geojson });
+            this.initialData.push(result);
+        });
+        this.isOverlayAdded = true;
     }
 
     deleteOverlay(model) {
@@ -402,7 +472,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
             .subscribe(
             data => {
                 this.toastr.success("Upload File Berhasil", null);
-                this.applyOverlay([data]);
+                this.applyOverlayTora([data]);
                 this.clearModal();
             });
     }
