@@ -47,7 +47,6 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     model: any = {};
     markers = [];
     initialData: any[] = [];
-    isOverlayAdded: boolean;
     leafletHeight: any;
     kecUpload: string = 'kecamatan';
     desaUpload: string = 'desa';
@@ -55,6 +54,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
     kecDownload: string = 'kecamatan';
     desaDownload: string = 'desa';
     toraDownload: string = 'objek tora';
+    container: any[] = [];
     kecamatanU: any[] = [];
     desaU: any[] = [];
     toU: any[] = [];
@@ -89,14 +89,22 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
             zoomControl: false,
             layers: [LAYERS["OpenStreetMap"]]
         };
+        let query = {};
+        this.baseLayerService.getAll(query, null).subscribe(base => {
+            this.applyOverlayBaseLayer(base);
+        });
         this.subscription = this.sharedService.getRegion().subscribe(region => {
+            if (this.container.length > 0) {
+                this.container.forEach(result => {
+                    this.map.removeLayer(result);
+                });
+                this.container = [];
+            }
+            
             this.region = region;
             let query = { data: { 'type': 'parent', 'parentId': region.id } }
             this.toraMapService.getAll(query, null).subscribe(data => {
                 this.applyOverlayTora(data);
-                this.baseLayerService.getAll(query, null).subscribe(base => {
-                    this.applyOverlayBaseLayer(base);
-                });
             });     
         });
     }
@@ -239,6 +247,17 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         this.afterInit = true;
     }
 
+    ngAfterViewChecked() {
+        if (this.afterInit) {
+            let elements = $(`.leaflet-control-layers-expanded`)
+            for (let i = 0; i < elements.length; i++) {
+                let element = elements[i];
+                element.style.visibility = 'hidden';
+            }
+            this.afterInit = false;
+        }
+    }
+
     toggleControlLayers(id) {
         if (this.controlOverlayShowing) {
             if (this.controlOverlayShowing.id != id && this.controlOverlayShowing.status === '') {
@@ -255,10 +274,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         }
         this.controlOverlayShowing = { id: id, status: status }
     }
-
-    fullScreenToggle(e) {
-    }
-
+        
     onMapReady(map: L.Map): void {
         this.map = map;
         this.setLayer('OpenStreetMap');
@@ -311,6 +327,7 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
                             });
 
                             layer.addTo(this.map);
+                            this.container.push(layer);
 
                             let center = null;
 
@@ -415,7 +432,6 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
                 let geojson = this.getGeoJsonTora(result, '#FF0000', tora);
             })
         });
-        this.isOverlayAdded = true;
     }
 
     applyOverlayBaseLayer(data) {
@@ -426,19 +442,10 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         data.forEach(result => {
             
             let geojson = this.getGeoJsonBaseLayer(JSON.parse(result.geojson), result.color);
-            let innerHtml = `
-            <a href="javascript:void(0)">
-                <span class="oi oi-x overlay-action" id="delete" style="float:right; padding-right:10px;" data-value="${result.id}"></span>
-            </a>
-            <a href="javascript:void(0)">
-                <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
-            </a>                     
-            `;
-            let layer = this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
+            let layer = this.overlays.addOverlay(geojson, `${result.label}`);
             this.layers.push({ id: result.id, layer: geojson });
             this.initialData.push(result);
         });
-        this.isOverlayAdded = true;
     }
 
     deleteOverlay(model) {
@@ -459,7 +466,6 @@ export class MapNavigationComponent implements OnInit, OnDestroy {
         this.map.removeLayer(currentOverlay.layer);
         this.layers.splice(currentOverlay, 1);
         this.initialData.splice(currentData, 1);
-        this.isOverlayAdded = true;
     }
 
     onChangeFile(event) {
