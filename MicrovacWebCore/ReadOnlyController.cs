@@ -39,7 +39,7 @@ namespace MicrovacWebCore
             return exp.ToList();
         }
 
-        [HttpGet("/count")]
+        [HttpGet("count")]
         public virtual long Count()
         {
             IQueryable<TModel> exp = dbSet;

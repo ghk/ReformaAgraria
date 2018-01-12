@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -12,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using ReformaAgraria.Models;
 using ReformaAgraria.Security;
 using System;
+using System.Security.Claims;
 using System.Text;
 
 namespace ReformaAgraria
@@ -65,14 +67,18 @@ namespace ReformaAgraria
             });
 
             services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Bearer", policy =>
                 {
-                    options.AddPolicy("Bearer", policy =>
-                    {
-                        policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
-                        policy.RequireClaim("external", "true");
-                        policy.RequireAuthenticatedUser().Build();
-                    });
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireClaim("external", "true");
+                    policy.RequireAuthenticatedUser().Build();
                 });
+
+                options.AddPolicy("Administrator", policy => policy.RequireClaim(ClaimTypes.Role, "Administrator"));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, AccountEditHandler>();
 
             var tokenValidationParameters = new TokenValidationParameters
             {
