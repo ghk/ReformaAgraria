@@ -18,7 +18,7 @@ import { ToraService } from '../services/tora';
 
 @Component({
     selector: 'ra-tora-detail',
-    templateUrl: '../templates/toradetail.html',
+    templateUrl: '../templates/toraDetail.html',
 })
 export class ToraDetailComponent implements OnInit, OnDestroy {        
     RegionalStatus = RegionalStatus;   
