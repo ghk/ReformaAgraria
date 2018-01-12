@@ -172,6 +172,9 @@
     <None Update="ClientApp\app\services\gen\toraSubject .ts">
       <CustomToolNamespace>Controllers\ToraSubjectController .cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\services\gen\toraSubject.ts">
+      <CustomToolNamespace>Controllers\ToraSubjectController.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\services\gen\villageMapAttribute.ts">
       <CustomToolNamespace>Controllers\VillageMapAttributeController.cs</CustomToolNamespace>
     </None>

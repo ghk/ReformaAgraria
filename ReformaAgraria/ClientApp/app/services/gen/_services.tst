@@ -59,6 +59,11 @@
         return $"{type.ToString().ToLower()}";
     }
 
+    string GetCamelCaseFirstType(Class item) {
+        var type = item.BaseClass.TypeArguments.FirstOrDefault();
+        return $"{Char.ToLowerInvariant(type.ToString()[0]) + type.ToString().Substring(1)}";
+    }
+
 }$Classes($ServiceFilter)[import { Injectable } from '@angular/core';
 import { Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -66,7 +71,7 @@ import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
-import { $GetFirstType } from '../../models/gen/$GetLowerFirstType';
+import { $GetFirstType } from '../../models/gen/$GetCamelCaseFirstType';
 import { RequestHelper } from '../../helpers/request';
 import { SharedService } from '../../services/shared';
 import { CrudService } from '../../services/crud';

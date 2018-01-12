@@ -5,7 +5,7 @@ import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
-import { ToraMap } from '../../models/gen/toramap';
+import { ToraMap } from '../../models/gen/toraMap';
 import { RequestHelper } from '../../helpers/request';
 import { SharedService } from '../../services/shared';
 import { CrudService } from '../../services/crud';
