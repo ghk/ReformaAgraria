@@ -5,14 +5,13 @@ import { CookieService } from 'ngx-cookie-service';
 import { SharedService } from './../services/shared';
 import { ProgressHttp } from 'angular-progress-http';
 import { ToraObject } from './../models/gen/toraObject';
-
-import 'rxjs/add/operator/map'
-import * as urljoin from 'url-join';
-
 import { RequestHelper } from '../helpers/request';
 import { Query } from "../models/query";
 import { CrudService } from "./crud";
-import { BaseLayerService } from "./gen/baselayer";
+import { BaseLayerService } from "./gen/baseLayer";
+
+import 'rxjs/add/operator/map'
+import * as urljoin from 'url-join';
 
 @Injectable()
 export class MapService {  
