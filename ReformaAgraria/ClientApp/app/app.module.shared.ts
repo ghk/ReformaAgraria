@@ -50,7 +50,6 @@ import { MapService } from './services/map';
 import { ToraMapService } from './services/gen/toraMap';
 import { SearchService } from './services/search';
 
-
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
 import { TranslatePipe } from './pipes/translate';

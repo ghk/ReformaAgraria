@@ -85,6 +85,12 @@
     <None Update="ClientApp\app\models\gen\baseLayer.ts">
       <CustomToolNamespace>Models\BaseLayer.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\borderSettingProcessStage.ts">
+      <CustomToolNamespace>Models\BorderSettingProcessStage.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\codefication.ts">
+      <CustomToolNamespace>Models\Codefication.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\coordinate.ts">
       <CustomToolNamespace>Models\Coordinate.cs</CustomToolNamespace>
     </None>
@@ -97,11 +103,11 @@
     <None Update="ClientApp\app\models\gen\gender.ts">
       <CustomToolNamespace>Models\Gender.cs</CustomToolNamespace>
     </None>
-    <None Update="ClientApp\app\models\gen\geoJsonViewModel.ts">
-      <CustomToolNamespace>Models\ViewModels\GeoJsonViewModel.cs</CustomToolNamespace>
-    </None>
     <None Update="ClientApp\app\models\gen\landStatus.ts">
       <CustomToolNamespace>Models\LandStatus.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\landType.ts">
+      <CustomToolNamespace>Models\LandType.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\loginViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\LoginViewModel.cs</CustomToolNamespace>
@@ -118,17 +124,26 @@
     <None Update="ClientApp\app\models\gen\policiesDocument.ts">
       <CustomToolNamespace>Models\PoliciesDocument.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\proposedTreatment.ts">
+      <CustomToolNamespace>Models\ProposedTreatment.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\region.ts">
       <CustomToolNamespace>Models\Region.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\regionalStatus.ts">
       <CustomToolNamespace>Models\RegionalStatus.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\regionType.ts">
+      <CustomToolNamespace>Models\RegionType.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\searchType.ts">
       <CustomToolNamespace>Models\SearchType.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\searchViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\SearchViewModel.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\status.ts">
+      <CustomToolNamespace>Models\Status.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\tipologyOfAgrarianProblem.ts">
       <CustomToolNamespace>Models\TipologyOfAgrarianProblem.cs</CustomToolNamespace>
@@ -141,6 +156,9 @@
     </None>
     <None Update="ClientApp\app\models\gen\toraObject.ts">
       <CustomToolNamespace>Models\ToraObject.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\toraSettingProcessStage.ts">
+      <CustomToolNamespace>Models\ToraSettingProcessStage.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\toraSubject.ts">
       <CustomToolNamespace>Models\ToraSubject.cs</CustomToolNamespace>
@@ -174,9 +192,6 @@
     </None>
     <None Update="ClientApp\app\services\gen\toraSubject.ts">
       <CustomToolNamespace>Controllers\ToraSubjectController.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\services\gen\villageMapAttribute.ts">
-      <CustomToolNamespace>Controllers\VillageMapAttributeController.cs</CustomToolNamespace>
     </None>
   </ItemGroup>
 
