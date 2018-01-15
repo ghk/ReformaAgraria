@@ -71,7 +71,7 @@ namespace ReformaAgraria.Controllers
             var webRootPath = Path.Combine(_hostingEnvironment.WebRootPath, "baseLayer");
             ValidateAndCreateFolder(webRootPath);
 
-            var destinationFile = Path.Combine(webRootPath , (content.Id.ToString() + '_' + ".zip"));
+            var destinationFile = Path.Combine(webRootPath , (content.Id.ToString() + ".zip"));
             StreamCopy(destinationFile, file);
 
             return content;
@@ -111,7 +111,7 @@ namespace ReformaAgraria.Controllers
         {
             base.Delete(id);
             var webRootPath = _hostingEnvironment.WebRootPath;
-            var targetFile = Path.Combine(webRootPath, "baseLayer", (id.ToString() + '_' + ".zip"));
+            var targetFile = Path.Combine(webRootPath, "baseLayer", (id.ToString() + ".zip"));
 
             if (System.IO.File.Exists(targetFile)) { 
                 System.IO.File.Delete(targetFile);
