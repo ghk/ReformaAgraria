@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 namespace ReformaAgraria.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "Bearer")]
     public class AccountController : ControllerBase
     {
         private readonly ReformaAgrariaDbContext _context;
@@ -27,15 +28,17 @@ namespace ReformaAgraria.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly TokenAuthOption _tokenOptions;
         private readonly IConfiguration _iconfiguration;
+        private readonly IAuthorizationService _authorizationService;
 
         public AccountController(
             ReformaAgrariaDbContext context,
             UserManager<ReformaAgrariaUser> userManager,
             SignInManager<ReformaAgrariaUser> signInManager,
             ILogger<AccountController> logger,
+            IOptions<TokenAuthOption> tokenOptions,
             IConfiguration iconfiguration,
-            IOptions<TokenAuthOption> tokenOptions)
-
+            IAuthorizationService authorizationService
+        )
         {
             _context = context;
             _userManager = userManager;
@@ -43,6 +46,7 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
             _tokenOptions = tokenOptions.Value;
             _iconfiguration = iconfiguration;
+            _authorizationService = authorizationService;
         }
 
         // POST: /Account/login
@@ -52,14 +56,15 @@ namespace ReformaAgraria.Controllers
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
             var user = _signInManager.UserManager.Users.Where(u => u.Email == model.Email).FirstOrDefault();
-
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, isPersistent: true, lockoutOnFailure: false);
-
             if (result.Succeeded)
             {
                 var claimsUser = await _userManager.FindByEmailAsync(model.Email);
                 var claims = _userManager.GetClaimsAsync(claimsUser);
                 var id = new ClaimsIdentity(claims.Result);
+
+                id.AddClaim(new Claim(ClaimTypes.Email, claimsUser.Email));
+                id.AddClaim(new Claim(ClaimTypes.NameIdentifier, claimsUser.Id));
 
                 var requestAt = DateTime.Now;
                 var expiresIn = requestAt + TokenAuthOption.ExpiresSpan;
@@ -72,7 +77,7 @@ namespace ReformaAgraria.Controllers
                     {
                         requestAt = requestAt,
                         expiresIn = TokenAuthOption.ExpiresSpan.TotalSeconds,
-                        tokenType = TokenAuthOption.TokenType,                        
+                        tokenType = TokenAuthOption.TokenType,
                         accessToken = token,
                         userName = claimsUser.UserName
                     }
@@ -88,17 +93,15 @@ namespace ReformaAgraria.Controllers
             }
         }
 
-
         // POST: /Account/register
         [HttpPost("register")]
-        [AllowAnonymous]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Register([FromBody] LoginViewModel model)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-
                     var user = new ReformaAgrariaUser { UserName = model.Email, Email = model.Email, FullName = model.FullName };
                     user.Claims.Add(new IdentityUserClaim<string>
                     {
@@ -125,11 +128,11 @@ namespace ReformaAgraria.Controllers
                     throw ex;
                 }
             }
-            
+
         }
 
-        // POST: /Account/LogOff
         [HttpPost("logout")]
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -154,19 +157,19 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("password/recovery")]
-        [AllowAnonymous]
         public async Task<IActionResult> SendPasswordRecoveryLink([FromBody] LoginViewModel model)
         {
-            var user =  _userManager.FindByEmailAsync(model.Email).Result;
+            var user = _userManager.FindByEmailAsync(model.Email).Result;
+
+            var authorizeResult = await _authorizationService.AuthorizeAsync(User, user, new AccountEditRequirement());
+            if (!authorizeResult.Succeeded)
+                return Forbid();
 
             var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
-            
             string resetLink = Request.Scheme + "://" + Request.Host + "/account/resetpassword?id=" + user.Id + "&token=" + token;
-
             MailController mc = new MailController(_iconfiguration);
             string body = "Klik tautan di bawah ini untuk mereset password anda. </br><a href='" + resetLink + "'>Reset Password</a>";
             mc.SendEmail("Reset Password", body, new MailAddress(user.Email, user.UserName));
-
             return Ok();
         }
 
@@ -174,25 +177,34 @@ namespace ReformaAgraria.Controllers
         public async Task<IActionResult> ResetPassword(string id, string token, string password)
         {
             var user = _userManager.FindByIdAsync(id).Result;
-            
+
+            var authorizeResult = await _authorizationService.AuthorizeAsync(User, user, new AccountEditRequirement());
+            if (!authorizeResult.Succeeded)
+                return Forbid();
+
             IdentityResult result = _userManager.ResetPasswordAsync(user, token.Replace(" ", "+"), password).Result;
             if (result.Succeeded)
-            {
                 return Ok();
-            }
             return BadRequest(result.Errors);
         }
 
-        [HttpPost("password/change")]
-        public async Task<IActionResult> ChangePassword(string id, string newPassword)
+        [HttpPost("password/change")]        
+        public async Task<IActionResult> ChangePassword([FromBody]Dictionary<string, string> data)
         {
-            var user = _userManager.FindByIdAsync(id).Result;
-            
+            var id = data["id"];
+            var newPassword = data["newPassword"];
+            var user = await _userManager.FindByIdAsync(id);
+
+            var authorizeResult = await _authorizationService.AuthorizeAsync(User, user, new AccountEditRequirement());
+            if (!authorizeResult.Succeeded)
+                return Forbid();
+
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             return await ResetPassword(id, token, newPassword);
         }
 
         [HttpGet("user")]
+        [Authorize(Policy = "Administrator")]
         public List<object> GetAllUser()
         {
             var users = _context.Users.ToList();
@@ -209,12 +221,14 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpGet("user/{id}")]
+        [Authorize(Policy = "Administrator")]
         public ReformaAgrariaUser GetUserById(string id)
         {
             return _userManager.FindByIdAsync(id).Result;
         }
 
         [HttpDelete("user/{id}")]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var userDetail = _userManager.FindByIdAsync(id).Result;
@@ -225,6 +239,7 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPut("user/{id}")]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody]Dictionary<string, string> data)
         {
             var newEmail = data["email"];

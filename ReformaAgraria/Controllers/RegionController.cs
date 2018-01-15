@@ -16,7 +16,7 @@ namespace ReformaAgraria.Controllers
 {
     [Produces("application/json")]    
     [Route("api/[controller]")]
-    //[Authorize(Policy = "Bearer")]
+    [Authorize(Policy = "Bearer")]
     public class RegionController : ReadOnlyController<Region, string>
     {
         private readonly ILogger<RegionController> _logger;
@@ -30,34 +30,31 @@ namespace ReformaAgraria.Controllers
         protected override IQueryable<Region> ApplyQuery(IQueryable<Region> query)
         {
             var type = GetQueryString<string>("type");
-            if (type != null)
+            if (type == "breadcrumb")
             {
-                if (type == "breadcrumb")
+                var depth = GetQueryString<int>("depth");
+                for (var i = 1; i <= depth; i++)
                 {
-                    var depth = GetQueryString<int>("depth");
-                    for (var i = 1; i <= depth; i++)
-                    {
-                        var includeString = string.Concat(Enumerable.Repeat("Parent.", i));
-                        includeString = includeString.Remove(includeString.Length - 1);
-                        query = query.Include(includeString);
-                    }
+                    var includeString = string.Concat(Enumerable.Repeat("Parent.", i));
+                    includeString = includeString.Remove(includeString.Length - 1);
+                    query = query.Include(includeString);
                 }
+            }
 
-                if (type == "parent")
+            if (type == "parent")
+            {
+                var id = GetQueryString<string>("parentId");
+                var parentId = (id == null) ? null : id.Replace('_', '.');                    
+                var regionType = GetQueryString<int?>("regionType");
+
+                if (!string.IsNullOrWhiteSpace(parentId))
                 {
-                    var id = GetQueryString<string>("parentId");
-                    var parentId = (id == null) ? null : id.Replace('_', '.');                    
-                    var regionType = GetQueryString<int?>("regionType");
+                    query = query.Where(r => r.FkParentId == parentId);
 
-                    if (!string.IsNullOrWhiteSpace(parentId))
-                    {
-                        query = query.Where(r => r.FkParentId == parentId);
-
-                    }
-                    if (regionType != null)
-                    {
-                        query = query.Where(r => r.Type == (RegionType)regionType);
-                    }
+                }
+                if (regionType != null)
+                {
+                    query = query.Where(r => r.Type == (RegionType)regionType);
                 }
             }
 
