@@ -36,6 +36,7 @@ export class ToraService {
             let file: File = fileList[0];
             let formData: FormData = new FormData();
             formData.append('uploadFile', file, file.name);
+            formData.append('regionId', regionId);
             let headers = new Headers();
             headers.append('Accept', 'application/json');
             let requestOptions = new RequestOptions({ headers: headers });

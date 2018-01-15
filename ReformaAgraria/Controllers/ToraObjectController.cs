@@ -21,15 +21,20 @@ namespace ReformaAgraria.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly ILogger<ToraObjectController> _logger;
+        private readonly ILogger<ToraSubjectController> _tsLogger;
+        private readonly ReformaAgrariaDbContext _context;
 
         public ToraObjectController(ReformaAgrariaDbContext dbContext, 
             IHostingEnvironment hostingEnvironment, 
             IHttpContextAccessor contextAccessor,
-            ILogger<ToraObjectController> logger) : base(dbContext)
+            ILogger<ToraObjectController> logger,
+            ILogger<ToraSubjectController> tsLogger) : base(dbContext)
         {
+            _context = dbContext;
             _hostingEnvironment = hostingEnvironment;
             _contextAccessor = contextAccessor;
             _logger = logger;
+            _tsLogger = tsLogger;
         }
 
         public class DashboardData
@@ -87,8 +92,9 @@ namespace ReformaAgraria.Controllers
         [HttpPost("import")]
         public ToraObject Import()
         {
-            var formFile = HttpContext.Request.ReadFormAsync().Result.Files[0];
-            string regionId = HttpContext.Request.Cookies["regionId"].ToString();
+            var results = HttpContext.Request.ReadFormAsync().Result;
+            var formFile = results.Files[0];
+            string regionId = results["regionId"];
             decimal size;
 
             var path = Path.Combine(
@@ -216,7 +222,8 @@ namespace ReformaAgraria.Controllers
 
                         if (objectIdList.Count > 0 && workbook.Worksheets.Count > 1)
                         {
-                            ToraSubjectController ts = (ToraSubjectController)HttpContext.RequestServices.GetService(typeof(ToraSubjectController));
+                            //ToraSubjectController ts = (ToraSubjectController)HttpContext.RequestServices.GetService(typeof(ToraSubjectController));
+                            ToraSubjectController ts = new ToraSubjectController(_context, _hostingEnvironment, _tsLogger);
                             ts.Import(objectIdList, package);
                         }
                     }
