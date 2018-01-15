@@ -68,8 +68,10 @@ namespace ReformaAgraria.Controllers
             dbContext.Add(content);
             await dbContext.SaveChangesAsync();
 
-            var webRootPath = _hostingEnvironment.WebRootPath;
-            var destinationFile = Path.Combine(webRootPath , "baseLayer", (content.Id.ToString() + '_' + ".zip"));
+            var webRootPath = Path.Combine(_hostingEnvironment.WebRootPath, "baseLayer");
+            ValidateAndCreateFolder(webRootPath);
+
+            var destinationFile = Path.Combine(webRootPath , (content.Id.ToString() + '_' + ".zip"));
             StreamCopy(destinationFile, file);
 
             return content;
