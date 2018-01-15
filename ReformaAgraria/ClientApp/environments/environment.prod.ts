@@ -1,4 +1,4 @@
 ﻿export const environment = {
     production: true,
-    serverUrl: 'http://www.sinavraps.id/api'
+    serverUrl: 'http://sinavraps.id/api'
 };
