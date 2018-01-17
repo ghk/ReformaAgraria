@@ -373,7 +373,7 @@ namespace ReformaAgraria.Controllers
         {
             var type = GetQueryString<string>("type");
 
-            if (type == "getAllByRegionId")
+            if (type == "getAllByRegion")
             {
                 var regionId = GetQueryString<string>("regionId");
                 query = query.Where(to => to.FkRegionId == regionId);

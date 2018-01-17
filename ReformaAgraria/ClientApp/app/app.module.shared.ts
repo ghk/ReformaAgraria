@@ -23,7 +23,7 @@ import { EventComponent } from './components/event';
 import { VillageComponent } from './components/village';
 import { TeamComponent } from './components/team';
 import { VillageBorderComponent } from './components/village-border';
-import { MapNavigationComponent } from './components/mapNavigation';
+import { ToraMapComponent } from './components/toraMap';
 import { ToraHeaderComponent } from './components/toraHeader';
 import { ToraSummaryComponent } from './components/toraSummary';
 import { ToraListComponent } from './components/toraList';
@@ -72,10 +72,10 @@ import './styles/app.scss';
         ToraSummaryComponent,
         ToraListComponent,
         ToraDetailComponent,
+        ToraMapComponent,
         MapComponent,
         AlertComponent,
-        LoginComponent,
-        MapNavigationComponent,
+        LoginComponent,        
         ForgotPasswordComponent,
         ResetPasswordComponent,
         UserManagementComponent,

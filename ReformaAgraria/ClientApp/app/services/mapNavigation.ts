@@ -1,16 +1,16 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, Headers, Response, RequestOptions } from '@angular/http';
+import { Http, Headers, Response, RequestOptions, ResponseContentType } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { CookieService } from 'ngx-cookie-service';
-import { SharedService } from './../services/shared';
 import { ProgressHttp } from 'angular-progress-http';
-import { ToraObject } from './../models/gen/toraObject';
 
 import 'rxjs/add/operator/map'
 import * as urljoin from 'url-join';
 
+import { SharedService } from './../services/shared';
 import { RequestHelper } from '../helpers/request';
 import { Query } from "../models/query";
+
 
 @Injectable()
 export class MapNavigationService {
@@ -26,21 +26,29 @@ export class MapNavigationService {
 
     import(model): Observable<any> {
         let fileList: FileList = model.file;
-        if (fileList.length && fileList.length > 0) {
+        if (fileList && fileList.length > 0) {
             let file: File = fileList[0];
             let formData: FormData = new FormData();
             let headers = new Headers();
-            let requestOptions = new RequestOptions({ headers: headers });
+            let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
 
             headers.append('Accept', 'application/json');
-            formData.append('toraObjectId', model.toraObjectId);
-            formData.append('toraObjectName', model.toraObjectName);
-            formData.append('regionId', model.regionId);
+            formData.append('toraObjectId', model.tora.id);
+            formData.append('toraObjectName', model.tora.name);
+            formData.append('regionId', model.desa.id);
             formData.append('uploadFile', file, file.name);
 
             return this.http.post('/api/toramap/import', formData, requestOptions)
-                .map(res => res.json()).catch(this.handleError);
+                .map(res => res.json())
+                .catch(this.handleError);
         }
+    }
+
+    download(toraId: number): Observable<any> {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        requestOptions.responseType = ResponseContentType.Blob;
+        return this.http.get('/api/toramap/download/' + toraId, requestOptions)  
+            .catch(this.handleError);     
     }
     
     private handleError(error: Response | any) {

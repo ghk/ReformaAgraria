@@ -22,13 +22,13 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpGet("{keywords}")]
-        public List<SearchViewModel> Search(string keywords)
+        public async Task<List<SearchViewModel>> Search(string keywords)
         {
             var result = new List<SearchViewModel>();
-            var regions = dbContext.Set<Region>()
+            var regions = await dbContext.Set<Region>()
                 .Where(r => r.Id.StartsWith("72.1"))
                 .Where(r => EF.Functions.Like(r.Name.ToLower(), string.Format("{0}%", keywords.ToLower())))
-                .ToList();
+                .ToListAsync();
 
             foreach (var region in regions)
             {
@@ -56,7 +56,10 @@ namespace ReformaAgraria.Controllers
                 result.Add(searchViewModel);
             }
 
-            var toraObjects = dbContext.Set<ToraObject>().Where(t => EF.Functions.Like(t.Name.ToLower(), string.Format("{0}%", keywords.ToLower()))).ToList();
+            var toraObjects = await dbContext.Set<ToraObject>()
+                .Where(t => EF.Functions.Like(t.Name.ToLower(), string.Format("{0}%", keywords.ToLower())))
+                .ToListAsync();
+
             foreach (var to in toraObjects)
             {             
                 var searchViewModel = new SearchViewModel()

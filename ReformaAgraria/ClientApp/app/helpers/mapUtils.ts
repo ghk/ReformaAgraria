@@ -1,6 +1,6 @@
 ﻿import * as L from 'leaflet';
 
-export default class MapUtils {
+export class MapUtils {
     public static readonly BUILDING_COLORS = [{
         "description": 'Sekolah',
         "color": 'darkgreen',
