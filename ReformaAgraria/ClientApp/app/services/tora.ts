@@ -22,13 +22,60 @@ export class ToraService {
         private sharedService: SharedService
     ) {
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
-    }   
+    }
 
     getToraObjectSummaries(id: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         return this.http.get('/api/toraobject/summary/' + id, requestOptions)
             .map(res => res.json())
-    }    
+    }
+
+    editToraObject(model) {
+        let formData: FormData = new FormData();
+        formData.append('id', model.id);
+        formData.append('conflictChronology', model.conflictChronology);
+        formData.append('fkRegionId', model.fkRegionId);
+        formData.append('formalAdvocacyProgress', model.formalAdvocacyProgress);
+        formData.append('nonFormalAdvocacyProgress', model.nonFormalAdvocacyProgress);
+        formData.append('landStatus', model.landStatus);
+        formData.append('landTenureHistory', model.landTenureHistory);
+        formData.append('landType', model.landType);
+        formData.append('livelihood', model.livelihood);
+        formData.append('name', model.name);
+        formData.append('proposedTreatment', model.proposedTreatment);
+        formData.append('regionalStatus', model.regionalStatus);
+        formData.append('size', model.size);
+        formData.append('stages', model.stages);
+        formData.append('totalTenants', model.totalTenants);
+        let headers = new Headers();
+        headers.append('Accept', 'application/json');
+        let requestOptions = new RequestOptions({ headers: headers });
+        return this.http.post('/api/toraobject/edit', formData, requestOptions)
+            .map(res => res.json())
+    }
+
+    addToraObject(model) {
+        let formData: FormData = new FormData();
+        formData.append('conflictChronology', model.conflictChronology);
+        formData.append('fkRegionId', model.fkRegionId);
+        formData.append('formalAdvocacyProgress', model.formalAdvocacyProgress);
+        formData.append('nonFormalAdvocacyProgress', model.nonFormalAdvocacyProgress);
+        formData.append('landStatus', model.landStatus);
+        formData.append('landTenureHistory', model.landTenureHistory);
+        formData.append('landType', model.landType);
+        formData.append('livelihood', model.livelihood);
+        formData.append('name', model.name);
+        formData.append('proposedTreatment', model.proposedTreatment);
+        formData.append('regionalStatus', model.regionalStatus);
+        formData.append('size', model.size);
+        formData.append('stages', model.stages);
+        formData.append('totalTenants', model.totalTenants);
+        let headers = new Headers();
+        headers.append('Accept', 'application/json');
+        let requestOptions = new RequestOptions({ headers: headers });
+        return this.http.post('/api/toraobject/add', formData, requestOptions)
+            .map(res => res.json())
+    }
 
     importToraObject(event, regionId) {
         let fileList: FileList = event.target.files;

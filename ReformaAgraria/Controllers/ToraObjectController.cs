@@ -238,6 +238,90 @@ namespace ReformaAgraria.Controllers
             }
         }
 
+        [HttpPost("edit")]
+        public async Task<ToraObject> Edit()
+        {
+            var results = HttpContext.Request.ReadFormAsync().Result;
+            int id = Int32.Parse(results["id"]);
+            var conflictChronology = results["conflictChronology"];
+            var fkRegionId = results["fkRegionId"];
+            var formalAdvocacyProgress = results["formalAdvocacyProgress"];
+            var nonFormalAdvocacyProgress = results["nonFormalAdvocacyProgress"];
+            int landStatus = Int32.Parse(results["landStatus"]);
+            var landTenureHistory = results["landTenureHistory"];
+            var landType = results["landType"];
+            var livelihood = results["livelihood"];
+            var name = results["name"];
+            var proposedTreatment = results["proposedTreatment"];
+            int regionalStatus = Int32.Parse(results["regionalStatus"]);
+            decimal size = Convert.ToDecimal(results["size"]);
+            int stages = Int32.Parse(results["stages"]);
+            var totalTenants = results["totalTenants"];
+
+            var content = dbContext.Set<ToraObject>().Where(o => o.Id == id).FirstOrDefault();
+            content.DateModified = DateTime.Now;
+            content.ConflictChronology = conflictChronology;
+            content.FkRegionId = fkRegionId;
+            content.FormalAdvocacyProgress = formalAdvocacyProgress;
+            content.NonFormalAdvocacyProgress = nonFormalAdvocacyProgress;
+            content.LandStatus = (LandStatus)landStatus;
+            content.LandTenureHistory = landTenureHistory;
+            content.LandType = landType;
+            content.Livelihood = livelihood;
+            content.Name = name;
+            content.ProposedTreatment = proposedTreatment;
+            content.RegionalStatus = (RegionalStatus)regionalStatus;
+            content.Size = size;
+            content.Stages = stages;
+            content.TotalTenants = totalTenants;
+
+            dbContext.Update(content);
+            await dbContext.SaveChangesAsync();
+            return content;
+        }
+
+        [HttpPost("add")]
+        public async Task<ToraObject> Add()
+        {
+            var results = HttpContext.Request.ReadFormAsync().Result;
+            var conflictChronology = results["conflictChronology"];
+            var fkRegionId = results["fkRegionId"];
+            var formalAdvocacyProgress = results["formalAdvocacyProgress"];
+            var nonFormalAdvocacyProgress = results["nonFormalAdvocacyProgress"];
+            int landStatus = Int32.Parse(results["landStatus"]);
+            var landTenureHistory = results["landTenureHistory"];
+            var landType = results["landType"];
+            var livelihood = results["livelihood"];
+            var name = results["name"];
+            var proposedTreatment = results["proposedTreatment"];
+            int regionalStatus = Int32.Parse(results["regionalStatus"]);
+            decimal size = Convert.ToDecimal(results["size"]);
+            int stages = Int32.Parse(results["stages"]);
+            var totalTenants = results["totalTenants"];
+
+            var content = new ToraObject();
+            content.DateCreated = DateTime.Now;
+            content.DateModified = DateTime.Now;
+            content.ConflictChronology = conflictChronology;
+            content.FkRegionId = fkRegionId;
+            content.FormalAdvocacyProgress = formalAdvocacyProgress;
+            content.NonFormalAdvocacyProgress = nonFormalAdvocacyProgress;
+            content.LandStatus = (LandStatus)landStatus;
+            content.LandTenureHistory = landTenureHistory;
+            content.LandType = landType;
+            content.Livelihood = livelihood;
+            content.Name = name;
+            content.ProposedTreatment = proposedTreatment;
+            content.RegionalStatus = (RegionalStatus)regionalStatus;
+            content.Size = size;
+            content.Stages = stages;
+            content.TotalTenants = totalTenants;
+
+            dbContext.Add(content);
+            await dbContext.SaveChangesAsync();
+            return content;
+        }
+
         [HttpGet("summary/{id}")]
         public List<DashboardData> GetSummary(string id)
         {

@@ -5,13 +5,13 @@
         <!-- start new add object and subject -->
         <div class="dropdown nav justify-content-end mr-3">
             <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownMenuForm" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false" title="Tambah data objek dan subjek tora">
+                    aria-expanded="false" title="Tambah data objek dan subjek tora">
                 <span class="oi oi-plus"></span>
             </button>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuForm">
                 <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalUploadDocument">Upload Dokumen</button>
-                <button class="dropdown-item" type="button" data-toggle="modal" data-target="#exampleModal-lg">Isi Form Dokumen</button>
+                <button class="dropdown-item" type="button" data-toggle="modal" data-target="#editModal" (click)="add()">Isi Form Dokumen</button>
             </div>
         </div>
 
@@ -58,18 +58,11 @@
                                 <td>{{LandStatus[object.landStatus] | translate}}</td>
                                 <td>{{object.proposedTreatment}}</td>
                                 <td>Image</td>
-                                <td>Penetapan</td>
-                                <td data-toggle="tooltip" data-placement="top" title="edit">
-                                    <div class="dropdown">
-                                        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuEdit" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                            <span class="oi oi-pencil" title="Edit"></span>
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuEdit">
-                                            <button class="dropdown-item" type="button">Edit Objek</button>
-                                            <button class="dropdown-item" type="button">Edit Subjek</button>
-                                        </div>
-                                    </div>
+                                <td>{{Status[object.stages] | translate}}</td>
+                                <td title="edit" data-toggle="modal" data-target="#editModal">
+                                    <button type="button" class="btn btn-link">
+                                        <span class="oi oi-pencil" title="Edit" (click)="edit(object)"></span>
+                                    </button>
                                 </td>
                                 <td data-toggle="modal" data-target="#deleteModal" title="hapus">
                                     <button type="button" class="btn btn-link">
@@ -94,7 +87,7 @@
 <!-- MODAL -->
 <!-- modal add new upload dokumen objek dan subjek table -->
 <div class="modal fade" id="modalUploadDocument" tabindex="-1" role="dialog" aria-labelledby="tambah data dengan unggah dokumen"
-    aria-hidden="true">
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -151,10 +144,9 @@
     </div>
 </div>
 <!-- end modal add new upload dokumen objek dan subjek table -->
-
 <!-- Modal add new objek dan subjek table -->
-<div class="modal fade" id="exampleModal-lg" tabindex="-1" role="dialog" aria-labelledby="Tambah data dengan isi form dokumen"
-    aria-hidden="true">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="Tambah data dengan isi form dokumen"
+     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -183,35 +175,24 @@
 
                                 <div class="form-row pt-2">
                                     <div class="form-group col-md-8">
-                                        <label for="inputEmail4">Nama lokasi</label>
-                                        <input type="Text" class="form-control is-invalid" id="inputEmail4" placeholder="Nama Lokasi" required>
+                                        <label for="inputName">Nama lokasi</label>
+                                        <input type="Text" class="form-control is-invalid" id="inputName" placeholder="Nama Lokasi" required [(ngModel)]="model.name" name="editName">
                                     </div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Desa</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
+                                        <label for="ddlDesa">Desa</label>
+                                        <select class="form-control" id="ddlDesa" required [(ngModel)]="model.fkRegionId" name="fkRegionId">
                                             <option value="">Pilih desa</option>
-                                            <option value="1">Bora</option>
-                                            <option value="2">Kababona</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
+                                            <option *ngFor="let d of desa" [ngValue]="d.id">{{d.name}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Kecamatan</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
+                                        <label for="ddlKecamatan">Kecamatan</label>
+                                        <select class="form-control" id="ddlKecamatan" required>
                                             <option value="">Pilih kecamatan</option>
-                                            <option value="1">Dolo Barat</option>
-                                            <option value="2">Dolo Selatan</option>
-                                            <option value="3">Gumbasa</option>
-                                            <option value="4">Kinovaro</option>
-                                            <option value="5">Kulawi</option>
-                                            <option value="6">Marawola Barat</option>
-                                            <option value="7">Nokilalaki</option>
-                                            <option value="8">Palalo</option>
+                                            <option *ngFor="let k of kecamatan" [selected]="region.fkParentId == k.id" (change)="getDesa(k.id)">{{k.name}}</option>
                                         </select>
                                     </div>
                                     <div class="fieldset disabled form-group col-md-4">
@@ -224,16 +205,17 @@
 
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="inputEmail4">Luas wilayah objek</label>
-                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="Ha" required>
+                                        <label for="inputSize">Luas wilayah objek</label>
+                                        <input type="Text" class="form-control" id="inputSize" placeholder="Ha" required [(ngModel)]="model.size" name="editSize">
                                     </div>
 
                                     <div class="form-group col-md-6">
-                                        <label for="exampleFormControlSelect1">Status kawasan</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
+                                        <label for="ddlRegionalStatus">Status kawasan</label>
+                                        <select class="form-control" id="ddlRegionalStatus" required [(ngModel)]="model.regionalStatus" name="regionalStatus">
                                             <option value="">Pilih status kawasan</option>
-                                            <option value="1">Hutan</option>
-                                            <option value="2">Non Hutan</option>
+                                            <option value="0" [selected]="model.regionalStatus == 0">Hutan</option>
+                                            <option value="1" [selected]="model.regionalStatus == 1">Non Hutan</option>
+                                            <option value="2" [selected]="model.regionalStatus == 2">Lainnya</option>
                                         </select>
                                     </div>
 
@@ -243,39 +225,34 @@
                                 <div class="form-row">
 
                                     <div class="form-group col-md-12">
-                                        <label for="inputEmail4">Klasifikasi bentang lahan</label>
-                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="Perbukitan, pegunungan" required>
+                                        <label for="inputLandTye">Klasifikasi bentang lahan</label>
+                                        <input type="Text" class="form-control" id="inputLandTye" placeholder="Perbukitan, pegunungan" required [(ngModel)]="model.landType" name="editLandType">
                                     </div>
 
                                     <div class="form-group col-md-12">
-                                        <label for="inputEmail4">Tipe penggunaan lahan</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Tipe penggunaan lahan" required></textarea>
+                                        <label for="inputLivelihood">Tipe penggunaan lahan</label>
+                                        <textarea class="form-control" id="inputLivelihood" rows="3" placeholder="Tipe penggunaan lahan" required [(ngModel)]="model.livelihood" name="editLivelihood"></textarea>
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Usulan skema</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
-                                            <option value="">Pilih usulan skema</option>
-                                            <option value="1">TORA</option>
-                                            <option value="2">Pelepasan kawasan hutan</option>
-                                            <option value="3">redistribusi tanah</option>
-                                        </select>
+                                        <label for="inputProposedTreatment">Usulan skema</label>
+                                        <input type="Text" class="form-control" id="inputProposedTreatment" placeholder="TORA, Pelepasan Kawasan Hutan" required [(ngModel)]="model.proposedTreatment" name="editProposedTreatment">
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Tahapan</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
+                                        <label for="ddlStages">Tahapan</label>
+                                        <select class="form-control" id="ddlStages" required [(ngModel)]="model.stages" name="stages">
                                             <option value="">Pilih tahapan</option>
-                                            <option value="1">Usulan</option>
-                                            <option value="2">Verifikasi</option>
-                                            <option value="3">Penetapan</option>
+                                            <option value="0" [selected]="model.regionalStatus == 0">Usulan</option>
+                                            <option value="1" [selected]="model.regionalStatus == 1">Verifikasi</option>
+                                            <option value="2" [selected]="model.regionalStatus == 2">Penetapan</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label for="inputEmail4">Unggah Koordinat PETA</label>
+                                        <label for="uploadMapCoordinate">Unggah Koordinat PETA</label>
                                         <label class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleFormControlFile1" aria-describedby="uploadHelpBlock" required>
+                                            <input type="file" class="custom-file-input" id="uploadMapCoordinate" aria-describedby="uploadHelpBlock" required>
                                             <small id="uploadHelpBlock" class="form-text text-muted">
                                                 File Ms.Excel (.xl .xls)
                                             </small>
@@ -292,30 +269,33 @@
                                 <div class="form-row pt-2">
 
                                     <div class="form-group col-md-4">
-                                        <label for="exampleFormControlSelect1">Status tanah</label>
-                                        <select class="form-control" id="exampleFormControlSelect1" required>
+                                        <label for="ddlLandStatus">Status tanah</label>
+                                        <select class="form-control" id="ddlLandStatus" required [(ngModel)]="model.landStatus" name="landStatus">
                                             <option value="">Pilih status tanah</option>
-                                            <option value="1">Negara</option>
-                                            <option value="2">Swasta</option>
-                                            <option value="3">lainya</option>
+                                            <option value="0" [selected]="model.landStatus == 0">Negara</option>
+                                            <option value="1" [selected]="model.landStatus == 1">Swasta</option>
+                                            <option value="2" [selected]="model.landStatus == 2">Pemberian</option>
+                                            <option value="3" [selected]="model.landStatus == 3">Warisan</option>
+                                            <option value="4" [selected]="model.landStatus == 4">Lainnya</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-md-8 text-muted">
-                                        <label for="inputEmail4">*Data tambahan</label>
-                                        <input type="Text" class="form-control" id="inputEmail4" placeholder="data tambahan">
+                                        <label for="inputAdditionalInfo">*Data tambahan</label>
+                                        <input type="Text" class="form-control" id="inputAdditionalInfo" placeholder="data tambahan">
                                     </div>
 
                                     <div class="form-group col-md-12">
-                                        <label for="inputEmail4">Sejarah penguasaan tanah</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" required></textarea>
+                                        <label for="inputLandTenureHistory">Sejarah penguasaan tanah</label>
+                                        <textarea class="form-control" id="inputLandTenureHistory" rows="6" required [(ngModel)]="model.landTenureHistory" name="editLandTenureHistory"></textarea>
                                     </div>
 
                                     <div class="form-group col-md-12">
-                                        <label for="inputEmail4">Kronologi konflik
+                                        <label for="inputChronologyConflict">
+                                            Kronologi konflik
                                             <label class="text-muted">*(Jika ada)</label>
                                         </label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        <textarea class="form-control" id="inputChronologyConflict" rows="3" [(ngModel)]="model.conflictChronology" name="editConflictChronology"></textarea>
                                     </div>
 
                                     <div class="form-row col-md-12">
@@ -324,16 +304,19 @@
                                         </div>
 
                                         <div class="form-group col-md-6 text-muted">
-                                            <label for="Formal">a. Formal</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                            <label for="inputFormalAdvocacyProgress">a. Formal</label>
+                                            <textarea class="form-control" id="inputFormalAdvocacyProgress" rows="3" [(ngModel)]="model.formalAdvocacyProgress" name="editFormalAdvocacyProgress"></textarea>
                                         </div>
 
                                         <div class="form-group col-md-6 text-muted">
-                                            <label for="NonFormal">b. Non formal</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                            <label for="inputNonFormalAdvocacyProgress">b. Non formal</label>
+                                            <textarea class="form-control" id="inputNonFormalAdvocacyProgress" rows="3" [(ngModel)]="model.nonFormalAdvocacyProgress" name="editNonFormalAdvocacyProgress"></textarea>
                                         </div>
                                     </div>
-
+                                    <div class="form-group col-md-12">
+                                        <button type="button" class="btn btn-primary" (click)="addOrEditObject(model)" data-dismiss="modal">Simpan</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                    </div>
                                 </div>
 
                             </div>
@@ -454,8 +437,8 @@
                                     </div>
 
                                     <div class="form-group col-md-8">
-                                        <button type="button" class="btn btn-info">Simpan data subjek</button>
-                                        <button type="button" class="btn btn-warning">Clear data</button>
+                                        <button type="button" class="btn btn-primary">Simpan data subjek</button>
+                                        <button type="button" class="btn btn-secondary">Clear data</button>
                                     </div>
 
 
@@ -466,18 +449,10 @@
                 </div>
             </div>
             <!-- End Modal Body-->
-
-            <div class="modal-footer">
-                <div class="pr-4">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan</button>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 <!-- END MODAL -->
-
 <!-- alert delete modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

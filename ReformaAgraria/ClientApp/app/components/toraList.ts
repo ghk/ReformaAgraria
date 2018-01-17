@@ -5,12 +5,14 @@ import { ToastrService } from 'ngx-toastr';
 import { ToraService } from '../services/tora';
 import { SharedService } from '../services/shared';
 import { LandStatus } from '../models/gen/landStatus';
+import { Status } from '../models/gen/status';
 import { RegionalStatus } from '../models/gen/regionalStatus';
 import { EducationalAttainment } from '../models/gen/educationalAttainment';
 import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
 import * as $ from 'jquery';
 import { ToraObjectService } from '../services/gen/toraObject';
+import { RegionService } from "../services/gen/region";
 
 @Component({
     selector: 'ra-tora-list',
@@ -24,6 +26,7 @@ export class ToraListComponent implements OnInit, OnDestroy {
     MaritalStatus = MaritalStatus;
     Gender = Gender;
     RegionalStatus = RegionalStatus;
+    Status = Status;
 
     toraObjects: any = [];
     toraSubjects: any = [];
@@ -36,15 +39,19 @@ export class ToraListComponent implements OnInit, OnDestroy {
     isDesc: boolean = false;
     prevColumn: string = "";
     objectId: number = 0;
-
+    model: any = [];
+    desa: any = [];
+    kecamatan: any = [];
     region: any;
+    state: string;
 
-    constructor(        
-        private cookieService: CookieService,        
+    constructor(
+        private cookieService: CookieService,
         private toastr: ToastrService,
         private toraService: ToraService,
         private toraObjectService: ToraObjectService,
-        private sharedService: SharedService
+        private sharedService: SharedService,
+        private regionService: RegionService
     ) { }
 
     ngOnInit(): void {
@@ -53,13 +60,15 @@ export class ToraListComponent implements OnInit, OnDestroy {
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             this.region = region;
             this.getToraObjects(region.id);
+            this.getDesa(region.fkParentId);
+            this.getKecamatan('72.1');
         });
     }
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
- 
+
     uploadFile(event) {
         this.loadingUploadModal = true;
         this.showUploadModal = false;
@@ -78,6 +87,20 @@ export class ToraListComponent implements OnInit, OnDestroy {
             });
     }
 
+    getKecamatan(parentId: string) {
+        let query = { data: { 'type': 'parent', 'regionType': 3, 'parentId': parentId } }
+        this.regionService.getAll(query, null).subscribe(data => {
+            this.kecamatan = data;
+        });
+    }
+
+    getDesa(parentId: string) {
+        let query = { data: { 'type': 'parent', 'regionType': 4, 'parentId': parentId } }
+        this.regionService.getAll(query, null).subscribe(data => {
+            this.desa = data;
+        });
+    }
+
     getToraObjects(id) {
         let query = { data: { 'type': 'getAllByRegionId', 'regionId': id } }
         this.toraObjectService.getAll(query, null).subscribe(data => {
@@ -85,6 +108,46 @@ export class ToraListComponent implements OnInit, OnDestroy {
             this.loading = false;
             this.showPage = true;
         });
+    }
+
+    addOrEditObject(model) {
+        if (this.state == 'edit') {
+            this.editObject(model);
+        }
+        else {
+            this.addObject(model);
+        }
+    }
+
+    add() {
+        this.model = [];
+        this.model.fkRegionId = this.region.id;
+        this.state = 'add';
+    }
+
+    addObject(model) {
+        this.toraService.addToraObject(model).subscribe(
+            data => {
+            this.toastr.success("Penambahan Berhasil", null);
+            },
+            error => {
+                this.toastr.error(error, null);
+            });
+    }
+
+    edit(object) {
+        this.model = object;
+        this.state = 'edit';
+    }
+
+    editObject(model) {
+        this.toraService.editToraObject(model).subscribe(
+            data => {
+            this.toastr.success("Pengeditan Berhasil", null);
+            },
+            error => {
+                this.toastr.error(error, null);
+            });
     }
 
     delete(id) {

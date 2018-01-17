@@ -36,6 +36,8 @@ namespace ReformaAgraria.Models
 
         public string NonFormalAdvocacyProgress { get; set; }
 
+        public int Stages { get; set; }
+
         public string FkRegionId { get; set; }
 
         [ForeignKey("FkRegionId")]
