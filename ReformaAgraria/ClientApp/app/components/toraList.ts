@@ -79,7 +79,7 @@ export class ToraListComponent implements OnInit, OnDestroy {
     }
 
     getToraObjects(id) {
-        let query = { data: { 'type': 'getAllByRegionId', 'regionId': id } }
+        let query = { data: { 'type': 'getAllByRegion', 'regionId': id } }
         this.toraObjectService.getAll(query, null).subscribe(data => {
             this.toraObjects = data;
             this.loading = false;

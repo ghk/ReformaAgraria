@@ -251,13 +251,13 @@ namespace ReformaAgraria.Controllers
         {
             var type = GetQueryString<string>("type");
 
-            if (type == "getAllByRegionId")
+            if (type == "getAllByRegion")
             {
                 var regionId = GetQueryString<int>("regionId");
                 query = query.Where(ts => ts.FkToraObjectId == regionId);
             }
 
-            if (type == "getAllByToraObjectId")
+            if (type == "getAllByToraObject")
             {
                 var toraObjectId = GetQueryString<int>("toraObjectId");
                 query = query.Where(ts => ts.FkToraObjectId == toraObjectId);

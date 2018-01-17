@@ -41,21 +41,15 @@ namespace ReformaAgraria.Controllers
                 }
             }
 
-            if (type == "parent")
+            if (type == "getAllByParent")
             {
-                var id = GetQueryString<string>("parentId");
-                var parentId = (id == null) ? null : id.Replace('_', '.');                    
+                var parentId = GetQueryString<string>("parentId");
                 var regionType = GetQueryString<int?>("regionType");
 
                 if (!string.IsNullOrWhiteSpace(parentId))
-                {
                     query = query.Where(r => r.FkParentId == parentId);
-
-                }
                 if (regionType != null)
-                {
                     query = query.Where(r => r.Type == (RegionType)regionType);
-                }
             }
 
             return query;

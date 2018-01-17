@@ -4,7 +4,7 @@ import { ColorPickerService } from 'angular4-color-picker';
 import { BaseLayerService } from '../services/gen/baseLayer';
 import { MapService } from '../services/map';
 import { BaseLayer } from '../models/gen/baseLayer';
-import MapUtils from '../helpers/mapUtils';
+import { MapUtils } from '../helpers/mapUtils';
 
 import * as L from 'leaflet';
 import * as $ from 'jquery';

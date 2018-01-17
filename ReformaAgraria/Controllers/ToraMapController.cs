@@ -18,6 +18,7 @@ using ProjNet.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems;
 using System.Net;
 using ReformaAgraria.Security;
+using Microsoft.EntityFrameworkCore;
 
 namespace ReformaAgraria.Controllers
 {
@@ -38,7 +39,7 @@ namespace ReformaAgraria.Controllers
         [HttpPost("import")]
         public async Task<ToraMap> Import()
         {
-            var results = HttpContext.Request.ReadFormAsync().Result;
+            var results = await HttpContext.Request.ReadFormAsync();
             var content = new ToraMap
             {
                 FkRegionId = results["regionId"],
@@ -47,14 +48,14 @@ namespace ReformaAgraria.Controllers
             };
 
             var file = results.Files[0];
-            var geoJsonModel = GetGeoJson(file);
-
-            if (geoJsonModel == null)
+            var geojson = GetGeoJson(file);
+            if (string.IsNullOrEmpty(geojson))
             {
+                // TODO: LOG
                 return null;
             }
 
-            content.Geojson = geoJsonModel;
+            content.Geojson = geojson;
             dbContext.Add(content);
             await dbContext.SaveChangesAsync();
 
@@ -65,7 +66,7 @@ namespace ReformaAgraria.Controllers
             ValidateAndCreateFolder(regionFolderPath);
             
             var destinationFile = Path.Combine(regionFolderPath, (content.Id.ToString() + ".zip"));
-            StreamCopy(destinationFile, file);
+            StreamCopy(destinationFile, file);           
 
             return content;
         }
@@ -82,48 +83,39 @@ namespace ReformaAgraria.Controllers
             }
         }
 
-        [HttpGet("download/{toraId}")]
-        public async Task<IActionResult> Download(int toraId)
+        [HttpGet("download/{toraMapId}")]
+        public async Task<IActionResult> Download(int toraMapId)
         {
-            var toraObject = dbContext.Set<ToraObject>()
-                .Where(to => to.Id == toraId)
-                .FirstOrDefault();
+            var toraMap = await dbContext.Set<ToraMap>()
+                .Where(tm => tm.Id == toraMapId)
+                .FirstOrDefaultAsync();
 
-            if (toraObject == null)
+            if (toraMap == null)
                 return NotFound(new RequestResult
                 {
                     State = RequestState.Failed,
-                    Message = "TORA not found"
+                    Message = "TORA map not found"
                 });
 
             var toraPath = Path.Combine(_hostingEnvironment.WebRootPath, "TORA");
-            var filePath = Path.Combine(toraPath, toraObject.FkRegionId, toraObject.Id.ToString() + ".zip");
-            using (var memory = new MemoryStream())
+            var filePath = Path.Combine(toraPath, toraMap.FkRegionId, toraMap.Id + ".zip");
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(filePath, FileMode.Open))
             {
-                using (var stream = new FileStream(filePath, FileMode.Open))
-                {
-                    await stream.CopyToAsync(memory);
-                }
-                memory.Position = 0;
-                return File(memory, "application/zip", Path.GetFileName(filePath));
+                await stream.CopyToAsync(memory);
             }
+            memory.Position = 0;
+            return File(memory, "application/zip", Path.GetFileName(filePath));
         }
 
         protected override IQueryable<ToraMap> ApplyQuery(IQueryable<ToraMap> query)
         {
             var type = GetQueryString<string>("type");
-            if (type != null)
+            if (type == "getAllByRegion")
             {
-                if (type == "parent")
-                {
-                    var parentId = GetQueryString<string>("parentId").ToString().Trim().Replace("_", ".");
-
-
-                    if (!string.IsNullOrWhiteSpace(parentId))
-                    {
-                        query = query.Where(r => r.FkRegionId.Contains(parentId));
-                    }
-                }
+                var regionId = GetQueryString<string>("regionId");                    
+                if (!string.IsNullOrWhiteSpace(regionId))
+                    query = query.Where(r => r.FkRegionId.Contains(regionId));
             }
 
             return query;
