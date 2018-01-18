@@ -61,10 +61,11 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
 
             this.toraObject = toraObject;
 
-            if (!this.sharedService.region)
+            if (!this.sharedService.region) {
                 this.regionService.getById(toraObject.fkRegionId).subscribe(region => {
                     this.sharedService.setRegion(region);
                 });
+            }
             
             this.toraSubjectService.getAll(toraSubjectQuery, null).subscribe(toraSubjects => {
                 this.toraSubjects = toraSubjects;

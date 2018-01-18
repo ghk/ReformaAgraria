@@ -13,7 +13,12 @@
         </ul>
     </div> -->
     <div class="card-body">
-        <div id="map" leaflet style="height: 561px; position: relative;" [leafletOptions]="options" [leafletCenter]="center" [leafletZoom]="zoom"
+        <div id="map" leaflet style="height: 561px; position: relative;" 
+            [leafletOptions]="options" 
+            [leafletCenter]="center" 
+            [leafletZoom]="zoom"
+            [leafletLayers]="layers"
+            [leafletLayersControl]="layersControl"
             (leafletMapReady)="onMapReady($event)">
         </div>
     </div>
@@ -108,28 +113,6 @@
                         <i class="fa fa-repeat"></i>&nbsp;
                         <i class="fa fa-save"></i>Download
                     </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
-    <div class="modal-dialog modal-lg" role="document">
-        <form class="form-horizontal" (ngSubmit)="deleteOverlay(model)">
-            <div class="modal-content" style="border-radius: 0">
-                <div class="modal-header">
-                    <h5 class="modal-title">Apakah Anda Yakin Akan Menghapus {{model.label}} ? </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary focus" data-backdrop="false" data-dismiss="modal">
-                        <i class="fa fa-save"></i> Batal</button>
-                    <button type="submit" class="btn btn-danger" data-backdrop="false">
-                        <i class="fa fa-repeat"></i>&nbsp;
-                        <i class="fa fa-save"></i> Delete</button>
                 </div>
             </div>
         </form>

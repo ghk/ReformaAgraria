@@ -111,11 +111,23 @@ namespace ReformaAgraria.Controllers
         protected override IQueryable<ToraMap> ApplyQuery(IQueryable<ToraMap> query)
         {
             var type = GetQueryString<string>("type");
+
             if (type == "getAllByRegion")
             {
                 var regionId = GetQueryString<string>("regionId");                    
                 if (!string.IsNullOrWhiteSpace(regionId))
                     query = query.Where(r => r.FkRegionId.Contains(regionId));
+            }
+
+            if (type == "getAllByRegionComplete")
+            {
+                var regionId = GetQueryString<string>("regionId");
+                if (!string.IsNullOrWhiteSpace(regionId))
+                {
+                    query = query.Include("Region.Parent.Parent");
+                    query = query.Include(t => t.ToraObject);
+                    query = query.Where(r => r.FkRegionId.Contains(regionId));
+                }
             }
 
             return query;

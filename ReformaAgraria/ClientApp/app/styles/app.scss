@@ -9,17 +9,16 @@
 
 body {
     padding-top: 3rem;
-    background-color: #EEEEEE; 
+    background-color: #EEEEEE;
 }
 
 // section {
-
 // }
-
 .container {
     padding-right: 5px;
     padding-left: 5px;
 }
+
 
 /*
  * Typography
@@ -32,21 +31,21 @@ h1 {
 }
 
 // h4 {
-
 // }
 
 /*list group*/
 
 // .list-group .list-group-item {
-
 // }
 
 /* Login image properti*/
+
 .image-login-style {
     width: 180px;
     padding-bottom: 20px;
     padding-top: 30px;
 }
+
 
 /*
  * Sidebar
@@ -86,39 +85,36 @@ h1 {
 }
 
 // .nav .nav-item {
-    
 // }
-
 .sidebar .nav .nav-item .nav-link {
-    color: rgba(255,255,255,.5);
-    font-size: 14px;        
+    color: rgba(255, 255, 255, .5);
+    font-size: 14px;
     font-style: normal;
 }
 
 .sidebar .nav .nav-item .active {
-    color: #FFF;   
+    color: #FFF;
 }
 
 .sidebar .nav .nav-item .nav-link:hover {
-    color: #e5e5e5;   
+    color: #e5e5e5;
 }
-
 
 .agenda_kegiatan img {
     width: 215px;
 }
+
 
 /*
  * Navbar
  */
 
 .navbar {
-    background-color: #1976d2;
-    // box-shadow: 12px 0px 8px; 
+    background-color: #1976d2; // box-shadow: 12px 0px 8px; 
 }
 
 .navbar-brand {
-    float: left;    
+    float: left;
 }
 
 .nav-item .nav-link img {
@@ -168,20 +164,24 @@ h1 {
 }
 
 @media screen and (max-height: 450px) {
-  .sidenavDrawer {padding-top: 15px;}
-  .sidenavDrawer a {font-size: 18px;}
+    .sidenavDrawer {
+        padding-top: 15px;
+    }
+    .sidenavDrawer a {
+        font-size: 18px;
+    }
 }
 
 .breadcrumb {
     background-color: #1976d2;
     font-size: 14px;
     line-height: 5px;
-    height: 5px;  
+    height: 5px;
 }
 
 ol.breadcrumb li a {
     text-decoration: none;
-    color: rgba(255,255,255,.5);
+    color: rgba(255, 255, 255, .5);
 }
 
 ol.breadcrumb .active {
@@ -189,11 +189,11 @@ ol.breadcrumb .active {
 }
 
 ol.breadcrumb li a:hover {
-    color: #FFFFFF;   
+    color: #FFFFFF;
 }
 
 .breadcrumb .breadcrumb-item::before {
-    color: rgba(255,255,255,.5);
+    color: rgba(255, 255, 255, .5);
 }
 
 .card {
@@ -242,20 +242,21 @@ ol.breadcrumb li a:hover {
     margin: auto;
 }
 
+
 /*header map*/
 
 .kartu_map img {
     margin-top: 0.5rem;
-} 
+}
 
 .kartu_map .button {
     float: right;
 }
 
+
 /*Listgroup*/
 
 // .list-group {
-    
 // }
 
 /* Placeholders */
@@ -269,11 +270,12 @@ ol.breadcrumb li a:hover {
     padding-bottom: 1.5rem;
 }
 
-@media(max-width:980px){
+@media(max-width:980px) {
     #navbarsMenu {
         display: none;
     }
 }
+
 
 /*indikator dashboard permasalahan agraria*/
 
@@ -286,54 +288,98 @@ ol.breadcrumb li a:hover {
     transform: translate(-50%, -50%);
 }
 
+
 /*spin css table*/
 
-
 .spin-icon {
-animation-name: spin;
-width: 32px;
-animation: spin 1100ms linear both;
+    animation-name: spin;
+    width: 32px;
+    animation: spin 1100ms linear both;
 }
+
 
 /* Generated with Bounce.js. Edit at https://goo.gl/KRVw6Y */
 
-  @keyframes spin { 
-    0% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    4.66% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    4.76% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    7.81% { transform: matrix3d(0.525, 0.851, 0, 0, -0.851, 0.525, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    10.77% { transform: matrix3d(-0.12, 0.993, q0, 0, -0.993, -0.12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    16.68% { transform: matrix3d(-0.783, 0.622, 0, 0, -0.622, -0.783, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    22.68% { transform: matrix3d(-0.954, 0.299, 0, 0, -0.299, -0.954, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    28.6% { transform: matrix3d(-0.991, 0.137, 0, 0, -0.137, -0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    40.51% { transform: matrix3d(-1, 0.027, 0, 0, -0.027, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    52.43% { transform: matrix3d(-1, 0.005, 0, 0, -0.005, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    100% { transform: matrix3d(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); } 
-  }
-  
-  
+@keyframes spin {
+    0% {
+        transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    4.66% {
+        transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    4.76% {
+        transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    7.81% {
+        transform: matrix3d(0.525, 0.851, 0, 0, -0.851, 0.525, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    10.77% {
+        transform: matrix3d(-0.12, 0.993, q0, 0, -0.993, -0.12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    16.68% {
+        transform: matrix3d(-0.783, 0.622, 0, 0, -0.622, -0.783, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    22.68% {
+        transform: matrix3d(-0.954, 0.299, 0, 0, -0.299, -0.954, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    28.6% {
+        transform: matrix3d(-0.991, 0.137, 0, 0, -0.137, -0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    40.51% {
+        transform: matrix3d(-1, 0.027, 0, 0, -0.027, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    52.43% {
+        transform: matrix3d(-1, 0.005, 0, 0, -0.005, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    100% {
+        transform: matrix3d(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+}
 
 .back-spin {
     animation-name: back-spin;
     animation: back-spin 1100ms linear both;
     width: 32px;
-  }
-  
-  /* Generated with Bounce.js. Edit at https://goo.gl/1ULDyA */
+}
 
-  @keyframes back-spin { 
-    0% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    4.66% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    4.76% { transform: matrix3d(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    7.81% { transform: matrix3d(-0.525, 0.851, 0, 0, -0.851, -0.525, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    10.77% { transform: matrix3d(0.12, 0.993, 0, 0, -0.993, 0.12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    16.68% { transform: matrix3d(0.783, 0.622, 0, 0, -0.622, 0.783, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    22.68% { transform: matrix3d(0.954, 0.299, 0, 0, -0.299, 0.954, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    28.6% { transform: matrix3d(0.991, 0.137, 0, 0, -0.137, 0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    40.51% { transform: matrix3d(1, 0.027, 0, 0, -0.027, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    52.43% { transform: matrix3d(1, 0.005, 0, 0, -0.005, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-    100% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); } 
-  }
+
+/* Generated with Bounce.js. Edit at https://goo.gl/1ULDyA */
+
+@keyframes back-spin {
+    0% {
+        transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    4.66% {
+        transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    4.76% {
+        transform: matrix3d(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    7.81% {
+        transform: matrix3d(-0.525, 0.851, 0, 0, -0.851, -0.525, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    10.77% {
+        transform: matrix3d(0.12, 0.993, 0, 0, -0.993, 0.12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    16.68% {
+        transform: matrix3d(0.783, 0.622, 0, 0, -0.622, 0.783, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    22.68% {
+        transform: matrix3d(0.954, 0.299, 0, 0, -0.299, 0.954, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    28.6% {
+        transform: matrix3d(0.991, 0.137, 0, 0, -0.137, 0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    40.51% {
+        transform: matrix3d(1, 0.027, 0, 0, -0.027, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    52.43% {
+        transform: matrix3d(1, 0.005, 0, 0, -0.005, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    100% {
+        transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+}
 
 
 /*text size*/
@@ -350,6 +396,7 @@ animation: spin 1100ms linear both;
     font-size: 14px;
 }
 
+
 /* end text size */
 
 // table size and style
@@ -358,14 +405,12 @@ animation: spin 1100ms linear both;
 }
 
 // tab style
-
-table, td, th {    
-    
-}
+table,
+td,
+th {}
 
 .table-region table {
     border-collapse: collapse;
-    
 }
 
 table#table-region td {
@@ -380,110 +425,120 @@ table#table-region th {
     font-size: 14px;
 }
 
-
-
 // loader animation
 
 /* Center the loader */
+
 #loader {
-  //position: absolute;
-  //margin: 70px 600px 70px 600px;
-  margin-top: 70px;
-  margin-bottom: 70px;
-  margin-left: auto;
-  margin-right: auto;
-  left: 50%;
-  top: 50%;
-  right: 50%;
-  bottom: 50%;
-  z-index: 1;
-  width: 120px;
-  height: 120px;
-  //margin: -75px 0 0 -75px;
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid #3498db;
-  width: 100px;
-  height: 100px;
-  -webkit-animation: spin 1.5s linear infinite;
-  animation: spin 1.5s linear infinite;
+    //position: absolute;
+    //margin: 70px 600px 70px 600px;
+    margin-top: 70px;
+    margin-bottom: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 50%;
+    top: 50%;
+    right: 50%;
+    bottom: 50%;
+    z-index: 1;
+    width: 120px;
+    height: 120px; //margin: -75px 0 0 -75px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 100px;
+    height: 100px;
+    -webkit-animation: spin 1.5s linear infinite;
+    animation: spin 1.5s linear infinite;
 }
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
+
 /* Add animation to "page content" */
+
 .animate-bottom {
-  position: relative;
-  -webkit-animation-name: animatebottom;
-  -webkit-animation-duration: 1s;
-  animation-name: animatebottom;
-  animation-duration: 1s
+    position: relative;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 1s;
+    animation-name: animatebottom;
+    animation-duration: 1s
 }
 
 @-webkit-keyframes animatebottom {
-  from { bottom:-100px; opacity:0 } 
-  to { bottom:0px; opacity:1 }
+    from {
+        bottom: -100px;
+        opacity: 0
+    }
+    to {
+        bottom: 0px;
+        opacity: 1
+    }
 }
 
-@keyframes animatebottom { 
-  from{ bottom:-100px; opacity:0 } 
-  to{ bottom:0; opacity:1 }
+@keyframes animatebottom {
+    from {
+        bottom: -100px;
+        opacity: 0
+    }
+    to {
+        bottom: 0;
+        opacity: 1
+    }
 }
 
 #myDiv {
-  display: none;
-  text-align: center;
+    display: none;
+    text-align: center;
 }
 
 // pointer
-
 .btn {
     cursor: pointer;
 }
 
-
 // vertical line
-
 .Vline {
     border-left: 1px solid rgba(0, 0, 0, 0.1);
     height: 80px;
     position: absolute;
     left: 24%;
-    
 }
 
 // header indicator
-
-.header-list-problem, .header-list-object {
+.header-list-problem,
+.header-list-object {
     border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
 
+.header-list-problem h2 {
+    color: #FF0058;
+}
 
 .header-list-problem h2 {
     color: #FF0058;
 }
 
-
-.header-list-problem h2 {
-    color: #FF0058;
-    
-}
-
-.header-list-problem p {
-}
+.header-list-problem p {}
 
 .header-list-object h2 {
     color: #4835E8;
-    
-
 }
 
 .header-list-large h2 {
@@ -497,13 +552,12 @@ table#table-region th {
 }
 
 .header-list-problem .header-list-object p {
-   margin-top: 20px;
+    margin-top: 20px;
 }
-
 
 .mainMap {
     display: block;
-    height: 600px;    
+    height: 600px;
 }
 
 .box {
@@ -544,22 +598,23 @@ table#table-region th {
 }
 
 // map icons properti
-.iconsMapUpload { 
+.iconsMapUpload {
     margin-right: 10px;
 }
 
 // button toggle
-
 .switch {
     position: relative;
     display: inline-block;
     width: 50px;
     height: 25px;
-  }
-  
-  .switch input {display:none;}
-  
-  .slider {
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -569,9 +624,9 @@ table#table-region th {
     background-color: #ccc;
     -webkit-transition: .2s;
     transition: .2s;
-  }
-  
-  .slider:before {
+}
+
+.slider:before {
     position: absolute;
     content: "";
     height: 24px;
@@ -581,35 +636,34 @@ table#table-region th {
     background-color: white;
     -webkit-transition: .2s;
     transition: .2s;
-  }
-  
-  input:checked + .slider {
+}
+
+input:checked+.slider {
     background-color: #2196F3;
-  }
-  
-  input:focus + .slider {
+}
+
+input:focus+.slider {
     box-shadow: 0 0 1px #2196F3;
-  } 
-  
-  input:checked + .slider:before {
+}
+
+input:checked+.slider:before {
     -webkit-transform: translateX(24px);
     -ms-transform: translateX(26px);
     transform: translateX(20px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
-    border-radius: 33px;
-  }
-  
-  .slider.round:before {
-    border-radius: 50%;
-  }
-
-
-.leaflet-control-layers-expanded {
-    overflow: auto;
-    max-height: 322px;
 }
 
 
+/* Rounded sliders */
+
+.slider.round {
+    border-radius: 33px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.leaflet-control-layers-toggle {
+    
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAQAAAADQ4RFAAACf0lEQVR4AY1UM3gkARTePdvdoTxXKc+qTl3aU5U6b2Kbkz3Gtq3Zw6ziLGNPzrYx7946Tr6/ee/XeCQ4D3ykPtL5tHno4n0d/h3+xfuWHGLX81cn7r0iTNzjr7LrlxCqPtkbTQEHeqOrTy4Yyt3VCi/IOB0v7rVC7q45Q3Gr5K6jt+3Gl5nCoDD4MtO+j96Wu8atmhGqcNGHObuf8OM/x3AMx38+4Z2sPqzCxRFK2aF2e5Jol56XTLyggAMTL56XOMoS1W4pOyjUcGGQdZxU6qRh7B9Zp+PfpOFlqt0zyDZckPi1ttmIp03jX8gyJ8a/PG2yutpS/Vol7peZIbZcKBAEEheEIAgFbDkz5H6Zrkm2hVWGiXKiF4Ycw0RWKdtC16Q7qe3X4iOMxruonzegJzWaXFrU9utOSsLUmrc0YjeWYjCW4PDMADElpJSSQ0vQvA1Tm6/JlKnqFs1EGyZiFCqnRZTEJJJiKRYzVYzJck2Rm6P4iH+cmSY0YzimYa8l0EtTODFWhcMIMVqdsI2uiTvKmTisIDHJ3od5GILVhBCarCfVRmo4uTjkhrhzkiBV7SsaqS+TzrzM1qpGGUFt28pIySQHR6h7F6KSwGWm97ay+Z+ZqMcEjEWebE7wxCSQwpkhJqoZA5ivCdZDjJepuJ9IQjGGUmuXJdBFUygxVqVsxFsLMbDe8ZbDYVCGKxs+W080max1hFCarCfV+C1KATwcnvE9gRRuMP2prdbWGowm1KB1y+zwMMENkM755cJ2yPDtqhTI6ED1M/82yIDtC/4j4BijjeObflpO9I9MwXTCsSX8jWAFeHr05WoLTJ5G8IQVS/7vwR6ohirYM7f6HzYpogfS3R2OAAAAAElFTkSuQmCC)
+}

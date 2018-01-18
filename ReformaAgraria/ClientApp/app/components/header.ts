@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                     'depth': depth
                 }
             };
-            
+                        
             this.regionService.getById(region.id, breadcrumbQuery, null).subscribe(region => {
                 this.region = region;
             })
