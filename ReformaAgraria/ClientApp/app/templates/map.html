@@ -1,7 +1,7 @@
 ﻿﻿<div class="box">
-
-<div class="d-flex align-items-stretch">
-    <div leaflet id="map" [leafletOptions]="options" [leafletCenter]="center" [leafletZoom]="zoom" (leafletMapReady)="onMapReady($event)">
+    <div class="d-flex align-items-stretch">
+        <div leaflet id="map" [leafletOptions]="options" [leafletCenter]="center" [leafletZoom]="zoom" (leafletMapReady)="onMapReady($event)">
+        </div>
     </div>
 </div>
 
@@ -24,8 +24,7 @@
                         <div class="form-group col-md-6">
                             <label class="form-control-label" for="color">Warna</label>
                             <input id="color" name="color" class="form-control" autocomplete="off" [(colorPicker)]="color" [style.background]="color"
-                                [value]="color" [cpPosition]="'bottom'" [cpPositionOffset]="'20%'" [cpOutputFormat]="'hex'"
-                            />
+                                [value]="color" [cpPosition]="'bottom'" [cpPositionOffset]="'20%'" [cpOutputFormat]="'hex'" />
                         </div>
                         <div class="form-group col-md-6">
                             <label class="form-control-label" for="file">Unggah File (*.zip)</label>
@@ -64,8 +63,7 @@
                         <div class="form-group col-md-6">
                             <label class="form-control-label" for="color">Warna</label>
                             <input id="color" name="color" class="form-control" autocomplete="off" [(colorPicker)]="color" [style.background]="color"
-                                [value]="color" [cpPosition]="'bottom'" [cpPositionOffset]="'20%'" [cpOutputFormat]="'hex'"
-                            />
+                                [value]="color" [cpPosition]="'bottom'" [cpPositionOffset]="'20%'" [cpOutputFormat]="'hex'" />
                         </div>
                         <div class="form-group col-md-6">
                             <label class="form-control-label" for="file">File (*.zip)</label>

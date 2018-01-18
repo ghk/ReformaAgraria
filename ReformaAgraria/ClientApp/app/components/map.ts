@@ -1,10 +1,15 @@
-﻿import { OnInit, NgZone, OnDestroy, Component, ApplicationRef, EventEmitter, Input, Output, Injector, ComponentRef, ComponentFactoryResolver } from "@angular/core";
+﻿import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ColorPickerService } from 'angular4-color-picker';
+import { ToastrService } from 'ngx-toastr';
 
 import { BaseLayerService } from '../services/gen/baseLayer';
 import { MapService } from '../services/map';
-import { BaseLayer } from '../models/gen/baseLayer';
+import { ToraMapService } from "../services/gen/toraMap";
+import { ToraObjectService } from "../services/gen/toraObject";
+import { RegionService } from "../services/gen/region";
 import { MapUtils } from '../helpers/mapUtils';
+import { ToraMap } from "../models/gen/toraMap";
+import { BaseLayer } from '../models/gen/baseLayer';
 
 import * as L from 'leaflet';
 import * as $ from 'jquery';
@@ -17,11 +22,6 @@ const LAYERS = {
     'MapboxSatellite': new L.TileLayer('https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZ2hrIiwiYSI6ImUxYmUxZDU3MTllY2ZkMGQ3OTAwNTg1MmNlMWUyYWIyIn0.qZKc1XfW236NeD0qAKBf9A')
 };
 
-import { ToastrService } from 'ngx-toastr';
-import { ToraMapService } from "../services/gen/toraMap";
-import { ToraObjectService } from "../services/gen/toraObject";
-import { RegionService } from "../services/gen/region";
-
 @Component({
     selector: 'ra-map',
     templateUrl: '../templates/map.html',
@@ -33,22 +33,15 @@ export class MapComponent implements OnInit, OnDestroy {
     center: any;
     zoom: number;
     layers: any[] = [];
-    layersControl: any;
     controlOverlayShowing: any;
     afterInit: boolean;
-    mapData: any;
-    baseLayers: any;
     overlays: L.Control.Layers;
     model: any = {};
     markers = [];
     initialData: any[] = [];
     isOverlayAdded: boolean;
-    BaseLayer: BaseLayer;
-    leafletHeight: any;
+
     private color: string = "#127bdc";
-    kabupaten: string;
-    kecamatan: string;
-    desa: string;
 
     constructor(
         private baseLayerService: BaseLayerService,
@@ -66,17 +59,18 @@ export class MapComponent implements OnInit, OnDestroy {
         this.options = {
             zoomControl: false,
             layers: [LAYERS["OpenStreetMap"]]
-        };
+        };        
         
         window.addEventListener('resize', this.onResize);
         window.dispatchEvent(new Event('resize'));
         
-        let query = {};
-        this.baseLayerService.getAll(query, null).subscribe(data => {
+        let baseLayerQuery = {};
+        this.baseLayerService.getAll(baseLayerQuery, null).subscribe(data => {
             this.applyOverlay(data);
         });
-        let queryTora = { data: { 'type': 'parent', 'parentId': '72.1' } }
-        this.toraMapService.getAll(queryTora, null).subscribe(data => {
+
+        let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': '72.1' } }
+        this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
             this.applyOverlayTora(data);
         });   
 
@@ -87,11 +81,7 @@ export class MapComponent implements OnInit, OnDestroy {
         window.removeEventListener('resize', this.onResize);
     }
 
-    applyOverlay(data) {
-        if (data.length && data.length == 0) {
-            return
-        }
-
+    applyOverlay(data: BaseLayer[]) {   
         data.forEach(result => {
             let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
             let innerHtml = `
@@ -101,26 +91,22 @@ export class MapComponent implements OnInit, OnDestroy {
             <a href="javascript:void(0)">
                 <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
             </a>                     
-            `;
+            `;            
             let layer = this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
             this.layers.push({ id: result.id, layer: geojson });
             this.initialData.push(result);
         });
+
         this.isOverlayAdded = true;
     }
 
-    applyOverlayTora(data) {
-        if (data.length && data.length == 0) {
-            return
-        }
+    applyOverlayTora(data: ToraMap[]): void {
         data.forEach(result => {
-            this.toraObjectService.getById(result.fkToraObjectId).subscribe(tora => {
-                let geojson = this.getGeoJsonTora(result, '#FF0000', tora);
-            })
+            let geojson = this.getGeoJsonTora(result, '#FF0000');
         });
     }
 
-    getGeoJsonTora(data, currentColor, tora): any {
+    getGeoJsonTora(data: ToraMap, currentColor): any {
         let geoJsonOptions = {
             style: (feature) => {
                 let color = "#000";
@@ -139,58 +125,49 @@ export class MapComponent implements OnInit, OnDestroy {
                 });
             },
             onEachFeature: (feature, layer: L.FeatureGroup) => {
-                this.regionService.getById(tora.fkRegionId, null, null).subscribe(desa => {
-                    this.desa = desa.name;
-                    this.regionService.getById(desa.fkParentId, null, null).subscribe(kec => {
-                        this.kecamatan = kec.name;
-                        this.regionService.getById(kec.fkParentId, null, null).subscribe(kab => {
-                            this.kabupaten = kab.name;
-                            layer.bindPopup('<table class=\'table table-sm\'><thead><tr><th colspan=3 style=\'text-align:center\'>' + data.name + '</th></tr></thead>' +
-                                '<tbody><tr><td>Kabupaten</td><td>:</td><td>' + this.kabupaten + '</td></tr>' +
-                                '<tr><td>Kecamatan</td><td>:</td><td>' + this.kecamatan + '</td></tr>' +
-                                '<tr><td>Desa</td><td>:</td><td>' + this.desa + '</td></tr>' +
-                                '<tr><td>Luas</td><td>:</td><td>' + tora.size + ' ha</td></tr>' +
-                                '<tr><td>Jumlah Penduduk</td><td>:</td><td>' + tora.totalTenants + '</td></tr></tbody></table>');
+                layer.bindPopup('<table class=\'table table-sm\'><thead><tr><th colspan=3 style=\'text-align:center\'>' + data.name + '</th></tr></thead>' +
+                    '<tbody><tr><td>Kabupaten</td><td>:</td><td>' + data.region.parent.parent.name + '</td></tr>' +
+                    '<tr><td>Kecamatan</td><td>:</td><td>' + data.region.parent.name + '</td></tr>' +
+                    '<tr><td>Desa</td><td>:</td><td>' + data.region.name + '</td></tr>' +
+                    '<tr><td>Luas</td><td>:</td><td>' + data.toraObject.size + ' ha</td></tr>' +
+                    '<tr><td>Jumlah Penduduk</td><td>:</td><td>' + data.toraObject.totalTenants + '</td></tr></tbody></table>');
 
-                            layer.on('click', function (e) {
-                            });
+                layer.on('click', function (e) {
+                });
 
-                            layer.addTo(this.map);
+                layer.addTo(this.map);
 
-                            let center = null;
+                let center = null;
 
-                            if (layer.feature['geometry'].type === 'Point') {
-                                center = layer.feature['geometry'].coordinates;
-                            }
-                            else {
-                                let bounds = layer.getBounds();
-                                center = bounds.getCenter();
-                            }
+                if (layer.feature['geometry'].type === 'Point') {
+                    center = layer.feature['geometry'].coordinates;
+                }
+                else {
+                    let bounds = layer.getBounds();
+                    center = bounds.getCenter();
+                }
 
-                            let element = null;
+                let element = null;
 
-                            if (!element)
-                                return;
+                if (!element)
+                    return;
 
-                            if (feature.properties['icon']) {
-                                let icon = L.icon({
-                                    iconUrl: 'assets/markers/' + feature.properties['icon'],
-                                    iconSize: [15, 15],
-                                    shadowSize: [50, 64],
-                                    iconAnchor: [22, 24],
-                                    shadowAnchor: [4, 62],
-                                    popupAnchor: [-3, -76]
-                                });
+                if (feature.properties['icon']) {
+                    let icon = L.icon({
+                        iconUrl: 'assets/markers/' + feature.properties['icon'],
+                        iconSize: [15, 15],
+                        shadowSize: [50, 64],
+                        iconAnchor: [22, 24],
+                        shadowAnchor: [4, 62],
+                        popupAnchor: [-3, -76]
+                    });
 
-                                let marker = L.marker(center, { icon: icon }).addTo(this.map);
-                                this.addMarker(marker);
-                            }
-                        });
-                    })
-                })
+                    let marker = L.marker(center, { icon: icon }).addTo(this.map);
+                    this.addMarker(marker);
+                }
             }
         };
-        return MapUtils.setGeoJsonLayer(JSON.parse(data.geojson), geoJsonOptions);
+        return L.geoJSON(JSON.parse(data.geojson), geoJsonOptions);
     } 
 
     onclickActionOverlay = (event) => {
@@ -303,15 +280,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     onMapReady(map: L.Map): void {
         this.map = map;
-        this.setLayer('OpenStreetMap');
-        this.setupControlBar();
-
-        //RESIZE ICON
-        this.map.on('zoomend', () => {
-            this.map.eachLayer(layer => {
-
-            });
-        });
+        this.setupControlBar();        
     }
 
     uploadFile() {
@@ -416,13 +385,11 @@ export class MapComponent implements OnInit, OnDestroy {
                 }
             }
         };
-        return MapUtils.setGeoJsonLayer(geoJson, geoJsonOptions);
+        return L.geoJSON(geoJson, geoJsonOptions);
     }
 
     onResize = (e) => {
-        let height = e.target.innerHeight - 85;
+        let height = e.target.innerHeight - 58;
         $("#map").height(height);
     }
-
-
 }
