@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
 import { ProgressHttpModule } from 'angular-progress-http';
-import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
@@ -12,13 +12,14 @@ import { ColorPickerModule } from 'angular4-color-picker';
 import { NgPipesModule } from 'ngx-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { CalendarModule } from 'angular-calendar';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
 import { SidenavComponent } from './components/sidenav';
 import { DashboardComponent } from './components/dashboard';
 import { HomeComponent } from './components/home';
-import { EventComponent } from './components/event';
+import { EventCalendarComponent } from './components/eventCalendar';
 import { VillageComponent } from './components/village';
 import { TeamComponent } from './components/team';
 import { VillageBorderComponent } from './components/village-border';
@@ -48,6 +49,7 @@ import { BaseLayerService } from './services/gen/baseLayer';
 import { MapService } from './services/map';
 import { ToraMapService } from './services/gen/toraMap';
 import { SearchService } from './services/search';
+import { EventService } from './services/gen/event';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
@@ -63,7 +65,7 @@ import './styles/app.scss';
         SidenavComponent,
         DashboardComponent,
         HomeComponent,
-        EventComponent,
+        EventCalendarComponent,
         VillageComponent,
         TeamComponent,
         VillageBorderComponent,
@@ -95,13 +97,14 @@ import './styles/app.scss';
         NgPipesModule,
         TypeaheadModule.forRoot(),
         TabsModule.forRoot(),
+        CalendarModule.forRoot(),
         RouterModule.forRoot([
             { path: '', redirectTo: 'home/72_1', pathMatch: 'full' },
             {
                 path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
                     { path: 'home/:id', component: HomeComponent },
                     { path: 'toradetail/:id', component: ToraDetailComponent },
-                    { path: 'event', component: EventComponent },
+                    { path: 'calendar/:id', component: EventCalendarComponent },
                     { path: 'map', component: MapComponent },
                 ]
             },
@@ -130,7 +133,9 @@ import './styles/app.scss';
         BaseLayerService,
         MapService,
         ToraMapService,
-        SearchService
+        SearchService,
+        EventService,
+        { provide: LOCALE_ID, useValue: 'id-ID' }
     ]
 })
 export class AppModuleShared {
