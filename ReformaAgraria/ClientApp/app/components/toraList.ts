@@ -10,9 +10,11 @@ import { RegionalStatus } from '../models/gen/regionalStatus';
 import { EducationalAttainment } from '../models/gen/educationalAttainment';
 import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
+import { Query } from '../models/query';
 import * as $ from 'jquery';
 import { ToraObjectService } from '../services/gen/toraObject';
 import { RegionService } from "../services/gen/region";
+import { ToraSubjectService } from "../services/gen/toraSubject";
 
 @Component({
     selector: 'ra-tora-list',
@@ -51,7 +53,8 @@ export class ToraListComponent implements OnInit, OnDestroy {
         private toraService: ToraService,
         private toraObjectService: ToraObjectService,
         private sharedService: SharedService,
-        private regionService: RegionService
+        private regionService: RegionService,
+        private toraSubjectService: ToraSubjectService
     ) { }
 
     ngOnInit(): void {
@@ -60,8 +63,8 @@ export class ToraListComponent implements OnInit, OnDestroy {
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             this.region = region;
             this.getToraObjects(region.id);
-            this.getDesa(region.fkParentId);
-            this.getKecamatan('72.1');
+            //this.getDesa(region.fkParentId);
+            //this.getKecamatan('72.1');
         });
     }
 
@@ -110,6 +113,19 @@ export class ToraListComponent implements OnInit, OnDestroy {
         });
     }
 
+    getToraSubjects(id) {
+        console.log(id);
+        let toraSubjectQuery: Query = {
+            data: {
+                type: 'getAllByToraObjectId',
+                toraObjectId: id
+            }
+        };
+        this.toraSubjectService.getAll(toraSubjectQuery, null).subscribe(toraSubjects => {
+            this.toraSubjects = toraSubjects;
+        });
+    }
+
     addOrEditObject(model) {
         if (this.state == 'edit') {
             this.editObject(model);
@@ -138,6 +154,7 @@ export class ToraListComponent implements OnInit, OnDestroy {
     edit(object) {
         this.model = object;
         this.state = 'edit';
+        this.getToraSubjects(this.model.id);
     }
 
     editObject(model) {

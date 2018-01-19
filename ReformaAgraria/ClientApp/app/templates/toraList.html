@@ -324,9 +324,8 @@
                             <div class="tab-pane fade" id="formSubject" role="tabpanel" aria-labelledby="subject-tab">
                                 <div class="form-row pt-2">
 
-                                    <div class="form-group col-md-12">
-                                        <nav id="navbar-tablePreview" class="navbar navbar-light bg-light navbarSubjectTable">
-
+                                    <div class="form-group col-md-12" style="overflow:scroll; height:300px">
+                                        
                                             <table class="table table-bordered table-striped table-sm table-subject table-responsive">
                                                 <thead>
                                                     <tr>
@@ -344,25 +343,24 @@
                                                         <th scope="col">Jenis tanaman</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody *ngFor="let subject of subjectList">
+                                                <tbody *ngFor="let subject of toraSubjects">
                                                     <tr>
                                                         <th scope="row" id="">1</th>
-                                                        <td>{{subject.name}}</td>
-                                                        <td>{{MaritalStatus[subject.maritalStatus]}}</td>
-                                                        <td>{{subject.address}}</td>
-                                                        <td>{{Gender[subject.gender]}}</td>
-                                                        <td>{{subject.age}}</td>
-                                                        <td>{{EducationalAttainment[subject.educationalAttainment]}}</td>
-                                                        <td>{{subject.totalFamilyMembers}}</td>
-                                                        <td>{{LandStatus[subject.landStatus]}}</td>
-                                                        <td>{{subject.landLocation}}</td>
-                                                        <td>{{subject.size}}</td>
-                                                        <td>{{subject.plantTypes}}</td>
+                                                        <td><font size="1">{{subject.name}}</font></td>
+                                                        <td><font size="1">{{MaritalStatus[subject.maritalStatus]}}</font></td>
+                                                        <td><font size="1">{{subject.address}}</font></td>
+                                                        <td><font size="1">{{Gender[subject.gender]}}</font></td>
+                                                        <td><font size="1">{{subject.age}}</font></td>
+                                                        <td><font size="1">{{EducationalAttainment[subject.educationalAttainment]}}</font></td>
+                                                        <td><font size="1">{{subject.totalFamilyMembers}}</font></td>
+                                                        <td><font size="1">{{LandStatus[subject.landStatus]}}</font></td>
+                                                        <td><font size="1">{{subject.landLocation}}</font></td>
+                                                        <td><font size="1">{{subject.size}}</font></td>
+                                                        <td><font size="1">{{subject.plantTypes}}</font></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
 
-                                        </nav>
                                     </div>
 
 

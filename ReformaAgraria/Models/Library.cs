@@ -4,16 +4,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class PoliciesDocument: BaseEntity<int>
+    public class Library: BaseEntity<int>
     {
-        public PoliciesDocument() { }
+        public Library() { }
         
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override int Id { get; set; }
         
         public string Title { get; set; }
-                
-        public string Attachment { get; set; }
+
+        public string Path { get; set; }
     }
 }

@@ -17,6 +17,7 @@ export interface ToraObject extends BaseEntity<number> {
     conflictChronology: string;
     formalAdvocacyProgress: string;
     nonFormalAdvocacyProgress: string;
+    stages: number;
     fkRegionId: string;
     region?: Region;
 }

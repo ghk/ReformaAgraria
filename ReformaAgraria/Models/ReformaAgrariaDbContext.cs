@@ -19,7 +19,7 @@ namespace ReformaAgraria.Models
         public DbSet<ToraMap> ToraMap { get; set; }
         public DbSet<ToraMapAttribute> ToraMapAttribute { get; set; }
         public DbSet<Event> Event { get; set; }
-        public DbSet<PoliciesDocument> PoliciesDocument { get; set; }
+        public DbSet<Library> Library { get; set; }
         public DbSet<MeetingMinute> MeetingReport { get; set; }
         public DbSet<ToraObject> ToraObject { get; set; }
         public DbSet<ToraSubject> ToraSubject { get; set; }

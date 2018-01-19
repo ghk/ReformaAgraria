@@ -33,6 +33,7 @@ import { ForgotPasswordComponent } from './components/forgotPassword';
 import { ResetPasswordComponent } from './components/resetPassword';
 import { UserManagementComponent } from './components/userManagement';
 import { MapComponent } from './components/map';
+import { LibraryComponent } from './components/library';
 
 import { CookieService } from 'ngx-cookie-service';
 import { SharedService } from './services/shared';
@@ -48,6 +49,7 @@ import { BaseLayerService } from './services/gen/baseLayer';
 import { MapService } from './services/map';
 import { ToraMapService } from './services/gen/toraMap';
 import { SearchService } from './services/search';
+import { LibraryService } from './services/library';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
@@ -80,7 +82,8 @@ import './styles/app.scss';
         UserManagementComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
-        TranslatePipe
+        TranslatePipe,
+        LibraryComponent
     ],
     imports: [
         LeafletModule,
@@ -103,6 +106,7 @@ import './styles/app.scss';
                     { path: 'toradetail/:id', component: ToraDetailComponent },
                     { path: 'event', component: EventComponent },
                     { path: 'map', component: MapComponent },
+                    { path: 'library', component: LibraryComponent }
                 ]
             },
             {
@@ -130,7 +134,8 @@ import './styles/app.scss';
         BaseLayerService,
         MapService,
         ToraMapService,
-        SearchService
+        SearchService,
+        LibraryService
     ]
 })
 export class AppModuleShared {

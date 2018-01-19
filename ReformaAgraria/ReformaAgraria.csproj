@@ -109,6 +109,9 @@
     <None Update="ClientApp\app\models\gen\landType.ts">
       <CustomToolNamespace>Models\LandType.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\library.ts">
+      <CustomToolNamespace>Models\Library.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\loginViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\LoginViewModel.cs</CustomToolNamespace>
     </None>

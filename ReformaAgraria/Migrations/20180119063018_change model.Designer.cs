@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180119063018_change model")]
+    partial class changemodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -317,9 +318,6 @@ namespace ReformaAgraria.Migrations
 
                     b.Property<DateTime?>("DateModified")
                         .HasColumnName("date_modified");
-
-                    b.Property<string>("Path")
-                        .HasColumnName("path");
 
                     b.Property<string>("Title")
                         .HasColumnName("title");
