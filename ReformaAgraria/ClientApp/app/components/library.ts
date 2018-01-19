@@ -9,7 +9,7 @@ import { saveAs as importedSaveAs } from "file-saver";
     templateUrl: '../templates/library.html',
 })
 export class LibraryComponent implements OnInit, OnDestroy {
-    library: Library[];
+    library: Library[] = [];
     model: any = {};
     libraryId: number;
 

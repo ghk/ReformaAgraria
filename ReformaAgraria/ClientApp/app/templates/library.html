@@ -46,6 +46,11 @@
                             </button>
                         </td>
                     </tr>
+                    <tr *ngIf="library.length < 1">
+                        <td colspan="12" style="text-align:center; vertical-align:middle; background-color:#f2f2f2;">
+                            Tidak ada data
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
