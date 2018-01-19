@@ -31,7 +31,9 @@ export class RegionService implements CrudService<Region, string>{
             'GET',
             urljoin(this.serverUrl, 'region'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -44,7 +46,9 @@ export class RegionService implements CrudService<Region, string>{
             'GET',
             urljoin(this.serverUrl, 'region', 'count'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -57,7 +61,9 @@ export class RegionService implements CrudService<Region, string>{
             'GET',
             urljoin(this.serverUrl, 'region', id),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);

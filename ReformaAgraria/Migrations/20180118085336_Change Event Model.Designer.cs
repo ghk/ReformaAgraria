@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180118085336_Change Event Model")]
+    partial class ChangeEventModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,30 +304,6 @@ namespace ReformaAgraria.Migrations
                     b.ToTable("event");
                 });
 
-            modelBuilder.Entity("ReformaAgraria.Models.Library", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id");
-
-                    b.Property<DateTime?>("DateCreated")
-                        .HasColumnName("date_created");
-
-                    b.Property<DateTime?>("DateModified")
-                        .HasColumnName("date_modified");
-
-                    b.Property<string>("Path")
-                        .HasColumnName("path");
-
-                    b.Property<string>("Title")
-                        .HasColumnName("title");
-
-                    b.HasKey("Id")
-                        .HasName("pk_library");
-
-                    b.ToTable("library");
-                });
-
             modelBuilder.Entity("ReformaAgraria.Models.MeetingAttendee", b =>
                 {
                     b.Property<int>("Id")
@@ -382,6 +359,30 @@ namespace ReformaAgraria.Migrations
                         .HasName("ix_meeting_report_fk_event_id");
 
                     b.ToTable("meeting_report");
+                });
+
+            modelBuilder.Entity("ReformaAgraria.Models.PoliciesDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
+
+                    b.Property<string>("Attachment")
+                        .HasColumnName("attachment");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnName("date_created");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnName("date_modified");
+
+                    b.Property<string>("Title")
+                        .HasColumnName("title");
+
+                    b.HasKey("Id")
+                        .HasName("pk_policies_document");
+
+                    b.ToTable("policies_document");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.ReformaAgrariaUser", b =>

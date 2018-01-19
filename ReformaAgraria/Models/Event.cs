@@ -14,16 +14,15 @@ namespace ReformaAgraria.Models
         
         public string Title { get; set; }
 
-        public string Agenda { get; set; }
-
-        public RegionType RegionType { get; set; }
-
-        public string Place { get; set; }
+        public string Description { get; set; }                
 
         public DateTime StartDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
-        public string Notes { get; set; }
+        public string FkRegionId { get; set; }
+
+        [ForeignKey("FkRegionId")]
+        public virtual Region Region { get; set; }
     }
 }

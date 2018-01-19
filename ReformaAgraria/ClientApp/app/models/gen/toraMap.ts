@@ -3,11 +3,11 @@ import { Region } from './region';
 import { BaseEntity } from './baseEntity';
 
 export interface ToraMap extends BaseEntity<number> { 
-    id: number;
-    name: string;
-    geojson: string;
-    fkToraObjectId: number;
-    fkRegionId: string;
+    id?: number;
+    name?: string;
+    geojson?: string;
+    fkToraObjectId?: number;
+    fkRegionId?: string;
     toraObject?: ToraObject;
     region?: Region;
 }

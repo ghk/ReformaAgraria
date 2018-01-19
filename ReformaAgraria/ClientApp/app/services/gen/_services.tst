@@ -34,14 +34,25 @@
         if (item.Name != "ModelController" && 
             item.Name != "ReadOnlyController"  && 
             item.Name != "CrudController" && 
-            inheritance.Any(i => i == "ModelController" || i == "ReadOnlyController" || i == "CrudController"))
+            item.Name != "ModelControllerAsync" && 
+            item.Name != "ReadOnlyControllerAsync"  && 
+            item.Name != "CrudControllerAsync" && 
+            inheritance.Any(i => 
+                i == "ModelController" || 
+                i == "ReadOnlyController" || 
+                i == "CrudController" ||
+                i == "ModelControllerAsync" || 
+                i == "ReadOnlyControllerAsync" || 
+                i == "CrudControllerAsync"
+            )
+        )
             return true;
         return false;
     }
 
     bool IsCrudController(Class item) {
         var inheritance = GetInheritance(item);
-        return inheritance.Any(i => i == "CrudController");
+        return inheritance.Any(i => i == "CrudController" || i == "CrudControllerAsync");
     }
 
     string GetFirstType(Class item) {
@@ -97,7 +108,9 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
             'GET',
             urljoin(this.serverUrl, '$GetLowerFirstType'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -110,7 +123,9 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
             'GET',
             urljoin(this.serverUrl, '$GetLowerFirstType', 'count'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -123,7 +138,9 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
             'GET',
             urljoin(this.serverUrl, '$GetLowerFirstType', id),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -143,8 +160,9 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
             this.cookieService,
             this.http,
             'POST',
-            urljoin(this.serverUrl, '$GetLowerFirstType'),
+            urljoin(this.serverUrl, '$GetLowerFirstType'),            
             null,
+            model,
             null,
             progressListener
         );
@@ -159,6 +177,7 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
             'PUT',
             urljoin(this.serverUrl, '$GetLowerFirstType'),
             null,
+            model,
             null,
             progressListener
         );

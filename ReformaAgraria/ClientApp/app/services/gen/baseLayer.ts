@@ -31,7 +31,9 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
             'GET',
             urljoin(this.serverUrl, 'baselayer'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -44,7 +46,9 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
             'GET',
             urljoin(this.serverUrl, 'baselayer', 'count'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -57,7 +61,9 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
             'GET',
             urljoin(this.serverUrl, 'baselayer', id),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -77,8 +83,9 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
             this.cookieService,
             this.http,
             'POST',
-            urljoin(this.serverUrl, 'baselayer'),
+            urljoin(this.serverUrl, 'baselayer'),            
             null,
+            model,
             null,
             progressListener
         );
@@ -93,6 +100,7 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
             'PUT',
             urljoin(this.serverUrl, 'baselayer'),
             null,
+            model,
             null,
             progressListener
         );

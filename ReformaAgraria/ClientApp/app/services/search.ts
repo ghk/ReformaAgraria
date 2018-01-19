@@ -21,6 +21,13 @@ export class SearchService {
             .catch(this.handleError);
     }
 
+    searchRegion(keywords: string): Observable<Array<SearchViewModel>> {
+        let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        return this.http.get('/api/search/region/' + keywords, requestOptions)
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
     private handleError(error: Response | any) {
         let errMsg: string;
         if (error instanceof Response) {

@@ -31,7 +31,7 @@ namespace MicrovacWebCore
         [HttpPost]
         public virtual async Task<TId> PostAsync([FromBody] TModel model)
         {
-            if (PostFields != null)
+            if (PostFields.Count > 0)
             {
                 var m = new TModel();
                 foreach (var field in PostFields)
@@ -49,7 +49,7 @@ namespace MicrovacWebCore
         [HttpPut("{id}")]
         public virtual async Task<TId> PutAsync([FromBody] TModel model)
         {
-            if (PutFields != null)
+            if (PutFields.Count > 0)
             {
                 var m = await GetAsync(model.Id);
                 foreach (var field in PutFields)

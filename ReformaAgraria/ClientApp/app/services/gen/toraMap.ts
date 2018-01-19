@@ -31,7 +31,9 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             'GET',
             urljoin(this.serverUrl, 'toramap'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -44,7 +46,9 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             'GET',
             urljoin(this.serverUrl, 'toramap', 'count'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -57,7 +61,9 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             'GET',
             urljoin(this.serverUrl, 'toramap', id),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -77,8 +83,9 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             this.cookieService,
             this.http,
             'POST',
-            urljoin(this.serverUrl, 'toramap'),
+            urljoin(this.serverUrl, 'toramap'),            
             null,
+            model,
             null,
             progressListener
         );
@@ -93,6 +100,7 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             'PUT',
             urljoin(this.serverUrl, 'toramap'),
             null,
+            model,
             null,
             progressListener
         );

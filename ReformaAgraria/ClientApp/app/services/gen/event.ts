@@ -31,7 +31,9 @@ export class EventService implements CrudService<Event, number>{
             'GET',
             urljoin(this.serverUrl, 'event'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -44,7 +46,9 @@ export class EventService implements CrudService<Event, number>{
             'GET',
             urljoin(this.serverUrl, 'event', 'count'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -57,7 +61,9 @@ export class EventService implements CrudService<Event, number>{
             'GET',
             urljoin(this.serverUrl, 'event', id),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -77,8 +83,9 @@ export class EventService implements CrudService<Event, number>{
             this.cookieService,
             this.http,
             'POST',
-            urljoin(this.serverUrl, 'event'),
+            urljoin(this.serverUrl, 'event'),            
             null,
+            model,
             null,
             progressListener
         );
@@ -93,6 +100,7 @@ export class EventService implements CrudService<Event, number>{
             'PUT',
             urljoin(this.serverUrl, 'event'),
             null,
+            model,
             null,
             progressListener
         );
