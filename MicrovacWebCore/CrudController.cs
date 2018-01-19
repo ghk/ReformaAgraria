@@ -30,7 +30,7 @@ namespace MicrovacWebCore
         [HttpPost]
         public virtual TId Post([FromBody] TModel model)
         {
-            if (PostFields != null && PostFields.Count > 0)
+            if (PostFields.Count > 0)
             {
                 var m = new TModel();
                 foreach (var field in PostFields)
@@ -48,7 +48,7 @@ namespace MicrovacWebCore
         [HttpPut("{id}")]
         public virtual TId Put([FromBody] TModel model)
         {
-            if (PutFields != null)
+            if (PutFields.Count > 0)
             {
                 var m = Get(model.Id);
                 foreach (var field in PutFields)

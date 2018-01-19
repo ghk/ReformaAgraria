@@ -72,5 +72,5 @@
 }$Classes($ModelFilter)[$Imports
 
 export interface $Name$TypeParameters$Inherit { $Properties[
-    $IsPropertyNullable[$name?: $Type][$name: $Type];]
+    $name?: $Type;]
 }]

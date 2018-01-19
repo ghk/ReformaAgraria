@@ -13,7 +13,7 @@
                     <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
                         &gt;
                     </div>
-                </div>                
+                </div>
             </div>
             <div class="col-md-2 text-center text-md-left" style="margin-bottom: 0.5rem;">
                 <div class="btn-group">
@@ -31,10 +31,10 @@
             <div class="col-md-4 text-center">
                 <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):locale }}</h3>
             </div>
-            <div class="col-md-4 text-center text-md-right">   
-                <div class="btn btn-primary" (click)="onAddEvent()">
+            <div class="col-md-4 text-center text-md-right">
+                <div class="btn btn-primary" (click)="resetEvent(); onAddEvent(eventModal);">
                     Tambah Event
-                </div>      
+                </div>
             </div>
         </div>
 
@@ -48,10 +48,85 @@
             <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="calEvents" [locale]="locale" [weekStartsOn]="weekStartsOn"
                 [weekendDays]="weekendDays" [refresh]="refresh" (eventClicked)="onHandleEvent('Clicked', $event.event)" (eventTimesChanged)="onEventTimesChanged($event)">
             </mwl-calendar-week-view>
-            <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="calEvents" [locale]="locale" [refresh]="refresh" (eventClicked)="onHandleEvent('Clicked', $event.event)"
-                (eventTimesChanged)="onEventTimesChanged($event)">
+            <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="calEvents" [locale]="locale" [refresh]="refresh"
+                (eventClicked)="onHandleEvent('Clicked', $event.event)" (eventTimesChanged)="onEventTimesChanged($event)">
             </mwl-calendar-day-view>
         </div>
     </div>
 </div>
 
+<ng-template #eventModal>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Tambah Event</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        {{ modelEvent | json }}
+        <form (ngSubmit)="onSaveEvent()">
+            <div class="form-group row">
+                <label for="title" class="col-sm-2 col-form-label">Judul</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="title" required [(ngModel)]="modelEvent.title">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="description" class="col-sm-2 col-form-label">Deskripsi</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control" name="description" rows="5" [(ngModel)]="modelEvent.description">
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="startDate" class="col-sm-2 col-form-label d-flex align-items-center">Waktu Mulai</label>
+                <div class="col-sm-5 d-flex align-items-center">
+                    <input bsDatepicker type="text" class="form-control" name="startDate"
+                        [(ngModel)]="modelEvent.startDate"
+                        [minDate]="minDate">                    
+                </div>
+                <div class="col-sm-2">
+                    <timepicker [(ngModel)]="modelEvent.startDate" [min]="minDate" [showMeridian]="false" name="startTime"></timepicker>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="endDate" class="col-sm-2 col-form-label d-flex align-items-center">Waktu Selesai</label>
+                <div class="col-sm-5 d-flex align-items-center">
+                    <input bsDatepicker type="text" class="form-control" name="endDate"
+                        [(ngModel)]="modelEvent.endDate"
+                        [minDate]="modelEvent.startDate">                    
+                </div>
+                <div class="col-sm-2">
+                    <timepicker [(ngModel)]="modelEvent.endDate" [min]="modelEvent.startDate" [showMeridian]="false" name="endTime"></timepicker>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="location" class="col-sm-2 col-form-label">Lokasi</label>
+                <div class="col-sm-10">
+                    <input [(ngModel)]="selected" 
+                        [typeahead]="dataSource"
+                        [typeaheadMinLength]="3"
+                        [typeaheadItemTemplate]="searchRegionTemplate"
+                        typeaheadOptionField="label"
+                        (typeaheadOnSelect)="onSearchSelected($event)"
+                        name="search"
+                        autocomplete="off"
+                        class="typehead form-control mr-sm-2" 
+                        type="text" 
+                        placeholder="Cari Lokasi" 
+                        aria-label="Search">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Simpan</button>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #searchRegionTemplate let-model="item" let-index="index">
+    <div>
+        <span>{{ model.label }}</span>
+        <span style="font-size:0.6rem;" *ngIf="model.type === 0"><i>Kabupaten</i></span>
+        <span style="font-size:0.6rem;" *ngIf="model.type === 1"><i>Kecamatan</i></span>
+        <span style="font-size:0.6rem;" *ngIf="model.type === 2"><i>Desa</i></span>
+    </div>
+</ng-template>

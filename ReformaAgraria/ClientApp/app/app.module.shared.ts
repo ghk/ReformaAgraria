@@ -12,6 +12,9 @@ import { ColorPickerModule } from 'angular4-color-picker';
 import { NgPipesModule } from 'ngx-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { CalendarModule } from 'angular-calendar';
 
 import { AppComponent } from './components/app';
@@ -55,6 +58,10 @@ import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
 import { TranslatePipe } from './pipes/translate';
 
+import { defineLocale } from 'ngx-bootstrap';
+import { id } from './helpers/id';
+defineLocale('id', id);
+
 import 'bootstrap';
 import './styles/app.scss';
 
@@ -97,6 +104,9 @@ import './styles/app.scss';
         NgPipesModule,
         TypeaheadModule.forRoot(),
         TabsModule.forRoot(),
+        ModalModule.forRoot(),
+        BsDatepickerModule.forRoot(),
+        TimepickerModule.forRoot(),
         CalendarModule.forRoot(),
         RouterModule.forRoot([
             { path: '', redirectTo: 'home/72_1', pathMatch: 'full' },

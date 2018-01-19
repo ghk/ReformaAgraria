@@ -22,8 +22,8 @@ export class EventHelper {
             secondary: '#FAE3E3'
         };
         let calEvent: CalendarEvent<Event> = {
-            start: event.startDate,
-            end: event.endDate,
+            start: event.startDate ? new Date(event.startDate) : null,
+            end: event.endDate ? new Date(event.endDate) : null,
             title: event.title,
             color: color,
             draggable: true,

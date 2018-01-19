@@ -20,9 +20,29 @@ namespace ReformaAgraria.Controllers
         {
             this.dbContext = dbContext;
         }
-
+        
         [HttpGet("{keywords}")]
         public async Task<List<SearchViewModel>> Search(string keywords)
+        {
+            var result = new List<SearchViewModel>();
+
+            var regionResult = await SearchByRegion(keywords);
+            result.AddRange(regionResult);
+
+            var toraObjectResult = await SearchByToraObject(keywords);
+            result.AddRange(regionResult);          
+
+            return result.OrderBy(x => x.Label).ToList();
+        }
+
+        [HttpGet("region/{keywords}")]
+        public async Task<List<SearchViewModel>> SearchRegion(string keywords)
+        {
+            var result = await SearchByRegion(keywords);
+            return result;
+        }
+
+        private async Task<List<SearchViewModel>> SearchByRegion(string keywords)
         {
             var result = new List<SearchViewModel>();
             var regions = await dbContext.Set<Region>()
@@ -50,18 +70,24 @@ namespace ReformaAgraria.Controllers
                 {
                     Label = region.Name,
                     Value = region.Id,
-                    Type = type    
+                    Type = type
                 };
 
                 result.Add(searchViewModel);
             }
 
+            return result;
+        }
+
+        private async Task<List<SearchViewModel>> SearchByToraObject(string keywords)
+        {
+            var result = new List<SearchViewModel>();
             var toraObjects = await dbContext.Set<ToraObject>()
                 .Where(t => EF.Functions.Like(t.Name.ToLower(), string.Format("{0}%", keywords.ToLower())))
                 .ToListAsync();
 
             foreach (var to in toraObjects)
-            {             
+            {
                 var searchViewModel = new SearchViewModel()
                 {
                     Label = to.Name,
@@ -72,7 +98,7 @@ namespace ReformaAgraria.Controllers
                 result.Add(searchViewModel);
             }
 
-            return result.OrderBy(x => x.Label).ToList();
+            return result;
         }
     }
 }

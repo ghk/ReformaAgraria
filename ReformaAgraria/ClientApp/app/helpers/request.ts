@@ -1,4 +1,4 @@
-﻿import { Headers, RequestOptions, URLSearchParams } from '@angular/http';
+﻿import { Headers, RequestOptions, URLSearchParams, Http, Response } from '@angular/http';
 import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from "rxjs/Observable";
@@ -37,13 +37,15 @@ export class RequestHelper {
         return result;
     }
 
-    static getHttpRequest(cookieService: CookieService, http: ProgressHttp, method, url, query, downloadListener?, uploadListener?): Observable<Response> {
+    static getHttpRequest(cookieService: CookieService, http: ProgressHttp, method, url, query, body, downloadListener?, uploadListener?): Observable<Response> {
         let options = this.getRequestOptions(cookieService, query);
-        let req: any = http;
+        if (body)
+            options.body = body;
         options.method = method;
-
+        
+        let req: Http = http;       
         if (downloadListener)
-            req = req.withDownloadProgressListener(downloadListener);
+            req = http.withDownloadProgressListener(downloadListener);
         if (uploadListener)
             req = http.withUploadProgressListener(uploadListener);
 

@@ -5,13 +5,13 @@ import { Region } from './region';
 import { BaseEntity } from './baseEntity';
 
 export interface ToraMapAttribute extends BaseEntity<number> { 
-    id: number;
-    size: number;
-    toraSettingProcessStage: ToraSettingProcessStage;
-    borderSettingStatus: Status;
-    attachment: string;
+    id?: number;
+    size?: number;
+    toraSettingProcessStage?: ToraSettingProcessStage;
+    borderSettingStatus?: Status;
+    attachment?: string;
     fkCoordinateId?: number;
     coordinate?: Coordinate;
-    fkRegionId: string;
+    fkRegionId?: string;
     region?: Region;
 }

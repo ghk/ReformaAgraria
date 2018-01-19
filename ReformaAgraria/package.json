@@ -29,6 +29,8 @@
     "jquery": "3.2.1",
     "leaflet": "^1.2.0",
     "leaflet-groupedlayercontrol": "^0.6.0",
+    "moment": "^2.20.1",
+    "moment-timezone": "^0.5.14",
     "ngx-bootstrap": "^2.0.0-rc.0",
     "ngx-cookie-service": "^1.0.9",
     "ngx-pipes": "^2.1.0",

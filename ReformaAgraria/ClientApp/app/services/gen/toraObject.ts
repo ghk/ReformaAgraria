@@ -31,7 +31,9 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
             'GET',
             urljoin(this.serverUrl, 'toraobject'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -44,7 +46,9 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
             'GET',
             urljoin(this.serverUrl, 'toraobject', 'count'),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -57,7 +61,9 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
             'GET',
             urljoin(this.serverUrl, 'toraobject', id),
             query,
-            progressListener
+            null,
+            progressListener,
+            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);
@@ -77,8 +83,9 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
             this.cookieService,
             this.http,
             'POST',
-            urljoin(this.serverUrl, 'toraobject'),
+            urljoin(this.serverUrl, 'toraobject'),            
             null,
+            model,
             null,
             progressListener
         );
@@ -93,6 +100,7 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
             'PUT',
             urljoin(this.serverUrl, 'toraobject'),
             null,
+            model,
             null,
             progressListener
         );
