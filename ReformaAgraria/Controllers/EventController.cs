@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using MicrovacWebCore;
 using ReformaAgraria.Models;
 using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
 namespace ReformaAgraria.Controllers
 {
@@ -26,7 +27,7 @@ namespace ReformaAgraria.Controllers
             {
                 var regionId = GetQueryString<string>("regionId");
                 if (!string.IsNullOrWhiteSpace(regionId))
-                    query = query.Where(to => to.FkRegionId == regionId);
+                    query = query.Where(e => e.FkRegionId == regionId);
             }
 
             if (type == "getAllByParent")
@@ -34,13 +35,14 @@ namespace ReformaAgraria.Controllers
                 var parentId = GetQueryString<string>("parentId");
                 var startDate = GetQueryString<string>("startDate");
                 if (!string.IsNullOrWhiteSpace(parentId))
-                    query = query.Where(to => to.FkRegionId.StartsWith(parentId));
+                    query = query.Where(e => e.FkRegionId.StartsWith(parentId));
                 if (!string.IsNullOrWhiteSpace(startDate))
                 {
                     try
                     {
-                        DateTime date = DateTime.ParseExact(startDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                        query = query.Where(to => to.StartDate >= date);
+                        var date = DateTime.ParseExact(startDate, "dd/MM/yyyy", CultureInfo.CurrentCulture);
+                        var utcDate = date.ToUniversalTime();
+                        query = query.Where(e => e.StartDate >= utcDate);
                     }
                     catch (FormatException ex)
                     {
@@ -48,6 +50,8 @@ namespace ReformaAgraria.Controllers
                     }
                 }
             }
+
+            query = query.Include(e => e.EventType);
 
             return query;
         }

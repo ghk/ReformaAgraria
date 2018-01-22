@@ -5,8 +5,8 @@
             <div class="card event-card" *ngFor="let event of events" (click)="onCardClicked(event)">
                 <h5 class="card-header text-center">{{event.startDate | date:'dd MMM'}}</h5>
                 <div class="card-body">
-                    <h5 class="card-title">{{event.title}}</h5>
-                    <p class="card-text">{{event.description}}</p>
+                    <p class="card-title" style="font-size:0.8rem;">{{event.eventType.name}}</p>
+                    <p class="card-text" style="font-size:0.7rem;">{{event.description}}</p>
                 </div>                
             </div>
         </div>

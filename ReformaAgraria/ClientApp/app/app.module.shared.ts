@@ -56,6 +56,7 @@ import { ToraMapService } from './services/gen/toraMap';
 import { SearchService } from './services/search';
 import { LibraryService } from './services/library';
 import { EventService } from './services/gen/event';
+import { EventTypeService } from './services/gen/eventType';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
@@ -152,6 +153,7 @@ import './styles/app.scss';
         SearchService,
         LibraryService,
         EventService,
+        EventTypeService,
         { provide: LOCALE_ID, useValue: 'id-ID' }
     ]
 })

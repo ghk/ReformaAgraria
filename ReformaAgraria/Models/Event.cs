@@ -10,9 +10,7 @@ namespace ReformaAgraria.Models
         
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public override int Id { get; set; }
-        
-        public string Title { get; set; }
+        public override int Id { get; set; }        
 
         public string Description { get; set; }                
 
@@ -23,6 +21,11 @@ namespace ReformaAgraria.Models
         public string FkRegionId { get; set; }
 
         [ForeignKey("FkRegionId")]
-        public virtual Region Region { get; set; }
+        public Region Region { get; set; }
+
+        public string FkEventTypeId { get; set; }
+
+        [ForeignKey("FkEventTypeId")]
+        public EventType EventType { get; set; }
     }
 }

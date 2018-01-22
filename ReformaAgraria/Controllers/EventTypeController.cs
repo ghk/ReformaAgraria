@@ -17,11 +17,11 @@ namespace ReformaAgraria.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [Authorize(Policy = "Bearer")]
-    public class RegionController : ReadOnlyControllerAsync<Region, string>
+    public class EventTypeController : ReadOnlyControllerAsync<EventType, string>
     {
         private readonly ILogger<RegionController> _logger;
 
-        public RegionController(
+        public EventTypeController(
             ReformaAgrariaDbContext dbContext,
             ILogger<RegionController> logger
         ) : base(dbContext)
@@ -29,31 +29,17 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
         }
 
-        protected override IQueryable<Region> ApplyQuery(IQueryable<Region> query)
+        protected override IQueryable<EventType> ApplyQuery(IQueryable<EventType> query)
         {
             var type = GetQueryString<string>("type");
-            if (type == "breadcrumb")
-            {
-                var depth = GetQueryString<int>("depth");
-                for (var i = 1; i <= depth; i++)
-                {
-                    var includeString = string.Concat(Enumerable.Repeat("Parent.", i));
-                    includeString = includeString.Remove(includeString.Length - 1);
-                    query = query.Include(includeString);
-                }
-            }
 
-            if (type == "getAllByParent")
+            if (type == "getAllByRegionType")
             {
-                var parentId = GetQueryString<string>("parentId");
                 var regionType = GetQueryString<int?>("regionType");
-
-                if (!string.IsNullOrWhiteSpace(parentId))
-                    query = query.Where(r => r.FkParentId == parentId);
                 if (regionType != null)
-                    query = query.Where(r => r.Type == (RegionType)regionType);
+                    query = query.Where(et => et.RegionType >= (RegionType)regionType.Value);
             }
-
+            
             return query;
         }
 

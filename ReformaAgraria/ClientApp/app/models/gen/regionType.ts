@@ -1,5 +1,5 @@
 ﻿export enum RegionType { 
-	National,
+	Nasional,
 	Propinsi,
 	Kabupaten,
 	Kecamatan,

@@ -6,12 +6,15 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker/bs-locale.service';
 
-import { SharedService } from '../services/shared';
+import { Query } from '../models/query';
 import { Region } from '../models/gen/region';
 import { Event } from '../models/gen/event';
+import { EventType } from '../models/gen/eventType';
 import { SearchViewModel } from '../models/gen/searchViewModel';
+import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { EventService } from '../services/gen/event';
+import { EventTypeService } from '../services/gen/eventType';
 import { SearchService } from '../services/search';
 import { EventHelper } from '../helpers/event';
 import { CustomDateFormatter } from '../helpers/customDateFormatter';
@@ -49,6 +52,7 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
 
     events: Event[];
+    eventTypes: EventType[];
     calEvents: CalendarEvent[] = [];
     modelEvent: Event;
 
@@ -75,7 +79,8 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
         private sharedService: SharedService,
         private regionService: RegionService,
         private searchService: SearchService,
-        private eventService: EventService
+        private eventService: EventService,
+        private eventTypeService: EventTypeService,
     ) { }
 
     ngOnInit(): void {
@@ -113,10 +118,15 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
     }
 
     getData(): void {
-        let eventQuery = { data: { 'type': 'getAllByParent', 'parentId': this.region.id } }
+        let eventQuery: Query = { data: { 'type': 'getAllByParent', 'parentId': this.region.id } };
         this.eventService.getAll(eventQuery, null).subscribe(events => {
             this.events = events;
             this.calEvents = EventHelper.deserializeMany(events, this.getActions());
+        });
+
+        let eventTypeQuery: Query = { data: { 'type': 'getAllByRegionType', 'regionType': this.region.type } };
+        this.eventTypeService.getAll(eventTypeQuery, null).subscribe(eventTypes => {
+            this.eventTypes = eventTypes;
         });
     }
 
@@ -228,11 +238,11 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
 
     resetEvent(): void {
         let event: Event = {
-            title: null,
             startDate: null,
             endDate: null,
             description: null,
-            fkRegionId: null
+            fkRegionId: null,
+            fkEventTypeId: null
         };
 
         this.modelEvent = event;

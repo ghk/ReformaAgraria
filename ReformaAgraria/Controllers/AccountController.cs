@@ -49,7 +49,6 @@ namespace ReformaAgraria.Controllers
             _authorizationService = authorizationService;
         }
 
-        // POST: /Account/login
         // [ValidateAntiForgeryToken]
         [HttpPost("login")]
         [AllowAnonymous]
@@ -93,7 +92,6 @@ namespace ReformaAgraria.Controllers
             }
         }
 
-        // POST: /Account/register
         [HttpPost("register")]
         [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Register([FromBody] LoginViewModel model)
@@ -137,24 +135,7 @@ namespace ReformaAgraria.Controllers
         {
             await _signInManager.SignOutAsync();
             return Ok();
-        }
-
-        private string GenerateToken(DateTime expires, ClaimsIdentity claims)
-        {
-            var handler = new JwtSecurityTokenHandler();
-
-            var securityToken = handler.CreateToken(new SecurityTokenDescriptor
-            {
-                Issuer = _tokenOptions.Issuer,
-                Audience = _tokenOptions.Audience,
-                SigningCredentials = _tokenOptions.SigningCredentials,
-                Subject = claims,
-                NotBefore = DateTime.Now,
-                Expires = expires
-            });
-
-            return handler.WriteToken(securityToken);
-        }
+        }        
 
         [HttpPost("password/recovery")]
         public async Task<IActionResult> SendPasswordRecoveryLink([FromBody] LoginViewModel model)
@@ -256,6 +237,23 @@ namespace ReformaAgraria.Controllers
             }
 
             return Ok();
-        }        
+        }
+
+        private string GenerateToken(DateTime expires, ClaimsIdentity claims)
+        {
+            var handler = new JwtSecurityTokenHandler();
+
+            var securityToken = handler.CreateToken(new SecurityTokenDescriptor
+            {
+                Issuer = _tokenOptions.Issuer,
+                Audience = _tokenOptions.Audience,
+                SigningCredentials = _tokenOptions.SigningCredentials,
+                Subject = claims,
+                NotBefore = DateTime.Now,
+                Expires = expires
+            });
+
+            return handler.WriteToken(securityToken);
+        }
     }
 }
