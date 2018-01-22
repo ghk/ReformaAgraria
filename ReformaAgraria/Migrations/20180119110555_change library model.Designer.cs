@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180119110555_change library model")]
+    partial class changelibrarymodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -273,20 +274,26 @@ namespace ReformaAgraria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
+                    b.Property<string>("Agenda")
+                        .HasColumnName("agenda");
+
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnName("date_created");
 
                     b.Property<DateTime?>("DateModified")
                         .HasColumnName("date_modified");
 
-                    b.Property<string>("Description")
-                        .HasColumnName("description");
-
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateTime>("EndDate")
                         .HasColumnName("end_date");
 
-                    b.Property<string>("FkRegionId")
-                        .HasColumnName("fk_region_id");
+                    b.Property<string>("Notes")
+                        .HasColumnName("notes");
+
+                    b.Property<string>("Place")
+                        .HasColumnName("place");
+
+                    b.Property<int>("RegionType")
+                        .HasColumnName("region_type");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnName("start_date");
@@ -296,9 +303,6 @@ namespace ReformaAgraria.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_event");
-
-                    b.HasIndex("FkRegionId")
-                        .HasName("ix_event_fk_region_id");
 
                     b.ToTable("event");
                 });
@@ -315,8 +319,8 @@ namespace ReformaAgraria.Migrations
                     b.Property<DateTime?>("DateModified")
                         .HasColumnName("date_modified");
 
-                    b.Property<string>("FileExtension")
-                        .HasColumnName("file_extension");
+                    b.Property<string>("Path")
+                        .HasColumnName("path");
 
                     b.Property<string>("Title")
                         .HasColumnName("title");
@@ -888,14 +892,6 @@ namespace ReformaAgraria.Migrations
                         .WithMany()
                         .HasForeignKey("FkRegionId")
                         .HasConstraintName("fk_act_proposal_document_check_list_region_fk_region_id");
-                });
-
-            modelBuilder.Entity("ReformaAgraria.Models.Event", b =>
-                {
-                    b.HasOne("ReformaAgraria.Models.Region", "Region")
-                        .WithMany()
-                        .HasForeignKey("FkRegionId")
-                        .HasConstraintName("fk_event_region_fk_region_id");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.MeetingAttendee", b =>

@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
@@ -7,12 +6,12 @@
     <IsPackable>false</IsPackable>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
     <PackageReference Include="Gdal.Core" Version="1.0.0" />
     <PackageReference Include="GeoJSON.Net" Version="1.1.64" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.0" />
@@ -21,22 +20,18 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
   </ItemGroup>
-
   <ItemGroup>
-	<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Content Remove="ClientApp\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Remove="appsettings.Development.json" />
     <Content Remove="appsettings.json" />
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="ClientApp\app\components\crud.ts" />
     <None Remove="ClientApp\app\components\crud\region.ts" />
@@ -47,23 +42,19 @@
     <None Remove="ClientApp\app\templates\environments\environment.prod.ts" />
     <None Remove="ClientApp\app\templates\environments\environment.ts" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Docs\" />
     <Folder Include="wwwroot\baseLayer\" />
     <Folder Include="wwwroot\baseLayer\" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="appsettings.Development.json" />
     <None Include="appsettings.json" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\MicrovacWebCore\MicrovacWebCore.csproj" />
     <ProjectReference Include="..\SharpMap.CoordinateSystems\ProjNET.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\crud\crud.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\crud\region.ts" />
@@ -74,7 +65,6 @@
     <TypeScriptCompile Include="ClientApp\app\templates\environments\environment.prod.ts" />
     <TypeScriptCompile Include="ClientApp\app\templates\environments\environment.ts" />
   </ItemGroup>
-
   <ItemGroup>
     <None Update="ClientApp\app\models\gen\actProposalDocumentCheckList.ts">
       <CustomToolNamespace>Models\ActProposalDocumentCheckList.cs</CustomToolNamespace>
@@ -108,6 +98,9 @@
     </None>
     <None Update="ClientApp\app\models\gen\landType.ts">
       <CustomToolNamespace>Models\LandType.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\library.ts">
+      <CustomToolNamespace>Models\Library.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\loginViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\LoginViewModel.cs</CustomToolNamespace>
@@ -194,27 +187,23 @@
       <CustomToolNamespace>Controllers\ToraSubjectController.cs</CustomToolNamespace>
     </None>
   </ItemGroup>
-
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
     </Exec>
     <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
-
     <!-- In development, the dist files won't exist on the first run or when cloning to
          a different machine, so rebuild them if not already present. -->
     <Message Importance="high" Text="Performing first-run Webpack build..." />
     <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js" />
     <Exec Command="node node_modules/webpack/bin/webpack.js" />
   </Target>
-
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec Command="npm install" />
     <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js --env.prod" />
     <Exec Command="node node_modules/webpack/bin/webpack.js --env.prod" />
-
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="wwwroot\dist\**; ClientApp\dist\**" />
@@ -224,5 +213,4 @@
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
-
 </Project>

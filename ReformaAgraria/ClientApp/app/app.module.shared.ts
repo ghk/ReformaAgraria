@@ -38,6 +38,7 @@ import { ForgotPasswordComponent } from './components/forgotPassword';
 import { ResetPasswordComponent } from './components/resetPassword';
 import { UserManagementComponent } from './components/userManagement';
 import { MapComponent } from './components/map';
+import { LibraryComponent } from './components/library';
 
 import { CookieService } from 'ngx-cookie-service';
 import { SharedService } from './services/shared';
@@ -53,6 +54,7 @@ import { BaseLayerService } from './services/gen/baseLayer';
 import { MapService } from './services/map';
 import { ToraMapService } from './services/gen/toraMap';
 import { SearchService } from './services/search';
+import { LibraryService } from './services/library';
 import { EventService } from './services/gen/event';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
@@ -91,7 +93,8 @@ import './styles/app.scss';
         UserManagementComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
-        TranslatePipe
+        TranslatePipe,
+        LibraryComponent
     ],
     imports: [
         LeafletModule,
@@ -118,6 +121,7 @@ import './styles/app.scss';
                     { path: 'toradetail/:id', component: ToraDetailComponent },
                     { path: 'calendar/:id', component: EventCalendarComponent },
                     { path: 'map', component: MapComponent },
+                    { path: 'library', component: LibraryComponent }
                 ]
             },
             {
@@ -146,6 +150,7 @@ import './styles/app.scss';
         MapService,
         ToraMapService,
         SearchService,
+        LibraryService,
         EventService,
         { provide: LOCALE_ID, useValue: 'id-ID' }
     ]
