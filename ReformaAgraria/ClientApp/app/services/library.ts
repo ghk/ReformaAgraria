@@ -44,15 +44,6 @@ export class LibraryService {
         return this.http.post('/api/library/delete', formData, requestOptions).catch(this.handleError);
     }
 
-    public download(id: number, progressListener?: any): Observable<string> {
-        let formData: FormData = new FormData();
-        let headers = new Headers();
-        let requestOptions = new RequestOptions({ headers: headers });
-        headers.append('Accept', 'application/json');
-        formData.append('id', id.toString());
-        return this.http.post('/api/library/download/', formData, requestOptions).catch(this.handleError);
-    }
-
     public upload(model, progressListener?: any): Observable<number> {
         let fileList: FileList = model.file;
         console.log(fileList);

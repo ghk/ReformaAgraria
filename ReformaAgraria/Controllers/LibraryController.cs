@@ -36,77 +36,17 @@ namespace ReformaAgraria.Controllers
                 DateModified = DateTime.Now
             };
             var file = results.Files[0];
+            content.FileExtension = '.' + file.FileName.Split('.')[1].ToString();
             
             dbContext.Add(content);
             await dbContext.SaveChangesAsync();
 
             var webRootPath = Path.Combine(_hostingEnvironment.WebRootPath, "library");
             ValidateAndCreateFolder(webRootPath);
-            var destinationFile = Path.Combine(webRootPath, (content.Id.ToString() + "_" + content.Title));
+            var destinationFile = Path.Combine(webRootPath, (content.Id.ToString() + "_" + content.Title + content.FileExtension));
             StreamCopy(destinationFile, file);
 
             return content;
-        }
-
-        [HttpPost("download")]
-        public async Task<IActionResult> Download()
-        {
-            string path = "";
-            var results = HttpContext.Request.ReadFormAsync().Result;
-            var content = new Library
-            {
-                Id = Int32.Parse(results["id"])
-            };
-            var webRootPath = Path.Combine(_hostingEnvironment.WebRootPath, "library");
-            using (var client = new WebClient())
-            {
-                string fileName = content.Id + "_";
-                string[] Files = Directory.GetFiles(webRootPath);
-
-                foreach (string file in Files)
-                {
-                    if (file.Contains(fileName))
-                    {
-                        path = Path.GetFileName(file);
-
-                    }
-                }
-            }
-
-            path = Path.Combine(webRootPath, path);
-
-            var memory = new MemoryStream();
-            using (var stream = new FileStream(path, FileMode.Open))
-            {
-                await stream.CopyToAsync(memory);
-            }
-            memory.Position = 0;
-            return File(memory, GetContentType(path), Path.GetFileName(path));
-        }
-
-        private string GetContentType(string path)
-        {
-            var types = GetFileTypes();
-            var ext = Path.GetExtension(path).ToLowerInvariant();
-            return types[ext];
-        }
-
-        private Dictionary<string, string> GetFileTypes()
-        {
-            return new Dictionary<string, string>
-            {
-                {".txt", "text/plain"},
-                {".pdf", "application/pdf"},
-                {".doc", "application/vnd.ms-word"},
-                {".docx", "application/vnd.ms-word"},
-                {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformats officedocument.spreadsheetml.sheet"},
-                {".png", "image/png"},
-                {".jpg", "image/jpeg"},
-                {".jpeg", "image/jpeg"},
-                {".gif", "image/gif"},
-                {".csv", "text/csv"}
-            };
         }
 
         [HttpPost("delete")]

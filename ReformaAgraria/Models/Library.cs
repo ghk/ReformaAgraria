@@ -14,6 +14,6 @@ namespace ReformaAgraria.Models
         
         public string Title { get; set; }
 
-        public string Path { get; set; }
+        public string FileExtension { get; set; }
     }
 }

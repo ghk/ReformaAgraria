@@ -12,6 +12,7 @@
             </div>
         </div>
         <div class="table-responsive pt-2">
+            <a href="#" download id="download"></a>
             <table class="table table-responsive table-hover table-sm" id="table-library">
                 <thead>
                     <tr>
@@ -36,7 +37,7 @@
                         <td class="text-center">{{lib.dateCreated | date: 'dd MMM yyyy'}}</td>
                         <td class="text-center">{{lib.dateModified | date: 'dd MMM yyyy'}}</td>
                         <td>
-                            <button type="button" class="btn btn-link" (click)="download(lib.id, lib.title)">
+                            <button type="button" class="btn btn-link" (click)="download(lib.id, lib.title, lib.fileExtension)">
                                 <span class="oi oi-data-transfer-download" title="Download"></span>
                             </button>
                         </td>

@@ -65,14 +65,11 @@ export class LibraryComponent implements OnInit, OnDestroy {
             });
     }
 
-    download(id) {
-        this.libraryService.download(id)
-            .subscribe(
-            data => {
-                this.toastr.success('Download berhasil', null);
-            },
-            error => {
-                this.toastr.error(error, null);
-            });
+    download(id, title, extension) {
+        var link = [window.location.origin, 'library', id + "_" + title + extension].join("/")
+        console.log(link);
+        $("#download").attr("href", link);
+        $('#download')[0].click();
+        
     }
 }
