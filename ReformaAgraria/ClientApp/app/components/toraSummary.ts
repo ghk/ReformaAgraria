@@ -1,11 +1,11 @@
-﻿import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { RegionType } from '../models/gen/regionType';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+
 import { RegionService } from '../services/gen/region';
 import { ToraService } from '../services/tora';
 import { SharedService } from '../services/shared';
-import { CookieService } from 'ngx-cookie-service';
-import { DecimalPipe } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { RegionType } from '../models/gen/regionType';
 import { Region } from '../models/gen/region';
 
 @Component({

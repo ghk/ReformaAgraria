@@ -1,6 +1,8 @@
 import { Event } from '../models/gen/event';
-import { CalendarEvent } from 'angular-calendar';
+import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
+
+import * as moment from 'moment';
 
 export class EventHelper {
 
@@ -16,21 +18,22 @@ export class EventHelper {
         return event;
     }
 
-    static deserialize(event: Event) : CalendarEvent<Event> {
+    static deserialize(event: Event, actions?:CalendarEventAction[]) : CalendarEvent<Event> {
         let color = {
             primary: '#ad2121',
             secondary: '#FAE3E3'
         };
         let calEvent: CalendarEvent<Event> = {
-            start: event.startDate ? new Date(event.startDate) : null,
-            end: event.endDate ? new Date(event.endDate) : null,
+            start: event.startDate ? moment.utc(event.startDate).toDate() : null,
+            end: event.endDate ? moment.utc(event.endDate).toDate() : null,
             title: event.title,
             color: color,
             draggable: true,
             resizable: {
                 beforeStart: true,
                 afterEnd: true
-            },
+            },        
+            actions: actions ? actions : [],
             meta: event
         };
         return calEvent;
@@ -44,10 +47,10 @@ export class EventHelper {
         return events;
     }
 
-    static deserializeMany(events: Event[]) : CalendarEvent[] {
+    static deserializeMany(events: Event[], actions?:CalendarEventAction[]) : CalendarEvent[] {
         let calEvents = [];
         events.forEach(event => {
-            calEvents.push(this.deserialize(event));
+            calEvents.push(this.deserialize(event, actions));
         });
         return calEvents;
     }

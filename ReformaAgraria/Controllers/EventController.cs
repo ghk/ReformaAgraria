@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using MicrovacWebCore;
 using ReformaAgraria.Models;
+using System.Globalization;
 
 namespace ReformaAgraria.Controllers
 {
@@ -31,8 +32,21 @@ namespace ReformaAgraria.Controllers
             if (type == "getAllByParent")
             {
                 var parentId = GetQueryString<string>("parentId");
+                var startDate = GetQueryString<string>("startDate");
                 if (!string.IsNullOrWhiteSpace(parentId))
-                    query = query.Where(to => to.FkRegionId.StartsWith(parentId));                
+                    query = query.Where(to => to.FkRegionId.StartsWith(parentId));
+                if (!string.IsNullOrWhiteSpace(startDate))
+                {
+                    try
+                    {
+                        DateTime date = DateTime.ParseExact(startDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        query = query.Where(to => to.StartDate >= date);
+                    }
+                    catch (FormatException ex)
+                    {
+                        // TODO: LOG
+                    }
+                }
             }
 
             return query;

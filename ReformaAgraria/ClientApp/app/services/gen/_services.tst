@@ -196,7 +196,7 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
             progressListener
         );
 
-        return request.map(res => res).catch(this.handleError);
+        return request.map(res => res.json()).catch(this.handleError);
     }
     ]
     private handleError(error: Response | any) {

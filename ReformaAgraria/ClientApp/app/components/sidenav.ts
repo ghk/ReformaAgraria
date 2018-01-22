@@ -1,8 +1,9 @@
 ﻿import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
+
 import { SharedService } from '../services/shared';
-import { Region } from '../models/gen/region';
 import { RegionService } from '../services/gen/region';
+import { Region } from '../models/gen/region';
 
 @Component({
     selector: 'ra-sidenav',
@@ -14,22 +15,18 @@ export class SidenavComponent implements OnInit, OnDestroy {
     regionId: string;
     
     constructor(
-        private sharedService: SharedService,
-        private regionService: RegionService
+        private sharedService: SharedService
     ) { }
 
-    ngOnInit(): void {        
-        this.regionService.getById('72.1', null, null).subscribe(region => {
-            this.region = region;
-            this.regionId = region.id.replace(/\./g, '_');
-        });
+    ngOnInit(): void {       
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             this.region = region;
+            this.regionId = region.id.split('.').join('_');
         });
     }
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
-
+    
 }

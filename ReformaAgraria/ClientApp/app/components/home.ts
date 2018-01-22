@@ -1,7 +1,8 @@
 ﻿import { Component, OnInit, OnDestroy} from '@angular/core';
-import { SharedService } from '../services/shared';
-import { ActivatedRoute, Router, } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+
+import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { Region } from '../models/gen/region';
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+
 import { SharedService } from '../services/shared';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'ra-tora-header',

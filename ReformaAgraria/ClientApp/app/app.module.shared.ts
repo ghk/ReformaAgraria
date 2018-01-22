@@ -23,6 +23,7 @@ import { SidenavComponent } from './components/sidenav';
 import { DashboardComponent } from './components/dashboard';
 import { HomeComponent } from './components/home';
 import { EventCalendarComponent } from './components/eventCalendar';
+import { EventCardComponent } from './components/eventCard';
 import { VillageComponent } from './components/village';
 import { TeamComponent } from './components/team';
 import { VillageBorderComponent } from './components/village-border';
@@ -73,6 +74,7 @@ import './styles/app.scss';
         DashboardComponent,
         HomeComponent,
         EventCalendarComponent,
+        EventCardComponent,
         VillageComponent,
         TeamComponent,
         VillageBorderComponent,
