@@ -9,6 +9,7 @@ using MicrovacWebCore;
 using ReformaAgraria.Models;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
@@ -17,7 +18,15 @@ namespace ReformaAgraria.Controllers
     [Authorize(Policy = "Bearer")]
     public class EventController : CrudControllerAsync<Event, int>
     {
-        public EventController(ReformaAgrariaDbContext dbContext): base(dbContext) { }
+        private readonly ILogger<EventController> _logger;
+
+        public EventController(
+            ReformaAgrariaDbContext dbContext,
+            ILogger<EventController> logger
+        ) : base(dbContext)
+        {
+            this._logger = logger;
+        }
 
         protected override IQueryable<Event> ApplyQuery(IQueryable<Event> query)
         {
@@ -46,7 +55,7 @@ namespace ReformaAgraria.Controllers
                     }
                     catch (FormatException ex)
                     {
-                        // TODO: LOG
+                        _logger.LogError(ex, "DateTime Parse Error");
                     }
                 }
             }
