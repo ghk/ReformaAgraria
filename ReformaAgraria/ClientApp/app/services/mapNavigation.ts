@@ -30,7 +30,7 @@ export class MapNavigationService {
             let file: File = fileList[0];
             let formData: FormData = new FormData();
             let headers = new Headers();
-            let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+            let requestOptions = new RequestOptions({ headers: headers });
 
             headers.append('Accept', 'application/json');
             formData.append('toraObjectId', model.tora.id);

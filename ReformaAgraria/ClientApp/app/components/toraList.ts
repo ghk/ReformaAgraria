@@ -42,6 +42,7 @@ export class ToraListComponent implements OnInit, OnDestroy {
     prevColumn: string = "";
     objectId: number = 0;
     model: any = [];
+    subjectModel: any = [];
     desa: any = [];
     kecamatan: any = [];
     region: any;
@@ -117,7 +118,7 @@ export class ToraListComponent implements OnInit, OnDestroy {
         console.log(id);
         let toraSubjectQuery: Query = {
             data: {
-                type: 'getAllByToraObjectId',
+                type: 'getAllByToraObject',
                 toraObjectId: id
             }
         };
@@ -132,6 +133,15 @@ export class ToraListComponent implements OnInit, OnDestroy {
         }
         else {
             this.addObject(model);
+        }
+    }
+
+    addOrEditSubject(model) {
+        if (this.state == 'edit') {
+            this.editSubject(model);
+        }
+        else {
+            //this.addSubject(model);
         }
     }
 
@@ -165,6 +175,20 @@ export class ToraListComponent implements OnInit, OnDestroy {
             error => {
                 this.toastr.error(error, null);
             });
+    }
+
+    editSubject(model) {
+        this.subjectModel.name = model.name;
+        this.subjectModel.maritalStatus = model.maritalStatus;
+        this.subjectModel.address = model.address;
+        this.subjectModel.gender = model.gender;
+        this.subjectModel.age = model.age;
+        this.subjectModel.educationalAttainment = model.educationalAttainment;
+        this.subjectModel.totalFamilyMembers = model.totalFamilyMembers;
+        this.subjectModel.landStatus = model.landStatus;
+        this.subjectModel.landLocation = model.landLocation;
+        this.subjectModel.size = model.size;
+        this.subjectModel.plantTypes = model.plantTypes;
     }
 
     delete(id) {

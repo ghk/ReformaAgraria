@@ -341,11 +341,13 @@
                                                         <th scope="col">Lokasi lahan garapan</th>
                                                         <th scope="col">Luas (ha)</th>
                                                         <th scope="col">Jenis tanaman</th>
+                                                        <th></th>
+                                                        <th></th>
                                                     </tr>
                                                 </thead>
-                                                <tbody *ngFor="let subject of toraSubjects">
+                                                <tbody *ngFor="let subject of toraSubjects; let i = index">
                                                     <tr>
-                                                        <th scope="row" id="">1</th>
+                                                        <th scope="row" id="">{{i + 1}}</th>
                                                         <td><font size="1">{{subject.name}}</font></td>
                                                         <td><font size="1">{{MaritalStatus[subject.maritalStatus]}}</font></td>
                                                         <td><font size="1">{{subject.address}}</font></td>
@@ -357,6 +359,16 @@
                                                         <td><font size="1">{{subject.landLocation}}</font></td>
                                                         <td><font size="1">{{subject.size}}</font></td>
                                                         <td><font size="1">{{subject.plantTypes}}</font></td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-link">
+                                                                <span class="oi oi-pencil" title="Edit" (click)="editSubject(subject)"></span>
+                                                            </button>
+                                                        </td>
+                                                        <td>
+                                                            <button data-toggle="modal" data-target="#deleteModal" type="button" class="btn btn-link">
+                                                                <span class="oi oi-trash" title="Delete" (click)="deleteSubject(subject.id)"></span>
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -366,71 +378,82 @@
 
                                     <div class="form-group col-md-6">
                                         <label for="Name">Nama</label>
-                                        <input type="text" class="form-control" id="subjekName" aria-describedby="nameHelp" placeholder="Masukan Nama">
+                                        <input type="text" class="form-control" id="subjekName" aria-describedby="nameHelp" placeholder="Masukan Nama" [(ngModel)]="subjectModel.name" name="name">
                                         <small id="namelHelp" class="form-text text-muted"></small>
                                     </div>
 
                                     <div class="form-group col-md-6">
                                         <label for="status-pernikahan">Status pernikahan</label>
-                                        <select id="inputState" class="form-control">
-                                            <option selected>Pilih status pernikahan</option>
-                                            <option>Menikah</option>
-                                            <option>Tidak menikah</option>
+                                        <select id="inputState" class="form-control" [(ngModel)]="subjectModel.maritalStatus" name="maritalStatus">
+                                            <option value="">Pilih status pernikahan</option>
+                                            <option value="0" [selected]="model.maritalStatus == 0">Tidak Menikah</option>
+                                            <option value="1" [selected]="model.maritalStatus == 1">Menikah</option>
+                                            <option value="2" [selected]="model.maritalStatus == 2">Cerai</option>
+                                            <option value="3" [selected]="model.maritalStatus == 3">Tidak Disebutkan</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-md-12">
                                         <label for="formSubjectAlamat">Alamat</label>
-                                        <textarea class="form-control" id="formSubjectAlamat" rows="3"></textarea>
+                                        <textarea class="form-control" id="formSubjectAlamat" rows="3" [(ngModel)]="subjectModel.address" name="address"></textarea>
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label for="jenisKelamin">Jenis kelamin</label>
-                                        <select id="inputState" class="form-control">
-                                            <option selected>Pilih jenis kelamin</option>
-                                            <option>Pria</option>
-                                            <option>Wanita</option>
+                                        <select id="inputState" class="form-control" [(ngModel)]="subjectModel.gender" name="gender">
+                                            <option value="">Pilih jenis kelamin</option>
+                                            <option value="0" [selected]="model.gender == 0">Pria</option>
+                                            <option value="1" [selected]="model.gender == 1">Wanita</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label for="umur">Umur</label>
-                                        <input type="text" class="form-control" id="formSubjectUmur" aria-describedby="umurHelp" placeholder="Masukan umur">
+                                        <input type="text" class="form-control" id="formSubjectUmur" aria-describedby="umurHelp" placeholder="Masukan umur" [(ngModel)]="subjectModel.age" name="age">
                                         <small id="umurlHelp" class="form-text text-muted"></small>
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label for="pendidikan">Pendidikan</label>
-                                        <input type="text" class="form-control" id="formSubjectPendidikan" aria-describedby="pendidikanHelp" placeholder="Masukan pendidikan">
-                                        <small id="pendidikanHelp" class="form-text text-muted"></small>
+                                        <select id="inputState" class="form-control" [(ngModel)]="subjectModel.educationalAttainment" name="educationalAttainment">
+                                            <option value="">Pilih jenjang pendidikan</option>
+                                            <option value="0" [selected]="model.educationalAttainment == 0">Tidak Sekolah</option>
+                                            <option value="1" [selected]="model.educationalAttainment == 1">SD dan Sederajat</option>
+                                            <option value="2" [selected]="model.educationalAttainment == 2">SMP dan Sederajat</option>
+                                            <option value="3" [selected]="model.educationalAttainment == 3">SMA dan Sederajat</option>
+                                            <option value="4" [selected]="model.educationalAttainment == 4">S1 dan sederajat</option>
+                                            <option value="5" [selected]="model.educationalAttainment == 5">S2 dan sederajat</option>
+                                            <option value="6" [selected]="model.educationalAttainment == 6">S3 dan sederajat</option>
+                                            <option value="7" [selected]="model.educationalAttainment == 7">Lainnya</option>
+                                        </select>
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label for="jumlahAnggotaKeluarga">Jumlah keluarga</label>
-                                        <input type="text" class="form-control" id="formSubjectAnggotaKeluarga" aria-describedby="anggotaKeluargaHelp" placeholder="Masukan jumlah keluarga">
+                                        <input type="text" class="form-control" id="formSubjectAnggotaKeluarga" aria-describedby="anggotaKeluargaHelp" placeholder="Masukan jumlah keluarga" [(ngModel)]="subjectModel.totalFamilyMembers" name="totalFamilyMembers">
                                         <small id="pendidikanHelp" class="form-text text-muted"></small>
                                     </div>
 
                                     <div class="form-group col-md-8">
                                         <label for="statusTanah">Status tanah</label>
-                                        <input type="text" class="form-control" id="formSubjectStatusTanah" aria-describedby="statusTanahHelp" placeholder="Masukan status tanah">
+                                        <input type="text" class="form-control" id="formSubjectStatusTanah" aria-describedby="statusTanahHelp" placeholder="Masukan status tanah" [(ngModel)]="LandStatus[subjectModel.landStatus]" name="landStatus">
                                         <small id="statusTanahHelp" class="form-text text-muted"></small>
                                     </div>
 
                                     <div class="form-group col-md-12">
                                         <label for="lokasiLahanGarapan">Lokasi lahan garapan</label>
-                                        <textarea class="form-control" id="formSubjectLokasiLahanGarapan" rows="3"></textarea>
+                                        <textarea class="form-control" id="formSubjectLokasiLahanGarapan" rows="3" [(ngModel)]="subjectModel.landLocation" name="landLocation"></textarea>
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label for="Luas">Luas</label>
-                                        <input type="text" class="form-control" id="formSubjectLuas" aria-describedby="luasHelp" placeholder="Luas">
+                                        <input type="text" class="form-control" id="formSubjectLuas" aria-describedby="luasHelp" placeholder="Luas" [(ngModel)]="subjectModel.size" name="size">
                                         <small id="statusTanahHelp" class="form-text text-muted"></small>
                                     </div>
 
                                     <div class="form-group col-md-8">
                                         <label for="Luas">Jenis tanaman</label>
-                                        <input type="text" class="form-control" id="formSubjectJenisTanaman" aria-describedby="jenisTanamanHelp" placeholder="Masukan jenis tanaman">
+                                        <input type="text" class="form-control" id="formSubjectJenisTanaman" aria-describedby="jenisTanamanHelp" placeholder="Masukan jenis tanaman" [(ngModel)]="subjectModel.plantTypes" name="plantTypes">
                                         <small id="jenisTanamanHelp" class="form-text text-muted"></small>
                                     </div>
 

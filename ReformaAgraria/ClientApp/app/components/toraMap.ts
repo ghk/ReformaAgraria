@@ -275,10 +275,10 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                 });
             },
             onEachFeature: (feature, layer: L.FeatureGroup) => {
-                layer.bindPopup('<table class=\'table table-sm\'><thead><tr><th colspan=3 style=\'text-align:center\'>' + data.name + '</th></tr></thead>' +
-                    '<tbody><tr><td>Kabupaten</td><td>:</td><td>' + data.region.parent.parent.name + '</td></tr>' +
-                    '<tr><td>Kecamatan</td><td>:</td><td>' + data.region.parent.name + '</td></tr>' +
-                    '<tr><td>Desa</td><td>:</td><td>' + data.region.name + '</td></tr>' +
+                layer.bindPopup('<table class=\'table table-sm\'><thead><tr><th colspan=3 style=\'text-align:center\'><a href="/toradetail/' + data.toraObject.id + '">' + data.name + '</th></tr></thead>' +
+                    '<tbody><tr><td>Kabupaten</td><td>:</td><td><a href="/home/' + data.region.parent.parent.id.split('.').join('_') + '">' + data.region.parent.parent.name + '</a></td></tr>' +
+                    '<tr><td>Kecamatan</td><td>:</td><td><a href="/home/' + data.region.parent.id.split('.').join('_') + '">' + data.region.parent.name + '</td></tr>' +
+                    '<tr><td>Desa</td><td>:</td><td><a href="/home/' + data.region.id.split('.').join('_') + '">' + data.region.name + '</td></tr>' +
                     '<tr><td>Luas</td><td>:</td><td>' + data.toraObject.size + ' ha</td></tr>' +
                     '<tr><td>Jumlah Penduduk</td><td>:</td><td>' + data.toraObject.totalTenants + '</td></tr></tbody></table>');       
             }

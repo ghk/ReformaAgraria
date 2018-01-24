@@ -19,6 +19,7 @@ using ProjNet.CoordinateSystems;
 using System.Net;
 using ReformaAgraria.Security;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
@@ -29,11 +30,17 @@ namespace ReformaAgraria.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ReformaAgrariaDbContext _context;
+        private readonly ILogger<ToraObjectController> _toLogger;
+        private readonly ILogger<ToraSubjectController> _tsLogger;
 
-        public ToraMapController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment, IHttpContextAccessor contextAccessor) : base(dbContext)
+        public ToraMapController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment, IHttpContextAccessor contextAccessor, ILogger<ToraObjectController> toLogger, ILogger<ToraSubjectController> tsLogger) : base(dbContext)
         {
             _hostingEnvironment = hostingEnvironment;
             _contextAccessor = contextAccessor;
+            _context = dbContext;
+            _toLogger = toLogger;
+            _tsLogger = tsLogger;
         }
 
         [HttpPost("import")]
@@ -48,7 +55,10 @@ namespace ReformaAgraria.Controllers
             };
 
             var file = results.Files[0];
-            var geojson = GetGeoJson(file);
+            var geo = GetGeoJson(file);
+            var geojson = geo.Item1;
+            decimal size = geo.Item2 / 10000;
+
             if (string.IsNullOrEmpty(geojson))
             {
                 // TODO: LOG
@@ -56,8 +66,15 @@ namespace ReformaAgraria.Controllers
             }
 
             content.Geojson = geojson;
+            content.Size = size;
             dbContext.Add(content);
             await dbContext.SaveChangesAsync();
+
+            ToraObjectController to = new ToraObjectController(_context, _hostingEnvironment, _contextAccessor, _toLogger, _tsLogger);
+            int id = content.FkToraObjectId;
+            var toraObject = dbContext.Set<ToraObject>().Where(o => o.Id == id).FirstOrDefault();
+            toraObject.Size = content.Size;
+            to.Put(toraObject);
 
             var rootFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "TORA");
             ValidateAndCreateFolder(rootFolderPath);
@@ -133,7 +150,7 @@ namespace ReformaAgraria.Controllers
             return query;
         }
 
-        private string GetGeoJson(IFormFile file)
+        private Tuple<string, decimal> GetGeoJson(IFormFile file)
         {
             GeoJSON.Net.Feature.FeatureCollection result = null;
             var tempFolderName = "reforma_agraria_tora_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + Guid.NewGuid().ToString("N");
@@ -146,6 +163,7 @@ namespace ReformaAgraria.Controllers
 
             Ogr.RegisterAll();
             Driver driver = Ogr.GetDriverByName("ESRI Shapefile");
+            double size = 0;
             using (var dataSource = driver.Open(tempPath, 0))
             {
                 Layer layer = dataSource.GetLayerByIndex(0);
@@ -168,6 +186,8 @@ namespace ReformaAgraria.Controllers
                         continue;
 
                     var properties = new Dictionary<string, object>();
+
+                    size += geometryRef.GetArea();
 
                     for (var i = 0; i <= f.GetFieldCount() - 1; i++)
                     {
@@ -198,9 +218,9 @@ namespace ReformaAgraria.Controllers
 
                 result = new GeoJSON.Net.Feature.FeatureCollection(features);
             }
-
             Directory.Delete(tempPath, true);
-            return JsonConvert.SerializeObject(result);
+
+            return new Tuple<string, decimal>(JsonConvert.SerializeObject(result), Convert.ToDecimal(size));
         }
 
         private void TransformGeometry(Geometry geometry, ICoordinateTransformation transformer)
