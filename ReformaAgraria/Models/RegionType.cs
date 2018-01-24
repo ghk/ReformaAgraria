@@ -3,7 +3,7 @@ namespace ReformaAgraria.Models
 {
     public enum RegionType
     {
-        National = 0,
+        Nasional = 0,
         Propinsi = 1,
         Kabupaten = 2,
         Kecamatan = 3,

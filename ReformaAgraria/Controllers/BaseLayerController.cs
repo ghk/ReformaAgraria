@@ -107,7 +107,7 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpDelete("{id}")]
-        public override void Delete(int id)
+        public override int Delete(int id)
         {
             base.Delete(id);
             var webRootPath = _hostingEnvironment.WebRootPath;
@@ -116,6 +116,8 @@ namespace ReformaAgraria.Controllers
             if (System.IO.File.Exists(targetFile)) { 
                 System.IO.File.Delete(targetFile);
             }
+
+            return id;
         }
 
         public string GetGeoJson(IFormFile file)

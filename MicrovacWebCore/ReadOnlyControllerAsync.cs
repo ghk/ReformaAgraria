@@ -40,7 +40,7 @@ namespace MicrovacWebCore
             return await exp.ToListAsync();
         }
 
-        [HttpGet("/count")]
+        [HttpGet("count")]
         public virtual async Task<long> CountAsync()
         {
             IQueryable<TModel> exp = dbSet;

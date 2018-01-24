@@ -1,11 +1,14 @@
 ﻿<div class="row">
     <hr />
+    <div class="col-md-12 col-sm-12 card-padding">
+        <ra-event-card></ra-event-card>
+    </div>    
     <div class="col-md-12 col-sm-12 card-padding agraria-issues-header">
         <ra-tora-header></ra-tora-header>
-    </div>
+    </div>    
     <div class="col-md-12 col-sm-12 card-padding" [hidden]="region && region.type === 4">
         <ra-tora-summary></ra-tora-summary>
-    </div>
+    </div>    
     <div class="col-md-12 col-sm-12 card-padding" *ngIf="region && region.type === 4">
         <ra-tora-list></ra-tora-list>
     </div>    

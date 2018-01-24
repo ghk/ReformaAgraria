@@ -21,11 +21,12 @@ namespace MicrovacWebCore
         public CrudControllerAsync(DbContext dbContext) : base(dbContext) { }
 
         [HttpDelete("{id}")]
-        public virtual async void DeleteAsync(TId id)
+        public virtual async Task<TId> DeleteAsync(TId id)
         {
             var model = new TModel { Id = id };
             dbContext.Entry(model).State = EntityState.Deleted;
             await dbContext.SaveChangesAsync();
+            return model.Id;
         }
 
         [HttpPost]
@@ -46,7 +47,7 @@ namespace MicrovacWebCore
             return model.Id;
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public virtual async Task<TId> PutAsync([FromBody] TModel model)
         {
             if (PutFields.Count > 0)

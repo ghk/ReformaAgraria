@@ -5,7 +5,7 @@ import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
-import { ToraMap } from '../../models/gen/toraMap';
+import { EventType } from '../../models/gen/eventType';
 import { RequestHelper } from '../../helpers/request';
 import { SharedService } from '../../services/shared';
 import { CrudService } from '../../services/crud';
@@ -13,7 +13,7 @@ import { CrudService } from '../../services/crud';
 import * as urljoin from 'url-join';
 
 @Injectable()
-export class ToraMapService implements CrudService<ToraMap, number>{        
+export class EventTypeService implements CrudService<EventType, string>{        
 
     private serverUrl: string;
    
@@ -24,12 +24,12 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     } 
 
-    public getAll(query?: Query, progressListener?: any): Observable<Array<ToraMap>> { 
+    public getAll(query?: Query, progressListener?: any): Observable<Array<EventType>> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, 'toramap'),
+            urljoin(this.serverUrl, 'eventtype'),
             query,
             null,
             progressListener,
@@ -44,7 +44,7 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, 'toramap', 'count'),
+            urljoin(this.serverUrl, 'eventtype', 'count'),
             query,
             null,
             progressListener,
@@ -54,69 +54,16 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public getById(id: number, query?: Query, progressListener?: any): Observable<ToraMap> {
+    public getById(id: string, query?: Query, progressListener?: any): Observable<EventType> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, 'toramap', id),
+            urljoin(this.serverUrl, 'eventtype', id),
             query,
             null,
             progressListener,
             null
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-    
-    public createOrUpdate(model: ToraMap, progressListener?: any): Observable<number> {
-        let method = 'POST';
-        if (!model['id']) {
-            return this.create(model, progressListener);
-        } else if (model['id']) {
-            return this.update(model, progressListener);       
-        }
-    }
-
-    public create(model: ToraMap, progressListener?: any): Observable<number> {
-        let request = RequestHelper.getHttpRequest(
-            this.cookieService,
-            this.http,
-            'POST',
-            urljoin(this.serverUrl, 'toramap'),            
-            null,
-            model,
-            null,
-            progressListener
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-
-    public update(model: ToraMap, progressListener?: any): Observable<number> {
-        let request = RequestHelper.getHttpRequest(
-            this.cookieService,
-            this.http,
-            'PUT',
-            urljoin(this.serverUrl, 'toramap'),
-            null,
-            model,
-            null,
-            progressListener
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-
-    public deleteById(id: any, progressListener?: any): Observable<number> {
-        let request = RequestHelper.getHttpRequest(
-            this.cookieService,
-            this.http,
-            'DELETE',
-            urljoin(this.serverUrl, 'toramap', id),
-            null,
-            null,
-            progressListener
         );
 
         return request.map(res => res.json()).catch(this.handleError);

@@ -5,7 +5,7 @@
         <!-- start new add object and subject -->
         <div class="dropdown nav justify-content-end mr-3">
             <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownMenuForm" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false" title="Tambah data objek dan subjek tora">
+                aria-expanded="false" title="Tambah data objek dan subjek tora">
                 <span class="oi oi-plus"></span>
             </button>
 
@@ -16,70 +16,68 @@
         </div>
 
         <!-- Table objek subjek -->
-        <div class="table-responsive pt-2 table-object-subject">
-            <table class="table table-sm">
-                <thead>
+        <table class="table table-sm pt-2">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox">
+                    </th>
+                    <th (click)="sorted('Lokasi')">Lokasi</th>
+                    <th (click)="sorted('Penggarap')">Penggarap</th>
+                    <th (click)="sorted('Luas')">Luas (ha)</th>
+                    <th (click)="sorted('Status')">Status Tanah</th>
+                    <th (click)="sorted('Usulan')">Usulan Skema</th>
+                    <th>Koordinat</th>
+                    <th>Tahapan</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="loading">
                     <tr>
-                        <th>
-                            <input type="checkbox">
-                        </th>
-                        <th (click)="sorted('Lokasi')">Lokasi</th>
-                        <th (click)="sorted('Penggarap')">Penggarap</th>
-                        <th (click)="sorted('Luas')">Luas (ha)</th>
-                        <th (click)="sorted('Status')">Status Tanah</th>
-                        <th (click)="sorted('Usulan')">Usulan Skema</th>
-                        <th>Koordinat</th>
-                        <th>Tahapan</th>
-                        <th></th>
-                        <th></th>
+                        <td colspan="12">
+                            <div class="col-md-12">
+                                <div id="loader"></div>
+                            </div>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <ng-container *ngIf="loading">
+                </ng-container>
+                <ng-container *ngIf="!loading">
+                    <ng-container *ngFor="let object of toraObjects">
                         <tr>
-                            <td colspan="12">
-                                <div class="col-md-12">
-                                    <div id="loader"></div>
-                                </div>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>
+                                <a routerLink="/toradetail/{{object.id}}">{{object.name}}</a>
+                            </td>
+                            <td>{{object.totalTenants}}</td>
+                            <td>{{object.size > 0 ? (object.size | number) : '-'}}</td>
+                            <td>{{LandStatus[object.landStatus] | translate}}</td>
+                            <td>{{object.proposedTreatment}}</td>
+                            <td>Image</td>
+                            <td>{{Status[object.stages] | translate}}</td>
+                            <td title="edit" data-toggle="modal" data-target="#editModal">
+                                <button type="button" class="btn btn-link">
+                                    <span class="oi oi-pencil" title="Edit" (click)="edit(object)"></span>
+                                </button>
+                            </td>
+                            <td data-toggle="modal" data-target="#deleteModal" title="hapus">
+                                <button type="button" class="btn btn-link">
+                                    <span class="oi oi-trash" title="Hapus" (click)="delete(object.id)"></span>
+                                </button>
                             </td>
                         </tr>
                     </ng-container>
-                    <ng-container *ngIf="!loading">
-                        <ng-container *ngFor="let object of toraObjects">
-                            <tr>
-                                <td>
-                                    <input type="checkbox">
-                                </td>
-                                <td>
-                                    <a routerLink="/toradetail/{{object.id}}">{{object.name}}</a>
-                                </td>
-                                <td>{{object.totalTenants}}</td>
-                                <td>{{object.size > 0 ? (object.size | number) : '-'}}</td>
-                                <td>{{LandStatus[object.landStatus] | translate}}</td>
-                                <td>{{object.proposedTreatment}}</td>
-                                <td>Image</td>
-                                <td>{{Status[object.stages] | translate}}</td>
-                                <td title="edit" data-toggle="modal" data-target="#editModal">
-                                    <button type="button" class="btn btn-link">
-                                        <span class="oi oi-pencil" title="Edit" (click)="edit(object)"></span>
-                                    </button>
-                                </td>
-                                <td data-toggle="modal" data-target="#deleteModal" title="hapus">
-                                    <button type="button" class="btn btn-link">
-                                        <span class="oi oi-trash" title="Hapus" (click)="delete(object.id)"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                        </ng-container>
-                        <tr *ngIf="toraObjects.length < 1">
-                            <td colspan="12" style="text-align:center; vertical-align:middle; background-color:#f2f2f2;">
-                                Tidak ada Permasalahan Agraria
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-        </div>
+                    <tr *ngIf="toraObjects.length < 1">
+                        <td colspan="12" style="text-align:center; vertical-align:middle; background-color:#f2f2f2;">
+                            Tidak ada Permasalahan Agraria
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
         <!-- end table data utama -->
     </div>
 </div>
@@ -87,7 +85,7 @@
 <!-- MODAL -->
 <!-- modal add new upload dokumen objek dan subjek table -->
 <div class="modal fade" id="modalUploadDocument" tabindex="-1" role="dialog" aria-labelledby="tambah data dengan unggah dokumen"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -146,7 +144,7 @@
 <!-- end modal add new upload dokumen objek dan subjek table -->
 <!-- Modal add new objek dan subjek table -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="Tambah data dengan isi form dokumen"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -176,7 +174,8 @@
                                 <div class="form-row pt-2">
                                     <div class="form-group col-md-8">
                                         <label for="inputName">Nama lokasi</label>
-                                        <input type="Text" class="form-control is-invalid" id="inputName" placeholder="Nama Lokasi" required [(ngModel)]="model.name" name="editName">
+                                        <input type="Text" class="form-control is-invalid" id="inputName" placeholder="Nama Lokasi" required [(ngModel)]="model.name"
+                                            name="editName">
                                     </div>
                                 </div>
 
@@ -226,17 +225,20 @@
 
                                     <div class="form-group col-md-12">
                                         <label for="inputLandTye">Klasifikasi bentang lahan</label>
-                                        <input type="Text" class="form-control" id="inputLandTye" placeholder="Perbukitan, pegunungan" required [(ngModel)]="model.landType" name="editLandType">
+                                        <input type="Text" class="form-control" id="inputLandTye" placeholder="Perbukitan, pegunungan" required [(ngModel)]="model.landType"
+                                            name="editLandType">
                                     </div>
 
                                     <div class="form-group col-md-12">
                                         <label for="inputLivelihood">Tipe penggunaan lahan</label>
-                                        <textarea class="form-control" id="inputLivelihood" rows="3" placeholder="Tipe penggunaan lahan" required [(ngModel)]="model.livelihood" name="editLivelihood"></textarea>
+                                        <textarea class="form-control" id="inputLivelihood" rows="3" placeholder="Tipe penggunaan lahan" required [(ngModel)]="model.livelihood"
+                                            name="editLivelihood"></textarea>
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label for="inputProposedTreatment">Usulan skema</label>
-                                        <input type="Text" class="form-control" id="inputProposedTreatment" placeholder="TORA, Pelepasan Kawasan Hutan" required [(ngModel)]="model.proposedTreatment" name="editProposedTreatment">
+                                        <input type="Text" class="form-control" id="inputProposedTreatment" placeholder="TORA, Pelepasan Kawasan Hutan" required
+                                            [(ngModel)]="model.proposedTreatment" name="editProposedTreatment">
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -310,7 +312,8 @@
 
                                         <div class="form-group col-md-6 text-muted">
                                             <label for="inputNonFormalAdvocacyProgress">b. Non formal</label>
-                                            <textarea class="form-control" id="inputNonFormalAdvocacyProgress" rows="3" [(ngModel)]="model.nonFormalAdvocacyProgress" name="editNonFormalAdvocacyProgress"></textarea>
+                                            <textarea class="form-control" id="inputNonFormalAdvocacyProgress" rows="3" [(ngModel)]="model.nonFormalAdvocacyProgress"
+                                                name="editNonFormalAdvocacyProgress"></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-12">

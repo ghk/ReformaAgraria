@@ -7,9 +7,9 @@ import { MapService } from '../services/map';
 import { ToraMapService } from "../services/gen/toraMap";
 import { ToraObjectService } from "../services/gen/toraObject";
 import { RegionService } from "../services/gen/region";
-import { MapUtils } from '../helpers/mapUtils';
 import { ToraMap } from "../models/gen/toraMap";
 import { BaseLayer } from '../models/gen/baseLayer';
+import { MapUtils } from '../helpers/mapUtils';
 
 import * as L from 'leaflet';
 import * as $ from 'jquery';

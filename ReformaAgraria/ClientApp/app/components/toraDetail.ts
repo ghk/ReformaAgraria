@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+
 import { SharedService } from '../services/shared';
-import { Subscription } from 'rxjs/Subscription';
 import { RegionService } from '../services/gen/region';
-import { Region } from '../models/gen/region';
+import { ToraService } from '../services/tora';
 import { ToraObjectService } from '../services/gen/toraObject';
 import { ToraSubjectService } from '../services/gen/toraSubject';
+
+import { Region } from '../models/gen/region';
 import { ToraObject } from '../models/gen/toraObject';
 import { ToraSubject } from '../models/gen/toraSubject';
 import { Query } from '../models/query';
@@ -14,7 +17,6 @@ import { LandStatus } from '../models/gen/landStatus';
 import { EducationalAttainment } from '../models/gen/educationalAttainment';
 import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
-import { ToraService } from '../services/tora';
 
 @Component({
     selector: 'ra-tora-detail',
@@ -75,8 +77,6 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
                 this.sharedService.setToraSummary(summary);
             });
         });
-
-
     }
 
     ngOnDestroy(): void {

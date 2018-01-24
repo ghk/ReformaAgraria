@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180122100001_Add Event Type")]
+    partial class AddEventType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -625,9 +626,6 @@ namespace ReformaAgraria.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnName("name");
-
-                    b.Property<decimal>("Size")
-                        .HasColumnName("size");
 
                     b.HasKey("Id")
                         .HasName("pk_tora_map");

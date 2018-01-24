@@ -5,7 +5,7 @@ import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
-import { ToraMap } from '../../models/gen/toraMap';
+import { Library } from '../../models/gen/library';
 import { RequestHelper } from '../../helpers/request';
 import { SharedService } from '../../services/shared';
 import { CrudService } from '../../services/crud';
@@ -13,7 +13,7 @@ import { CrudService } from '../../services/crud';
 import * as urljoin from 'url-join';
 
 @Injectable()
-export class ToraMapService implements CrudService<ToraMap, number>{        
+export class LibraryService implements CrudService<Library, number>{        
 
     private serverUrl: string;
    
@@ -24,12 +24,12 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         this.serverUrl = this.sharedService.getEnvironment().serverUrl;
     } 
 
-    public getAll(query?: Query, progressListener?: any): Observable<Array<ToraMap>> { 
+    public getAll(query?: Query, progressListener?: any): Observable<Array<Library>> { 
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, 'toramap'),
+            urljoin(this.serverUrl, 'library'),
             query,
             null,
             progressListener,
@@ -44,7 +44,7 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, 'toramap', 'count'),
+            urljoin(this.serverUrl, 'library', 'count'),
             query,
             null,
             progressListener,
@@ -54,12 +54,12 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public getById(id: number, query?: Query, progressListener?: any): Observable<ToraMap> {
+    public getById(id: number, query?: Query, progressListener?: any): Observable<Library> {
             let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'GET',
-            urljoin(this.serverUrl, 'toramap', id),
+            urljoin(this.serverUrl, 'library', id),
             query,
             null,
             progressListener,
@@ -69,7 +69,7 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public createOrUpdate(model: ToraMap, progressListener?: any): Observable<number> {
+    public createOrUpdate(model: Library, progressListener?: any): Observable<number> {
         let method = 'POST';
         if (!model['id']) {
             return this.create(model, progressListener);
@@ -78,12 +78,12 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         }
     }
 
-    public create(model: ToraMap, progressListener?: any): Observable<number> {
+    public create(model: Library, progressListener?: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'POST',
-            urljoin(this.serverUrl, 'toramap'),            
+            urljoin(this.serverUrl, 'library'),            
             null,
             model,
             null,
@@ -93,12 +93,12 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public update(model: ToraMap, progressListener?: any): Observable<number> {
+    public update(model: Library, progressListener?: any): Observable<number> {
         let request = RequestHelper.getHttpRequest(
             this.cookieService,
             this.http,
             'PUT',
-            urljoin(this.serverUrl, 'toramap'),
+            urljoin(this.serverUrl, 'library'),
             null,
             model,
             null,
@@ -113,7 +113,7 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             this.cookieService,
             this.http,
             'DELETE',
-            urljoin(this.serverUrl, 'toramap', id),
+            urljoin(this.serverUrl, 'library', id),
             null,
             null,
             progressListener

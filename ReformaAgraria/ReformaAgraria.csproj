@@ -10,11 +10,10 @@
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
     <PackageReference Include="Gdal.Core" Version="1.0.0" />
     <PackageReference Include="GeoJSON.Net" Version="1.1.64" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.1" />
     <PackageReference Include="NuGet.Modules.JObjectExtensions" Version="1.0.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
@@ -89,6 +88,9 @@
     </None>
     <None Update="ClientApp\app\models\gen\event.ts">
       <CustomToolNamespace>Models\Event.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\eventType.ts">
+      <CustomToolNamespace>Models\EventType.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\gender.ts">
       <CustomToolNamespace>Models\Gender.cs</CustomToolNamespace>
@@ -170,6 +172,12 @@
     </None>
     <None Update="ClientApp\app\services\gen\event.ts">
       <CustomToolNamespace>Controllers\EventController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\services\gen\eventType.ts">
+      <CustomToolNamespace>Controllers\EventTypeController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\services\gen\library.ts">
+      <CustomToolNamespace>Controllers\LibraryController.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\services\gen\region.ts">
       <CustomToolNamespace>Controllers\RegionController.cs</CustomToolNamespace>

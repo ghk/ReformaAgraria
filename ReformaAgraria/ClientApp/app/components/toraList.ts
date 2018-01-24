@@ -1,9 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
+
 import { ToraService } from '../services/tora';
 import { SharedService } from '../services/shared';
+import { ToraObjectService } from '../services/gen/toraObject';
+import { ToraSubjectService } from "../services/gen/toraSubject";
+import { RegionService } from "../services/gen/region";
 import { LandStatus } from '../models/gen/landStatus';
 import { Status } from '../models/gen/status';
 import { RegionalStatus } from '../models/gen/regionalStatus';
@@ -11,10 +15,8 @@ import { EducationalAttainment } from '../models/gen/educationalAttainment';
 import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
 import { Query } from '../models/query';
+
 import * as $ from 'jquery';
-import { ToraObjectService } from '../services/gen/toraObject';
-import { RegionService } from "../services/gen/region";
-import { ToraSubjectService } from "../services/gen/toraSubject";
 
 @Component({
     selector: 'ra-tora-list',
@@ -92,14 +94,14 @@ export class ToraListComponent implements OnInit, OnDestroy {
     }
 
     getKecamatan(parentId: string) {
-        let query = { data: { 'type': 'parent', 'regionType': 3, 'parentId': parentId } }
+        let query = { data: { 'type': 'getAllByParent', 'regionType': 3, 'parentId': parentId } }
         this.regionService.getAll(query, null).subscribe(data => {
             this.kecamatan = data;
         });
     }
 
     getDesa(parentId: string) {
-        let query = { data: { 'type': 'parent', 'regionType': 4, 'parentId': parentId } }
+        let query = { data: { 'type': 'getAllByParent', 'regionType': 4, 'parentId': parentId } }
         this.regionService.getAll(query, null).subscribe(data => {
             this.desa = data;
         });

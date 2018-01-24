@@ -33,7 +33,7 @@
             </div>
             <div class="col-md-4 text-center text-md-right">
                 <div class="btn btn-primary" (click)="resetEvent(); onAddEvent(eventModal);">
-                    Tambah Event
+                    Tambah Kegiatan
                 </div>
             </div>
         </div>
@@ -57,18 +57,19 @@
 
 <ng-template #eventModal>
     <div class="modal-header">
-        <h4 class="modal-title pull-left">Tambah Event</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <h4 class="modal-title pull-left">{{ modelEvent.id ? 'Ubah Kegiatan' : 'Tambah Kegiatan' }}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="eventModalRef.hide()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        {{ modelEvent | json }}
         <form (ngSubmit)="onSaveEvent()">
             <div class="form-group row">
-                <label for="title" class="col-sm-2 col-form-label">Judul</label>
+                <label for="title" class="col-sm-2 col-form-label">Tipe</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="title" required [(ngModel)]="modelEvent.title">
+                    <select class="form-control" [(ngModel)]="modelEvent.fkEventTypeId" name="eventType">
+                        <option *ngFor="let eventType of eventTypes" [ngValue]="eventType.id">{{eventType.id}} - {{eventType.name}}</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group row">
@@ -128,5 +129,13 @@
         <span style="font-size:0.6rem;" *ngIf="model.type === 0"><i>Kabupaten</i></span>
         <span style="font-size:0.6rem;" *ngIf="model.type === 1"><i>Kecamatan</i></span>
         <span style="font-size:0.6rem;" *ngIf="model.type === 2"><i>Desa</i></span>
+    </div>
+</ng-template>
+
+<ng-template #deleteConfirmationModal>  
+    <div class="modal-body text-center">
+        <p>Hapus {{ modelEvent.title }} ?</p>
+        <button type="button" class="btn btn-default" (click)="onConfirmDelete()">Ya</button>
+        <button type="button" class="btn btn-primary focus" (click)="onDeclineDelete()">Tidak</button>
     </div>
 </ng-template>
