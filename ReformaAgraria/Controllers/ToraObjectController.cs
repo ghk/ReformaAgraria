@@ -222,7 +222,6 @@ namespace ReformaAgraria.Controllers
 
                         if (objectIdList.Count > 0 && workbook.Worksheets.Count > 1)
                         {
-                            //ToraSubjectController ts = (ToraSubjectController)HttpContext.RequestServices.GetService(typeof(ToraSubjectController));
                             ToraSubjectController ts = new ToraSubjectController(_context, _hostingEnvironment, _tsLogger);
                             ts.Import(objectIdList, package);
                         }

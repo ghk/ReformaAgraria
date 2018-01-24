@@ -15,6 +15,8 @@ namespace ReformaAgraria.Models
 
         public string Geojson { get; set; }
 
+        public decimal Size { get; set; }
+
         public int FkToraObjectId { get; set; }
 
         public string FkRegionId { get; set; }

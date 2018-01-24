@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180124042413_add size column with decimal datatype")]
+    partial class addsizecolumnwithdecimaldatatype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,48 +286,22 @@ namespace ReformaAgraria.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnName("end_date");
 
-                    b.Property<string>("FkEventTypeId")
-                        .HasColumnName("fk_event_type_id");
-
                     b.Property<string>("FkRegionId")
                         .HasColumnName("fk_region_id");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnName("start_date");
 
+                    b.Property<string>("Title")
+                        .HasColumnName("title");
+
                     b.HasKey("Id")
                         .HasName("pk_event");
-
-                    b.HasIndex("FkEventTypeId")
-                        .HasName("ix_event_fk_event_type_id");
 
                     b.HasIndex("FkRegionId")
                         .HasName("ix_event_fk_region_id");
 
                     b.ToTable("event");
-                });
-
-            modelBuilder.Entity("ReformaAgraria.Models.EventType", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime?>("DateCreated")
-                        .HasColumnName("date_created");
-
-                    b.Property<DateTime?>("DateModified")
-                        .HasColumnName("date_modified");
-
-                    b.Property<string>("Name")
-                        .HasColumnName("name");
-
-                    b.Property<int>("RegionType")
-                        .HasColumnName("region_type");
-
-                    b.HasKey("Id")
-                        .HasName("pk_event_type");
-
-                    b.ToTable("event_type");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.Library", b =>
@@ -921,11 +896,6 @@ namespace ReformaAgraria.Migrations
 
             modelBuilder.Entity("ReformaAgraria.Models.Event", b =>
                 {
-                    b.HasOne("ReformaAgraria.Models.EventType", "EventType")
-                        .WithMany()
-                        .HasForeignKey("FkEventTypeId")
-                        .HasConstraintName("fk_event_event_type_fk_event_type_id");
-
                     b.HasOne("ReformaAgraria.Models.Region", "Region")
                         .WithMany()
                         .HasForeignKey("FkRegionId")

@@ -35,7 +35,11 @@ namespace ReformaAgraria.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public ToraMapController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment, IHttpContextAccessor contextAccessor) : base(dbContext)
+        public ToraMapController(
+            ReformaAgrariaDbContext dbContext, 
+            IHostingEnvironment hostingEnvironment, 
+            IHttpContextAccessor contextAccessor
+        ) : base(dbContext)
         {
             _hostingEnvironment = hostingEnvironment;
             _contextAccessor = contextAccessor;
@@ -62,7 +66,9 @@ namespace ReformaAgraria.Controllers
             toraMap.Name = results["toraObjectName"];
 
             var file = results.Files[0];
-            toraMap.Geojson = GetGeoJson(file);
+            var features = TopologyHelper.GetFeatureCollectionWgs84(file);
+            toraMap.Geojson = TopologyHelper.GetGeojson(features);
+            toraMap.Size = TopologyHelper.GetArea(features);
 
             await dbContext.SaveChangesAsync();
 
@@ -122,19 +128,6 @@ namespace ReformaAgraria.Controllers
             }
 
             return query;
-        }
-
-        private string GetGeoJson(IFormFile file)
-        {
-            //var tempDirectoryPath = IOHelper.ExtractTempZip(file);          
-            //var shapeFilePath = Directory.GetFiles(tempDirectoryPath).FirstOrDefault(fileName => fileName.Contains("shp"));
-            //var features = TopologyHelper.GetFeatureCollectionWgs84(shapefilePath);
-            //var geojson = TopologyHelper.GetGeojson(features);            
-            //Directory.Delete(tempDirectoryPath, true);
-
-            var features = TopologyHelper.GetFeatureCollectionWgs84(file);
-            var geojson = TopologyHelper.GetGeojson(features);
-            return geojson;
-        }
+        }       
     }
 }

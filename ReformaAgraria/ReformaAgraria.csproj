@@ -45,8 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Docs\" />
-    <Folder Include="wwwroot\baseLayer\" />
-    <Folder Include="wwwroot\baseLayer\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="appsettings.Development.json" />

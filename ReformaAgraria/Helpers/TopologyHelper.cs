@@ -1,6 +1,7 @@
 ﻿using GeoAPI.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
+using GeoJSON.Net.Geometry;
 using Microsoft.AspNetCore.Http;
 using NetTopologySuite.CoordinateSystems;
 using NetTopologySuite.Features;
@@ -152,6 +153,18 @@ namespace ReformaAgraria.Helpers
             return features;
         }
 
+        public static decimal GetArea(FeatureCollection features)
+        {
+            decimal area = 0;
+            foreach (var feature in features.Features)
+            {
+                for (var i = 0; i < feature.Geometry.NumGeometries; i++)
+                {
+                    area += (decimal)feature.Geometry.GetGeometryN(i).Area;
+                }
+            }            
+            return area;
+        }        
     }
 
     public class CoordinateTransformationFilter : ICoordinateSequenceFilter
