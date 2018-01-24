@@ -298,7 +298,7 @@ export class MapComponent implements OnInit, OnDestroy {
         $("#edit-modal")['modal']("hide");
         this.model.color = this.color;
 
-        this.mapService.edit(model).subscribe(data => {
+        this.mapService.import(model).subscribe(data => {
             this.toastr.success("Pengeditan Berhasil", null);
             this.removeLayer(data.id);
             this.applyOverlay([data]);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ReformaAgraria.Helpers
 {
-    public static class LogConfiguration
+    public static class LogConfigurationHelper
     {
         public static Logger GetConfiguration()
         {

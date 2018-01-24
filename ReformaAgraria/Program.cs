@@ -13,7 +13,7 @@ namespace ReformaAgraria
     {
         public static void Main(string[] args)
         {
-            Log.Logger = LogConfiguration.GetConfiguration();
+            Log.Logger = LogConfigurationHelper.GetConfiguration();
 
             try
             {

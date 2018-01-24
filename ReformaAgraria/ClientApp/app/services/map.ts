@@ -27,43 +27,25 @@ export class MapService {
 
     import(model): Observable<any> {
         let fileList: FileList = model.file;
-        if (fileList.length && fileList.length > 0) {
+        if (fileList && fileList.length > 0) {
             let file: File = fileList[0];
             let formData: FormData = new FormData();
             let headers = new Headers();
             let requestOptions = new RequestOptions({ headers: headers });
+            requestOptions.headers.delete('Content-Type');
 
             headers.append('Accept', 'application/json');
+            if (model.id)
+                formData.append('id', model.id);
             formData.append('label', model.label);
             formData.append('color', model.color);
             formData.append('uploadFile', file, file.name);            
             
             return this.http.post('/api/baselayer/import', formData, requestOptions)
-                .map(res => res.json()).catch(this.handleError);
+                .map(res => res.json())
+                .catch(this.handleError);
         }
-    }
-
-    edit(model): Observable<any> { 
-        let headers = new Headers();
-        let requestOptions = new RequestOptions({ headers: headers });
-        headers.append('Accept', 'application/json');
-
-        let formData: FormData = new FormData();
-        formData.append('id', model.id);
-        formData.append('label', model.label);
-        formData.append('color', model.color);        
-        formData.append('geojson', model.geojson);
-
-        if(model.file){ 
-            let fileList: FileList = model.file;
-            let file: File = fileList[0];
-        
-            formData.append('uploadFile', file, file.name);
-        }
-
-        return this.http.post('/api/baselayer/edit', formData, requestOptions)
-            .map(res => res.json()).catch(this.handleError);
-    }
+    }   
     
     private handleError(error: Response | any) {
         let errMsg: string;

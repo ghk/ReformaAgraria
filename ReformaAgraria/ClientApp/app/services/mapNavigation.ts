@@ -31,7 +31,8 @@ export class MapNavigationService {
             let formData: FormData = new FormData();
             let headers = new Headers();
             let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-
+            requestOptions.headers.delete('Content-Type');
+            
             headers.append('Accept', 'application/json');
             formData.append('toraObjectId', model.tora.id);
             formData.append('toraObjectName', model.tora.name);
