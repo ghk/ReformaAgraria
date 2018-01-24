@@ -174,7 +174,10 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         this.mapNavigationService.import(this.uploadModel)
             .subscribe(data => {
                 this.toastr.success("Upload File Berhasil", null);
-                this.applyOverlayTora([data]);
+                let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
+                this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
+                    this.applyOverlayTora(data);
+                });   
                 this.clearModal();
             });
     }
@@ -257,6 +260,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     }
 
     getGeoJsonTora(data: ToraMap, currentColor): any {
+        console.log(data);
         let geoJsonOptions = {
             style: (feature) => {
                 let color = "#000";
@@ -280,7 +284,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                     '<tr><td>Kecamatan</td><td>:</td><td><a href="/home/' + data.region.parent.id.split('.').join('_') + '">' + data.region.parent.name + '</td></tr>' +
                     '<tr><td>Desa</td><td>:</td><td><a href="/home/' + data.region.id.split('.').join('_') + '">' + data.region.name + '</td></tr>' +
                     '<tr><td>Luas</td><td>:</td><td>' + data.toraObject.size + ' ha</td></tr>' +
-                    '<tr><td>Jumlah Penduduk</td><td>:</td><td>' + data.toraObject.totalTenants + '</td></tr></tbody></table>');       
+                    '<tr><td>Jumlah Penggarap</td><td>:</td><td>' + data.toraObject.totalTenants + '</td></tr></tbody></table>');       
             }
         };                    
         return L.geoJSON(JSON.parse(data.geojson), geoJsonOptions);
