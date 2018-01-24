@@ -260,7 +260,6 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     }
 
     getGeoJsonTora(data: ToraMap, currentColor): any {
-        console.log(data);
         let geoJsonOptions = {
             style: (feature) => {
                 let color = "#000";
