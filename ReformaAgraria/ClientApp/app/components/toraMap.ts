@@ -272,7 +272,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
             size = '-';
         }
         else {
-            size = data.toraObject.size + ' ha';
+            size = data.toraObject.size.toFixed(2) + ' ha';
         }
 
         let geoJsonOptions = {

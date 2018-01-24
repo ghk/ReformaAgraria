@@ -53,7 +53,7 @@
                                 <a routerLink="/toradetail/{{object.id}}">{{object.name}}</a>
                             </td>
                             <td>{{object.totalTenants}}</td>
-                            <td>{{object.size > 0 ? (object.size | number) : '-'}}</td>
+                            <td>{{object.size > 0 ? (object.size | number : '1.2-2') : '-'}}</td>
                             <td>{{LandStatus[object.landStatus] | translate}}</td>
                             <td>{{object.proposedTreatment}}</td>
                             <td>Image</td>
