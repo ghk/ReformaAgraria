@@ -12,6 +12,8 @@ appsettings.json
 appsettings.*.json
 Logs/*.*
 !Logs/.gitkeep
+/wwwroot/tora
+/wwwroot/baseLayer
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

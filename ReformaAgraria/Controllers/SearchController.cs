@@ -30,7 +30,7 @@ namespace ReformaAgraria.Controllers
             result.AddRange(regionResult);
 
             var toraObjectResult = await SearchByToraObject(keywords);
-            result.AddRange(regionResult);          
+            result.AddRange(toraObjectResult);          
 
             return result.OrderBy(x => x.Label).ToList();
         }

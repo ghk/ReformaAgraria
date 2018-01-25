@@ -1,35 +1,30 @@
 ﻿using GeoAPI.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
-using GeoJSON.Net.Geometry;
 using Microsoft.AspNetCore.Http;
 using NetTopologySuite.CoordinateSystems;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using NetTopologySuite.IO.Streams;
-using ProjNet.Converters.WellKnownText;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReformaAgraria.Helpers
 {
     public static class TopologyHelper
-    {       
+    {
         public static FeatureCollection GetFeatureCollection(ShapefileDataReader reader)
         {
             FeatureCollection features = new FeatureCollection();
 
             using (reader)
             {
-                var header = reader.DbaseHeader;                
+                var header = reader.DbaseHeader;
                 while (reader.Read())
                 {
                     var feature = new Feature();
@@ -53,7 +48,7 @@ namespace ReformaAgraria.Helpers
             var reader = new ShapefileDataReader(shapefilePath, geometryFactory);
             var features = GetFeatureCollection(reader);
             var projection = GetProjection(shapefilePath);
-            features = TopologyHelper.TransformProjectionToWgs84(features, projection);
+            features = TopologyHelper.TransformProjection(features, projection, GeographicCoordinateSystem.WGS84);
             return features;
         }
 
@@ -69,7 +64,6 @@ namespace ReformaAgraria.Helpers
                 var dataEncodingEntry = archive.Entries.FirstOrDefault(e => e.Name.Contains(".cpg"));
                 var spatialIndexEntry = archive.Entries.FirstOrDefault(e => e.Name.Contains(".sbn"));
                 var spatialIndexIndexEntry = archive.Entries.FirstOrDefault(e => e.Name.Contains(".sbx"));
-
 
                 var shapeStream = new ZipStreamProvider(StreamTypes.Shape, shapeEntry);
                 var indexStream = new ZipStreamProvider(StreamTypes.Index, indexEntry);
@@ -94,7 +88,7 @@ namespace ReformaAgraria.Helpers
                 var reader = new ShapefileDataReader(registry, new GeometryFactory());
                 var features = GetFeatureCollection(reader);
                 var projection = GetProjection(projectionEntry);
-                features = TopologyHelper.TransformProjectionToWgs84(features, projection);
+                features = TopologyHelper.TransformProjection(features, projection, GeographicCoordinateSystem.WGS84);
                 return features;
             }
         }
@@ -113,8 +107,8 @@ namespace ReformaAgraria.Helpers
             var projection = File.ReadAllText(projectionFilePath);
             var cfac = new CoordinateSystemFactory();
             return cfac.CreateFromWkt(projection);
-        }   
-        
+        }
+
         public static ICoordinateSystem GetProjection(ZipArchiveEntry projectionEntry)
         {
             using (var projectionStream = projectionEntry.Open())
@@ -132,16 +126,17 @@ namespace ReformaAgraria.Helpers
             var ctfac = new CoordinateTransformationFactory();
             var cfac = new CoordinateSystemFactory();
             return ctfac.CreateFromCoordinateSystems(source, dest);
-        }       
+        }
 
-        public static FeatureCollection TransformProjectionToWgs84(
-            FeatureCollection features, ICoordinateSystem source)
-        {           
-            var dest = GeographicCoordinateSystem.WGS84;
+        public static FeatureCollection TransformProjection(
+            FeatureCollection features, ICoordinateSystem source, ICoordinateSystem dest)
+        {
+            if (dest == GeographicCoordinateSystem.WGS84)
+                features.CRS = new NamedCRS("urn:ogc:def:crs:OGC:1.3:CRS84");
+
             var transformer = GetCoordinateTransformer(source, dest);
-
-            features.CRS = new NamedCRS("urn:ogc:def:crs:OGC:1.3:CRS84");            
-            foreach(var feature in features.Features)
+            
+            foreach (var feature in features.Features)
             {
                 var transformFilter = new CoordinateTransformationFilter(transformer);
                 for (var i = 0; i < feature.Geometry.NumGeometries; i++)
@@ -153,8 +148,14 @@ namespace ReformaAgraria.Helpers
             return features;
         }
 
-        public static decimal GetArea(FeatureCollection features)
+        public static decimal GetArea(FeatureCollection feats)
         {
+            var features = feats.Clone();
+            var coordinate = features.Features.FirstOrDefault().Geometry.GetGeometryN(1).Centroid.Coordinate;
+            var zone = 1 + (int)Math.Floor((coordinate.X + 180) / 6);
+            var zoneIsNorth = (coordinate.Y * Math.PI / 180) < 0 ? false : true;
+            features = TransformProjection(features, GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WGS84_UTM(zone, zoneIsNorth));            
+
             decimal area = 0;
             foreach (var feature in features.Features)
             {
@@ -162,9 +163,28 @@ namespace ReformaAgraria.Helpers
                 {
                     area += (decimal)feature.Geometry.GetGeometryN(i).Area;
                 }
-            }            
+            }
             return area;
-        }        
+        }
+
+        public static FeatureCollection Clone(this FeatureCollection features)
+        {
+            var newFeatures = new FeatureCollection();
+            foreach (var feature in features.Features)
+            {
+                var newAttributes = new AttributesTable();                
+                foreach(var attributeName in feature.Attributes.GetNames())
+                {
+                    newAttributes.Add(attributeName, feature.Attributes[attributeName]);
+                }
+                var newFeature = new Feature();
+                newFeature.Attributes = newAttributes;
+                newFeature.Geometry = (IGeometry)feature.Geometry.Clone();
+                newFeatures.Add(newFeature);
+            }
+
+            return newFeatures;
+        }
     }
 
     public class CoordinateTransformationFilter : ICoordinateSequenceFilter
