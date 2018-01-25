@@ -83,22 +83,20 @@
                 <label for="startDate" class="col-sm-2 col-form-label d-flex align-items-center">Waktu Mulai</label>
                 <div class="col-sm-5 d-flex align-items-center">
                     <input bsDatepicker type="text" class="form-control" name="startDate"
-                        [(ngModel)]="modelEvent.startDate"
-                        [minDate]="minDate">                    
+                        [(ngModel)]="modelEvent.startDate">                    
                 </div>
                 <div class="col-sm-2">
-                    <timepicker [(ngModel)]="modelEvent.startDate" [min]="minDate" [showMeridian]="false" name="startTime"></timepicker>
+                    <timepicker [(ngModel)]="modelEvent.startDate" [showMeridian]="false" name="startTime"></timepicker>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="endDate" class="col-sm-2 col-form-label d-flex align-items-center">Waktu Selesai</label>
                 <div class="col-sm-5 d-flex align-items-center">
                     <input bsDatepicker type="text" class="form-control" name="endDate"
-                        [(ngModel)]="modelEvent.endDate"
-                        [minDate]="modelEvent.startDate">                    
+                        [(ngModel)]="modelEvent.endDate">                    
                 </div>
                 <div class="col-sm-2">
-                    <timepicker [(ngModel)]="modelEvent.endDate" [min]="modelEvent.startDate" [showMeridian]="false" name="endTime"></timepicker>
+                    <timepicker [(ngModel)]="modelEvent.endDate" [showMeridian]="false" name="endTime"></timepicker>
                 </div>
             </div>
             <div class="form-group row">
