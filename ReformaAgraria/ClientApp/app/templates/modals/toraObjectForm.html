@@ -1,0 +1,125 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{toraObject?.id ? 'Ubah' : 'Tambah'}} Objek TORA</h4>
+    <button type="button" class="close" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form class="was-validated" (ngSubmit)="onFormSubmit()">
+        <h5 class="pt-3">Data Utama</h5>
+        <div class="form-row pt-2">
+            <div class="form-group col-md-8">
+                <label for="inputName">Nama Lokasi</label>
+                <input type="Text" class="form-control is-invalid" id="inputName" placeholder="Nama Lokasi" required [(ngModel)]="toraObject.name"
+                    name="editName">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="ddlDesa">Desa</label>
+                <input type="text" disabled class="form-control" [value]="desa?.name" />
+            </div>
+            <div class="form-group col-md-4">
+                <label for="ddlKecamatan">Kecamatan</label>
+                <input type="text" disabled class="form-control" [value]="kecamatan?.name" />
+            </div>
+            <div class="fieldset disabled form-group col-md-4">
+                <label for="disabledSelect">Kabupaten</label>
+                <input type="text" disabled class="form-control" [value]="kabupaten?.name" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputSize">Luas Wilayah Objek</label>
+                <input type="Text" class="form-control" id="inputSize" placeholder="Ha" required [(ngModel)]="toraObject.size" name="editSize">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="ddlRegionalStatus">Status Kawasan</label>
+                <select class="form-control" id="ddlRegionalStatus" required [(ngModel)]="toraObject.regionalStatus" name="regionalStatus">
+                    <option [ngValue]="null">Pilih Status Kawasan</option>
+                    <option [ngValue]="RegionalStatus.Forest">{{RegionalStatus[RegionalStatus.Forest] | translate}}</option>
+                    <option [ngValue]="RegionalStatus.NonForest">{{RegionalStatus[RegionalStatus.NonForest] | translate}}</option>
+                    <option [ngValue]="RegionalStatus.NotSpecified">{{RegionalStatus[RegionalStatus.NotSpecified] | translate}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="inputLandTye">Klasifikasi Bentang Lahan</label>
+                <input type="Text" class="form-control" id="inputLandTye" placeholder="Perbukitan, pegunungan" required [(ngModel)]="toraObject.landType"
+                    name="editLandType">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputLivelihood">Tipe Penggunaan Lahan</label>
+                <textarea class="form-control" id="inputLivelihood" rows="3" placeholder="Tipe penggunaan lahan" required [(ngModel)]="toraObject.livelihood"
+                    name="editLivelihood"></textarea>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputProposedTreatment">Usulan Skema</label>
+                <input type="Text" class="form-control" id="inputProposedTreatment" placeholder="TORA, Pelepasan Kawasan Hutan" required
+                    [(ngModel)]="toraObject.proposedTreatment" name="editProposedTreatment">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="ddlStatus">Tahapan</label>
+                <select class="form-control" id="ddlStatus" required [(ngModel)]="toraObject.status" name="status">
+                    <option [ngValue]="null">Pilih Tahapan</option>
+                    <option [ngValue]="Status.Proposal">{{Status[Status.Proposal] | translate}}</option>
+                    <option [ngValue]="Status.Verification">{{Status[Status.Verification] | translate}}</option>
+                    <option [ngValue]="Status.Act">{{Status[Status.Act] | translate}}</option>
+                </select>
+            </div>            
+        </div>
+        <hr>
+        <h5 class="pt-3">Data Pendukung</h5>
+        <div class="form-row pt-2">
+            <div class="form-group col-md-4">
+                <label for="ddlLandStatus">Status Tanah</label>
+                <select class="form-control" id="ddlLandStatus" required [(ngModel)]="toraObject.landStatus" name="landStatus">
+                    <option [ngValue]="null">Pilih Status Tanah</option>
+                    <option [ngValue]="LandStatus.Government">{{LandStatus[LandStatus.Government] | translate}}</option>
+                    <option [ngValue]="LandStatus.Private">{{LandStatus[LandStatus.Private] | translate}}</option>
+                    <option [ngValue]="LandStatus.Gift">{{LandStatus[LandStatus.Gift] | translate}}</option>
+                    <option [ngValue]="LandStatus.Inheritance">{{LandStatus[LandStatus.Inheritance] | translate}}</option>
+                    <option [ngValue]="LandStatus.Others">{{LandStatus[LandStatus.Others] | translate}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-8 text-muted">
+                <label for="inputAdditionalInfo">*Data Tambahan</label>
+                <input type="Text" class="form-control" id="inputAdditionalInfo" placeholder="Data Tambahan">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputLandTenureHistory">Sejarah Penguasaan Tanah</label>
+                <textarea class="form-control" id="inputLandTenureHistory" rows="6" required [(ngModel)]="toraObject.landTenureHistory" name="editLandTenureHistory"></textarea>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="inputChronologyConflict">
+                    Kronologi Konflik
+                    <label class="text-muted">*(Jika ada)</label>
+                </label>
+                <textarea class="form-control" id="inputChronologyConflict" rows="3" [(ngModel)]="toraObject.conflictChronology" name="editConflictChronology"></textarea>
+            </div>
+            <div class="form-row col-md-12">
+                <div class="form-group col-md-12 mb-auto">
+                    <label for="progresLangkahAdvokasi">Progres Langkah Advokasi:</label>
+                </div>
+
+                <div class="form-group col-md-6 text-muted">
+                    <label for="inputFormalAdvocacyProgress">a. Formal</label>
+                    <textarea class="form-control" id="inputFormalAdvocacyProgress" rows="3" [(ngModel)]="toraObject.formalAdvocacyProgress"
+                        name="editFormalAdvocacyProgress"></textarea>
+                </div>
+
+                <div class="form-group col-md-6 text-muted">
+                    <label for="inputNonFormalAdvocacyProgress">b. Non Formal</label>
+                    <textarea class="form-control" id="inputNonFormalAdvocacyProgress" rows="3" [(ngModel)]="toraObject.nonFormalAdvocacyProgress"
+                        name="editNonFormalAdvocacyProgress"></textarea>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Batal</button>
+            </div>
+        </div>
+    </form>
+</div>
