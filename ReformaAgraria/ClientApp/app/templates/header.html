@@ -2,8 +2,10 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top justify-content-between">
 
     <div id="mySidenav" class="sidenav-drawer">
-        <a class="closebtn" data-toggle="collapse" data-target="#mySidenav">&times;</a>
-        <a class="nav-link" routerLink="/home/{{regionId}}" routerLinkActive="active">Dashboard</a>
+        <div class="d-flex" style="justify-content: space-between">
+            <a class="nav-link" routerLink="/home/{{regionId}}" routerLinkActive="active">Dashboard</a>
+            <a class="nav-link close-btn" data-toggle="collapse" data-target="#mySidenav">&times;</a>            
+        </div>        
         <a class="nav-link" routerLink="/calendar/{{regionId}}" routerLinkActive="active">Kalendar Kegiatan</a>
         <a class="nav-link" routerLink="/map" routerLinkActive="active">Peta</a>
         <a class="nav-link" routerLink="/library" routerLinkActive="active">Pustaka</a>

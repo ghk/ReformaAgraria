@@ -143,9 +143,8 @@ h1 {
 }
 
 .sidenav-drawer a {
-    padding: 8px 8px 8px 32px;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 18px;
     color: #818181;
     display: block;
     transition: 0.3s;
@@ -155,15 +154,12 @@ h1 {
     color: #f1f1f1;
 }
 
-.sidenav-drawer .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
+.sidenav-drawer .close-btn {
+    font-size: 1rem;
+    color: #f1f1f1 !important;
 }
 
-.sidenav-drawer .closebtn:hover {
+.sidenav-drawer .close-btn:hover {
     cursor: pointer;
 }
 

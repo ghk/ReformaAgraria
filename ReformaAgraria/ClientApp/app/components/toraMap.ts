@@ -243,7 +243,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
             },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<button type="button" class="btn btn-outline-secondary btn-sm" style="width:44px; height:44px; padding-top: 0.5rem"><strong><i class="material-icons">add</i></strong></button>';
+                div.innerHTML = '<button type="button" class="btn btn-outline-secondary btn-sm" style="width:44px; height:44px; padding-top: 0.5rem"><strong><i class="material-icons">library_add</i></strong></button>';
                 div.onclick = (e) => { 
                     this.clearModal();
                     $("#upload-modal")['modal']("show");
