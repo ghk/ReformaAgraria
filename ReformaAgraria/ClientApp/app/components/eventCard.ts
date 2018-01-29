@@ -8,8 +8,10 @@ import { EventService } from '../services/gen/event';
 import { Region } from '../models/gen/region';
 import { Event } from '../models/gen/event';
 import { Query } from '../models/query';
+import { EventHelper } from '../helpers/event';
 
 import * as moment from 'moment';
+
 
 @Component({
     selector: 'ra-event-card',
@@ -49,10 +51,11 @@ export class EventCardComponent implements OnInit, OnDestroy {
             events.forEach(event => {
                 event.startDate = event.startDate ? moment.utc(event.startDate).toDate() : null;
                 event.endDate = event.endDate ? moment.utc(event.endDate).toDate() : null;
+                event['color'] = EventHelper.getEventColor(event);
             })
             this.events = events;
         })
-    }
+    }    
 
     onCardClicked(event: Event) {
         let regionId = this.region.id.split('.').join('_');

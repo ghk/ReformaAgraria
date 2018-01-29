@@ -31,7 +31,7 @@ export class TranslatePipe implements PipeTransform {
                 return 'Swasta';
             case 'Gift':
                 return 'Pemberian';
-            case 'Inheritage':
+            case 'Inheritance':
                 return 'Warisan';
             case 'Flat':
                 return 'Datar';

@@ -2,8 +2,10 @@
     <div class="card-body">
         <div class="card-text text-center" *ngIf="!events || events.length === 0">Tidak ada kegiatan</div>
         <div class="card-deck" *ngIf="events && events.length > 0">
-            <div class="card event-card" *ngFor="let event of events" (click)="onCardClicked(event)">
-                <h5 class="card-header text-center">{{event.startDate | date:'dd MMM'}}</h5>
+            <div class="card event-card" *ngFor="let event of events" [style.borderColor]="event.color" (click)="onCardClicked(event)">
+                <h6 class="card-header text-center" [style.backgroundColor]="event.color">
+                    {{event.startDate | date:'dd MMM'}} {{event.endDate ? '- ' + (event.endDate | date: 'dd MMM') : ''}}
+                </h6>
                 <div class="card-body">
                     <p class="card-title" style="font-size:0.8rem;">{{event.eventType?.name}}</p>
                     <p class="card-text" style="font-size:0.7rem;">{{event.description}}</p>
