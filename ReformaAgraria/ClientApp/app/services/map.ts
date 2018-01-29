@@ -2,7 +2,7 @@
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { CookieService } from 'ngx-cookie-service';
-import { SharedService } from './../services/shared';
+import { EnvironmentService } from './../services/environment';
 import { ProgressHttp } from 'angular-progress-http';
 import { ToraObject } from './../models/gen/toraObject';
 import { RequestHelper } from '../helpers/request';
@@ -20,9 +20,9 @@ export class MapService {
     constructor(
         private http: ProgressHttp,
         private cookieService: CookieService,
-        private sharedService: SharedService
+        private environmentService: EnvironmentService
     ) { 
-        this.serverUrl = this.sharedService.getEnvironment().serverUrl;
+        this.serverUrl = this.environmentService.getEnvironment().serverUrl;
     }
 
     import(model): Observable<any> {

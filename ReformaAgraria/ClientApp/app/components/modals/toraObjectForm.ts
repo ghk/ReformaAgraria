@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Subscription } from "rxjs";
+import { Component, OnInit, OnDestroy, Input } from "@angular/core";
+import { BehaviorSubject, Subscription } from "rxjs";
 import { BsModalRef } from "ngx-bootstrap";
 import { Progress } from "angular-progress-http";
 import { ToastrService } from "ngx-toastr";
@@ -14,6 +14,7 @@ import { ToraObject } from "../../models/gen/toraObject";
 import { SharedService } from "../../services/shared";
 import { RegionService } from "../../services/gen/region";
 import { ToraObjectService } from "../../services/gen/toraObject";
+import { ReplaySubject } from "rxjs/ReplaySubject";
 
 
 @Component({
@@ -32,6 +33,8 @@ export class ModalToraObjectFormComponent implements OnInit, OnDestroy {
     kecamatan: Region;
     kabupaten: Region;
     desa: Region;  
+
+    private isSaveSuccess$: ReplaySubject<boolean> = new ReplaySubject(1);   
 
     constructor(
         public bsModalRef: BsModalRef,
@@ -54,8 +57,8 @@ export class ModalToraObjectFormComponent implements OnInit, OnDestroy {
     }  
    
     setToraObject(toraObject: ToraObject): void {
-        if (toraObject) {
-            this.toraObject = toraObject;
+        if (toraObject) {            
+            this.toraObject = JSON.parse(JSON.stringify(toraObject));
         }
     }
 
@@ -78,11 +81,11 @@ export class ModalToraObjectFormComponent implements OnInit, OnDestroy {
         this.toraObjectService.createOrUpdate(this.toraObject, null).subscribe(
             success => {
                 this.toastr.success("Objek TORA berhasil disimpan");
-                this.bsModalRef.hide();
+                this.isSaveSuccess$.next(true);
             },
             error => {
                 this.toastr.error("Ada kesalahan dalam penyimpanan");
-                this.bsModalRef.hide();
+                this.isSaveSuccess$.next(false);
             }
         );
     }

@@ -2,6 +2,7 @@
 import { ColorPickerService } from 'angular4-color-picker';
 import { ToastrService } from 'ngx-toastr';
 
+import { SharedService } from "../services/shared";
 import { BaseLayerService } from '../services/gen/baseLayer';
 import { MapService } from '../services/map';
 import { ToraMapService } from "../services/gen/toraMap";
@@ -48,12 +49,19 @@ export class MapComponent implements OnInit, OnDestroy {
         private mapService: MapService,
         private toastr: ToastrService,
         private cpService: ColorPickerService,
+        private sharedService: SharedService,
         private toraMapService: ToraMapService,
         private toraObjectService: ToraObjectService,
         private regionService: RegionService
     ) { }
 
     ngOnInit(): void {
+        if (!this.sharedService.region) {
+            this.regionService.getById('72.1').subscribe(region => {
+                this.sharedService.setRegion(region);
+            })
+        };
+
         this.center = L.latLng(-1.374581, 119.977618);
         this.zoom = 10;
         this.options = {
@@ -62,8 +70,8 @@ export class MapComponent implements OnInit, OnDestroy {
         };        
         
         window.addEventListener('resize', this.onResize);
-        window.dispatchEvent(new Event('resize'));
-        
+        window.dispatchEvent(new Event('resize'));      
+
         let baseLayerQuery = {};
         this.baseLayerService.getAll(baseLayerQuery, null).subscribe(data => {
             this.applyOverlay(data);

@@ -1,12 +1,13 @@
 ﻿import { Injectable } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
-import { ProgressHttp } from "angular-progress-http";
-import { RequestHelper } from "../helpers/request";
-import { CookieService } from "ngx-cookie-service";
-import { SharedService } from "./shared";
-import { Query } from "../models/query";
 import { Observable } from "rxjs/Observable";
+import { ProgressHttp } from "angular-progress-http";
+import { CookieService } from "ngx-cookie-service";
+
+import { Query } from "../models/query";
 import { Library } from "../models/gen/library";
+import { EnvironmentService } from "./environment";
+import { RequestHelper } from "../helpers/request";
 
 import * as urljoin from 'url-join';
 
@@ -17,9 +18,9 @@ export class LibraryService {
     constructor(
         private http: ProgressHttp,
         private cookieService: CookieService,
-        private sharedService: SharedService
+        private environmentService: EnvironmentService
     ) {
-        this.serverUrl = this.sharedService.getEnvironment().serverUrl;
+        this.serverUrl = this.environmentService.getEnvironment().serverUrl;
     }
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<Library>> {

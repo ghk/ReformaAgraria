@@ -1,35 +1,25 @@
 ﻿import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 import { Observable, ReplaySubject } from 'rxjs';
-import { Subject} from 'rxjs/Subject';
-import { Region } from "../models/gen/region";
 
-declare var ENV: string;
-var ENVIRONMENT = require('../../environments/environment.ts')['environment'];
-if ('Production' === ENV)
-    ENVIRONMENT = require('../../environments/environment.prod.ts')['environment'];
+import { Region } from "../models/gen/region";
+import { RegionService } from './gen/region';
 
 @Injectable()
 export class SharedService {
 
     public region: Region;
-    private _environment: any;    
     private _region$: ReplaySubject<Region>;
-    private _isAgrariaIssuesListReloaded$: ReplaySubject<boolean>;
     private _toraSummary$: ReplaySubject<any[]>;
 
-    constructor() {
-        this._environment = ENVIRONMENT;
+    constructor(
+        private regionService: RegionService
+    ) {
         this._region$ = new ReplaySubject(1);
         this._toraSummary$ = new ReplaySubject(1);
-        this._isAgrariaIssuesListReloaded$ = new ReplaySubject<false>(1);
     }
 
-    public getEnvironment() {        
-        return this._environment;
-    }
-
-    public getRegion() {
+    public getRegion() {      
         return this._region$;
     }
 

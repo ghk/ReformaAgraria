@@ -41,9 +41,11 @@ import { MapComponent } from './components/map';
 import { LibraryComponent } from './components/library';
 
 import { ModalToraObjectFormComponent } from './components/modals/toraObjectForm';
+import { ModalToraSubjectFormComponent } from './components/modals/toraSubjectForm';
 import { ModalUploadToraDocumentComponent } from './components/modals/uploadToraDocument';
 
 import { CookieService } from 'ngx-cookie-service';
+import { EnvironmentService } from './services/environment';
 import { SharedService } from './services/shared';
 import { AlertService } from './services/alert';
 import { AccountService } from './services/account';
@@ -96,6 +98,7 @@ import './styles/app.scss';
         ResetPasswordComponent,
         UserManagementComponent,        
         ModalToraObjectFormComponent,
+        ModalToraSubjectFormComponent,
         ModalUploadToraDocumentComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
@@ -104,6 +107,7 @@ import './styles/app.scss';
     ],
     entryComponents: [
         ModalToraObjectFormComponent,
+        ModalToraSubjectFormComponent,
         ModalUploadToraDocumentComponent
     ],
     imports: [
@@ -146,6 +150,7 @@ import './styles/app.scss';
         ])
     ],
     providers: [
+        EnvironmentService,
         SharedService,
         CookieService,
         AccountService,

@@ -7,7 +7,7 @@ import { ProgressHttp } from 'angular-progress-http';
 import 'rxjs/add/operator/map'
 import * as urljoin from 'url-join';
 
-import { SharedService } from './../services/shared';
+import { EnvironmentService } from './../services/environment';
 import { RequestHelper } from '../helpers/request';
 import { Query } from "../models/query";
 
@@ -19,9 +19,9 @@ export class MapNavigationService {
     constructor(
         private http: ProgressHttp,
         private cookieService: CookieService,
-        private sharedService: SharedService
+        private environmentService: EnvironmentService
     ) {
-        this.serverUrl = this.sharedService.getEnvironment().serverUrl;
+        this.serverUrl = this.environmentService.getEnvironment().serverUrl;
     }
 
     import(model): Observable<any> {

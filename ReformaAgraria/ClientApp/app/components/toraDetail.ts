@@ -19,27 +19,37 @@ import { EducationalAttainment } from '../models/gen/educationalAttainment';
 import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
 import { Status } from '../models/gen/status';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
+import { ModalToraObjectFormComponent } from './modals/toraObjectForm';
+import { ModalToraSubjectFormComponent } from './modals/toraSubjectForm';
 
 @Component({
     selector: 'ra-tora-detail',
     templateUrl: '../templates/toraDetail.html',
 })
-export class ToraDetailComponent implements OnInit, OnDestroy {        
+export class ToraDetailComponent implements OnInit, OnDestroy {       
+    toraObjectModalRef: BsModalRef;
+    toraSubjectModalRef: BsModalRef;
+    routeSubscription: Subscription; 
+    toraObjectFormSubscription: Subscription;
+    toraSubjectFormSubscription: Subscription;
+    
     RegionalStatus = RegionalStatus;   
     LandStatus = LandStatus;
     EducationalAttainment = EducationalAttainment;
     MaritalStatus = MaritalStatus;
     Gender = Gender;
     Status = Status;
-
     subscription: Subscription; 
-    toraSubscription: Subscription;
+    toraObjectId: number;
     toraObject: ToraObject;
     toraSubjects: ToraSubject[];
     progress: Progress;
 
     constructor(
         private route: ActivatedRoute,
+        private modalService: BsModalService,
         private sharedService: SharedService,
         private regionService: RegionService,
         private toraService: ToraService,
@@ -48,21 +58,35 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.subscription = this.route.params.subscribe(params => {
-            let toraId = params['id'];            
-            this.getData(toraId);            
+        this.routeSubscription = this.route.params.subscribe(params => {
+            this.toraObjectId = +params['id'];            
+            this.getData(this.toraObjectId);            
         });
     }
+    
+    ngOnDestroy(): void {
+        this.routeSubscription.unsubscribe();
+        if (this.toraObjectFormSubscription)
+            this.toraObjectFormSubscription.unsubscribe();
+        if (this.toraSubjectFormSubscription)
+            this.toraSubjectFormSubscription.unsubscribe();
+    }
 
-    getData(toraId: number): void {        
-        let toraSubjectQuery: Query = {
+    getData(toraObjectId: number): void {        
+        let toraObjectQuery: Query = {
             data: {
-                type: 'getAllByToraObjectId',
-                toraObjectId: toraId
+                type: 'getCompleteRegion'
             }
         };
 
-        this.toraObjectService.getById(toraId, null, null).subscribe(toraObject => {
+        let toraSubjectQuery: Query = {
+            data: {
+                type: 'getAllByToraObject',
+                toraObjectId: toraObjectId
+            }
+        };
+
+        this.toraObjectService.getById(toraObjectId, toraObjectQuery, null).subscribe(toraObject => {
             if (!toraObject)
                 return;                
 
@@ -83,7 +107,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
             });
         });
     }
-
+    
     export() {
         this.toraService.exportObject(this.toraObject, this.progressListener.bind(this)).subscribe(data => {
             var link = [window.location.origin, 'template', data].join("/")
@@ -92,11 +116,35 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         })
     }
 
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
-        this.toraSubscription.unsubscribe();
-    }
+    onShowToraObjectForm(): void {
+        this.toraObjectModalRef = this.modalService.show(ModalToraObjectFormComponent, { 'class': 'modal-lg' });
+        this.toraObjectModalRef.content.setToraObject(this.toraObject);
+        if (!this.toraObjectFormSubscription)
+            this.toraObjectFormSubscription = this.toraObjectModalRef.content.isSaveSuccess$.subscribe(success => {                
+                if (success) {
+                    this.getData(this.toraObject.id);
+                    this.toraObjectFormSubscription.unsubscribe();
+                    this.toraObjectFormSubscription = null;  
+                    this.toraObjectModalRef.hide();                  
+                }
+            });        
+    }    
 
+    onShowToraSubjectForm(toraSubject: ToraSubject): void {
+        this.toraSubjectModalRef = this.modalService.show(ModalToraSubjectFormComponent, { 'class': 'modal-lg' });
+        this.toraSubjectModalRef.content.setToraObject(this.toraObject);        
+        this.toraSubjectModalRef.content.setToraSubject(toraSubject);        
+        if (!this.toraSubjectFormSubscription)
+            this.toraSubjectFormSubscription = this.toraSubjectModalRef.content.isSaveSuccess$.subscribe(success => {
+                if (success) {
+                    this.getData(this.toraObject.id);
+                    this.toraSubjectFormSubscription.unsubscribe();
+                    this.toraSubjectFormSubscription = null;
+                    this.toraSubjectModalRef.hide();
+                }
+            });
+    }
+    
     progressListener(progress: Progress) {
         this.progress = progress;
     }
