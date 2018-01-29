@@ -2,6 +2,6 @@
 	Government,
 	Private,
 	Gift,
-	Inheritage,
+	Inheritance,
 	Others,
 }

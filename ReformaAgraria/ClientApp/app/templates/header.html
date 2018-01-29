@@ -45,6 +45,7 @@
             <input [(ngModel)]="selected" 
                 [typeahead]="dataSource"
                 [typeaheadMinLength]="3"
+                [typeaheadWaitMs]="300"
                 [typeaheadItemTemplate]="searchItemTemplate"
                 typeaheadOptionField="label"
                 (typeaheadOnSelect)="onSearchSelected($event)"

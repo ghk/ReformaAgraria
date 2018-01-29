@@ -40,6 +40,9 @@ import { UserManagementComponent } from './components/userManagement';
 import { MapComponent } from './components/map';
 import { LibraryComponent } from './components/library';
 
+import { ModalToraFormComponent } from './components/modals/toraForm';
+import { ModalUploadToraDocumentComponent } from './components/modals/uploadToraDocument';
+
 import { CookieService } from 'ngx-cookie-service';
 import { SharedService } from './services/shared';
 import { AlertService } from './services/alert';
@@ -91,11 +94,17 @@ import './styles/app.scss';
         LoginComponent,        
         ForgotPasswordComponent,
         ResetPasswordComponent,
-        UserManagementComponent,
+        UserManagementComponent,        
+        ModalToraFormComponent,
+        ModalUploadToraDocumentComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
         TranslatePipe,
         LibraryComponent
+    ],
+    entryComponents: [
+        ModalToraFormComponent,
+        ModalUploadToraDocumentComponent
     ],
     imports: [
         LeafletModule,

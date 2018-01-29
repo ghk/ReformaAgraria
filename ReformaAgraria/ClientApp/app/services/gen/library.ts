@@ -25,12 +25,12 @@ export class LibraryService implements CrudService<Library, number>{
     } 
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<Library>> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
-            urljoin(this.serverUrl, 'library'),
-            query,
+            urljoin(this.serverUrl, 'library'),            
             null,
             progressListener,
             null
@@ -40,12 +40,12 @@ export class LibraryService implements CrudService<Library, number>{
     }
 
     public count(query?: Query, progressListener?: any): Observable<number> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'library', 'count'),
-            query,
             null,
             progressListener,
             null
@@ -55,12 +55,12 @@ export class LibraryService implements CrudService<Library, number>{
     }
 
     public getById(id: number, query?: Query, progressListener?: any): Observable<Library> {
-            let request = RequestHelper.getHttpRequest(
-            this.cookieService,
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
+        let request = RequestHelper.getHttpRequest(
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'library', id),
-            query,
             null,
             progressListener,
             null
@@ -79,12 +79,12 @@ export class LibraryService implements CrudService<Library, number>{
     }
 
     public create(model: Library, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'POST',
             urljoin(this.serverUrl, 'library'),            
-            null,
             model,
             null,
             progressListener
@@ -94,12 +94,12 @@ export class LibraryService implements CrudService<Library, number>{
     }
 
     public update(model: Library, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'PUT',
             urljoin(this.serverUrl, 'library'),
-            null,
             model,
             null,
             progressListener
@@ -109,9 +109,10 @@ export class LibraryService implements CrudService<Library, number>{
     }
 
     public deleteById(id: any, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'DELETE',
             urljoin(this.serverUrl, 'library', id),
             null,

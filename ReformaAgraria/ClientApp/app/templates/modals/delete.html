@@ -1,0 +1,7 @@
+<ng-template #deleteConfirmationModal>  
+    <div class="modal-body text-center">
+        <p>Hapus {{ model[label] }} ?</p>
+        <button type="button" class="btn btn-default" (click)="onConfirmDelete()">Ya</button>
+        <button type="button" class="btn btn-primary focus" (click)="onDeclineDelete()">Tidak</button>
+    </div>
+</ng-template>

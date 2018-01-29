@@ -23,12 +23,13 @@ export class LibraryService {
     }
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<Library>> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'library'),
-            query,
+            null,
             progressListener
         );
 

@@ -73,7 +73,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
                 this.toraSubjects = toraSubjects;
             });
 
-            this.toraService.getToraObjectSummaries(toraObject.fkRegionId).subscribe(summary => {
+            this.toraService.getSummaries(toraObject.fkRegionId).subscribe(summary => {
                 this.sharedService.setToraSummary(summary);
             });
         });

@@ -25,12 +25,12 @@ export class ToraMapService implements CrudService<ToraMap, number>{
     } 
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<ToraMap>> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
-            urljoin(this.serverUrl, 'toramap'),
-            query,
+            urljoin(this.serverUrl, 'toramap'),            
             null,
             progressListener,
             null
@@ -40,12 +40,12 @@ export class ToraMapService implements CrudService<ToraMap, number>{
     }
 
     public count(query?: Query, progressListener?: any): Observable<number> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'toramap', 'count'),
-            query,
             null,
             progressListener,
             null
@@ -55,12 +55,12 @@ export class ToraMapService implements CrudService<ToraMap, number>{
     }
 
     public getById(id: number, query?: Query, progressListener?: any): Observable<ToraMap> {
-            let request = RequestHelper.getHttpRequest(
-            this.cookieService,
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
+        let request = RequestHelper.getHttpRequest(
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'toramap', id),
-            query,
             null,
             progressListener,
             null
@@ -79,12 +79,12 @@ export class ToraMapService implements CrudService<ToraMap, number>{
     }
 
     public create(model: ToraMap, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'POST',
             urljoin(this.serverUrl, 'toramap'),            
-            null,
             model,
             null,
             progressListener
@@ -94,12 +94,12 @@ export class ToraMapService implements CrudService<ToraMap, number>{
     }
 
     public update(model: ToraMap, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'PUT',
             urljoin(this.serverUrl, 'toramap'),
-            null,
             model,
             null,
             progressListener
@@ -109,9 +109,10 @@ export class ToraMapService implements CrudService<ToraMap, number>{
     }
 
     public deleteById(id: any, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'DELETE',
             urljoin(this.serverUrl, 'toramap', id),
             null,

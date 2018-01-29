@@ -25,12 +25,12 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
     } 
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<BaseLayer>> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
-            urljoin(this.serverUrl, 'baselayer'),
-            query,
+            urljoin(this.serverUrl, 'baselayer'),            
             null,
             progressListener,
             null
@@ -40,12 +40,12 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
     }
 
     public count(query?: Query, progressListener?: any): Observable<number> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'baselayer', 'count'),
-            query,
             null,
             progressListener,
             null
@@ -55,12 +55,12 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
     }
 
     public getById(id: number, query?: Query, progressListener?: any): Observable<BaseLayer> {
-            let request = RequestHelper.getHttpRequest(
-            this.cookieService,
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
+        let request = RequestHelper.getHttpRequest(
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'baselayer', id),
-            query,
             null,
             progressListener,
             null
@@ -79,12 +79,12 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
     }
 
     public create(model: BaseLayer, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'POST',
             urljoin(this.serverUrl, 'baselayer'),            
-            null,
             model,
             null,
             progressListener
@@ -94,12 +94,12 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
     }
 
     public update(model: BaseLayer, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'PUT',
             urljoin(this.serverUrl, 'baselayer'),
-            null,
             model,
             null,
             progressListener
@@ -109,9 +109,10 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
     }
 
     public deleteById(id: any, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'DELETE',
             urljoin(this.serverUrl, 'baselayer', id),
             null,

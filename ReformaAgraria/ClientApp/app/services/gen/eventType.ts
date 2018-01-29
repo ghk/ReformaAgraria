@@ -25,12 +25,12 @@ export class EventTypeService implements CrudService<EventType, string>{
     } 
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<EventType>> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
-            urljoin(this.serverUrl, 'eventtype'),
-            query,
+            urljoin(this.serverUrl, 'eventtype'),            
             null,
             progressListener,
             null
@@ -40,12 +40,12 @@ export class EventTypeService implements CrudService<EventType, string>{
     }
 
     public count(query?: Query, progressListener?: any): Observable<number> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'eventtype', 'count'),
-            query,
             null,
             progressListener,
             null
@@ -55,12 +55,12 @@ export class EventTypeService implements CrudService<EventType, string>{
     }
 
     public getById(id: string, query?: Query, progressListener?: any): Observable<EventType> {
-            let request = RequestHelper.getHttpRequest(
-            this.cookieService,
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
+        let request = RequestHelper.getHttpRequest(
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'eventtype', id),
-            query,
             null,
             progressListener,
             null

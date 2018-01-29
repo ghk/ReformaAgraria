@@ -25,12 +25,12 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
     } 
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<ToraObject>> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
-            urljoin(this.serverUrl, 'toraobject'),
-            query,
+            urljoin(this.serverUrl, 'toraobject'),            
             null,
             progressListener,
             null
@@ -40,12 +40,12 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
     }
 
     public count(query?: Query, progressListener?: any): Observable<number> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'toraobject', 'count'),
-            query,
             null,
             progressListener,
             null
@@ -55,12 +55,12 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
     }
 
     public getById(id: number, query?: Query, progressListener?: any): Observable<ToraObject> {
-            let request = RequestHelper.getHttpRequest(
-            this.cookieService,
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
+        let request = RequestHelper.getHttpRequest(
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, 'toraobject', id),
-            query,
             null,
             progressListener,
             null
@@ -79,12 +79,12 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
     }
 
     public create(model: ToraObject, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'POST',
             urljoin(this.serverUrl, 'toraobject'),            
-            null,
             model,
             null,
             progressListener
@@ -94,12 +94,12 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
     }
 
     public update(model: ToraObject, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'PUT',
             urljoin(this.serverUrl, 'toraobject'),
-            null,
             model,
             null,
             progressListener
@@ -109,9 +109,10 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
     }
 
     public deleteById(id: any, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'DELETE',
             urljoin(this.serverUrl, 'toraobject', id),
             null,

@@ -31,21 +31,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             let depth = region.type - 2;
-            let breadcrumbQuery = { 
+            let depthQuery = { 
                 'data': {
-                    'type': 'breadcrumb',
+                    'type': 'getByDepth',
                     'depth': depth
                 }
             };
                         
-            this.regionService.getById(region.id, breadcrumbQuery, null).subscribe(region => {
+            this.regionService.getById(region.id, depthQuery, null).subscribe(region => {
                 this.region = region;
             })
         });
 
-        this.dataSource = Observable.create((observer: any) => {
-            observer.next(this.selected);
-        }).mergeMap((keywords: string) => this.searchService.search(keywords));
+        this.dataSource = Observable.create((observer: any) => { observer.next(this.selected); } )
+            .switchMap((keywords: string) => this.searchService.search(keywords))
+            .catch((error: any) => { console.log(error); return []; });
     }
 
     ngOnDestroy(): void {

@@ -1,0 +1,35 @@
+<!-- modal add new upload dokumen objek dan subjek table -->
+<div class="modal-header">
+    <h5 class="modal-title">Unggah Dokumen Objek dan Subjek</h5>
+    <button type="button" class="close" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form>
+        <div class="form-row pt-2">
+            <div class="form-group col-md-12">
+                <form>
+                    <div class="form-group">
+                        <input type="file" class="form-control-file" accept=".xls,.xlsx" (change)="onFileSelected($event.target.files[0])">
+                        <small class="form-text text-muted">
+                            File yang di upload harus berupa Ms.Excel (.xls .xlsx)
+                        </small>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Unduh File Template</label>
+                <button type="button" class="btn btn-outline-secondary pl-3 text-center">
+                    <img src="/images/ic_file_download_black_24dp_2x.png" class="img-fluid" alt="responsive image" width="32" height="32">
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Tutup</button>
+    <button type="button" class="btn btn-primary" (click)="onUpload()">Simpan</button>
+</div>

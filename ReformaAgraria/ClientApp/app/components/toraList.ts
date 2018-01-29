@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
 
 import { ToraService } from '../services/tora';
 import { SharedService } from '../services/shared';
@@ -18,12 +20,21 @@ import { Query } from '../models/query';
 
 import * as $ from 'jquery';
 
+import { ModalUploadToraDocumentComponent } from './modals/uploadToraDocument';
+import { ModalToraFormComponent } from './modals/toraForm';
+import { ToraObject } from '../models/gen/toraObject';
+
 @Component({
     selector: 'ra-tora-list',
     templateUrl: '../templates/toraList.html',
 })
 export class ToraListComponent implements OnInit, OnDestroy {
-    subscription: Subscription;
+    regionSubscription: Subscription;
+    uploadSubscription: Subscription;
+    toraFormSubscription: Subscription;
+    
+    uploadModalRef: BsModalRef;
+    toraFormModalRef: BsModalRef;
 
     LandStatus = LandStatus;
     EducationalAttainment = EducationalAttainment;
@@ -36,8 +47,6 @@ export class ToraListComponent implements OnInit, OnDestroy {
     toraSubjects: any = [];
     loading: boolean = false;
     showPage: boolean = true;
-    loadingUploadModal: boolean = false;
-    showUploadModal: boolean = true;
     order: string = "region.name";
     orderBy: string = "region.name";
     isDesc: boolean = false;
@@ -53,61 +62,33 @@ export class ToraListComponent implements OnInit, OnDestroy {
     constructor(
         private cookieService: CookieService,
         private toastr: ToastrService,
-        private toraService: ToraService,
-        private toraObjectService: ToraObjectService,
+        private modalService: BsModalService,
         private sharedService: SharedService,
+        private toraService: ToraService,
+        private toraObjectService: ToraObjectService,        
         private regionService: RegionService,
-        private toraSubjectService: ToraSubjectService
+        private toraSubjectService: ToraSubjectService        
     ) { }
 
     ngOnInit(): void {
         this.loading = true;
         this.showPage = false;
-        this.subscription = this.sharedService.getRegion().subscribe(region => {
+        this.regionSubscription = this.sharedService.getRegion().subscribe(region => {
             this.region = region;
             this.getToraObjects(region.id);
-            //this.getDesa(region.fkParentId);
-            //this.getKecamatan('72.1');
         });
     }
 
     ngOnDestroy(): void {
-        this.subscription.unsubscribe();
-    }
+        this.regionSubscription.unsubscribe();
+        if (this.uploadSubscription)
+            this.uploadSubscription.unsubscribe();
+        if (this.toraFormSubscription)
+            this.toraFormSubscription.unsubscribe();
+    }    
 
-    uploadFile(event) {
-        this.loadingUploadModal = true;
-        this.showUploadModal = false;
-        this.toraService.importToraObject(event, this.region.id)
-            .subscribe(
-            data => {
-                this.loadingUploadModal = false;
-                this.showUploadModal = true;
-                this.toastr.success('File is successfully uploaded', null)
-                this.getToraObjects(this.region.id);
-            },
-            error => {
-                this.loadingUploadModal = false;
-                this.showUploadModal = true;
-                this.toastr.error('Unable to upload the file', null)
-            });
-    }
-
-    getKecamatan(parentId: string) {
-        let query = { data: { 'type': 'getAllByParent', 'regionType': 3, 'parentId': parentId } }
-        this.regionService.getAll(query, null).subscribe(data => {
-            this.kecamatan = data;
-        });
-    }
-
-    getDesa(parentId: string) {
-        let query = { data: { 'type': 'getAllByParent', 'regionType': 4, 'parentId': parentId } }
-        this.regionService.getAll(query, null).subscribe(data => {
-            this.desa = data;
-        });
-    }
-
-    getToraObjects(id) {
+   
+    getToraObjects(id): void {
         let query = { data: { 'type': 'getAllByRegion', 'regionId': id } }
         this.toraObjectService.getAll(query, null).subscribe(data => {
             this.toraObjects = data;
@@ -116,17 +97,32 @@ export class ToraListComponent implements OnInit, OnDestroy {
         });
     }
 
-    getToraSubjects(id) {
-        console.log(id);
+    getToraSubjects(id): void {
         let toraSubjectQuery: Query = {
             data: {
                 type: 'getAllByToraObject',
                 toraObjectId: id
             }
         };
+
         this.toraSubjectService.getAll(toraSubjectQuery, null).subscribe(toraSubjects => {
             this.toraSubjects = toraSubjects;
         });
+    }
+
+    onUploadDocument(): void {
+        this.uploadModalRef = this.modalService.show(ModalUploadToraDocumentComponent);   
+        if (!this.uploadSubscription)     
+            this.uploadSubscription = this.uploadModalRef.content.isUploadSuccess$.subscribe(success => {
+                if (success) {
+                    this.getToraObjects(this.region.id);
+                }
+            });
+    }
+
+    onShowToraForm(toraObject: ToraObject): void {
+        this.toraFormModalRef = this.modalService.show(ModalToraFormComponent, { class: 'modal-lg' });
+        this.toraFormModalRef.content.setToraObject(toraObject);
     }
 
     addOrEditObject(model) {
@@ -154,13 +150,14 @@ export class ToraListComponent implements OnInit, OnDestroy {
     }
 
     addObject(model) {
-        this.toraService.addToraObject(model).subscribe(
+        this.toraObjectService.create(model).subscribe(
             data => {
-            this.toastr.success("Penambahan Berhasil", null);
+                this.toastr.success("Penambahan Berhasil", null);
             },
             error => {
                 this.toastr.error(error, null);
-            });
+            }
+        );
     }
 
     edit(object) {
@@ -170,13 +167,14 @@ export class ToraListComponent implements OnInit, OnDestroy {
     }
 
     editObject(model) {
-        this.toraService.editToraObject(model).subscribe(
+        this.toraObjectService.update(model).subscribe(
             data => {
-            this.toastr.success("Pengeditan Berhasil", null);
+                this.toastr.success("Pengeditan Berhasil", null);
             },
             error => {
                 this.toastr.error(error, null);
-            });
+            }
+        );
     }
 
     editSubject(model) {
@@ -223,40 +221,5 @@ export class ToraListComponent implements OnInit, OnDestroy {
 
     convertRegionId(text) {
         return text.split('.').join('_');
-    }
-
-    sorted(sortedBy: string) {
-        if (sortedBy == "Penggarap") {
-            this.orderBy = 'totalToraObjects';
-        }
-        else if (sortedBy == "Status") {
-            this.orderBy = 'landStatus';
-        }
-        else if (sortedBy == "Usulan") {
-            this.orderBy = 'proposedTreatment';
-        }
-        else if (sortedBy == "Koordinat") {
-            this.orderBy = '';
-        }
-        else if (sortedBy == "Tahapan") {
-            this.orderBy = '';
-        }
-        else {
-            this.orderBy = 'name';
-        }
-
-        if (this.prevColumn != this.orderBy) {
-            this.isDesc = false;
-        }
-        else {
-            if (this.isDesc == false) {
-                this.isDesc = true;
-            }
-            else {
-                this.isDesc = false;
-            }
-        }
-
-        this.prevColumn = this.orderBy;
-    }
+    }    
 }

@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Docs\" />
+    <Folder Include="wwwroot\tora\document\72.10.09.2001\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="appsettings.Development.json" />
@@ -159,6 +160,9 @@
     </None>
     <None Update="ClientApp\app\models\gen\toraSubmission.ts">
       <CustomToolNamespace>Models\ToraSubmission.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\uploadToraDocumentViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\UploadToraDocumentViewModel.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\villageMapAttribute.ts">
       <CustomToolNamespace>Models\VillageMapAttribute.cs</CustomToolNamespace>

@@ -102,12 +102,12 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
     } 
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<$GetFirstType>> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
-            urljoin(this.serverUrl, '$GetLowerFirstType'),
-            query,
+            urljoin(this.serverUrl, '$GetLowerFirstType'),            
             null,
             progressListener,
             null
@@ -117,12 +117,12 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
     }
 
     public count(query?: Query, progressListener?: any): Observable<number> { 
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, '$GetLowerFirstType', 'count'),
-            query,
             null,
             progressListener,
             null
@@ -132,12 +132,12 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
     }
 
     public getById(id: $GetSecondType, query?: Query, progressListener?: any): Observable<$GetFirstType> {
-            let request = RequestHelper.getHttpRequest(
-            this.cookieService,
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
+        let request = RequestHelper.getHttpRequest(
             this.http,
+            options,
             'GET',
             urljoin(this.serverUrl, '$GetLowerFirstType', id),
-            query,
             null,
             progressListener,
             null
@@ -156,12 +156,12 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
     }
 
     public create(model: $GetFirstType, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'POST',
             urljoin(this.serverUrl, '$GetLowerFirstType'),            
-            null,
             model,
             null,
             progressListener
@@ -171,12 +171,12 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
     }
 
     public update(model: $GetFirstType, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'PUT',
             urljoin(this.serverUrl, '$GetLowerFirstType'),
-            null,
             model,
             null,
             progressListener
@@ -186,9 +186,10 @@ export class $ServiceName implements CrudService<$GetFirstType, $GetSecondType>{
     }
 
     public deleteById(id: any, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
-            this.cookieService,
             this.http,
+            options,
             'DELETE',
             urljoin(this.serverUrl, '$GetLowerFirstType', id),
             null,

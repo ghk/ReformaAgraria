@@ -46,7 +46,7 @@ namespace ReformaAgraria.Controllers
         {
             var result = new List<SearchViewModel>();
             var regions = await dbContext.Set<Region>()
-                .Where(r => r.Id.StartsWith("72.1"))
+                .Where(r => r.Id == "72.1" || r.Id.StartsWith("72.10"))
                 .Where(r => EF.Functions.Like(r.Name.ToLower(), string.Format("{0}%", keywords.ToLower())))
                 .ToListAsync();
 

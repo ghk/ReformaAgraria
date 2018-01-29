@@ -32,7 +32,7 @@ namespace ReformaAgraria.Controllers
         protected override IQueryable<Region> ApplyQuery(IQueryable<Region> query)
         {
             var type = GetQueryString<string>("type");
-            if (type == "breadcrumb")
+            if (type == "getByDepth")
             {
                 var depth = GetQueryString<int>("depth");
                 for (var i = 1; i <= depth; i++)

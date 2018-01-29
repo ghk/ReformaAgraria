@@ -72,9 +72,9 @@ namespace ReformaAgraria.Controllers
 
             await dbContext.SaveChangesAsync();
 
-            var rootDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora");
-            var regionDirectoryPath = Path.Combine(rootDirectoryPath, results["regionId"].ToString().ToUpper());
-            var destinationFilePath = Path.Combine(regionDirectoryPath, (toraMap.Id.ToString() + ".zip"));
+            var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
+            var regionDirectoryPath = Path.Combine(toraMapDirectoryPath, results["regionId"]);
+            var destinationFilePath = Path.Combine(regionDirectoryPath, toraMap.Id + ".zip");
             IOHelper.StreamCopy(destinationFilePath, file);           
 
             return toraMap;
@@ -93,16 +93,16 @@ namespace ReformaAgraria.Controllers
                     State = RequestState.Failed,
                     Message = "TORA map not found"
                 });
-
-            var toraPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora");
-            var filePath = Path.Combine(toraPath, toraMap.FkRegionId, toraMap.Id + ".zip");
+            
+            var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
+            var toraMapPath = Path.Combine(toraMapDirectoryPath, toraMap.FkRegionId, toraMap.Id + ".zip");
             var memory = new MemoryStream();
-            using (var stream = new FileStream(filePath, FileMode.Open))
+            using (var stream = new FileStream(toraMapPath, FileMode.Open))
             {
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-            return File(memory, "application/zip", Path.GetFileName(filePath));
+            return File(memory, "application/zip", Path.GetFileName(toraMapPath));
         }
 
         protected override IQueryable<ToraMap> ApplyQuery(IQueryable<ToraMap> query)

@@ -108,9 +108,9 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
             };
         }));
 
-        this.dataSource = Observable.create((observer: any) => {
-            observer.next(this.selected);
-        }).mergeMap((keywords: string) => this.searchService.searchRegion(keywords));
+        this.dataSource = Observable.create((observer: any) => { observer.next(this.selected); } )
+            .switchMap((keywords: string) => this.searchService.searchRegion(keywords))
+            .catch((error: any) => { console.log(error); return []; });
     }
 
     ngOnDestroy(): void {

@@ -37,8 +37,15 @@ export class RequestHelper {
         return result;
     }
 
-    static getHttpRequest(cookieService: CookieService, http: ProgressHttp, method, url, query, body, downloadListener?, uploadListener?): Observable<Response> {
-        let options = this.getRequestOptions(cookieService, query);
+    static getHttpRequest(
+        http: ProgressHttp, 
+        options: RequestOptions, 
+        method: string, 
+        url: string, 
+        body: any, 
+        downloadListener?, 
+        uploadListener?
+    ): Observable<Response> {
         if (body)
             options.body = body;
         options.method = method;

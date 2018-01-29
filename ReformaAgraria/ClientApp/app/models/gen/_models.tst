@@ -42,7 +42,7 @@
             return "";
 
 		List<string> neededImports = c.Properties
-			.Where(p => (!p.Type.IsPrimitive || p.Type.IsEnum))
+			.Where(p => (!p.Type.IsPrimitive || p.Type.IsEnum) && (p.Type.Name != "IFormFile"))
 			.Select(p => "import { " + p.Type.Name.TrimEnd('[',']') + " } from './" + p.Type.name.TrimEnd('[',']') + "';")
 			.ToList();			
 		if (c.BaseClass != null) {
@@ -69,8 +69,14 @@
         return false;
     }
 
+    string ConvertType(Property prop) {
+        if (prop.Type.Name == "IFormFile")
+            return "File";
+        return prop.Type.ToString();
+    }
+
 }$Classes($ModelFilter)[$Imports
 
 export interface $Name$TypeParameters$Inherit { $Properties[
-    $name?: $Type;]
+    $name?: $ConvertType;]
 }]
