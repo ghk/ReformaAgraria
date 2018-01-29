@@ -57,7 +57,7 @@ export class ToraService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    export(toraObject: any, progressListener?: any) {
+    exportObject(toraObject: any, progressListener?: any) {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         options.headers.delete('Content-Type');
 

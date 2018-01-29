@@ -176,9 +176,15 @@ namespace ReformaAgraria.Controllers
             }
         }
 
-        [HttpGet("export")]
-        public string Export(ToraObject objectModel, List<ToraSubject> subjectModel)
+        [HttpPost("export")]
+        public string Export([FromBody]ToraObject objectModel)
         {
+            var region = dbContext.Set<Region>().First(r => r.Id == objectModel.FkRegionId);
+            var parent1 = dbContext.Set<Region>().First(r => r.Id == region.FkParentId);
+            var parent2 = dbContext.Set<Region>().First(r => r.Id == parent1.FkParentId);
+
+            List<ToraSubject> subjectModel = dbContext.Set<ToraSubject>().Where(r => r.FkToraObjectId == objectModel.Id).ToList();
+
             var templateDocumentDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "template");
             string sFileName = @"Template_Object_Subject_Tora.xlsx";
             FileInfo file = new FileInfo(Path.Combine(templateDocumentDirectoryPath, sFileName));
@@ -188,9 +194,9 @@ namespace ReformaAgraria.Controllers
 
                 //Add values
                 worksheet.Cells["D3"].Value = objectModel.Name;
-                worksheet.Cells["D4"].Value = "";
-                worksheet.Cells["D5"].Value = "";
-                worksheet.Cells["D6"].Value = "";
+                worksheet.Cells["D4"].Value = region.Name;
+                worksheet.Cells["D5"].Value = parent1.Name;
+                worksheet.Cells["D6"].Value = parent2.Name;
                 worksheet.Cells["D7"].Value = objectModel.Size;
                 worksheet.Cells["D8"].Value = objectModel.TotalTenants;
                 worksheet.Cells["D9"].Value = objectModel.RegionalStatus;
@@ -203,7 +209,24 @@ namespace ReformaAgraria.Controllers
                 worksheet.Cells["D21"].Value = objectModel.FormalAdvocacyProgress;
                 worksheet.Cells["D22"].Value = objectModel.NonFormalAdvocacyProgress;
 
-                //ExcelWorksheet worksheet2 = package.Workbook.Worksheets[2];
+                ExcelWorksheet worksheet2 = package.Workbook.Worksheets[2];
+                for (int i = 0; i < subjectModel.Count; i++)
+                {
+                    int row = 1;
+                    worksheet2.Cells["A" + (++row).ToString()].Value = i + 1;
+                    worksheet2.Cells["B" + (++row).ToString()].Value = subjectModel[i].Name;
+                    worksheet2.Cells["C" + (++row).ToString()].Value = subjectModel[i].MaritalStatus.ToString();
+                    worksheet2.Cells["D" + (++row).ToString()].Value = subjectModel[i].Address.ToString();
+                    worksheet2.Cells["E" + (++row).ToString()].Value = subjectModel[i].Gender.ToString();
+                    worksheet2.Cells["F" + (++row).ToString()].Value = subjectModel[i].Age;
+                    worksheet2.Cells["G" + (++row).ToString()].Value = subjectModel[i].EducationalAttainment.ToString();
+                    worksheet2.Cells["H" + (++row).ToString()].Value = subjectModel[i].TotalFamilyMembers;
+                    worksheet2.Cells["I" + (++row).ToString()].Value = subjectModel[i].LandStatus.ToString();
+                    worksheet2.Cells["J" + (++row).ToString()].Value = subjectModel[i].LandLocation;
+                    worksheet2.Cells["K" + (++row).ToString()].Value = subjectModel[i].Size;
+                    worksheet2.Cells["L" + (++row).ToString()].Value = subjectModel[i].PlantTypes;
+                    worksheet2.Cells["M" + (++row).ToString()].Value = subjectModel[i].Notes;
+                }
 
                 package.Save();
             }

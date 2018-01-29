@@ -33,6 +33,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
     Status = Status;
 
     subscription: Subscription; 
+    toraSubscription: Subscription;
     toraObject: ToraObject;
     toraSubjects: ToraSubject[];
     progress: Progress;
@@ -83,17 +84,17 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         });
     }
 
-    export(toraObject, toraSubject) {
-        this.toraService.export(toraObject, this.progressListener.bind(this)).subscribe(data => {
+    export() {
+        this.toraService.exportObject(this.toraObject, this.progressListener.bind(this)).subscribe(data => {
             var link = [window.location.origin, 'template', data].join("/")
-            console.log(link);
-            //$("#download").attr("href", link);
-            //$('#download')[0].click();
+                $("#download").attr("href", link);
+                $('#download')[0].click();
         })
     }
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+        this.toraSubscription.unsubscribe();
     }
 
     progressListener(progress: Progress) {
