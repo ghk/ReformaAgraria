@@ -8,6 +8,7 @@ using OfficeOpenXml;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
+using ReformaAgraria.Security;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -177,61 +178,81 @@ namespace ReformaAgraria.Controllers
             }
         }
 
-        [HttpPost("export")]
-        public string Export([FromBody]ToraObject objectModel)
+        [HttpGet("export/{id}")]
+        public async Task<IActionResult> Export(int id)
         {
-            var region = dbContext.Set<Region>().First(r => r.Id == objectModel.FkRegionId);
-            var parent1 = dbContext.Set<Region>().First(r => r.Id == region.FkParentId);
-            var parent2 = dbContext.Set<Region>().First(r => r.Id == parent1.FkParentId);
+            var objectModel = dbContext.Set<ToraObject>().FirstOrDefault(t => t.Id == id);
+            if (objectModel == null)
+                return NotFound(new RequestResult {
+                    State = RequestState.Failed,
+                    Message = "TORA object not found"
+                });
 
-            List<ToraSubject> subjectModel = dbContext.Set<ToraSubject>().Where(r => r.FkToraObjectId == objectModel.Id).ToList();
+            var region = dbContext.Set<Region>()
+                .Include(r => r.Parent)
+                .Include(r => r.Parent.Parent)
+                .FirstOrDefault(r => r.Id == objectModel.FkRegionId);
 
-            var templateDocumentDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "template");
-            string sFileName = @"Template_Object_Subject_Tora.xlsx";
-            FileInfo file = new FileInfo(Path.Combine(templateDocumentDirectoryPath, sFileName));
-            using (ExcelPackage package = new ExcelPackage(file))
+            List<ToraSubject> subjectModel = dbContext.Set<ToraSubject>()
+                .Where(r => r.FkToraObjectId == objectModel.Id)
+                .ToList();
+
+            var templateFileName = @"Template_Object_Subject_Tora.xlsx";
+            var templateFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "template", templateFileName);
+
+            var outputStream = new MemoryStream();
+
+            using (var templateStream = new MemoryStream())
+            using (var fileStream = new FileStream(templateFilePath, FileMode.Open))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
-
-                //Add values
-                worksheet.Cells["D3"].Value = objectModel.Name;
-                worksheet.Cells["D4"].Value = region.Name;
-                worksheet.Cells["D5"].Value = parent1.Name;
-                worksheet.Cells["D6"].Value = parent2.Name;
-                worksheet.Cells["D7"].Value = objectModel.Size;
-                worksheet.Cells["D8"].Value = objectModel.TotalTenants;
-                worksheet.Cells["D9"].Value = objectModel.RegionalStatus;
-                worksheet.Cells["D10"].Value = objectModel.LandType;
-                worksheet.Cells["D11"].Value = objectModel.Livelihood;
-                worksheet.Cells["D12"].Value = objectModel.ProposedTreatment;
-                worksheet.Cells["D14"].Value = objectModel.LandStatus;
-                worksheet.Cells["C16"].Value = objectModel.LandTenureHistory;
-                worksheet.Cells["D19"].Value = objectModel.ConflictChronology;
-                worksheet.Cells["D21"].Value = objectModel.FormalAdvocacyProgress;
-                worksheet.Cells["D22"].Value = objectModel.NonFormalAdvocacyProgress;
-
-                ExcelWorksheet worksheet2 = package.Workbook.Worksheets[2];
-                for (int i = 0; i < subjectModel.Count; i++)
+                await fileStream.CopyToAsync(templateStream);
+                templateStream.Position = 0;
+                using (ExcelPackage package = new ExcelPackage(templateStream))
                 {
-                    int row = 1;
-                    worksheet2.Cells["A" + (++row).ToString()].Value = i + 1;
-                    worksheet2.Cells["B" + (++row).ToString()].Value = subjectModel[i].Name;
-                    worksheet2.Cells["C" + (++row).ToString()].Value = subjectModel[i].MaritalStatus.ToString();
-                    worksheet2.Cells["D" + (++row).ToString()].Value = subjectModel[i].Address.ToString();
-                    worksheet2.Cells["E" + (++row).ToString()].Value = subjectModel[i].Gender.ToString();
-                    worksheet2.Cells["F" + (++row).ToString()].Value = subjectModel[i].Age;
-                    worksheet2.Cells["G" + (++row).ToString()].Value = subjectModel[i].EducationalAttainment.ToString();
-                    worksheet2.Cells["H" + (++row).ToString()].Value = subjectModel[i].TotalFamilyMembers;
-                    worksheet2.Cells["I" + (++row).ToString()].Value = subjectModel[i].LandStatus.ToString();
-                    worksheet2.Cells["J" + (++row).ToString()].Value = subjectModel[i].LandLocation;
-                    worksheet2.Cells["K" + (++row).ToString()].Value = subjectModel[i].Size;
-                    worksheet2.Cells["L" + (++row).ToString()].Value = subjectModel[i].PlantTypes;
-                    worksheet2.Cells["M" + (++row).ToString()].Value = subjectModel[i].Notes;
-                }
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
 
-                package.Save();
+                    //Add values
+                    worksheet.Cells["D3"].Value = objectModel.Name;
+                    worksheet.Cells["D4"].Value = region.Name;
+                    worksheet.Cells["D5"].Value = region.Parent.Name;
+                    worksheet.Cells["D6"].Value = region.Parent.Parent.Name;
+                    worksheet.Cells["D7"].Value = objectModel.Size;
+                    worksheet.Cells["D8"].Value = objectModel.TotalTenants;
+                    worksheet.Cells["D9"].Value = objectModel.RegionalStatus;
+                    worksheet.Cells["D10"].Value = objectModel.LandType;
+                    worksheet.Cells["D11"].Value = objectModel.Livelihood;
+                    worksheet.Cells["D12"].Value = objectModel.ProposedTreatment;
+                    worksheet.Cells["D14"].Value = objectModel.LandStatus;
+                    worksheet.Cells["C16"].Value = objectModel.LandTenureHistory;
+                    worksheet.Cells["D19"].Value = objectModel.ConflictChronology;
+                    worksheet.Cells["D21"].Value = objectModel.FormalAdvocacyProgress;
+                    worksheet.Cells["D22"].Value = objectModel.NonFormalAdvocacyProgress;
+
+                    ExcelWorksheet worksheet2 = package.Workbook.Worksheets[2];
+                    for (int i = 0; i < subjectModel.Count; i++)
+                    {
+                        int row = 1;
+                        worksheet2.Cells["A" + (++row).ToString()].Value = i + 1;
+                        worksheet2.Cells["B" + (++row).ToString()].Value = subjectModel[i].Name;
+                        worksheet2.Cells["C" + (++row).ToString()].Value = subjectModel[i].MaritalStatus.ToString();
+                        worksheet2.Cells["D" + (++row).ToString()].Value = subjectModel[i].Address.ToString();
+                        worksheet2.Cells["E" + (++row).ToString()].Value = subjectModel[i].Gender.ToString();
+                        worksheet2.Cells["F" + (++row).ToString()].Value = subjectModel[i].Age;
+                        worksheet2.Cells["G" + (++row).ToString()].Value = subjectModel[i].EducationalAttainment.ToString();
+                        worksheet2.Cells["H" + (++row).ToString()].Value = subjectModel[i].TotalFamilyMembers;
+                        worksheet2.Cells["I" + (++row).ToString()].Value = subjectModel[i].LandStatus.ToString();
+                        worksheet2.Cells["J" + (++row).ToString()].Value = subjectModel[i].LandLocation;
+                        worksheet2.Cells["K" + (++row).ToString()].Value = subjectModel[i].Size;
+                        worksheet2.Cells["L" + (++row).ToString()].Value = subjectModel[i].PlantTypes;
+                        worksheet2.Cells["M" + (++row).ToString()].Value = subjectModel[i].Notes;
+                    }
+
+                    package.SaveAs(outputStream);
+                }
             }
-            return sFileName;
+
+            outputStream.Position = 0;
+            return File(outputStream, "application/xlsx", "tora.xlsx");
         }
 
         [HttpGet("summary/{id}")]

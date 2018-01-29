@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Progress } from "angular-progress-http";
+import { saveAs } from 'file-saver';
 
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
@@ -108,12 +109,11 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         });
     }
     
-    export() {
-        this.toraService.exportObject(this.toraObject, this.progressListener.bind(this)).subscribe(data => {
-            var link = [window.location.origin, 'template', data].join("/")
-                $("#download").attr("href", link);
-                $('#download')[0].click();
-        })
+    onClickExport() {
+        this.toraService.export(this.toraObject.id).subscribe(data => {
+            let blob = new Blob([data.blob()], { type: 'application/xlsx' });
+            saveAs(blob, 'tora.xlsx');
+        });
     }
 
     onShowToraObjectForm(): void {

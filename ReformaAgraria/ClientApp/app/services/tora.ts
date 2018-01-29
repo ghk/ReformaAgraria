@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
+import { Response, ResponseContentType } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { CookieService } from 'ngx-cookie-service';
 import { ProgressHttp } from 'angular-progress-http';
@@ -57,21 +57,11 @@ export class ToraService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    exportObject(toraObject: any, progressListener?: any) {
+    export(toraObjectId: number, progressListener?: any) {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
-        options.headers.delete('Content-Type');
-
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'POST',
-            urljoin(this.serverUrl, 'toraobject', 'export'),
-            toraObject,
-            null,
-            progressListener
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
+        options.responseType = ResponseContentType.Blob;
+        return this.http.get('/api/toraobject/export/' + toraObjectId, options)  
+            .catch(this.handleError);
     }
 
     private handleError(error: Response | any) {
