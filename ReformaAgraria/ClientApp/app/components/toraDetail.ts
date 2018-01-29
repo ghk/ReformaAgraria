@@ -17,6 +17,7 @@ import { LandStatus } from '../models/gen/landStatus';
 import { EducationalAttainment } from '../models/gen/educationalAttainment';
 import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
+import { Status } from '../models/gen/status';
 
 @Component({
     selector: 'ra-tora-detail',
@@ -28,6 +29,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
     EducationalAttainment = EducationalAttainment;
     MaritalStatus = MaritalStatus;
     Gender = Gender;
+    Status = Status;
 
     subscription: Subscription; 
     toraObject: ToraObject;

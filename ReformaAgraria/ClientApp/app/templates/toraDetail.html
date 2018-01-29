@@ -51,27 +51,27 @@
                             <tr>
                                 <th scope="row">7</th>
                                 <td>Status Kawasan</td>
-                                <td colspan="2">{{RegionalStatus[toraObject?.regionalStatus]}}</td>
+                                <td colspan="2">{{RegionalStatus[toraObject?.regionalStatus] | translate}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">8</th>
                                 <td>Klasifikasi bentang Lahan</td>
-                                <td colspan="2">{{toraObject?.landType}}</td>
+                                <td colspan="2">{{toraObject?.landType | translate}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">9</th>
                                 <td>Tipe Penggunaan Lahan</td>
-                                <td colspan="2">{{toraObject?.livelihood}}</td>
+                                <td colspan="2">{{toraObject?.livelihood | translate}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">10</th>
                                 <td>Usulan Skema</td>
-                                <td colspan="2">{{toraObject?.proposedTreatment}}</td>
+                                <td colspan="2">{{toraObject?.proposedTreatment | translate}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">11</th>
                                 <td>Tahapan</td>
-                                <td colspan="2">Tahapan</td>
+                                <td colspan="2">{{Status[toraObject?.stages] | translate}}</td>
                             </tr>
                             <tr>
                                 <th scope="col">No</th>
@@ -80,7 +80,7 @@
                             <tr>
                                 <th scope="row">1</th>
                                 <td>Status Tanah</td>
-                                <td colspan="2">{{LandStatus[toraObject?.landStatus]}}</td>
+                                <td colspan="2">{{LandStatus[toraObject?.landStatus] | translate}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">2</th>
@@ -135,13 +135,13 @@
                         <tr *ngFor="let toraSubject of toraSubjects; let i = index">
                             <td scope="row">{{i + 1}}</td>
                             <td>{{toraSubject?.name}}</td>
-                            <td>{{MaritalStatus[toraSubject?.maritalStatus]}}</td>
+                            <td>{{MaritalStatus[toraSubject?.maritalStatus] | translate}}</td>
                             <td>{{toraSubject?.address}}</td>
-                            <td>{{Gender[toraSubject?.gender]}}</td>
+                            <td>{{Gender[toraSubject?.gender] | translate}}</td>
                             <td>{{toraSubject?.age}}</td>
-                            <td>{{EducationalAttainment[toraSubject?.educationalAttainment]}}</td>
+                            <td>{{EducationalAttainment[toraSubject?.educationalAttainment] | translate}}</td>
                             <td>{{toraSubject?.totalFamilyMembers}}</td>
-                            <td>{{LandStatus[toraSubject?.landStatus]}}</td>
+                            <td>{{LandStatus[toraSubject?.landStatus] | translate}}</td>
                             <td>{{toraSubject?.landLocation}}</td>
                             <td>{{toraSubject?.size | number : '1.2-2'}}</td>
                             <td>{{toraSubject?.plantTypes}}</td>

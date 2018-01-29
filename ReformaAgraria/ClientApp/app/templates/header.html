@@ -3,17 +3,19 @@
 
     <div id="mySidenav" class="sidenavDrawer">
         <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-        <a class="nav-link" routerLink="/home" routerLinkActive="active" href="javascript:void(0)" (click)="closeNav()">Dashboard</a>
-        <a class="nav-link" routerLink="/map" routerLinkActive="active" href="javascript:void(0)" (click)="closeNav()">Peta</a>
+        <a href="javascript:void(0)" class="nav-link" routerLinkActive="active" (click)="navigate('home')">Dashboard</a>
+        <a href="javascript:void(0)" class="nav-link" routerLinkActive="active" (click)="navigate('calendar')">Kalendar Kegiatan</a>
+        <a href="javascript:void(0)" class="nav-link" routerLinkActive="active" (click)="navigate('map')">Peta</a>
+        <a href="javascript:void(0)" class="nav-link" routerLinkActive="active" (click)="navigate(library)">Pustaka</a>
     </div>
         
     <div class="d-md-none d-lg-none">
         <button class="navbar-toggler" type="button">
-            <span (click)="openNav()">Nav</span>
+            <span (click)="openNav()">Menu</span>
         </button>
     </div>
 
-    <a class="navbar-brand" [routerLink]="['/home']">Reforma Agraria</a>
+    <a class="navbar-brand" [routerLink]="['/home/']">Reforma Agraria</a>
     <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>    

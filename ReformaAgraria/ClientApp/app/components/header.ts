@@ -16,6 +16,7 @@ import { SearchViewModel } from '../models/gen/searchViewModel';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
     region: Region;
+    regionId: string = '72_1';
     selected: any;
     dataSource: any;
     subscription: Subscription;
@@ -30,6 +31,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.subscription = this.sharedService.getRegion().subscribe(region => {
+            this.regionId = region.id.split('.').join('_');
+            console.log(this.regionId);
             let depth = region.type - 2;
             let depthQuery = { 
                 'data': {
@@ -50,6 +53,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    navigate(moduleName) {
+        if (moduleName == 'home' || moduleName == 'calendar') {
+            this.router.navigateByUrl(moduleName + '/' + this.regionId);
+        }
+        else {
+            this.router.navigateByUrl(moduleName + '/');
+        }
+        this.closeNav();
     }
 
     onSearchSelected(model: any) {
