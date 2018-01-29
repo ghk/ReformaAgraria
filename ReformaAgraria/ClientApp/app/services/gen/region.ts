@@ -6,9 +6,9 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
 import { Region } from '../../models/gen/region';
-import { RequestHelper } from '../../helpers/request';
-import { SharedService } from '../../services/shared';
+import { EnvironmentService } from '../../services/environment';
 import { CrudService } from '../../services/crud';
+import { RequestHelper } from '../../helpers/request';
 
 import * as urljoin from 'url-join';
 
@@ -20,8 +20,8 @@ export class RegionService implements CrudService<Region, string>{
     constructor(
         private http: ProgressHttp,
         private cookieService: CookieService,
-        private sharedService: SharedService) { 
-        this.serverUrl = this.sharedService.getEnvironment().serverUrl;
+        private environmentService: EnvironmentService) { 
+        this.serverUrl = this.environmentService.getEnvironment().serverUrl;
     } 
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<Region>> { 

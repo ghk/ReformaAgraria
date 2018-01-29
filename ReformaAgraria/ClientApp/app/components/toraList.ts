@@ -31,7 +31,7 @@ import { ToraObject } from '../models/gen/toraObject';
 export class ToraListComponent implements OnInit, OnDestroy {
     regionSubscription: Subscription;
     uploadSubscription: Subscription;
-    toraFormSubscription: Subscription;
+    toraObjectFormSubscription: Subscription;
     
     uploadModalRef: BsModalRef;
     toraObjectModalRef: BsModalRef;
@@ -83,8 +83,8 @@ export class ToraListComponent implements OnInit, OnDestroy {
         this.regionSubscription.unsubscribe();
         if (this.uploadSubscription)
             this.uploadSubscription.unsubscribe();
-        if (this.toraFormSubscription)
-            this.toraFormSubscription.unsubscribe();
+        if (this.toraObjectFormSubscription)
+            this.toraObjectFormSubscription.unsubscribe();
     }    
 
    
@@ -100,9 +100,12 @@ export class ToraListComponent implements OnInit, OnDestroy {
     onUploadDocument(): void {
         this.uploadModalRef = this.modalService.show(ModalUploadToraDocumentComponent);   
         if (!this.uploadSubscription)     
-            this.uploadSubscription = this.uploadModalRef.content.isUploadSuccess$.subscribe(success => {
+            this.uploadSubscription = this.uploadModalRef.content.isSaveSuccess$.subscribe(success => {
                 if (success) {
                     this.getToraObjects(this.region.id);
+                    this.uploadSubscription.unsubscribe();
+                    this.uploadSubscription = null;
+                    this.uploadModalRef.hide();
                 }
             });
     }
@@ -110,6 +113,15 @@ export class ToraListComponent implements OnInit, OnDestroy {
     onShowToraObjectForm(toraObject: ToraObject): void {
         this.toraObjectModalRef = this.modalService.show(ModalToraObjectFormComponent, { class: 'modal-lg' });
         this.toraObjectModalRef.content.setToraObject(toraObject);
+        if (!this.toraObjectFormSubscription)
+            this.toraObjectFormSubscription = this.toraObjectModalRef.content.isSaveSuccess$.subscribe(success => {                
+                if (success) {
+                    this.getToraObjects(this.region.id);
+                    this.toraObjectFormSubscription.unsubscribe();
+                    this.toraObjectFormSubscription = null;  
+                    this.toraObjectModalRef.hide();                  
+                }
+            }); 
     }
 
     addOrEditObject(model) {

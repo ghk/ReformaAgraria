@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MicrovacWebCore;
 using OfficeOpenXml;
@@ -275,6 +276,13 @@ namespace ReformaAgraria.Controllers
                 var regionId = GetQueryString<string>("regionId");
                 if (!string.IsNullOrWhiteSpace(regionId))
                     query = query.Where(to => to.FkRegionId == regionId);
+            }
+
+            if (type == "getCompleteRegion")
+            {
+                query = query.Include(to => to.Region)
+                    .Include(to => to.Region.Parent)
+                    .Include(to => to.Region.Parent.Parent);
             }
 
             return query;

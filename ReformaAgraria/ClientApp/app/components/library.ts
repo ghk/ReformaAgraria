@@ -3,6 +3,8 @@ import { LibraryService } from '../services/library';
 import { Library } from '../models/gen/library';
 import { ToastrService } from "ngx-toastr";
 import { saveAs as importedSaveAs } from "file-saver";
+import { SharedService } from '../services/shared';
+import { RegionService } from '../services/gen/region';
 
 @Component({
     selector: 'ra-library',
@@ -13,12 +15,20 @@ export class LibraryComponent implements OnInit, OnDestroy {
     model: any = {};
     libraryId: number;
 
-    constructor(
-        private libraryService: LibraryService,
-        private toastr: ToastrService
+    constructor(        
+        private toastr: ToastrService,
+        private sharedService: SharedService,
+        private regionService: RegionService,
+        private libraryService: LibraryService        
     ) { }
 
     ngOnInit(): void {
+        if (!this.sharedService.region) {
+            this.regionService.getById('72.1').subscribe(region => {
+                this.sharedService.setRegion(region);
+            })
+        };
+
         this.getAll();
     }
 

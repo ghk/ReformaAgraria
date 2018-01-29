@@ -32,18 +32,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             this.regionId = region.id.split('.').join('_');
-            console.log(this.regionId);
             let depth = region.type - 2;
-            let depthQuery = { 
-                'data': {
-                    'type': 'getByDepth',
-                    'depth': depth
-                }
-            };
-                        
+            let depthQuery = { 'data': { 'type': 'getByDepth', 'depth': depth } };                        
             this.regionService.getById(region.id, depthQuery, null).subscribe(region => {
                 this.region = region;
-            })
+            });
         });
 
         this.dataSource = Observable.create((observer: any) => { observer.next(this.selected); } )

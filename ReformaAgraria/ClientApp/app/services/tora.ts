@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { CookieService } from 'ngx-cookie-service';
 import { ProgressHttp } from 'angular-progress-http';
 
-import { SharedService } from './../services/shared';
+import { EnvironmentService } from './../services/environment';
 import { RequestHelper } from '../helpers/request';
 import { Query } from "../models/query";
 import { UploadToraDocumentViewModel } from '../models/gen/uploadToraDocumentViewModel';
@@ -21,9 +21,9 @@ export class ToraService {
     constructor(
         private http: ProgressHttp,
         private cookieService: CookieService,
-        private sharedService: SharedService
+        private environmentService: EnvironmentService
     ) {
-        this.serverUrl = this.sharedService.getEnvironment().serverUrl;
+        this.serverUrl = this.environmentService.getEnvironment().serverUrl;
     }
 
     getSummaries(id: string, progressListener?: any) {

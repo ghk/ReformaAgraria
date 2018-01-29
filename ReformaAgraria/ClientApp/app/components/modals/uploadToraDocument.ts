@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import { BehaviorSubject, Subscription } from "rxjs";
+import { ReplaySubject, Subscription } from "rxjs";
 import { BsModalRef } from "ngx-bootstrap";
 import { Progress } from "angular-progress-http";
 import { ToastrService } from "ngx-toastr";
@@ -19,15 +19,7 @@ export class ModalUploadToraDocumentComponent implements OnInit, OnDestroy {
     region: Region;
     model: UploadToraDocumentViewModel;
 
-    private isUploadSuccess$ = new BehaviorSubject<boolean>(false);
-
-    @Input()
-    set isUploadSuccess(value) { 
-        this.isUploadSuccess$.next(value);
-    }
-    get isUploadSuccess() {
-        return this.isUploadSuccess$.getValue();
-    }
+    private isSaveSuccess$: ReplaySubject<boolean> = new ReplaySubject(1);
     
     progress: Progress;
 
@@ -62,11 +54,11 @@ export class ModalUploadToraDocumentComponent implements OnInit, OnDestroy {
             .subscribe(
             data => {
                 this.toastr.success('File is successfully uploaded')
-                this.isUploadSuccess = true;
+                this.isSaveSuccess$.next(true);
             },
             error => {
                 this.toastr.error('Unable to upload the file')
-                this.isUploadSuccess = false;
+                this.isSaveSuccess$.next(false);
             }
         );
     }
