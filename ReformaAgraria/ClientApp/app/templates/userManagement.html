@@ -5,20 +5,22 @@
             <ra-sidenav></ra-sidenav>
         </nav>
         <main class="col-sm-9 col-md-10 ml-sm-auto pt-4" role="main">
-
             <div class="card w-100">
                 <div class="card-body">
-
                     <div *ngIf="isListUserShown">
                         <div class="row">
                             <div class="col-12">
-                                <h2 class="card-title">Manajemen Akun</h2>
+                                <div class="d-flex card-title" style="justify-content: space-between;">
+                                    <h2>Manajemen Akun</h2>
 
-                                <div class="nav justify-content-end my-2 mr-3">
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalAddUser" title="Tambah Akun" (click)="clearForm()"><span class="oi oi-plus"></span></button>
+                                    <div class="nav justify-content-end my-2 mr-3">
+                                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalAddUser" title="Tambah Akun"
+                                            (click)="clearForm()">
+                                            <span class="oi oi-plus"></span>
+                                        </button>
+                                    </div>
                                 </div>
-
-                                <table class="table table-sm table-responsive tableAccount">
+                                <table class="table table-sm tableAccount">
                                     <thead>
                                         <tr>
                                             <th>Nama</th>
@@ -43,7 +45,8 @@
                                                 <td>{{user.email}}</td>
                                                 <td span="2">
                                                     <div class="dropdown show">
-                                                        <button class="btn btn-link dropdown-toggle" href="javascript:void(0)" title="Ubah Email atau Password" role="button" id="dropdownEditLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <button class="btn btn-link dropdown-toggle" href="javascript:void(0)" title="Ubah Email atau Password" role="button" id="dropdownEditLink"
+                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <span class="oi oi-pencil"></span>
                                                         </button>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownEditLink">
@@ -52,7 +55,12 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><button class="btn btn-link" data-toggle="modal" data-target="#modalDelete" href="javascript:void(0)" title="Hapus" (click)="delete(user.id, user.email)"><span class="oi oi-x"></span></button></td>
+                                                <td>
+                                                    <button class="btn btn-link" data-toggle="modal" data-target="#modalDelete"
+                                                        href="javascript:void(0)" title="Hapus" (click)="delete(user.id, user.email)">
+                                                        <span class="oi oi-x"></span>
+                                                    </button>
+                                                </td>
                                             </tr>
                                         </ng-container>
                                     </tbody>
@@ -65,8 +73,6 @@
         </main>
     </div>
 </div>
-
-
 
 <!-- Modal -->
 <!-- modal addUser -->
@@ -99,7 +105,8 @@
 
                                 <div class="form-group col-md-12">
                                     <label for="email">Email</label>
-                                    <input type="text" class="form-control" name="email" placeholder="Email" [(ngModel)]="model.Email" #email="ngModel" required (keyup)="validateAddUserForm($event)" />
+                                    <input type="text" class="form-control" name="email" placeholder="Email" [(ngModel)]="model.Email" #email="ngModel" required
+                                        (keyup)="validateAddUserForm($event)" />
                                     <label for="email" id="invalidEmail" *ngIf="invalidEmail.length > 0">{{this.invalidEmail}}</label>
                                 </div>
                             </div>
@@ -107,7 +114,8 @@
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="password">Password</label>
-                                    <input type="password" class="form-control is-invalid" name="password" placeholder="Password" [(ngModel)]="model.Password" #password="ngModel" required (keyup)="validateAddUserForm($event)" />
+                                    <input type="password" class="form-control is-invalid" name="password" placeholder="Password" [(ngModel)]="model.Password"
+                                        #password="ngModel" required (keyup)="validateAddUserForm($event)" />
                                     <label for="password" id="invalidPassword" *ngIf="invalidPassword.length > 0">{{this.invalidPassword}}</label>
                                 </div>
                             </div>
@@ -123,10 +131,9 @@
         </div>
     </div>
 </div>
-
 <!-- end modal addUser -->
-<!-- start modal change email -->
 
+<!-- start modal change email -->
 <div class="modal fade" id="modalEditEmail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form name="form" class="was-validated" (submit)="isValid && updateUser()">
@@ -150,7 +157,8 @@
                             <div class="form-row">
                                 <div class="form-group col-md-12 was-validated">
                                     <label for="newEmail">Email</label>
-                                    <input type="text" class="form-control" onfocus="this.select();" name="newEmail" [(ngModel)]="model.newEmail" #newEmail="ngModel" required (keyup)="validateUpdateEmailForm($event)" />
+                                    <input type="text" class="form-control" onfocus="this.select();" name="newEmail" [(ngModel)]="model.newEmail" #newEmail="ngModel"
+                                        required (keyup)="validateUpdateEmailForm($event)" />
                                     <small id="changeEmaillHelp" class="form-text text-muted">Masukan email baru anda</small>
                                     <label for="newEmail" *ngIf="invalidEmail.length > 0">{{this.invalidEmail}}</label>
                                 </div>
@@ -168,10 +176,9 @@
         </form>
     </div>
 </div>
-
 <!-- end modal change email -->
-<!-- start modal change password -->
 
+<!-- start modal change password -->
 <div class="modal fade" id="modalEditPassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -194,13 +201,15 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="newPassword">Password Baru</label>
-                                <input type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #password="ngModel" required (keyup)="validateUpdatePasswordForm($event)" />
+                                <input type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #password="ngModel" required
+                                    (keyup)="validateUpdatePasswordForm($event)" />
                                 <small id="changePasswordlHelp1" class="form-text text-muted"></small>
                                 <label for="newPassword" *ngIf="invalidPassword.length > 0">{{this.invalidPassword}}</label>
                             </div>
                             <div class="form-group">
                                 <label for="confirmPassword">Konfirmasi Password Baru</label>
-                                <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #password="ngModel" required (keyup)="validatePasswordMatch($event)" />
+                                <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #password="ngModel"
+                                    required (keyup)="validatePasswordMatch($event)" />
                                 <label for="confirmPassword" *ngIf="unmatchedPassword.length > 0">{{this.unmatchedPassword}}</label>
                             </div>
                         </div>
@@ -215,10 +224,9 @@
         </div>
     </div>
 </div>
-
 <!-- end modal change password -->
-<!-- start modal deleteUser -->
 
+<!-- start modal deleteUser -->
 <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="alert alert-light alert-dismissible fade show" role="alert">
@@ -246,5 +254,4 @@
         </div>
     </div>
 </div>
-
 <!-- end modal deleteUser -->
