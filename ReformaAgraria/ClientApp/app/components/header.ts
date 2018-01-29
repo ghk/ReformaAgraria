@@ -47,17 +47,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
-
-    navigate(moduleName) {
-        if (moduleName == 'home' || moduleName == 'calendar') {
-            this.router.navigateByUrl(moduleName + '/' + this.regionId);
-        }
-        else {
-            this.router.navigateByUrl(moduleName + '/');
-        }
-        this.closeNav();
-    }
-
+   
     onSearchSelected(model: any) {
         let svm: SearchViewModel = model.item;
         if (svm.type === 3)        
@@ -71,14 +61,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     logout(): void {
         this.accountService.logout().subscribe();
         this.router.navigateByUrl('/account/login');
-    }
-
-    openNav() {
-        document.getElementById("mySidenav").style.width = "250px";
-    }
-
-    closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
     }
 
     convertRegionId(text) {

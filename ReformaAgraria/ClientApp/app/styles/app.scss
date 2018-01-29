@@ -128,8 +128,8 @@ h1 {
     margin-right: 1em;
 }
 
-// sidenavDrawer
-.sidenavDrawer {
+// sidenav-drawer
+.sidenav-drawer {
     height: 100%;
     width: 0;
     position: fixed;
@@ -142,7 +142,7 @@ h1 {
     padding-top: 60px;
 }
 
-.sidenavDrawer a {
+.sidenav-drawer a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
@@ -151,11 +151,11 @@ h1 {
     transition: 0.3s;
 }
 
-.sidenavDrawer a:hover {
+.sidenav-drawer a:hover {
     color: #f1f1f1;
 }
 
-.sidenavDrawer .closebtn {
+.sidenav-drawer .closebtn {
     position: absolute;
     top: 0;
     right: 25px;
@@ -163,11 +163,23 @@ h1 {
     margin-left: 50px;
 }
 
+.sidenav-drawer .closebtn:hover {
+    cursor: pointer;
+}
+
+.sidenav-drawer.collapse {
+    width: 0px;
+}
+
+.sidenav-drawer.collapse.show {
+    width: 250px;
+}
+
 @media screen and (max-height: 450px) {
-    .sidenavDrawer {
+    .sidenav-drawer {
         padding-top: 15px;
     }
-    .sidenavDrawer a {
+    .sidenav-drawer a {
         font-size: 18px;
     }
 }
