@@ -3,7 +3,7 @@
 //! author : Mohammad Satrio Utomo : https://github.com/tyok
 //! reference: http://id.wikisource.org/wiki/Pedoman_Umum_Ejaan_Bahasa_Indonesia_yang_Disempurnakan
 
-import { LocaleData } from "ngx-bootstrap/bs-moment/locale/locale.class";
+import { LocaleData } from "ngx-bootstrap";
 
 export var id: LocaleData = {
     abbr: 'id',
