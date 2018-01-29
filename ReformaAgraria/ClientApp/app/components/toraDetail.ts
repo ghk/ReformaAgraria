@@ -41,7 +41,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
     MaritalStatus = MaritalStatus;
     Gender = Gender;
     Status = Status;
-    
+    subscription: Subscription; 
     toraObjectId: number;
     toraObject: ToraObject;
     toraSubjects: ToraSubject[];
@@ -106,6 +106,14 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
                 this.sharedService.setToraSummary(summary);
             });
         });
+    }
+    
+    export() {
+        this.toraService.exportObject(this.toraObject, this.progressListener.bind(this)).subscribe(data => {
+            var link = [window.location.origin, 'template', data].join("/")
+                $("#download").attr("href", link);
+                $('#download')[0].click();
+        })
     }
 
     onShowToraObjectForm(): void {
