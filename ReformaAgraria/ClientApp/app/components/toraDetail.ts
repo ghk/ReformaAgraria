@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Progress } from "angular-progress-http";
 
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
@@ -34,6 +35,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
     subscription: Subscription; 
     toraObject: ToraObject;
     toraSubjects: ToraSubject[];
+    progress: Progress;
 
     constructor(
         private route: ActivatedRoute,
@@ -81,8 +83,21 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         });
     }
 
+    export(toraObject, toraSubject) {
+        this.toraService.export(toraObject, this.progressListener.bind(this)).subscribe(data => {
+            var link = [window.location.origin, 'template', data].join("/")
+            console.log(link);
+            //$("#download").attr("href", link);
+            //$('#download')[0].click();
+        })
+    }
+
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    progressListener(progress: Progress) {
+        this.progress = progress;
     }
 
 }

@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Docs\" />
+    <Folder Include="wwwroot\template\" />
     <Folder Include="wwwroot\tora\document\72.10.09.2001\" />
   </ItemGroup>
   <ItemGroup>

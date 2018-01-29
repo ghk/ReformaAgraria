@@ -57,6 +57,23 @@ export class ToraService {
         return request.map(res => res.json()).catch(this.handleError);
     }
 
+    export(toraObject: any, progressListener?: any) {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+        options.headers.delete('Content-Type');
+
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'toraobject', 'export'),
+            toraObject,
+            null,
+            progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+
     private handleError(error: Response | any) {
         let errMsg: string;
         if (error instanceof Response) {

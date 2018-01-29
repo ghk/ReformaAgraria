@@ -177,46 +177,37 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpGet("export")]
-        public string Export()
+        public string Export(ToraObject objectModel, List<ToraSubject> subjectModel)
         {
-            string sWebRootFolder = _hostingEnvironment.WebRootPath;
-            string sFileName = @"demo.xlsx";
-            string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
-            FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
-            if (file.Exists)
-            {
-                file.Delete();
-                file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
-            }
+            var templateDocumentDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "template");
+            string sFileName = @"Template_Object_Subject_Tora.xlsx";
+            FileInfo file = new FileInfo(Path.Combine(templateDocumentDirectoryPath, sFileName));
             using (ExcelPackage package = new ExcelPackage(file))
             {
-                // add a new worksheet to the empty workbook
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employee");
-                //First add the headers
-                worksheet.Cells[1, 1].Value = "ID";
-                worksheet.Cells[1, 2].Value = "Name";
-                worksheet.Cells[1, 3].Value = "Gender";
-                worksheet.Cells[1, 4].Value = "Salary (in $)";
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
 
                 //Add values
-                worksheet.Cells["A2"].Value = 1000;
-                worksheet.Cells["B2"].Value = "Jon";
-                worksheet.Cells["C2"].Value = "M";
-                worksheet.Cells["D2"].Value = 5000;
+                worksheet.Cells["D3"].Value = objectModel.Name;
+                worksheet.Cells["D4"].Value = "";
+                worksheet.Cells["D5"].Value = "";
+                worksheet.Cells["D6"].Value = "";
+                worksheet.Cells["D7"].Value = objectModel.Size;
+                worksheet.Cells["D8"].Value = objectModel.TotalTenants;
+                worksheet.Cells["D9"].Value = objectModel.RegionalStatus;
+                worksheet.Cells["D10"].Value = objectModel.LandType;
+                worksheet.Cells["D11"].Value = objectModel.Livelihood;
+                worksheet.Cells["D12"].Value = objectModel.ProposedTreatment;
+                worksheet.Cells["D14"].Value = objectModel.LandStatus;
+                worksheet.Cells["C16"].Value = objectModel.LandTenureHistory;
+                worksheet.Cells["D19"].Value = objectModel.ConflictChronology;
+                worksheet.Cells["D21"].Value = objectModel.FormalAdvocacyProgress;
+                worksheet.Cells["D22"].Value = objectModel.NonFormalAdvocacyProgress;
 
-                worksheet.Cells["A3"].Value = 1001;
-                worksheet.Cells["B3"].Value = "Graham";
-                worksheet.Cells["C3"].Value = "M";
-                worksheet.Cells["D3"].Value = 10000;
+                //ExcelWorksheet worksheet2 = package.Workbook.Worksheets[2];
 
-                worksheet.Cells["A4"].Value = 1002;
-                worksheet.Cells["B4"].Value = "Jenny";
-                worksheet.Cells["C4"].Value = "F";
-                worksheet.Cells["D4"].Value = 5000;
-
-                package.Save(); //Save the workbook.
+                package.Save();
             }
-            return URL;
+            return sFileName;
         }
 
         [HttpGet("summary/{id}")]
