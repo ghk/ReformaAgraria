@@ -97,7 +97,7 @@ namespace ReformaAgraria.Controllers
             var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
             var toraMapPath = Path.Combine(toraMapDirectoryPath, toraMap.FkRegionId, toraMap.Id + ".zip");
             var memory = new MemoryStream();
-            using (var stream = new FileStream(toraMapPath, FileMode.Open))
+            using (var stream = new FileStream(toraMapPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 await stream.CopyToAsync(memory);
             }

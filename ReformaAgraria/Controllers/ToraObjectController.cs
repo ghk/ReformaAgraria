@@ -203,7 +203,7 @@ namespace ReformaAgraria.Controllers
             var outputStream = new MemoryStream();
 
             using (var templateStream = new MemoryStream())
-            using (var fileStream = new FileStream(templateFilePath, FileMode.Open))
+            using (var fileStream = new FileStream(templateFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 await fileStream.CopyToAsync(templateStream);
                 templateStream.Position = 0;
@@ -218,11 +218,11 @@ namespace ReformaAgraria.Controllers
                     worksheet.Cells["D6"].Value = region.Parent.Parent.Name;
                     worksheet.Cells["D7"].Value = objectModel.Size;
                     worksheet.Cells["D8"].Value = objectModel.TotalTenants;
-                    worksheet.Cells["D9"].Value = objectModel.RegionalStatus;
-                    worksheet.Cells["D10"].Value = objectModel.LandType;
+                    worksheet.Cells["D9"].Value = Translate(objectModel.RegionalStatus.ToString());
+                    worksheet.Cells["D10"].Value = Translate(objectModel.LandType);
                     worksheet.Cells["D11"].Value = objectModel.Livelihood;
                     worksheet.Cells["D12"].Value = objectModel.ProposedTreatment;
-                    worksheet.Cells["D14"].Value = objectModel.LandStatus;
+                    worksheet.Cells["D14"].Value = Translate(objectModel.LandStatus.ToString());
                     worksheet.Cells["C16"].Value = objectModel.LandTenureHistory;
                     worksheet.Cells["D19"].Value = objectModel.ConflictChronology;
                     worksheet.Cells["D21"].Value = objectModel.FormalAdvocacyProgress;
@@ -231,20 +231,21 @@ namespace ReformaAgraria.Controllers
                     ExcelWorksheet worksheet2 = package.Workbook.Worksheets[2];
                     for (int i = 0; i < subjectModel.Count; i++)
                     {
-                        int row = 1;
-                        worksheet2.Cells["A" + (++row).ToString()].Value = i + 1;
-                        worksheet2.Cells["B" + (++row).ToString()].Value = subjectModel[i].Name;
-                        worksheet2.Cells["C" + (++row).ToString()].Value = subjectModel[i].MaritalStatus.ToString();
-                        worksheet2.Cells["D" + (++row).ToString()].Value = subjectModel[i].Address.ToString();
-                        worksheet2.Cells["E" + (++row).ToString()].Value = subjectModel[i].Gender.ToString();
-                        worksheet2.Cells["F" + (++row).ToString()].Value = subjectModel[i].Age;
-                        worksheet2.Cells["G" + (++row).ToString()].Value = subjectModel[i].EducationalAttainment.ToString();
-                        worksheet2.Cells["H" + (++row).ToString()].Value = subjectModel[i].TotalFamilyMembers;
-                        worksheet2.Cells["I" + (++row).ToString()].Value = subjectModel[i].LandStatus.ToString();
-                        worksheet2.Cells["J" + (++row).ToString()].Value = subjectModel[i].LandLocation;
-                        worksheet2.Cells["K" + (++row).ToString()].Value = subjectModel[i].Size;
-                        worksheet2.Cells["L" + (++row).ToString()].Value = subjectModel[i].PlantTypes;
-                        worksheet2.Cells["M" + (++row).ToString()].Value = subjectModel[i].Notes;
+                        int row = 2;
+
+                        worksheet2.Cells["A" + (row + i).ToString()].Value = i + 1;
+                        worksheet2.Cells["B" + (row + i).ToString()].Value = subjectModel[i].Name;
+                        worksheet2.Cells["C" + (row + i).ToString()].Value = Translate(subjectModel[i].MaritalStatus.ToString());
+                        worksheet2.Cells["D" + (row + i).ToString()].Value = subjectModel[i].Address.ToString();
+                        worksheet2.Cells["E" + (row + i).ToString()].Value = Translate(subjectModel[i].Gender.ToString());
+                        worksheet2.Cells["F" + (row + i).ToString()].Value = subjectModel[i].Age;
+                        worksheet2.Cells["G" + (row + i).ToString()].Value = Translate(subjectModel[i].EducationalAttainment.ToString());
+                        worksheet2.Cells["H" + (row + i).ToString()].Value = subjectModel[i].TotalFamilyMembers;
+                        worksheet2.Cells["I" + (row + i).ToString()].Value = Translate(subjectModel[i].LandStatus.ToString());
+                        worksheet2.Cells["J" + (row + i).ToString()].Value = subjectModel[i].LandLocation;
+                        worksheet2.Cells["K" + (row + i).ToString()].Value = subjectModel[i].Size;
+                        worksheet2.Cells["L" + (row + i).ToString()].Value = subjectModel[i].PlantTypes;
+                        worksheet2.Cells["M" + (row + i).ToString()].Value = subjectModel[i].Notes;
                     }
 
                     package.SaveAs(outputStream);
@@ -253,6 +254,89 @@ namespace ReformaAgraria.Controllers
 
             outputStream.Position = 0;
             return File(outputStream, "application/xlsx", "tora.xlsx");
+        }
+
+        public string Translate(string word)
+        {
+            switch (word)
+            {
+                case "Uneducated":
+                    return "Tidak Sekolah";
+                case "ElementarySchool":
+                    return "SD dan Sederajat";
+                case "JuniorHighSchool":
+                    return "SMP dan Sederajat";
+                case "SeniorHighSchool":
+                    return "SMA dan Sederajat";
+                case "BachelorDegree":
+                    return "S1";
+                case "MasterDegree":
+                    return "S2";
+                case "DoctorateDegree":
+                    return "S3";
+                case "Male":
+                    return "Pria";
+                case "Female":
+                    return "Wanita";
+                case "Government":
+                    return "Pemerintah";
+                case "Private":
+                    return "Swasta";
+                case "Gift":
+                    return "Pemberian";
+                case "Inheritage":
+                    return "Warisan";
+                case "Flat":
+                    return "Datar";
+                case "Sloping":
+                    return "Landai";
+                case "Hill":
+                    return "Perbukitan";
+                case "Mountain":
+                    return "Pegunungan";
+                case "Single":
+                    return "Belum Menikah";
+                case "Married":
+                    return "Menikah";
+                case "Divorced":
+                    return "Cerai";
+                case "ReleaseOfForestArea":
+                    return "Pelepasan Area Hutan";
+                case "CustomaryForest":
+                    return "Hutan Adat";
+                case "RedistributionOfLand":
+                    return "Redistribusi Lahan";
+                case "LegalizationOfAssets":
+                    return "Legalisasi Aset";
+                case "Forest":
+                    return "Hutan";
+                case "NonForest":
+                    return "Non Hutan";
+                case "Proposal":
+                    return "Pengajuan";
+                case "Verification":
+                    return "Verifikasi";
+                case "Act":
+                    return "Penetapan";
+                case "Identification":
+                    return "Identifikasi";
+                case "DeliberationWithinVillage":
+                    return "Musyawarah Desa";
+                case "DeliberationAmongVillages":
+                    return "Musyawarah Antar Desa";
+                case "CoordinationMeetingRaTaskForce":
+                    return "Rapat Koordinasi Gugus Tugas RA";
+                case "ProposalOfObjectSubjectToraAct":
+                    return "Pengajuan Penetapan Objek Subjek Tora";
+                case "PublicationOfPermissionFromAtrbpnOrLhk":
+                    return "Publikasi Izin dar Atrbpn atau Lhk";
+                case "Others":
+                    return "Lainnya";
+                case "NotSpecified":
+                    return "Tidak Disebutkan";
+                default:
+                    return word;
+            }
         }
 
         [HttpGet("summary/{id}")]
