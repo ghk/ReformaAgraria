@@ -16,6 +16,7 @@ import { SearchViewModel } from '../models/gen/searchViewModel';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
     region: Region;
+    regionId: string;
     selected: any;
     dataSource: any;
     subscription: Subscription;
@@ -30,6 +31,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.subscription = this.sharedService.getRegion().subscribe(region => {
+            this.regionId = region.id.split('.').join('_');
+
             let depth = region.type - 2;
             let breadcrumbQuery = { 
                 'data': {
