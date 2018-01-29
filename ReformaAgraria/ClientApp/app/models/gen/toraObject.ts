@@ -1,5 +1,6 @@
 ﻿import { RegionalStatus } from './regionalStatus';
 import { LandStatus } from './landStatus';
+import { Status } from './status';
 import { Region } from './region';
 import { BaseEntity } from './baseEntity';
 
@@ -17,7 +18,7 @@ export interface ToraObject extends BaseEntity<number> {
     conflictChronology?: string;
     formalAdvocacyProgress?: string;
     nonFormalAdvocacyProgress?: string;
-    stages?: number;
+    status?: Status;
     fkRegionId?: string;
     region?: Region;
 }

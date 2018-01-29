@@ -40,7 +40,7 @@ import { UserManagementComponent } from './components/userManagement';
 import { MapComponent } from './components/map';
 import { LibraryComponent } from './components/library';
 
-import { ModalToraFormComponent } from './components/modals/toraForm';
+import { ModalToraObjectFormComponent } from './components/modals/toraObjectForm';
 import { ModalUploadToraDocumentComponent } from './components/modals/uploadToraDocument';
 
 import { CookieService } from 'ngx-cookie-service';
@@ -95,7 +95,7 @@ import './styles/app.scss';
         ForgotPasswordComponent,
         ResetPasswordComponent,
         UserManagementComponent,        
-        ModalToraFormComponent,
+        ModalToraObjectFormComponent,
         ModalUploadToraDocumentComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
@@ -103,7 +103,7 @@ import './styles/app.scss';
         LibraryComponent
     ],
     entryComponents: [
-        ModalToraFormComponent,
+        ModalToraObjectFormComponent,
         ModalUploadToraDocumentComponent
     ],
     imports: [

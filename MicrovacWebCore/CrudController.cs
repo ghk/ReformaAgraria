@@ -46,7 +46,7 @@ namespace MicrovacWebCore
             return model.Id;
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public virtual TId Put([FromBody] TModel model)
         {
             if (PutFields.Count > 0)

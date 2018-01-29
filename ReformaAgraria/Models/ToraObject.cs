@@ -36,7 +36,7 @@ namespace ReformaAgraria.Models
 
         public string NonFormalAdvocacyProgress { get; set; }
 
-        public int Stages { get; set; }
+        public Status Status { get; set; }
 
         public string FkRegionId { get; set; }
 

@@ -21,7 +21,7 @@ import { Query } from '../models/query';
 import * as $ from 'jquery';
 
 import { ModalUploadToraDocumentComponent } from './modals/uploadToraDocument';
-import { ModalToraFormComponent } from './modals/toraForm';
+import { ModalToraObjectFormComponent } from './modals/toraObjectForm';
 import { ToraObject } from '../models/gen/toraObject';
 
 @Component({
@@ -34,7 +34,7 @@ export class ToraListComponent implements OnInit, OnDestroy {
     toraFormSubscription: Subscription;
     
     uploadModalRef: BsModalRef;
-    toraFormModalRef: BsModalRef;
+    toraObjectModalRef: BsModalRef;
 
     LandStatus = LandStatus;
     EducationalAttainment = EducationalAttainment;
@@ -95,20 +95,7 @@ export class ToraListComponent implements OnInit, OnDestroy {
             this.loading = false;
             this.showPage = true;
         });
-    }
-
-    getToraSubjects(id): void {
-        let toraSubjectQuery: Query = {
-            data: {
-                type: 'getAllByToraObject',
-                toraObjectId: id
-            }
-        };
-
-        this.toraSubjectService.getAll(toraSubjectQuery, null).subscribe(toraSubjects => {
-            this.toraSubjects = toraSubjects;
-        });
-    }
+    }    
 
     onUploadDocument(): void {
         this.uploadModalRef = this.modalService.show(ModalUploadToraDocumentComponent);   
@@ -120,9 +107,9 @@ export class ToraListComponent implements OnInit, OnDestroy {
             });
     }
 
-    onShowToraForm(toraObject: ToraObject): void {
-        this.toraFormModalRef = this.modalService.show(ModalToraFormComponent, { class: 'modal-lg' });
-        this.toraFormModalRef.content.setToraObject(toraObject);
+    onShowToraObjectForm(toraObject: ToraObject): void {
+        this.toraObjectModalRef = this.modalService.show(ModalToraObjectFormComponent, { class: 'modal-lg' });
+        this.toraObjectModalRef.content.setToraObject(toraObject);
     }
 
     addOrEditObject(model) {
@@ -158,12 +145,6 @@ export class ToraListComponent implements OnInit, OnDestroy {
                 this.toastr.error(error, null);
             }
         );
-    }
-
-    edit(object) {
-        this.model = object;
-        this.state = 'edit';
-        this.getToraSubjects(this.model.id);
     }
 
     editObject(model) {

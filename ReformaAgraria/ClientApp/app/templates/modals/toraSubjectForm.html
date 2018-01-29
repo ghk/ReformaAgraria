@@ -1,0 +1,93 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{toraSubject?.id ? 'Ubah' : 'Tambah'}} Subjek TORA</h4>
+    <button type="button" class="close" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form class="was-validated" (ngSubmit)="onFormSubmit()">
+        <div class="form-row pt-2">            
+            <div class="form-group col-md-6">
+                <label for="Name">Nama</label>
+                <input type="text" class="form-control" id="subjekName" aria-describedby="nameHelp" placeholder="Masukan Nama" [(ngModel)]="toraSubject.name"
+                    name="name">
+                <small id="namelHelp" class="form-text text-muted"></small>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="status-pernikahan">Status Pernikahan</label>
+                <select id="inputState" class="form-control" [(ngModel)]="toraSubject.maritalStatus" name="maritalStatus">
+                    <option [ngValue]="null">Pilih Status Pernikahan</option>
+                    <option [ngValue]="0">{{MartialStatus.Single | translate}}</option>
+                    <option [ngValue]="1">{{MaritalStatus.Married | translate}}</option>
+                    <option [ngValue]="2">{{MaritalStatus.Divorced | translate}}</option>
+                    <option [ngValue]="3">{{MaritalStatus.NotSpecified | translate}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="formSubjectAlamat">Alamat</label>
+                <textarea class="form-control" id="formSubjectAlamat" rows="3" [(ngModel)]="toraSubject.address" name="address"></textarea>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="jenisKelamin">Jenis Kelamin</label>
+                <select id="inputState" class="form-control" [(ngModel)]="toraSubject.gender" name="gender">
+                    <option [ngValue]="null">Pilih Jenis Kelamin</option>
+                    <option [ngValue]="Gender.Male">{{Gender[Gender.Male] | translate}}</option>
+                    <option [ngValue]="Gender.Female">{{Gender[Gender.Female] | translate}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="umur">Umur</label>
+                <input type="text" class="form-control" id="formSubjectUmur" aria-describedby="umurHelp" placeholder="Masukan umur" [(ngModel)]="toraSubject.age"
+                    name="age">
+                <small id="umurlHelp" class="form-text text-muted"></small>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="pendidikan">Pendidikan</label>
+                <select id="inputState" class="form-control" [(ngModel)]="toraSubject.educationalAttainment" name="educationalAttainment">
+                    <option [ngValue]="null">Pilih Jenjang Pendidikan</option>
+                    <option [ngValue]="EducationalAttainment.Uneducated">{{EducationalAttainment[EducationalAttainment.Uneducated] | translate}}</option>
+                    <option [ngValue]="EducationalAttainment.ElementarySchool">{{EducationalAttainment[EducationalAttainment.ElementarySchool] | translate}}</option>
+                    <option [ngValue]="EducationalAttainment.JuniorHighSchool">{{EducationalAttainment[EducationalAttainment.JuniorHighSchool] | translate}}</option>
+                    <option [ngValue]="EducationalAttainment.SeniorHighSchool">{{EducationalAttainment[EducationalAttainment.SeniorHighSchool] | translate}}</option>
+                    <option [ngValue]="EducationalAttainment.BachelorDegree">{{EducationalAttainment[EducationalAttainment.BachelorDegree] | translate}}</option>
+                    <option [ngValue]="EducationalAttainment.MasterDegree">{{EducationalAttainment[EducationalAttainment.MasterDegree] | translate}}</option>
+                    <option [ngValue]="EducationalAttainment.DoctorateDegree">{{EducationalAttainment[EducationalAttainment.DoctorateDegree] | translate}}</option>
+                    <option [ngValue]="EducationalAttainment.Others">{{EducationalAttainment[EducationalAttainment.Others] | translate}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="jumlahAnggotaKeluarga">Jumlah Keluarga</label>
+                <input type="text" class="form-control" id="formSubjectAnggotaKeluarga" aria-describedby="anggotaKeluargaHelp" placeholder="Masukan jumlah keluarga"
+                    [(ngModel)]="toraSubject.totalFamilyMembers" name="totalFamilyMembers">
+                <small id="pendidikanHelp" class="form-text text-muted"></small>
+            </div>
+            <div class="form-group col-md-8">
+                <label for="statusTanah">Status Tanah</label>
+                <input type="text" class="form-control" id="formSubjectStatusTanah" aria-describedby="statusTanahHelp" placeholder="Masukan status tanah"
+                    [(ngModel)]="LandStatus[toraSubject.landStatus]" name="landStatus">
+                <small id="statusTanahHelp" class="form-text text-muted"></small>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="lokasiLahanGarapan">Lokasi Lahan Garapan</label>
+                <textarea class="form-control" id="formSubjectLokasiLahanGarapan" rows="3" [(ngModel)]="toraSubject.landLocation" name="landLocation"></textarea>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="Luas">Luas</label>
+                <input type="text" class="form-control" id="formSubjectLuas" aria-describedby="luasHelp" placeholder="Luas" [(ngModel)]="toraSubject.size"
+                    name="size">
+                <small id="statusTanahHelp" class="form-text text-muted"></small>
+            </div>
+            <div class="form-group col-md-8">
+                <label for="Luas">Jenis Tanaman</label>
+                <input type="text" class="form-control" id="formSubjectJenisTanaman" aria-describedby="jenisTanamanHelp" placeholder="Masukan jenis tanaman"
+                    [(ngModel)]="toraSubject.plantTypes" name="plantTypes">
+                <small id="jenisTanamanHelp" class="form-text text-muted"></small>
+            </div>
+            <div class="form-group col-md-8">
+                <button type="button" class="btn btn-primary">Simpan Data Subjek</button>
+                <button type="button" class="btn btn-secondary">Clear Data</button>
+            </div>
+        </div>
+    </form>
+</div>
