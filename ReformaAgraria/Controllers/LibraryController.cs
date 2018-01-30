@@ -62,8 +62,8 @@ namespace ReformaAgraria.Controllers
                     System.IO.File.Delete(file);
                 }
             }
-
-            return Delete(id);
+            
+            return base.Delete(id);
         }        
     }
 }
