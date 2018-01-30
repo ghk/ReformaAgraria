@@ -22,26 +22,20 @@
                         Nama Dokumen
                     </th>
                     <th class="text-center">
-                        Tanggal Upload
+                        Tanggal Unggah
                     </th>
                     <th class="text-center">
-                        Tanggal Download
+                        Tanggal Ubah
                     </th>
-                    <th></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let lib of library; let i = index">
                     <td class="text-center">{{i + 1}}</td>
-                    <td class="text-left">{{lib.title}}</td>
+                    <td class="text-left"><a href="javascript:void(0)" (click)="onDownload(lib.id, lib.title, lib.fileExtension)">{{lib.title}}{{lib.fileExtension}}</a></td>
                     <td class="text-center">{{lib.dateCreated | date: 'dd MMM yyyy'}}</td>
                     <td class="text-center">{{lib.dateModified | date: 'dd MMM yyyy'}}</td>
-                    <td>
-                        <button type="button" class="btn btn-link" (click)="download(lib.id, lib.title, lib.fileExtension)">
-                            <span class="oi oi-data-transfer-download" title="Download"></span>
-                        </button>
-                    </td>
                     <td>
                         <button data-toggle="modal" data-target="#deleteModal" type="button" class="btn btn-link">
                             <span class="oi oi-trash" title="Delete" (click)="delete(lib.id)"></span>
@@ -69,7 +63,7 @@
             <div class="modal-body">
                 <div class="col-12">
                     <div class="form-group col-md-12">
-                        <input type="Text" class="form-control" id="inputTitle" placeholder="Judul Dokumen" required [(ngModel)]="model.title" name="title">
+                        <input type="Text" class="form-control" id="inputTitle" placeholder="Deskripsi" required [(ngModel)]="model.title" name="title">
                     </div>
                     <div class="form-group col-md-12">
                         <label class="custom-file">
