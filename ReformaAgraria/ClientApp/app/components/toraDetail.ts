@@ -5,6 +5,7 @@ import { Progress } from "angular-progress-http";
 import { saveAs } from 'file-saver';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
+import { ToastrService } from 'ngx-toastr';
 
 import { ModalToraObjectFormComponent } from './modals/toraObjectForm';
 import { ModalToraSubjectFormComponent } from './modals/toraSubjectForm';
@@ -44,11 +45,13 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
     Status = Status;
     subscription: Subscription; 
     toraObjectId: number;
+    toraSubjectId: number;
     toraObject: ToraObject;
     toraSubjects: ToraSubject[];
     progress: Progress;
 
     constructor(
+        private toastr: ToastrService,
         private route: ActivatedRoute,
         private modalService: BsModalService,
         private sharedService: SharedService,
@@ -127,7 +130,25 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
                     this.toraObjectModalRef.hide();                  
                 }
             });        
-    }    
+    }  
+
+    onDelete(id) {
+        this.toraSubjectId = id;
+    }
+
+    onConfirmDelete() {
+        this.toraSubjectService.deleteById(this.toraSubjectId)
+            .subscribe(
+            data => {
+                this.toastr.success('Data is successfully deleted.', null);
+                this.getData(this.toraObjectId);
+                (<any>$('#deleteModal')).modal('hide');
+            },
+            error => {
+                this.toastr.error(error, null);
+            });
+    }
+
 
     onShowToraSubjectForm(toraSubject: ToraSubject): void {
         this.toraSubjectModalRef = this.modalService.show(ModalToraSubjectFormComponent, { 'class': 'modal-lg' });
