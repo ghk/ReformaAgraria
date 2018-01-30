@@ -6,7 +6,15 @@
                 <thead>
                     <tr>
                         <th (click)="sort('region.name')" style="cursor: pointer;">
-                            {{ region?.name }}
+                            <ng-container *ngIf="region?.type == 2">
+                                Kecamatan
+                            </ng-container>
+                            <ng-container *ngIf="region?.type == 3">
+                                Desa
+                            </ng-container>
+                            <ng-container *ngIf="region?.type == 4">
+                                {{ region?.name }}
+                            </ng-container>
                             <ng-container *ngIf="order.includes('region.name')">
                                 <span [hidden]="order.startsWith('-')">▲</span>
                                 <span [hidden]="!order.startsWith('-')">▼</span>

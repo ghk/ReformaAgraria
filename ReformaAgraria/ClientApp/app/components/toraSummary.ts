@@ -18,6 +18,7 @@ export class ToraSummaryComponent implements OnInit, OnDestroy {
     region: Region;
     loading: boolean = true;    
     order: string = "region.name";
+    RegionType: RegionType;
 
     constructor(
         private regionService: RegionService,
