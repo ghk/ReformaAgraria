@@ -1,11 +1,12 @@
 ﻿import { Injectable } from '@angular/core';
-import { Response, RequestOptions } from '@angular/http';
+import { Response, ResponseContentType } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
 import { ToraMap } from '../../models/gen/toraMap';
+import { ImportToraMapViewModel } from '../../models/gen/importToraMapViewModel';
 import { EnvironmentService } from '../../services/environment';
 import { CrudService } from '../../services/crud';
 import { RequestHelper } from '../../helpers/request';
@@ -22,7 +23,7 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         private cookieService: CookieService,
         private environmentService: EnvironmentService) { 
         this.serverUrl = this.environmentService.getEnvironment().serverUrl;
-    } 
+    }
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<ToraMap>> { 
         let options = RequestHelper.getRequestOptions(this.cookieService, query);
@@ -68,9 +69,8 @@ export class ToraMapService implements CrudService<ToraMap, number>{
 
         return request.map(res => res.json()).catch(this.handleError);
     }
-    
+
     public createOrUpdate(model: ToraMap, progressListener?: any): Observable<number> {
-        let method = 'POST';
         if (!model['id']) {
             return this.create(model, progressListener);
         } else if (model['id']) {
@@ -121,6 +121,38 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         );
 
         return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public import(model: FormData, progressListener?: any): Observable<ToraMap> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+        options.headers.delete('Content-Type');                
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'toramap', 'import'),
+            model,
+            null,
+            progressListener,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public download(id: number, query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+        options.responseType = ResponseContentType.Blob;                
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'toramap', 'download', id),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.catch(this.handleError)
     }
     
     private handleError(error: Response | any) {

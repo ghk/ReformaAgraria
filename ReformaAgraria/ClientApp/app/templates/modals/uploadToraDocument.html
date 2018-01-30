@@ -11,7 +11,7 @@
             <div class="form-group col-md-12">
                 <form>
                     <div class="form-group">
-                        <input type="file" class="form-control-file" accept=".xls,.xlsx" (change)="onFileSelected($event.target.files[0])">
+                        <input type="file" class="form-control-file" accept=".xls,.xlsx" (change)="onChangeFile($event.target.files[0])">
                         <small class="form-text text-muted">
                             File yang di upload harus berupa Ms.Excel (.xls .xlsx)
                         </small>

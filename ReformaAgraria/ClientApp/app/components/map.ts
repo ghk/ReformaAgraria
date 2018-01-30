@@ -3,11 +3,11 @@ import { ColorPickerService } from 'angular4-color-picker';
 import { ToastrService } from 'ngx-toastr';
 
 import { SharedService } from "../services/shared";
+import { RegionService } from "../services/gen/region";
 import { BaseLayerService } from '../services/gen/baseLayer';
-import { MapService } from '../services/map';
 import { ToraMapService } from "../services/gen/toraMap";
 import { ToraObjectService } from "../services/gen/toraObject";
-import { RegionService } from "../services/gen/region";
+
 import { ToraMap } from "../models/gen/toraMap";
 import { BaseLayer } from '../models/gen/baseLayer';
 import { MapUtils } from '../helpers/mapUtils';
@@ -46,7 +46,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
     constructor(
         private baseLayerService: BaseLayerService,
-        private mapService: MapService,
         private toastr: ToastrService,
         private cpService: ColorPickerService,
         private sharedService: SharedService,
@@ -81,7 +80,6 @@ export class MapComponent implements OnInit, OnDestroy {
         this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
             this.applyOverlayTora(data);
         });   
-
     }
 
     ngOnDestroy() {
@@ -139,9 +137,6 @@ export class MapComponent implements OnInit, OnDestroy {
                     '<tr><td>Desa</td><td>:</td><td>' + data.region.name + '</td></tr>' +
                     '<tr><td>Luas</td><td>:</td><td>' + data.toraObject.size + ' ha</td></tr>' +
                     '<tr><td>Jumlah Penduduk</td><td>:</td><td>' + data.toraObject.totalTenants + '</td></tr></tbody></table>');
-
-                layer.on('click', function (e) {
-                });
 
                 layer.addTo(this.map);
 
@@ -294,7 +289,7 @@ export class MapComponent implements OnInit, OnDestroy {
     uploadFile() {
         $("#upload-modal")['modal']("hide");
         this.model['color'] = this.color;
-        this.mapService.import(this.model)
+        this.baseLayerService.import(this.model)
             .subscribe(
             data => {
                 this.toastr.success("Upload File Berhasil", null);
@@ -306,7 +301,7 @@ export class MapComponent implements OnInit, OnDestroy {
         $("#edit-modal")['modal']("hide");
         this.model.color = this.color;
 
-        this.mapService.import(model).subscribe(data => {
+        this.baseLayerService.import(model).subscribe(data => {
             this.toastr.success("Pengeditan Berhasil", null);
             this.removeLayer(data.id);
             this.applyOverlay([data]);
@@ -397,7 +392,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     onResize = (e) => {
-        let height = e.target.innerHeight - 58;
+        let height = e.target.innerHeight - 58;        
         $("#map").height(height);
     }
 }

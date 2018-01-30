@@ -4,10 +4,11 @@ import { BsModalRef } from "ngx-bootstrap";
 import { Progress } from "angular-progress-http";
 import { ToastrService } from "ngx-toastr";
 
+import { SharedService } from "../../services/shared";
+import { ToraObjectService } from "../../services/gen/toraObject";
+
 import { Region } from "../../models/gen/region";
 import { UploadToraDocumentViewModel } from "../../models/gen/uploadToraDocumentViewModel";
-import { ToraService } from "../../services/tora";
-import { SharedService } from "../../services/shared";
 
 @Component({
     selector: 'modal-upload-tora-document',
@@ -27,7 +28,7 @@ export class ModalUploadToraDocumentComponent implements OnInit, OnDestroy {
         public bsModalRef: BsModalRef,
         private toastr: ToastrService,
         private sharedService: SharedService,
-        private toraService: ToraService
+        private toraObjectService: ToraObjectService
     ) { }
 
     ngOnInit(): void {
@@ -41,7 +42,7 @@ export class ModalUploadToraDocumentComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    onFileSelected(file: File) {
+    onChangeFile(file: File) {
         this.model.document = file;
     }
 
@@ -50,7 +51,7 @@ export class ModalUploadToraDocumentComponent implements OnInit, OnDestroy {
         formData.append('regionId', this.region.id);
         formData.append('document', this.model.document);
 
-        this.toraService.import(formData, this.progressListener.bind(this))
+        this.toraObjectService.import(formData, this.progressListener.bind(this))
             .subscribe(
             data => {
                 this.toastr.success('File is successfully uploaded')

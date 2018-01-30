@@ -51,17 +51,14 @@ import { AlertService } from './services/alert';
 import { AccountService } from './services/account';
 import { AuthGuard } from './services/authGuard';
 import { RegionService } from './services/gen/region';
-import { ToraService } from './services/tora';
 import { ToraObjectService } from './services/gen/toraObject';
 import { ToraSubjectService } from './services/gen/toraSubject';
-import { MapNavigationService } from './services/mapNavigation';
 import { BaseLayerService } from './services/gen/baseLayer';
-import { MapService } from './services/map';
 import { ToraMapService } from './services/gen/toraMap';
-import { SearchService } from './services/search';
-import { LibraryService } from './services/library';
 import { EventService } from './services/gen/event';
 import { EventTypeService } from './services/gen/eventType';
+import { LibraryService } from './services/gen/library';
+import { SearchService } from './services/gen/search';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
@@ -152,22 +149,19 @@ import './styles/app.scss';
     providers: [
         EnvironmentService,
         SharedService,
-        CookieService,
-        AccountService,
+        CookieService,        
         AlertService,
         AuthGuard,
+        AccountService,        
         RegionService,
-        ToraService,
         ToraObjectService,
         ToraSubjectService,
-        MapNavigationService,
         BaseLayerService,
-        MapService,
         ToraMapService,
-        SearchService,
-        LibraryService,
         EventService,
         EventTypeService,
+        LibraryService,
+        SearchService,
         { provide: LOCALE_ID, useValue: 'id-ID' }
     ]
 })

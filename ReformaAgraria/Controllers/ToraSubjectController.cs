@@ -25,7 +25,6 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
         }
 
-        [HttpPost("import")]
         public ToraSubject Import(List<Dictionary<string, int>> objectIdList, ExcelPackage package)
         {
             using (package)

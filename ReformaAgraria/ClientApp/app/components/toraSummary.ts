@@ -2,9 +2,9 @@
 import { Subscription } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
-import { RegionService } from '../services/gen/region';
-import { ToraService } from '../services/tora';
 import { SharedService } from '../services/shared';
+import { RegionService } from '../services/gen/region';
+import { ToraObjectService } from '../services/gen/toraObject';
 import { RegionType } from '../models/gen/regionType';
 import { Region } from '../models/gen/region';
 
@@ -22,7 +22,7 @@ export class ToraSummaryComponent implements OnInit, OnDestroy {
     constructor(
         private regionService: RegionService,
         private sharedService: SharedService,
-        private toraService: ToraService
+        private toraObjectService: ToraObjectService
     ) { }
 
     ngOnInit() {
@@ -37,7 +37,7 @@ export class ToraSummaryComponent implements OnInit, OnDestroy {
     }
 
     getToraObjectSummary(region: Region) {
-        this.toraService.getSummaries(region.id).subscribe(data => {
+        this.toraObjectService.getSummary(region.id).subscribe(data => {
             this.summaries = data;
             this.sharedService.setToraSummary(data);
             this.loading = false;

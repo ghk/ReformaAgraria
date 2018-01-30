@@ -13,6 +13,7 @@ namespace ReformaAgraria.Models
 
         public string Name { get; set; }
 
+        [Column(TypeName = "jsonb")]
         public string Geojson { get; set; }
 
         public decimal Size { get; set; }

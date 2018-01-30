@@ -49,6 +49,7 @@ namespace ReformaAgraria.Helpers
             var features = GetFeatureCollection(reader);
             var projection = GetProjection(shapefilePath);
             features = TopologyHelper.TransformProjection(features, projection, GeographicCoordinateSystem.WGS84);
+            features.CRS = new NamedCRS("urn:ogc:def:crs:OGC:1.3:CRS84");
             return features;
         }
 
@@ -89,6 +90,7 @@ namespace ReformaAgraria.Helpers
                 var features = GetFeatureCollection(reader);
                 var projection = GetProjection(projectionEntry);
                 features = TopologyHelper.TransformProjection(features, projection, GeographicCoordinateSystem.WGS84);
+                features.CRS = new NamedCRS("urn:ogc:def:crs:OGC:1.3:CRS84");
                 return features;
             }
         }
@@ -131,9 +133,6 @@ namespace ReformaAgraria.Helpers
         public static FeatureCollection TransformProjection(
             FeatureCollection features, ICoordinateSystem source, ICoordinateSystem dest)
         {
-            if (dest == GeographicCoordinateSystem.WGS84)
-                features.CRS = new NamedCRS("urn:ogc:def:crs:OGC:1.3:CRS84");
-
             var transformer = GetCoordinateTransformer(source, dest);
             
             foreach (var feature in features.Features)

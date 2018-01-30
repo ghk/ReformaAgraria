@@ -19,15 +19,6 @@ namespace MicrovacWebCore
 
         public CrudController(DbContext dbContext) : base(dbContext) { }
 
-        [HttpDelete("{id}")]
-        public virtual TId Delete(TId id)
-        {
-            var model = new TModel { Id = id };            
-            dbContext.Entry(model).State = EntityState.Deleted;
-            dbContext.SaveChanges();
-            return model.Id;
-        }
-
         [HttpPost]
         public virtual TId Post([FromBody] TModel model)
         {
@@ -61,6 +52,15 @@ namespace MicrovacWebCore
             dbContext.Entry(model).State = EntityState.Modified;
             dbContext.SaveChanges();
             PostPersist(model);
+            return model.Id;
+        }
+
+        [HttpDelete("{id}")]
+        public virtual TId Delete(TId id)
+        {
+            var model = new TModel { Id = id };
+            dbContext.Entry(model).State = EntityState.Deleted;
+            dbContext.SaveChanges();
             return model.Id;
         }
 

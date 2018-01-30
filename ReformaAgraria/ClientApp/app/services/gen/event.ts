@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Response, RequestOptions } from '@angular/http';
+import { Response, ResponseContentType } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
@@ -22,7 +22,7 @@ export class EventService implements CrudService<Event, number>{
         private cookieService: CookieService,
         private environmentService: EnvironmentService) { 
         this.serverUrl = this.environmentService.getEnvironment().serverUrl;
-    } 
+    }
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<Event>> { 
         let options = RequestHelper.getRequestOptions(this.cookieService, query);
@@ -68,9 +68,8 @@ export class EventService implements CrudService<Event, number>{
 
         return request.map(res => res.json()).catch(this.handleError);
     }
-    
+
     public createOrUpdate(model: Event, progressListener?: any): Observable<number> {
-        let method = 'POST';
         if (!model['id']) {
             return this.create(model, progressListener);
         } else if (model['id']) {

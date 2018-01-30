@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { saveAs } from 'file-saver';
 
-import { MapNavigationService } from '../services/mapNavigation';
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { ToraMapService } from '../services/gen/toraMap';
 import { ToraObjectService } from '../services/gen/toraObject';
 import { BaseLayerService } from "../services/gen/baseLayer";
-import { ToastrService } from 'ngx-toastr';
-import { saveAs } from 'file-saver';
 
 import { RegionType } from '../models/gen/regionType';
 import { Region } from "../models/gen/region";
@@ -62,7 +61,6 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     desa: Region;
 
     constructor(
-        private mapNavigationService: MapNavigationService,
         private toastr: ToastrService,
         private sharedService: SharedService,
         private regionService: RegionService,
@@ -108,13 +106,15 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                 this.kecamatanList = [region];                     
             });
         }
+
         if (region.type === RegionType.Kecamatan) {            
             this.kecamatanList = [region];
             let desaQuery = { data: { 'type': 'getAllByParent', 'parentId': region.id } };
             this.regionService.getAll(desaQuery, null).subscribe(regions => {
                 this.desaList = regions;                
             });
-        }            
+        }  
+
         if (region.type === RegionType.Kabupaten) {
             let kecamatanQuery = { data: { 'type': 'getAllByParent', 'parentId': region.id } };
             this.regionService.getAll(kecamatanQuery, null).subscribe(regions => {
@@ -169,28 +169,39 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         this.downloadModel.tora = null;
     }    
 
-    onUploadFormSubmit() {
-        $("#upload-modal")['modal']("hide");
-        this.mapNavigationService.import(this.uploadModel)
-            .subscribe(data => {
+    onSubmitUploadForm() {
+        $("#upload-modal")['modal']("hide");        
+        
+        let formData = new FormData();
+        formData.append("toraObjectId", this.uploadModel.tora.id);
+        formData.append("toraObjectName", this.uploadModel.tora.name);
+        formData.append("regionId", this.uploadModel.desa.id);
+        formData.append("file", this.uploadModel.file);
+
+        this.toraMapService.import(formData).subscribe(
+            data => {
                 this.toastr.success("Upload File Berhasil", null);
                 let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
                 this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
                     this.applyOverlayTora(data);
                 });   
                 this.clearModal();
-            });
+            },
+            error => {
+                this.toastr.error("Ada kesalahan dalam upload", null);
+            }
+        );
     }
 
-    onDownloadFormSubmit() {
-        this.mapNavigationService.download(this.downloadModel.tora.id).subscribe(data => {
+    onSubmitDownloadForm() {
+        this.toraMapService.download(this.downloadModel.tora.id).subscribe(data => {
             let blob = new Blob([data.blob()], { type: 'application/zip' });
             saveAs(blob, this.downloadModel.tora.id + '.zip');
         });
     }
 
-    onChangeFile(event) {
-        this.uploadModel.file = event.srcElement.files;
+    onSelectFile(file: File) {
+        this.uploadModel.file = file;
     }
    
     clearModal() {      

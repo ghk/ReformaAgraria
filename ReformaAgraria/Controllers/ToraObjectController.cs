@@ -37,14 +37,6 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
             _tsLogger = tsLogger;
         }
-
-        public class DashboardData
-        {
-            public Region Region { get; set; }
-            public decimal TotalSize { get; set; }
-            public int TotalToraObjects { get; set; }
-            public int TotalToraSubjects { get; set; }
-        }
        
         [HttpPost("import")]
         public ToraObject Import([FromForm]UploadToraDocumentViewModel document)
@@ -179,14 +171,9 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpGet("export/{id}")]
-        public async Task<IActionResult> Export(int id)
+        public async Task<FileStreamResult> Export(int id)
         {
-            var objectModel = dbContext.Set<ToraObject>().FirstOrDefault(t => t.Id == id);
-            if (objectModel == null)
-                return NotFound(new RequestResult {
-                    State = RequestState.Failed,
-                    Message = "TORA object not found"
-                });
+            var objectModel = dbContext.Set<ToraObject>().FirstOrDefault(t => t.Id == id);           
 
             var region = dbContext.Set<Region>()
                 .Include(r => r.Parent)
@@ -218,11 +205,11 @@ namespace ReformaAgraria.Controllers
                     worksheet.Cells["D6"].Value = region.Parent.Parent.Name;
                     worksheet.Cells["D7"].Value = objectModel.Size;
                     worksheet.Cells["D8"].Value = objectModel.TotalTenants;
-                    worksheet.Cells["D9"].Value = Translate(objectModel.RegionalStatus.ToString());
-                    worksheet.Cells["D10"].Value = Translate(objectModel.LandType);
+                    worksheet.Cells["D9"].Value = TranslateHelper.Translate(objectModel.RegionalStatus.ToString());
+                    worksheet.Cells["D10"].Value = TranslateHelper.Translate(objectModel.LandType);
                     worksheet.Cells["D11"].Value = objectModel.Livelihood;
                     worksheet.Cells["D12"].Value = objectModel.ProposedTreatment;
-                    worksheet.Cells["D14"].Value = Translate(objectModel.LandStatus.ToString());
+                    worksheet.Cells["D14"].Value = TranslateHelper.Translate(objectModel.LandStatus.ToString());
                     worksheet.Cells["C16"].Value = objectModel.LandTenureHistory;
                     worksheet.Cells["D19"].Value = objectModel.ConflictChronology;
                     worksheet.Cells["D21"].Value = objectModel.FormalAdvocacyProgress;
@@ -235,13 +222,13 @@ namespace ReformaAgraria.Controllers
 
                         worksheet2.Cells["A" + (row + i).ToString()].Value = i + 1;
                         worksheet2.Cells["B" + (row + i).ToString()].Value = subjectModel[i].Name;
-                        worksheet2.Cells["C" + (row + i).ToString()].Value = Translate(subjectModel[i].MaritalStatus.ToString());
+                        worksheet2.Cells["C" + (row + i).ToString()].Value = TranslateHelper.Translate(subjectModel[i].MaritalStatus.ToString());
                         worksheet2.Cells["D" + (row + i).ToString()].Value = subjectModel[i].Address.ToString();
-                        worksheet2.Cells["E" + (row + i).ToString()].Value = Translate(subjectModel[i].Gender.ToString());
+                        worksheet2.Cells["E" + (row + i).ToString()].Value = TranslateHelper.Translate(subjectModel[i].Gender.ToString());
                         worksheet2.Cells["F" + (row + i).ToString()].Value = subjectModel[i].Age;
-                        worksheet2.Cells["G" + (row + i).ToString()].Value = Translate(subjectModel[i].EducationalAttainment.ToString());
+                        worksheet2.Cells["G" + (row + i).ToString()].Value = TranslateHelper.Translate(subjectModel[i].EducationalAttainment.ToString());
                         worksheet2.Cells["H" + (row + i).ToString()].Value = subjectModel[i].TotalFamilyMembers;
-                        worksheet2.Cells["I" + (row + i).ToString()].Value = Translate(subjectModel[i].LandStatus.ToString());
+                        worksheet2.Cells["I" + (row + i).ToString()].Value = TranslateHelper.Translate(subjectModel[i].LandStatus.ToString());
                         worksheet2.Cells["J" + (row + i).ToString()].Value = subjectModel[i].LandLocation;
                         worksheet2.Cells["K" + (row + i).ToString()].Value = subjectModel[i].Size;
                         worksheet2.Cells["L" + (row + i).ToString()].Value = subjectModel[i].PlantTypes;
@@ -254,95 +241,12 @@ namespace ReformaAgraria.Controllers
 
             outputStream.Position = 0;
             return File(outputStream, "application/xlsx", "tora.xlsx");
-        }
-
-        public string Translate(string word)
-        {
-            switch (word)
-            {
-                case "Uneducated":
-                    return "Tidak Sekolah";
-                case "ElementarySchool":
-                    return "SD dan Sederajat";
-                case "JuniorHighSchool":
-                    return "SMP dan Sederajat";
-                case "SeniorHighSchool":
-                    return "SMA dan Sederajat";
-                case "BachelorDegree":
-                    return "S1";
-                case "MasterDegree":
-                    return "S2";
-                case "DoctorateDegree":
-                    return "S3";
-                case "Male":
-                    return "Pria";
-                case "Female":
-                    return "Wanita";
-                case "Government":
-                    return "Pemerintah";
-                case "Private":
-                    return "Swasta";
-                case "Gift":
-                    return "Pemberian";
-                case "Inheritage":
-                    return "Warisan";
-                case "Flat":
-                    return "Datar";
-                case "Sloping":
-                    return "Landai";
-                case "Hill":
-                    return "Perbukitan";
-                case "Mountain":
-                    return "Pegunungan";
-                case "Single":
-                    return "Belum Menikah";
-                case "Married":
-                    return "Menikah";
-                case "Divorced":
-                    return "Cerai";
-                case "ReleaseOfForestArea":
-                    return "Pelepasan Area Hutan";
-                case "CustomaryForest":
-                    return "Hutan Adat";
-                case "RedistributionOfLand":
-                    return "Redistribusi Lahan";
-                case "LegalizationOfAssets":
-                    return "Legalisasi Aset";
-                case "Forest":
-                    return "Hutan";
-                case "NonForest":
-                    return "Non Hutan";
-                case "Proposal":
-                    return "Pengajuan";
-                case "Verification":
-                    return "Verifikasi";
-                case "Act":
-                    return "Penetapan";
-                case "Identification":
-                    return "Identifikasi";
-                case "DeliberationWithinVillage":
-                    return "Musyawarah Desa";
-                case "DeliberationAmongVillages":
-                    return "Musyawarah Antar Desa";
-                case "CoordinationMeetingRaTaskForce":
-                    return "Rapat Koordinasi Gugus Tugas RA";
-                case "ProposalOfObjectSubjectToraAct":
-                    return "Pengajuan Penetapan Objek Subjek Tora";
-                case "PublicationOfPermissionFromAtrbpnOrLhk":
-                    return "Publikasi Izin dar Atrbpn atau Lhk";
-                case "Others":
-                    return "Lainnya";
-                case "NotSpecified":
-                    return "Tidak Disebutkan";
-                default:
-                    return word;
-            }
-        }
+        }      
 
         [HttpGet("summary/{id}")]
-        public List<DashboardData> GetSummary(string id)
+        public List<DashboardDataViewModel> GetSummary(string id)
         {
-            var results = new List<DashboardData>();
+            var results = new List<DashboardDataViewModel>();
             var region = dbContext.Set<Region>().First(r => r.Id == id);
             var children = dbContext.Set<Region>()
                 .Where(r => r.FkParentId == id)
@@ -367,7 +271,7 @@ namespace ReformaAgraria.Controllers
                         .Where(ts => toraObjectIds.Contains(ts.FkToraObjectId))
                         .Count();
 
-                var dashboardData = new DashboardData
+                var dashboardData = new DashboardDataViewModel
                 {
                     Region = children.First(c => c.Id == toraObject.Data.Key),
                     TotalSize = toraObject.Data.Sum(t => t.Size),
@@ -380,7 +284,7 @@ namespace ReformaAgraria.Controllers
 
             var finalResult = children
                 .Select(c => results.FirstOrDefault(g => g.Region.Id == c.Id)
-                   ?? new DashboardData { Region = c })
+                   ?? new DashboardDataViewModel { Region = c })
                 .ToList();
 
             return finalResult;

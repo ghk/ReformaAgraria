@@ -24,6 +24,7 @@ using NetTopologySuite.Features;
 using System.Collections;
 using GeoAPI.Geometries;
 using ReformaAgraria.Helpers;
+using ReformaAgraria.Models.ViewModels;
 
 namespace ReformaAgraria.Controllers
 {
@@ -46,15 +47,15 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("import")]
-        public async Task<ToraMap> Import()
-        {
-            var results = await HttpContext.Request.ReadFormAsync();
-            var toraObjectId = int.Parse(results["toraObjectId"]);
-            var toraMap = dbContext.Set<ToraMap>().Where(tm => tm.FkToraObjectId == toraObjectId).FirstOrDefault();
+        public async Task<ToraMap> Import([FromForm]ImportToraMapViewModel model)
+        {                       
+            var toraMap = dbContext.Set<ToraMap>()
+                .Where(tm => tm.FkToraObjectId == model.ToraObjectId)
+                .FirstOrDefault();
 
             if (toraMap == null)
             {
-                toraMap = new ToraMap { FkToraObjectId = toraObjectId };
+                toraMap = new ToraMap { FkToraObjectId = model.ToraObjectId };
                 dbContext.Entry(toraMap).State = EntityState.Added;
             }
             else
@@ -62,37 +63,32 @@ namespace ReformaAgraria.Controllers
                 dbContext.Entry(toraMap).State = EntityState.Modified;
             }
 
-            toraMap.FkRegionId = results["regionId"];
-            toraMap.Name = results["toraObjectName"];
+            toraMap.FkRegionId = model.RegionId;
+            toraMap.Name = model.ToraObjectName;
 
-            var file = results.Files[0];
-            var features = TopologyHelper.GetFeatureCollectionWgs84(file);
+            var features = TopologyHelper.GetFeatureCollectionWgs84(model.File);
             toraMap.Geojson = TopologyHelper.GetGeojson(features);
             toraMap.Size = TopologyHelper.GetArea(features);
 
             await dbContext.SaveChangesAsync();
 
             var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
-            var regionDirectoryPath = Path.Combine(toraMapDirectoryPath, results["regionId"]);
+            var regionDirectoryPath = Path.Combine(toraMapDirectoryPath, model.RegionId);
             var destinationFilePath = Path.Combine(regionDirectoryPath, toraMap.Id + ".zip");
-            IOHelper.StreamCopy(destinationFilePath, file);           
+            IOHelper.StreamCopy(destinationFilePath, model.File);           
 
             return toraMap;
         }       
 
         [HttpGet("download/{id}")]
-        public async Task<IActionResult> Download(int id)
+        public async Task<FileStreamResult> Download(int id)
         {
             var toraMap = await dbContext.Set<ToraMap>()
                 .Where(tm => tm.Id == id)
                 .FirstOrDefaultAsync();
 
-            if (toraMap == null)
-                return NotFound(new RequestResult
-                {
-                    State = RequestState.Failed,
-                    Message = "TORA map not found"
-                });
+            //if (toraMap == null)
+                // TODO: Throw Exception
             
             var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
             var toraMapPath = Path.Combine(toraMapDirectoryPath, toraMap.FkRegionId, toraMap.Id + ".zip");

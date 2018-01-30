@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Response, RequestOptions } from '@angular/http';
+import { Response, ResponseContentType } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
@@ -7,13 +7,13 @@ import { CookieService } from 'ngx-cookie-service';
 import { Query } from '../../models/query';
 import { Region } from '../../models/gen/region';
 import { EnvironmentService } from '../../services/environment';
-import { CrudService } from '../../services/crud';
+
 import { RequestHelper } from '../../helpers/request';
 
 import * as urljoin from 'url-join';
 
 @Injectable()
-export class RegionService implements CrudService<Region, string>{        
+export class RegionService {        
 
     private serverUrl: string;
    
@@ -22,7 +22,7 @@ export class RegionService implements CrudService<Region, string>{
         private cookieService: CookieService,
         private environmentService: EnvironmentService) { 
         this.serverUrl = this.environmentService.getEnvironment().serverUrl;
-    } 
+    }
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<Region>> { 
         let options = RequestHelper.getRequestOptions(this.cookieService, query);

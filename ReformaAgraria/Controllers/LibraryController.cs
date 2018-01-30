@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using System.Net;
 using System.Collections.Generic;
+using ReformaAgraria.Models.ViewModels;
+using ReformaAgraria.Helpers;
 
 namespace ReformaAgraria.Controllers
 {
@@ -26,40 +28,31 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<Library> Upload()
-        {
-            var results = HttpContext.Request.ReadFormAsync().Result;
+        public async Task<Library> Upload([FromForm]ImportLibraryViewModel model)
+        {            
             var content = new Library
             {
-                Title = results["title"],
+                Title = model.Title,
+                FileExtension = Path.GetExtension(model.File.FileName),
                 DateCreated = DateTime.Now,
                 DateModified = DateTime.Now
             };
-            var file = results.Files[0];
-            content.FileExtension = '.' + file.FileName.Split('.')[1].ToString();
-            
+
             dbContext.Add(content);
             await dbContext.SaveChangesAsync();
 
             var webRootPath = Path.Combine(_hostingEnvironment.WebRootPath, "library");
-            ValidateAndCreateFolder(webRootPath);
             var destinationFile = Path.Combine(webRootPath, (content.Id.ToString() + "_" + content.Title + content.FileExtension));
-            StreamCopy(destinationFile, file);
+            IOHelper.StreamCopy(destinationFile, model.File);
 
             return content;
         }
 
-        [HttpPost("delete")]
-        public void Delete()
-        {
-            var results = HttpContext.Request.ReadFormAsync().Result;
-            var content = new Library
-            {
-                Id = Int32.Parse(results["id"])
-            };
+        [HttpDelete("delete/{id}")]
+        public override int Delete(int id)
+        {           
             var webRootPath = Path.Combine(_hostingEnvironment.WebRootPath, "library");
-
-            string fileName = content.Id + "_";
+            string fileName = id + "_";
             string[] Files = Directory.GetFiles(webRootPath);
 
             foreach (string file in Files)
@@ -70,24 +63,7 @@ namespace ReformaAgraria.Controllers
                 }
             }
 
-            Delete(content.Id);
-        }
-
-        private string ValidateAndCreateFolder(string path)
-        {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            return path;
-        }
-
-        private void StreamCopy(string filePath, IFormFile file)
-        {
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-        }
+            return Delete(id);
+        }        
     }
 }

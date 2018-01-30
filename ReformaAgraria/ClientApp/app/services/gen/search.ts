@@ -5,7 +5,7 @@ import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
-import { EventType } from '../../models/gen/eventType';
+import { SearchViewModel } from '../../models/gen/searchViewModel';
 import { EnvironmentService } from '../../services/environment';
 
 import { RequestHelper } from '../../helpers/request';
@@ -13,7 +13,7 @@ import { RequestHelper } from '../../helpers/request';
 import * as urljoin from 'url-join';
 
 @Injectable()
-export class EventTypeService {        
+export class SearchService {        
 
     private serverUrl: string;
    
@@ -23,47 +23,34 @@ export class EventTypeService {
         private environmentService: EnvironmentService) { 
         this.serverUrl = this.environmentService.getEnvironment().serverUrl;
     }
-
-    public getAll(query?: Query, progressListener?: any): Observable<Array<EventType>> { 
-        let options = RequestHelper.getRequestOptions(this.cookieService, query);
+    
+    public search(keywords: string, query?: Query, progressListener?: any): Observable<SearchViewModel[]> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'eventtype'),            
+            urljoin(this.serverUrl, 'search', encodeURIComponent(keywords)),
             null,
             progressListener,
-            null
+            null,
         );
 
         return request.map(res => res.json()).catch(this.handleError);
     }
-
-    public count(query?: Query, progressListener?: any): Observable<number> { 
-        let options = RequestHelper.getRequestOptions(this.cookieService, query);
+    
+    public searchRegion(keywords: string, query?: Query, progressListener?: any): Observable<SearchViewModel[]> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'eventtype', 'count'),
+            urljoin(this.serverUrl, 'search', 'region', encodeURIComponent(keywords)),
             null,
             progressListener,
-            null
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-
-    public getById(id: string, query?: Query, progressListener?: any): Observable<EventType> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, query);
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'GET',
-            urljoin(this.serverUrl, 'eventtype', id),
             null,
-            progressListener,
-            null
         );
 
         return request.map(res => res.json()).catch(this.handleError);

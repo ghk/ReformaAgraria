@@ -1,11 +1,12 @@
 ﻿import { Injectable } from '@angular/core';
-import { Response, RequestOptions } from '@angular/http';
+import { Response, ResponseContentType } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
 import { Library } from '../../models/gen/library';
+import { ImportLibraryViewModel } from '../../models/gen/importLibraryViewModel';
 import { EnvironmentService } from '../../services/environment';
 import { CrudService } from '../../services/crud';
 import { RequestHelper } from '../../helpers/request';
@@ -22,7 +23,7 @@ export class LibraryService implements CrudService<Library, number>{
         private cookieService: CookieService,
         private environmentService: EnvironmentService) { 
         this.serverUrl = this.environmentService.getEnvironment().serverUrl;
-    } 
+    }
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<Library>> { 
         let options = RequestHelper.getRequestOptions(this.cookieService, query);
@@ -68,9 +69,8 @@ export class LibraryService implements CrudService<Library, number>{
 
         return request.map(res => res.json()).catch(this.handleError);
     }
-    
+
     public createOrUpdate(model: Library, progressListener?: any): Observable<number> {
-        let method = 'POST';
         if (!model['id']) {
             return this.create(model, progressListener);
         } else if (model['id']) {
@@ -118,6 +118,38 @@ export class LibraryService implements CrudService<Library, number>{
             null,
             null,
             progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public upload(model: FormData, progressListener?: any): Observable<Library> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+        options.headers.delete('Content-Type');                
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'library', 'upload'),
+            model,
+            null,
+            progressListener,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public delete(id: number, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'DELETE',
+            urljoin(this.serverUrl, 'library', 'delete', id),
+            null,
+            progressListener,
+            null,
         );
 
         return request.map(res => res.json()).catch(this.handleError);

@@ -1,15 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
 
-import { ToraService } from '../services/tora';
+import { ModalUploadToraDocumentComponent } from './modals/uploadToraDocument';
+import { ModalToraObjectFormComponent } from './modals/toraObjectForm';
+
 import { SharedService } from '../services/shared';
+import { RegionService } from "../services/gen/region";
 import { ToraObjectService } from '../services/gen/toraObject';
 import { ToraSubjectService } from "../services/gen/toraSubject";
-import { RegionService } from "../services/gen/region";
 import { LandStatus } from '../models/gen/landStatus';
 import { Status } from '../models/gen/status';
 import { RegionalStatus } from '../models/gen/regionalStatus';
@@ -17,12 +18,9 @@ import { EducationalAttainment } from '../models/gen/educationalAttainment';
 import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
 import { Query } from '../models/query';
+import { ToraObject } from '../models/gen/toraObject';
 
 import * as $ from 'jquery';
-
-import { ModalUploadToraDocumentComponent } from './modals/uploadToraDocument';
-import { ModalToraObjectFormComponent } from './modals/toraObjectForm';
-import { ToraObject } from '../models/gen/toraObject';
 
 @Component({
     selector: 'ra-tora-list',
@@ -60,11 +58,9 @@ export class ToraListComponent implements OnInit, OnDestroy {
     state: string;
 
     constructor(
-        private cookieService: CookieService,
         private toastr: ToastrService,
         private modalService: BsModalService,
         private sharedService: SharedService,
-        private toraService: ToraService,
         private toraObjectService: ToraObjectService,        
         private regionService: RegionService,
         private toraSubjectService: ToraSubjectService        

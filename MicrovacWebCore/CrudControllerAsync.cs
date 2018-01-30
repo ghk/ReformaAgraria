@@ -20,15 +20,6 @@ namespace MicrovacWebCore
 
         public CrudControllerAsync(DbContext dbContext) : base(dbContext) { }
 
-        [HttpDelete("{id}")]
-        public virtual async Task<TId> DeleteAsync(TId id)
-        {
-            var model = new TModel { Id = id };
-            dbContext.Entry(model).State = EntityState.Deleted;
-            await dbContext.SaveChangesAsync();
-            return model.Id;
-        }
-
         [HttpPost]
         public virtual async Task<TId> PostAsync([FromBody] TModel model)
         {
@@ -62,6 +53,15 @@ namespace MicrovacWebCore
             dbContext.Entry(model).State = EntityState.Modified;
             await dbContext.SaveChangesAsync();
             PostPersist(model);
+            return model.Id;
+        }
+
+        [HttpDelete("{id}")]
+        public virtual async Task<TId> DeleteAsync(TId id)
+        {
+            var model = new TModel { Id = id };
+            dbContext.Entry(model).State = EntityState.Deleted;
+            await dbContext.SaveChangesAsync();
             return model.Id;
         }
 

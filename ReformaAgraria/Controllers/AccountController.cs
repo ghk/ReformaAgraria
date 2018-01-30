@@ -15,11 +15,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
+using MicrovacWebCore.Helpers;
 
 namespace ReformaAgraria.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [Authorize(Policy = "Bearer")]
+    [NotGenerated]
     public class AccountController : ControllerBase
     {
         private readonly ReformaAgrariaDbContext _context;

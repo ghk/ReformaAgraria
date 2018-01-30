@@ -3,10 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Progress } from "angular-progress-http";
 import { saveAs } from 'file-saver';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
+
+import { ModalToraObjectFormComponent } from './modals/toraObjectForm';
+import { ModalToraSubjectFormComponent } from './modals/toraSubjectForm';
 
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
-import { ToraService } from '../services/tora';
 import { ToraObjectService } from '../services/gen/toraObject';
 import { ToraSubjectService } from '../services/gen/toraSubject';
 
@@ -20,10 +24,6 @@ import { EducationalAttainment } from '../models/gen/educationalAttainment';
 import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
 import { Status } from '../models/gen/status';
-import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
-import { ModalToraObjectFormComponent } from './modals/toraObjectForm';
-import { ModalToraSubjectFormComponent } from './modals/toraSubjectForm';
 
 @Component({
     selector: 'ra-tora-detail',
@@ -53,7 +53,6 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private sharedService: SharedService,
         private regionService: RegionService,
-        private toraService: ToraService,
         private toraObjectService: ToraObjectService,
         private toraSubjectService: ToraSubjectService
     ) { }
@@ -103,14 +102,14 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
                 this.toraSubjects = toraSubjects;
             });
 
-            this.toraService.getSummaries(toraObject.fkRegionId).subscribe(summary => {
+            this.toraObjectService.getSummary(toraObject.fkRegionId).subscribe(summary => {
                 this.sharedService.setToraSummary(summary);
             });
         });
     }
     
     onExport() {
-        this.toraService.export(this.toraObject.id).subscribe(data => {
+        this.toraObjectService.export(this.toraObject.id).subscribe(data => {
             let blob = new Blob([data.blob()], { type: 'application/xlsx' });
             saveAs(blob, 'tora.xlsx');
         });

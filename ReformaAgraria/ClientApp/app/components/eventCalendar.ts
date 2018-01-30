@@ -15,7 +15,7 @@ import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { EventService } from '../services/gen/event';
 import { EventTypeService } from '../services/gen/eventType';
-import { SearchService } from '../services/search';
+import { SearchService } from '../services/gen/search';
 import { EventHelper } from '../helpers/event';
 import { CustomDateFormatter } from '../helpers/customDateFormatter';
 

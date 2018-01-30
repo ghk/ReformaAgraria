@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using MicrovacWebCore;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
+using ReformaAgraria.Models.ViewModels;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +16,7 @@ namespace ReformaAgraria.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    //[Authorize(Policy = "Bearer")]
+    [Authorize(Policy = "Bearer")]
     public class BaseLayerController : CrudControllerAsync<BaseLayer, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
@@ -29,16 +31,12 @@ namespace ReformaAgraria.Controllers
         }        
 
         [HttpPost("import")]
-        public async Task<BaseLayer> Import()
+        public async Task<BaseLayer> Import([FromForm]ImportBaseLayerViewModel model)
         {
-            var results = await HttpContext.Request.ReadFormAsync();
             BaseLayer baseLayer = null;
 
-            if (results.ContainsKey("id"))
-            {
-                int id = int.Parse(results["id"]);
-                baseLayer = dbContext.Set<BaseLayer>().Where(o => o.Id == id).FirstOrDefault();
-            }
+            if (model.Id > 0)
+                baseLayer = dbContext.Set<BaseLayer>().Where(o => o.Id == model.Id).FirstOrDefault();
 
             if (baseLayer == null)
             {
@@ -50,16 +48,15 @@ namespace ReformaAgraria.Controllers
                 dbContext.Entry(baseLayer).State = EntityState.Modified;
             }
 
-            baseLayer.Label = results["label"];
-            baseLayer.Color = results["color"];
+            baseLayer.Label = model.Label;
+            baseLayer.Color = model.Color;
+            baseLayer.Geojson = GetGeoJson(model.File);
 
-            var file = results.Files[0];
-            baseLayer.Geojson = GetGeoJson(file);
             await dbContext.SaveChangesAsync();
 
             var baseLayerDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "baseLayer");
             var destinationFilePath = Path.Combine(baseLayerDirectoryPath, baseLayer.Id + ".zip");
-            IOHelper.StreamCopy(destinationFilePath, file);
+            IOHelper.StreamCopy(destinationFilePath, model.File);
 
             return baseLayer;
         }

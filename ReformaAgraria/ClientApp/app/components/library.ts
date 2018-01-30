@@ -1,10 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { LibraryService } from '../services/library';
-import { Library } from '../models/gen/library';
 import { ToastrService } from "ngx-toastr";
-import { saveAs as importedSaveAs } from "file-saver";
+import { saveAs } from "file-saver";
+
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
+import { LibraryService } from '../services/gen/library';
+
+import { Library } from '../models/gen/library';
+import { ImportLibraryViewModel } from '../models/gen/importLibraryViewModel';
+import { FormHelper } from '../helpers/form';
 
 @Component({
     selector: 'ra-library',
@@ -12,7 +16,7 @@ import { RegionService } from '../services/gen/region';
 })
 export class LibraryComponent implements OnInit, OnDestroy {
     library: Library[] = [];
-    model: any = {};
+    model: ImportLibraryViewModel = {};
     libraryId: number;
 
     constructor(        
@@ -33,7 +37,6 @@ export class LibraryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-
     }
 
     getAll() {
@@ -43,8 +46,9 @@ export class LibraryComponent implements OnInit, OnDestroy {
         })
     }
 
-    upload() {
-        this.libraryService.upload(this.model, null).subscribe(
+    upload() {      
+        let formData = FormHelper.serialize(this.model);
+        this.libraryService.upload(formData, null).subscribe(
             data => {
                 this.toastr.success('Upload berhasil', null);
                 this.getAll();
@@ -54,8 +58,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
             });
     }
 
-    onChangeFile(event) {
-        this.model['file'] = event.srcElement.files;
+    onChangeFile(file: File) {
+        this.model.file = file;
     }
 
     delete(id) {
@@ -79,7 +83,6 @@ export class LibraryComponent implements OnInit, OnDestroy {
         var link = [window.location.origin, 'library', id + "_" + title + extension].join("/")
         console.log(link);
         $("#download").attr("href", link);
-        $('#download')[0].click();
-        
+        $('#download')[0].click();        
     }
 }

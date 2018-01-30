@@ -7,7 +7,7 @@ import { SharedService } from '../services/shared';
 import { Region } from "../models/gen/region";
 import { RegionService } from '../services/gen/region';
 import { Observable } from 'rxjs/Observable';
-import { SearchService } from '../services/search';
+import { SearchService } from '../services/gen/search';
 import { SearchViewModel } from '../models/gen/searchViewModel';
 
 @Component({
@@ -16,7 +16,7 @@ import { SearchViewModel } from '../models/gen/searchViewModel';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
     region: Region;
-    regionId: string = '72_1';
+    regionId: string;
     selected: any;
     dataSource: any;
     subscription: Subscription;

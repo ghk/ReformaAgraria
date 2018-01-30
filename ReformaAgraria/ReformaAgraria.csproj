@@ -84,6 +84,9 @@
     <None Update="ClientApp\app\models\gen\coordinate.ts">
       <CustomToolNamespace>Models\Coordinate.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\dashboardDataViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\DashboardDataViewModel.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\educationalAttainment.ts">
       <CustomToolNamespace>Models\EducationalAttainment.cs</CustomToolNamespace>
     </None>
@@ -95,6 +98,15 @@
     </None>
     <None Update="ClientApp\app\models\gen\gender.ts">
       <CustomToolNamespace>Models\Gender.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\importBaseLayerViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\ImportBaseLayerViewModel.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\importLibraryViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\ImportLibraryViewModel.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\importToraMapViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\ImportToraMapViewModel.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\landStatus.ts">
       <CustomToolNamespace>Models\LandStatus.cs</CustomToolNamespace>
@@ -185,6 +197,9 @@
     </None>
     <None Update="ClientApp\app\services\gen\region.ts">
       <CustomToolNamespace>Controllers\RegionController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\services\gen\search.ts">
+      <CustomToolNamespace>Controllers\SearchController.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\services\gen\toraMap.ts">
       <CustomToolNamespace>Controllers\ToraMapController.cs</CustomToolNamespace>

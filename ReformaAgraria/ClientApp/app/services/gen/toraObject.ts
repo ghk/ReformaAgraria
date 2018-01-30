@@ -1,11 +1,13 @@
 ﻿import { Injectable } from '@angular/core';
-import { Response, RequestOptions } from '@angular/http';
+import { Response, ResponseContentType } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
 import { ToraObject } from '../../models/gen/toraObject';
+import { UploadToraDocumentViewModel } from '../../models/gen/uploadToraDocumentViewModel';
+import { DashboardDataViewModel } from '../../models/gen/dashboardDataViewModel';
 import { EnvironmentService } from '../../services/environment';
 import { CrudService } from '../../services/crud';
 import { RequestHelper } from '../../helpers/request';
@@ -22,7 +24,7 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
         private cookieService: CookieService,
         private environmentService: EnvironmentService) { 
         this.serverUrl = this.environmentService.getEnvironment().serverUrl;
-    } 
+    }
 
     public getAll(query?: Query, progressListener?: any): Observable<Array<ToraObject>> { 
         let options = RequestHelper.getRequestOptions(this.cookieService, query);
@@ -68,9 +70,8 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
 
         return request.map(res => res.json()).catch(this.handleError);
     }
-    
+
     public createOrUpdate(model: ToraObject, progressListener?: any): Observable<number> {
-        let method = 'POST';
         if (!model['id']) {
             return this.create(model, progressListener);
         } else if (model['id']) {
@@ -118,6 +119,54 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
             null,
             null,
             progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public import(model: FormData, progressListener?: any): Observable<ToraObject> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+        options.headers.delete('Content-Type');                
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'toraobject', 'import'),
+            model,
+            null,
+            progressListener,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public export(id: number, query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+        options.responseType = ResponseContentType.Blob;                
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'toraobject', 'export', id),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.catch(this.handleError)
+    }
+    
+    public getSummary(id: string, query?: Query, progressListener?: any): Observable<DashboardDataViewModel[]> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'toraobject', 'summary', encodeURIComponent(id)),
+            null,
+            progressListener,
+            null,
         );
 
         return request.map(res => res.json()).catch(this.handleError);

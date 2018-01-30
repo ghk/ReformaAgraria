@@ -26,7 +26,7 @@
 
 <div id="upload-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">
-        <form class="form-horizontal" (ngSubmit)="onUploadFormSubmit()" id="upload-form">
+        <form class="form-horizontal" (ngSubmit)="onSubmitUploadForm()" id="upload-form">
             <div class="modal-content" style="border-radius: 0">
                 <div class="modal-header">
                     <h5 class="modal-title">Upload File</h5>
@@ -61,7 +61,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" name="file" (change)="onChangeFile($event)" [disabled]="!uploadModel.tora">
+                                <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" name="file" (change)="onSelectFile($event.target.files[0])" [disabled]="!uploadModel.tora">
                             </div>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                 </div>
             </div>
         </form>
-        <form class="form-horizontal" (ngSubmit)="onDownloadFormSubmit()" id="download-form">
+        <form class="form-horizontal" (ngSubmit)="onSubmitDownloadForm()" id="download-form">
             <div class="modal-content" style="border-radius: 0">
                 <div class="modal-header">
                     <h5 class="modal-title">Download File</h5>
