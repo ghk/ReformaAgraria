@@ -64,6 +64,12 @@ export class ModalUploadToraDocumentComponent implements OnInit, OnDestroy {
         );
     }
 
+    onDownloadTemplate() {
+        var link = [window.location.origin, 'template', 'Template_Example_Object_Subject_Tora.xlsx'].join("/")
+        $("#download").attr("href", link);
+        $('#download')[0].click();
+    }
+
     progressListener(progress: Progress) {
         this.progress = progress;
     }

@@ -1,7 +1,7 @@
 <div class="card w-100">
     <div class="card-body">
         <div class="d-flex card-title" style="justify-content: space-between;">
-            <h4>Daftar Permasalahan Agraria</h4>
+            <h4>Daftar Permasalahan Agraria di {{region?.name}}</h4>
 
             <!-- start new add object and subject -->
             <div class="dropdown nav justify-content-end mr-3">
@@ -25,7 +25,7 @@
                     <th (click)="sorted('Luas')">Luas (ha)</th>
                     <th (click)="sorted('Status')">Status Tanah</th>
                     <th (click)="sorted('Usulan')">Usulan Skema</th>
-                    <th>Koordinat</th>
+                    <!--<th>Koordinat</th>-->
                     <th>Tahapan</th>
                     <th></th>
                     <th></th>
@@ -45,13 +45,13 @@
                     <ng-container *ngFor="let object of toraObjects">
                         <tr>
                             <td>
-                                <a routerLink="/toradetail/{{object.id}}">{{object.name}}</a>
+                                <a routerLink="/toradetail/{{object.id}}">{{object.name != '' ? object.name : '[Lokasi Tanpa Nama]'}}</a>
                             </td>
-                            <td>{{object.totalTenants}}</td>
+                            <td>{{object.totalTenants != '' ? object.totalTenants : '-'}}</td>
                             <td>{{object.size > 0 ? (object.size | number : '1.2-2') : '-'}}</td>
                             <td>{{LandStatus[object.landStatus] | translate}}</td>
-                            <td>{{object.proposedTreatment}}</td>
-                            <td>Image</td>
+                            <td>{{object.proposedTreatment != '' ? object.proposedTreatment : '-'}}</td>
+                            <!--<td>Image</td>-->
                             <td>{{Status[object.status] | translate}}</td>
                             <td title="edit">
                                 <button type="button" class="btn btn-link">

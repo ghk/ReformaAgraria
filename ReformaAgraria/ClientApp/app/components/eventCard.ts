@@ -52,8 +52,13 @@ export class EventCardComponent implements OnInit, OnDestroy {
                 event.startDate = event.startDate ? moment.utc(event.startDate).toDate() : null;
                 event.endDate = event.endDate ? moment.utc(event.endDate).toDate() : null;
                 event['color'] = EventHelper.getEventColor(event);
+                let depthQuery = { 'data': { 'type': 'getByDepth', 'depth': 2 } };
+                this.regionService.getById(event.fkRegionId, depthQuery, null).subscribe(region => {
+                    event.region = region;
+                });
             })
             this.events = events;
+            
         })
     }    
 
