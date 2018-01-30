@@ -119,6 +119,7 @@ namespace ReformaAgraria.Controllers
                 {
                     query = query.Include("Region.Parent.Parent");
                     query = query.Include(t => t.ToraObject);
+                    query = query.Include(t => t.ToraObject.ToraSubjects);
                     query = query.Where(r => r.FkRegionId.Contains(regionId));
                 }
             }

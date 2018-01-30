@@ -5,9 +5,11 @@ import { Subscription } from 'rxjs';
 import { RegionService } from '../services/gen/region';
 import { SharedService } from '../services/shared';
 import { EventService } from '../services/gen/event';
+
 import { Region } from '../models/gen/region';
 import { Event } from '../models/gen/event';
 import { Query } from '../models/query';
+import { RegionType } from '../models/gen/regionType';
 import { EventHelper } from '../helpers/event';
 
 import * as moment from 'moment';
@@ -19,8 +21,10 @@ import * as moment from 'moment';
 })
 export class EventCardComponent implements OnInit, OnDestroy {
     subscription: Subscription;
-    events: Event[];
     region: Region;
+    RegionType = RegionType;
+
+    events: Event[];
 
     constructor(
         private router: Router,
@@ -46,20 +50,17 @@ export class EventCardComponent implements OnInit, OnDestroy {
             page: 1,
             perPage: 10,
             data: { 'type': 'getAllByParent', 'parentId': this.region.id, 'startDate': moment().format('DD/MM/YYYY') } 
-        }
+        };
+
         this.eventService.getAll(eventQuery, null).subscribe(events => {
             events.forEach(event => {
                 event.startDate = event.startDate ? moment.utc(event.startDate).toDate() : null;
                 event.endDate = event.endDate ? moment.utc(event.endDate).toDate() : null;
-                event['color'] = EventHelper.getEventColor(event);
-                let depthQuery = { 'data': { 'type': 'getByDepth', 'depth': 2 } };
-                this.regionService.getById(event.fkRegionId, depthQuery, null).subscribe(region => {
-                    event.region = region;
-                });
-            })
+                event['color'] = EventHelper.getEventColor(event);                
+            });
+
             this.events = events;
-            
-        })
+        });
     }    
 
     onCardClicked(event: Event) {

@@ -43,8 +43,10 @@ namespace ReformaAgraria.Controllers
             {
                 var parentId = GetQueryString<string>("parentId");
                 var startDate = GetQueryString<string>("startDate");
+
                 if (!string.IsNullOrWhiteSpace(parentId))
-                    query = query.Where(e => e.FkRegionId.StartsWith(parentId));
+                    query = query.Where(e => e.FkRegionId.StartsWith(parentId)).Include(e => e.Region);
+
                 if (!string.IsNullOrWhiteSpace(startDate))
                 {
                     try

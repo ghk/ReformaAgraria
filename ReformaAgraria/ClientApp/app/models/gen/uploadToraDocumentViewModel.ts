@@ -2,5 +2,5 @@
 
 export interface UploadToraDocumentViewModel { 
     regionId?: string;
-    document?: File;
+    file?: File;
 }

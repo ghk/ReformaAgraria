@@ -8,9 +8,7 @@
                 </h6>
                 <div class="card-body">
                     <p class="card-title" style="font-size:0.8rem;">{{event.eventType?.name}}</p>
-                    <p class="card-text" style="font-size:0.7rem;">Desa {{event.region?.name}}</p>
-                    <p class="card-text" style="font-size:0.7rem;">Kec. {{event.region?.parent.name}}</p>
-                    <p class="card-text" style="font-size:0.7rem;">Kab. {{event.region?.parent.parent.name}}</p>
+                    <p class="card-text" style="font-size:0.7rem;">{{RegionType[event.region?.type]}} {{event.region?.name}}</p>
                 </div>                
             </div>
         </div>

@@ -300,7 +300,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                     '<tr><td>Kecamatan</td><td>:</td><td><a href="/home/' + data.region.parent.id.split('.').join('_') + '">' + data.region.parent.name + '</td></tr>' +
                     '<tr><td>Desa</td><td>:</td><td><a href="/home/' + data.region.id.split('.').join('_') + '">' + data.region.name + '</td></tr>' +
                     '<tr><td>Luas</td><td>:</td><td>' + size + '</td></tr>' +
-                    '<tr><td>Jumlah Penggarap</td><td>:</td><td>' + totalTenants + '</td></tr></tbody></table>');       
+                    '<tr><td>Jumlah Penggarap</td><td>:</td><td>' + data.toraObject.toraSubjects.length + '</td></tr></tbody></table>');       
             }
         };      
 

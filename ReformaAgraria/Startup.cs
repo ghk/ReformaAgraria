@@ -37,7 +37,10 @@ namespace ReformaAgraria
         {
             services.AddOptions();
 
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
 
             services.AddDbContext<ReformaAgrariaDbContext>(
                 opts => opts.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));

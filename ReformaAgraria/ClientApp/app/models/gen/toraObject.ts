@@ -2,6 +2,7 @@
 import { LandStatus } from './landStatus';
 import { Status } from './status';
 import { Region } from './region';
+import { ToraSubject } from './toraSubject';
 import { BaseEntity } from './baseEntity';
 
 export interface ToraObject extends BaseEntity<number> { 
@@ -21,4 +22,5 @@ export interface ToraObject extends BaseEntity<number> {
     status?: Status;
     fkRegionId?: string;
     region?: Region;
+    toraSubjects?: ToraSubject[];
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -41,6 +42,8 @@ namespace ReformaAgraria.Models
         public string FkRegionId { get; set; }
 
         [ForeignKey("FkRegionId")]
-        public virtual Region Region { get; set; }
+        public Region Region { get; set; }
+
+        public List<ToraSubject> ToraSubjects { get; set; }
     }
 }
