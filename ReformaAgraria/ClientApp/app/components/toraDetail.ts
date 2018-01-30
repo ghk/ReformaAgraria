@@ -109,7 +109,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
     }
     
     onExport() {
-        this.toraObjectService.export(this.toraObject.id).subscribe(data => {
+        this.toraObjectService.download(this.toraObject.id).subscribe(data => {
             let blob = new Blob([data.blob()], { type: 'application/xlsx' });
             saveAs(blob, 'tora.xlsx');
         });

@@ -28,7 +28,7 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<Library> Upload([FromForm]ImportLibraryViewModel model)
+        public async Task<Library> Upload([FromForm]UploadLibraryViewModel model)
         {            
             var content = new Library
             {

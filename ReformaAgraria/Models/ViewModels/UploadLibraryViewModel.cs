@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace ReformaAgraria.Models.ViewModels
 {
-    public class ImportBaseLayerViewModel
+    public class UploadLibraryViewModel
     {
-        public int Id { get; set; }
-        public string Label { get; set; }
-        public string Color { get; set; }
+        public string Title { get; set; }
         public IFormFile File { get; set; }
     }
 }

@@ -38,14 +38,14 @@ namespace ReformaAgraria.Controllers
             _tsLogger = tsLogger;
         }
        
-        [HttpPost("import")]
-        public ToraObject Import([FromForm]UploadToraDocumentViewModel document)
+        [HttpPost("upload")]
+        public ToraObject Upload([FromForm]UploadToraDocumentViewModel document)
         {
             var toraDocumentDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "document");
-            var toraDocumentFilePath = Path.Combine(toraDocumentDirectoryPath, document.RegionId, document.Document.FileName);
+            var toraDocumentFilePath = Path.Combine(toraDocumentDirectoryPath, document.RegionId, document.File.FileName);
             var regionId = document.RegionId;
 
-            using (var stream = document.Document.OpenReadStream())
+            using (var stream = document.File.OpenReadStream())
             using (ExcelPackage package = new ExcelPackage(stream))
             {
                 ExcelWorkbook workbook = package.Workbook;
@@ -160,18 +160,18 @@ namespace ReformaAgraria.Controllers
                     if (objectIdList.Count > 0 && workbook.Worksheets.Count > 1)
                     {
                         ToraSubjectController ts = new ToraSubjectController(_context, _hostingEnvironment, _tsLogger);
-                        ts.Import(objectIdList, package);
+                        ts.Upload(objectIdList, package);
                     }
 
-                    IOHelper.StreamCopy(toraDocumentFilePath, document.Document);
+                    IOHelper.StreamCopy(toraDocumentFilePath, document.File);
                 }
                 
                 return to;
             }
         }
 
-        [HttpGet("export/{id}")]
-        public async Task<FileStreamResult> Export(int id)
+        [HttpGet("download/{id}")]
+        public async Task<FileStreamResult> Download(int id)
         {
             var objectModel = dbContext.Set<ToraObject>().FirstOrDefault(t => t.Id == id);           
 

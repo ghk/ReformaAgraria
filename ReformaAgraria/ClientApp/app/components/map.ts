@@ -289,7 +289,7 @@ export class MapComponent implements OnInit, OnDestroy {
     uploadFile() {
         $("#upload-modal")['modal']("hide");
         this.model['color'] = this.color;
-        this.baseLayerService.import(this.model)
+        this.baseLayerService.upload(this.model)
             .subscribe(
             data => {
                 this.toastr.success("Upload File Berhasil", null);
@@ -301,7 +301,7 @@ export class MapComponent implements OnInit, OnDestroy {
         $("#edit-modal")['modal']("hide");
         this.model.color = this.color;
 
-        this.baseLayerService.import(model).subscribe(data => {
+        this.baseLayerService.upload(model).subscribe(data => {
             this.toastr.success("Pengeditan Berhasil", null);
             this.removeLayer(data.id);
             this.applyOverlay([data]);
