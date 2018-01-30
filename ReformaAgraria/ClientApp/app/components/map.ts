@@ -10,10 +10,12 @@ import { ToraObjectService } from "../services/gen/toraObject";
 
 import { ToraMap } from "../models/gen/toraMap";
 import { BaseLayer } from '../models/gen/baseLayer';
+import { UploadBaseLayerViewModel } from "../models/gen/uploadBaseLayerViewModel";
 import { MapUtils } from '../helpers/mapUtils';
 
 import * as L from 'leaflet';
 import * as $ from 'jquery';
+
 
 const DATA_SOURCES = 'data';
 const LAYERS = {
@@ -67,9 +69,6 @@ export class MapComponent implements OnInit, OnDestroy {
             zoomControl: false,
             layers: [LAYERS["OpenStreetMap"]]
         };        
-        
-        window.addEventListener('resize', this.onResize);
-        window.dispatchEvent(new Event('resize'));      
 
         let baseLayerQuery = {};
         this.baseLayerService.getAll(baseLayerQuery, null).subscribe(data => {
@@ -84,7 +83,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.map.remove();
-        window.removeEventListener('resize', this.onResize);
     }
 
     applyOverlay(data: BaseLayer[]) {   
@@ -120,16 +118,7 @@ export class MapComponent implements OnInit, OnDestroy {
                     color = currentColor;
                 }
                 return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
-            },
-            pointToLayer: (feature, latlng) => {
-                return new L.CircleMarker(latlng, {
-                    radius: 8,
-                    fillColor: "#000",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                });
-            },
+            },            
             onEachFeature: (feature, layer: L.FeatureGroup) => {
                 layer.bindPopup('<table class=\'table table-sm\'><thead><tr><th colspan=3 style=\'text-align:center\'>' + data.name + '</th></tr></thead>' +
                     '<tbody><tr><td>Kabupaten</td><td>:</td><td>' + data.region.parent.parent.name + '</td></tr>' +
@@ -139,35 +128,6 @@ export class MapComponent implements OnInit, OnDestroy {
                     '<tr><td>Jumlah Penduduk</td><td>:</td><td>' + data.toraObject.totalTenants + '</td></tr></tbody></table>');
 
                 layer.addTo(this.map);
-
-                let center = null;
-
-                if (layer.feature['geometry'].type === 'Point') {
-                    center = layer.feature['geometry'].coordinates;
-                }
-                else {
-                    let bounds = layer.getBounds();
-                    center = bounds.getCenter();
-                }
-
-                let element = null;
-
-                if (!element)
-                    return;
-
-                if (feature.properties['icon']) {
-                    let icon = L.icon({
-                        iconUrl: 'assets/markers/' + feature.properties['icon'],
-                        iconSize: [15, 15],
-                        shadowSize: [50, 64],
-                        iconAnchor: [22, 24],
-                        shadowAnchor: [4, 62],
-                        popupAnchor: [-3, -76]
-                    });
-
-                    let marker = L.marker(center, { icon: icon }).addTo(this.map);
-                    this.addMarker(marker);
-                }
             }
         };
         return L.geoJSON(JSON.parse(data.geojson), geoJsonOptions);
@@ -182,7 +142,7 @@ export class MapComponent implements OnInit, OnDestroy {
         this.model = Object.assign({}, currentModel);
         this.color = currentModel.color ? currentModel.color : this.color;
         if (event.target.id == "edit") {
-            this.model["linkDownload"] = [window.location.origin, 'baseLayer', id + "_.zip"].join("/")
+            this.model["linkDownload"] = [window.location.origin, 'baseLayer', id + ".zip"].join("/")
         }
     }
 
@@ -207,9 +167,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     setupControlBar() {
-        L.control.zoom({
-            position: 'bottomright'
-        }).addTo(this.map);
+        L.control.zoom({position: 'bottomright'}).addTo(this.map);
 
         let button = L.Control.extend({
             options: {
@@ -221,7 +179,7 @@ export class MapComponent implements OnInit, OnDestroy {
                 div.onclick = (e) => { this.model = {}; $("#form-upload")[0]["reset"](); $("#upload-modal")['modal']("show") };
                 return div;
             }
-        });
+        });        
         this.map.addControl(new button());
 
         button = L.Control.extend({
@@ -231,10 +189,8 @@ export class MapComponent implements OnInit, OnDestroy {
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-1');
                 div.innerHTML = `<button type="button"class="btn btn-outline-secondary btn-sm" style="height:35px;"><i class="material-icons">layers</i></button>`;
-
                 let buttonOverlay = div.getElementsByTagName('button')[0];
                 buttonOverlay.onclick = (e) => this.toggleControlLayers(2);
-
                 return div;
             }
         });
@@ -261,11 +217,6 @@ export class MapComponent implements OnInit, OnDestroy {
         this.controlOverlayShowing = { id: id, status: status }
     }
 
-    setLayer(name): void {
-        let layer: L.Layer = LAYERS[name];
-        layer.addTo(this.map);
-    }
-
     removeLayer(id): void {
         let currentOverlay = this.layers.find(o => o.id == id);
         let currentData = this.initialData.find(o => o.id == id);
@@ -276,11 +227,7 @@ export class MapComponent implements OnInit, OnDestroy {
         this.initialData.splice(currentData, 1);
         this.isOverlayAdded = true;
     }
-
-    addMarker(marker): void {
-        this.markers.push(marker);
-    }
-
+  
     onMapReady(map: L.Map): void {
         this.map = map;
         this.setupControlBar();        
@@ -289,23 +236,43 @@ export class MapComponent implements OnInit, OnDestroy {
     uploadFile() {
         $("#upload-modal")['modal']("hide");
         this.model['color'] = this.color;
-        this.baseLayerService.upload(this.model)
-            .subscribe(
+
+        let formData = new FormData();
+        formData.append('label', this.model.label);
+        formData.append('color', this.model.color);
+        formData.append('file', this.model.file)
+
+        this.baseLayerService.upload(formData).subscribe(
             data => {
                 this.toastr.success("Upload File Berhasil", null);
                 this.applyOverlay([data]);
-            });
+            },
+            error => {
+                this.toastr.error("Ada kesalahan dalam penyimpanan", null);
+            }
+        );
     }
 
     editOverlay(model) {
         $("#edit-modal")['modal']("hide");
         this.model.color = this.color;
 
-        this.baseLayerService.upload(model).subscribe(data => {
-            this.toastr.success("Pengeditan Berhasil", null);
-            this.removeLayer(data.id);
-            this.applyOverlay([data]);
-        });
+        let formData = new FormData();
+        formData.append('id', model.id);
+        formData.append('label', model.label);
+        formData.append('color', model.color);
+        formData.append('file', model.file)
+
+        this.baseLayerService.upload(formData).subscribe(
+            data => {
+                this.toastr.success("Pengeditan Berhasil", null);
+                this.removeLayer(data.id);
+                this.applyOverlay([data]);
+            }, 
+            error => {
+                this.toastr.error("Ada kesalahan dalam penyimpanan", null);
+            }
+        );
     }
 
     deleteOverlay(model) {
@@ -318,8 +285,8 @@ export class MapComponent implements OnInit, OnDestroy {
         })
     }
 
-    onChangeFile(event) {
-        this.model['file'] = event.srcElement.files;
+    onChangeFile(file: File) {
+        this.model.file = file;
     }
 
     setCenter(): void {
@@ -347,52 +314,10 @@ export class MapComponent implements OnInit, OnDestroy {
                     color = currentColor;
                 }
                 return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
-            },
-            pointToLayer: (feature, latlng) => {
-                return new L.CircleMarker(latlng, {
-                    radius: 8,
-                    fillColor: "#000",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                });
-            },
-            onEachFeature: (feature, layer: L.FeatureGroup) => {
-                let center = null;
-
-                if (layer.feature['geometry'].type === 'Point') {
-                    center = layer.feature['geometry'].coordinates;
-                }
-                else {
-                    let bounds = layer.getBounds();
-                    center = bounds.getCenter();
-                }
-
-                let element = null;
-
-                if (!element)
-                    return;
-
-                if (feature.properties['icon']) {
-                    let icon = L.icon({
-                        iconUrl: 'assets/markers/' + feature.properties['icon'],
-                        iconSize: [15, 15],
-                        shadowSize: [50, 64],
-                        iconAnchor: [22, 24],
-                        shadowAnchor: [4, 62],
-                        popupAnchor: [-3, -76]
-                    });
-
-                    let marker = L.marker(center, { icon: icon }).addTo(this.map);
-                    this.addMarker(marker);
-                }
+            },           
+            onEachFeature: (feature, layer: L.FeatureGroup) => {        
             }
         };
         return L.geoJSON(geoJson, geoJsonOptions);
-    }
-
-    onResize = (e) => {
-        let height = e.target.innerHeight - 58;        
-        $("#map").height(height);
-    }
+    }    
 }

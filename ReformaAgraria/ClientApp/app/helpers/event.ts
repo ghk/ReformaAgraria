@@ -25,9 +25,12 @@ export class EventHelper {
             secondary: evColor
         };
 
+        event.startDate = event.startDate ? moment.utc(event.startDate).local().toDate() : null;
+        event.endDate = event.endDate ? moment.utc(event.endDate).local().toDate() : null;
+
         let calEvent: CalendarEvent<Event> = {
-            start: event.startDate ? moment.utc(event.startDate).toDate() : null,
-            end: event.endDate ? moment.utc(event.endDate).toDate() : null,
+            start: event.startDate,
+            end: event.endDate,
             title: event.eventType.name,
             color: color,
             draggable: true,

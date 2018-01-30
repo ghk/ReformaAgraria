@@ -90,7 +90,7 @@ export class AccountService {
     updateUser(id: string, newEmail: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         let body = { "email": newEmail };
-        return this.http.put('/api/account/user/' + id, body);
+        return this.http.put('/api/account/user/' + id, body, requestOptions);
     }
 
     private handleError(error: Response | any) {
