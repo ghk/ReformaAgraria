@@ -1,8 +1,5 @@
-﻿﻿<div class="box">
-    <div class="d-flex align-items-stretch">
-        <div leaflet id="map" [leafletOptions]="options" [leafletCenter]="center" [leafletZoom]="zoom" (leafletMapReady)="onMapReady($event)">
-        </div>
-    </div>
+﻿﻿<div class="box d-flex">
+    <div leaflet id="map" [leafletOptions]="options" [leafletCenter]="center" [leafletZoom]="zoom" (leafletMapReady)="onMapReady($event)"></div>
 </div>
 
 <div id="upload-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
@@ -28,7 +25,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label class="form-control-label" for="file">Unggah File (*.zip)</label>
-                            <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event)" name="file" required>
+                            <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event.target.files[0])" name="file" required>
                         </div>
                     </div>
                 </div>
@@ -67,7 +64,8 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label class="form-control-label" for="file">File (*.zip)</label>
-                            <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event)" name="file">
+                            <input id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onChangeFile($event.target.files[0])"
+                                name="file">
 
                         </div>
                         <div class="form-group col-md-6">
@@ -90,22 +88,18 @@
 
 <div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog" role="document">
-        <div class="alert alert-light alert-dismissible fade show" role="alert">
-            <form class="form-horizontal" (ngSubmit)="deleteOverlay(model)">
-                <div class="modal-header" style="border-bottom:none;">
-                    <h2 class="modal-title alert-heading">Hapus {{model.label}} ?</h2>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-footer" style="border-top:none;">
-                    <button type="button" class="btn btn-secondary focus" data-backdrop="false" data-dismiss="modal">
-                        <i class="fa fa-save"></i>Batal</button>
-                    <button type="submit" class="btn btn-danger" data-backdrop="false">
-                        <i class="fa fa-repeat"></i>&nbsp;
-                        <i class="fa fa-save"></i>Hapus</button>
-                </div>
-            </form>
+        <div class="modal-content" style="border-radius: 0">
+            <div class="modal-body">                        
+                <h2 class="text-center">Hapus {{model.label}} ?</h2>               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary focus" data-backdrop="false" data-dismiss="modal">
+                    <i class="fa fa-save"></i>Batal
+                </button>
+                <button type="submit" class="btn btn-danger" data-backdrop="false" (click)=deleteOverlay(model)>
+                    <i class="fa fa-save"></i>Hapus
+                </button>
+            </div>
         </div>
     </div>
 </div>

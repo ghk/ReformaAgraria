@@ -293,16 +293,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                     color = currentColor;
                 }
                 return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
-            },
-            pointToLayer: (feature, latlng) => {
-                return new L.CircleMarker(latlng, {
-                    radius: 8,
-                    fillColor: "#000",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                });
-            },
+            },     
             onEachFeature: (feature, layer: L.FeatureGroup) => {
                 layer.bindPopup('<table class=\'table table-sm\'><thead><tr><th colspan=3 style=\'text-align:center\'><a href="/toradetail/' + data.toraObject.id + '">' + data.name + '</th></tr></thead>' +
                     '<tbody><tr><td>Kabupaten</td><td>:</td><td><a href="/home/' + data.region.parent.parent.id.split('.').join('_') + '">' + data.region.parent.parent.name + '</a></td></tr>' +
@@ -311,7 +302,8 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                     '<tr><td>Luas</td><td>:</td><td>' + size + '</td></tr>' +
                     '<tr><td>Jumlah Penggarap</td><td>:</td><td>' + totalTenants + '</td></tr></tbody></table>');       
             }
-        };                    
+        };      
+
         return L.geoJSON(JSON.parse(data.geojson), geoJsonOptions);
     } 
 
@@ -323,16 +315,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                     color = currentColor;
                 }
                 return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
-            },
-            pointToLayer: (feature, latlng) => {
-                return new L.CircleMarker(latlng, {
-                    radius: 8,
-                    fillColor: "#000",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                });
-            },
+            },          
             onEachFeature: (feature, layer: L.FeatureGroup) => {               
             }
         };

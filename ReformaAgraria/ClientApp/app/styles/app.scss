@@ -6,10 +6,18 @@
 
 
 /* Move down content because we have a fixed navbar that is 3.5rem tall */
+html,
+body { 
+    height: 100%;
+}
 
 body {
     padding-top: 3rem;
     background-color: #EEEEEE;
+}
+
+.main {
+    height: 100%;
 }
 
 // section {
@@ -62,7 +70,7 @@ h1 {
     overflow-y: auto;
     /* Scrollable contents if viewport is shorter than content. */
     // border-right: 1px solid #eee;
-    min-height: 100vh;
+    min-height: 100%;
 }
 
 
@@ -431,7 +439,7 @@ table#table-region th {
 
 #map {
     width: 100%;
-    height: 800px;
+    //height: 800px;
 }
 
 .header-list-problem .header-list-object p {

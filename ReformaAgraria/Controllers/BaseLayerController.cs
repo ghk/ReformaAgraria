@@ -22,7 +22,8 @@ namespace ReformaAgraria.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger<BaseLayerController> _logger;
 
-        public BaseLayerController(ReformaAgrariaDbContext dbContext,
+        public BaseLayerController(
+            ReformaAgrariaDbContext dbContext,
             IHostingEnvironment hostingEnvironment,
             ILogger<BaseLayerController> logger) : base(dbContext)
         {
@@ -50,28 +51,32 @@ namespace ReformaAgraria.Controllers
 
             baseLayer.Label = model.Label;
             baseLayer.Color = model.Color;
-            baseLayer.Geojson = GetGeoJson(model.File);
 
-            await dbContext.SaveChangesAsync();
-
-            var baseLayerDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "baseLayer");
-            var destinationFilePath = Path.Combine(baseLayerDirectoryPath, baseLayer.Id + ".zip");
-            IOHelper.StreamCopy(destinationFilePath, model.File);
+            if (baseLayer.Id <= 0 || model.File != null)
+            {                
+                baseLayer.Geojson = GetGeoJson(model.File);
+                await dbContext.SaveChangesAsync();
+                var baseLayerDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "baseLayer");
+                var destinationFilePath = Path.Combine(baseLayerDirectoryPath, baseLayer.Id + ".zip");
+                IOHelper.StreamCopy(destinationFilePath, model.File);
+            } 
+            else
+            {
+                await dbContext.SaveChangesAsync();
+            }
 
             return baseLayer;
         }
 
         [HttpDelete("{id}")]
         public override async Task<int> DeleteAsync(int id)
-        {
-            await base.DeleteAsync(id);
-
+        {           
             var baseLayerDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "baseLayer");
             var destinationFilePath = Path.Combine(baseLayerDirectoryPath, id + ".zip");
             if (System.IO.File.Exists(destinationFilePath))
                 System.IO.File.Delete(destinationFilePath);
 
-            return id;
+            return await base.DeleteAsync(id);
         }
 
         protected override IQueryable<BaseLayer> ApplyQuery(IQueryable<BaseLayer> query)
