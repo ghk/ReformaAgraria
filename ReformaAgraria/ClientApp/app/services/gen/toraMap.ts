@@ -6,7 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
 import { ToraMap } from '../../models/gen/toraMap';
-import { ImportToraMapViewModel } from '../../models/gen/importToraMapViewModel';
+import { UploadToraMapViewModel } from '../../models/gen/uploadToraMapViewModel';
 import { EnvironmentService } from '../../services/environment';
 import { CrudService } from '../../services/crud';
 import { RequestHelper } from '../../helpers/request';
@@ -123,14 +123,14 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public import(model: FormData, progressListener?: any): Observable<ToraMap> {
+    public upload(model: FormData, progressListener?: any): Observable<ToraMap> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         options.headers.delete('Content-Type');                
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'POST',
-            urljoin(this.serverUrl, 'toramap', 'import'),
+            urljoin(this.serverUrl, 'toramap', 'upload'),
             model,
             null,
             progressListener,

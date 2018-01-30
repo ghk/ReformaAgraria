@@ -6,7 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
 import { Library } from '../../models/gen/library';
-import { ImportLibraryViewModel } from '../../models/gen/importLibraryViewModel';
+import { UploadLibraryViewModel } from '../../models/gen/uploadLibraryViewModel';
 import { EnvironmentService } from '../../services/environment';
 import { CrudService } from '../../services/crud';
 import { RequestHelper } from '../../helpers/request';

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ReformaAgraria.Models.ViewModels
 {
-    public class ImportToraMapViewModel
+    public class UploadBaseLayerViewModel
     {
-        public int ToraObjectId { get; set; }
-        public string ToraObjectName { get; set; }
-        public string RegionId { get; set; }        
+        public int Id { get; set; }
+        public string Label { get; set; }
+        public string Color { get; set; }
         public IFormFile File { get; set; }
     }
 }

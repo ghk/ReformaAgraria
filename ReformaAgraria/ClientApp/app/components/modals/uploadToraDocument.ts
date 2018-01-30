@@ -51,7 +51,7 @@ export class ModalUploadToraDocumentComponent implements OnInit, OnDestroy {
         formData.append('regionId', this.region.id);
         formData.append('document', this.model.document);
 
-        this.toraObjectService.import(formData, this.progressListener.bind(this))
+        this.toraObjectService.upload(formData, this.progressListener.bind(this))
             .subscribe(
             data => {
                 this.toastr.success('File is successfully uploaded')

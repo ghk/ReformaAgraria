@@ -76,7 +76,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
             zoomControl: false,
             layers: [LAYERS["OpenStreetMap"]]
         };
-
+        
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             this.resetMap();
 
@@ -178,7 +178,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         formData.append("regionId", this.uploadModel.desa.id);
         formData.append("file", this.uploadModel.file);
 
-        this.toraMapService.import(formData).subscribe(
+        this.toraMapService.upload(formData).subscribe(
             data => {
                 this.toastr.success("Upload File Berhasil", null);
                 let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }

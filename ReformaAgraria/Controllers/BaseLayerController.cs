@@ -30,8 +30,8 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
         }        
 
-        [HttpPost("import")]
-        public async Task<BaseLayer> Import([FromForm]ImportBaseLayerViewModel model)
+        [HttpPost("upload")]
+        public async Task<BaseLayer> Upload([FromForm]UploadBaseLayerViewModel model)
         {
             BaseLayer baseLayer = null;
 

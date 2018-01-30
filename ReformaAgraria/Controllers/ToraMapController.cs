@@ -46,8 +46,8 @@ namespace ReformaAgraria.Controllers
             _contextAccessor = contextAccessor;
         }
 
-        [HttpPost("import")]
-        public async Task<ToraMap> Import([FromForm]ImportToraMapViewModel model)
+        [HttpPost("upload")]
+        public async Task<ToraMap> Upload([FromForm]UploadToraMapViewModel model)
         {                       
             var toraMap = dbContext.Set<ToraMap>()
                 .Where(tm => tm.FkToraObjectId == model.ToraObjectId)

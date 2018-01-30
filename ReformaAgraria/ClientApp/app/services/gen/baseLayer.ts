@@ -6,7 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
 import { BaseLayer } from '../../models/gen/baseLayer';
-import { ImportBaseLayerViewModel } from '../../models/gen/importBaseLayerViewModel';
+import { UploadBaseLayerViewModel } from '../../models/gen/uploadBaseLayerViewModel';
 import { EnvironmentService } from '../../services/environment';
 import { CrudService } from '../../services/crud';
 import { RequestHelper } from '../../helpers/request';
@@ -123,14 +123,14 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public import(model: FormData, progressListener?: any): Observable<BaseLayer> {
+    public upload(model: FormData, progressListener?: any): Observable<BaseLayer> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         options.headers.delete('Content-Type');                
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'POST',
-            urljoin(this.serverUrl, 'baselayer', 'import'),
+            urljoin(this.serverUrl, 'baselayer', 'upload'),
             model,
             null,
             progressListener,

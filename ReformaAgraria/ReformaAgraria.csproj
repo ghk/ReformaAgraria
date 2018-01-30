@@ -99,15 +99,6 @@
     <None Update="ClientApp\app\models\gen\gender.ts">
       <CustomToolNamespace>Models\Gender.cs</CustomToolNamespace>
     </None>
-    <None Update="ClientApp\app\models\gen\importBaseLayerViewModel.ts">
-      <CustomToolNamespace>Models\ViewModels\ImportBaseLayerViewModel.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\importLibraryViewModel.ts">
-      <CustomToolNamespace>Models\ViewModels\ImportLibraryViewModel.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\importToraMapViewModel.ts">
-      <CustomToolNamespace>Models\ViewModels\ImportToraMapViewModel.cs</CustomToolNamespace>
-    </None>
     <None Update="ClientApp\app\models\gen\landStatus.ts">
       <CustomToolNamespace>Models\LandStatus.cs</CustomToolNamespace>
     </None>
@@ -128,9 +119,6 @@
     </None>
     <None Update="ClientApp\app\models\gen\meetingMinute.ts">
       <CustomToolNamespace>Models\MeetingMinute.cs</CustomToolNamespace>
-    </None>
-    <None Update="ClientApp\app\models\gen\policiesDocument.ts">
-      <CustomToolNamespace>Models\PoliciesDocument.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\proposedTreatment.ts">
       <CustomToolNamespace>Models\ProposedTreatment.cs</CustomToolNamespace>
@@ -174,8 +162,17 @@
     <None Update="ClientApp\app\models\gen\toraSubmission.ts">
       <CustomToolNamespace>Models\ToraSubmission.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\uploadBaseLayerViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\UploadBaseLayerViewModel.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\uploadLibraryViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\UploadLibraryViewModel.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\uploadToraDocumentViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\UploadToraDocumentViewModel.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\uploadToraMapViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\UploadToraMapViewModel.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\villageMapAttribute.ts">
       <CustomToolNamespace>Models\VillageMapAttribute.cs</CustomToolNamespace>

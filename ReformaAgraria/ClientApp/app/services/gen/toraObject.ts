@@ -124,14 +124,14 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public import(model: FormData, progressListener?: any): Observable<ToraObject> {
+    public upload(model: FormData, progressListener?: any): Observable<ToraObject> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         options.headers.delete('Content-Type');                
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'POST',
-            urljoin(this.serverUrl, 'toraobject', 'import'),
+            urljoin(this.serverUrl, 'toraobject', 'upload'),
             model,
             null,
             progressListener,
@@ -140,14 +140,14 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public export(id: number, query?: Query, progressListener?: any): Observable<any> {
+    public download(id: number, query?: Query, progressListener?: any): Observable<any> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         options.responseType = ResponseContentType.Blob;                
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'toraobject', 'export', id),
+            urljoin(this.serverUrl, 'toraobject', 'download', id),
             null,
             progressListener,
             null,

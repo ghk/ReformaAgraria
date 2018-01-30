@@ -7,7 +7,7 @@ import { RegionService } from '../services/gen/region';
 import { LibraryService } from '../services/gen/library';
 
 import { Library } from '../models/gen/library';
-import { ImportLibraryViewModel } from '../models/gen/importLibraryViewModel';
+import { UploadLibraryViewModel } from '../models/gen/uploadLibraryViewModel';
 import { FormHelper } from '../helpers/form';
 
 @Component({
@@ -16,7 +16,7 @@ import { FormHelper } from '../helpers/form';
 })
 export class LibraryComponent implements OnInit, OnDestroy {
     library: Library[] = [];
-    model: ImportLibraryViewModel = {};
+    model: UploadLibraryViewModel = {};
     libraryId: number;
 
     constructor(        
