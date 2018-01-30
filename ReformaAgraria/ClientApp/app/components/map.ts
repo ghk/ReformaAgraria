@@ -142,7 +142,7 @@ export class MapComponent implements OnInit, OnDestroy {
         this.model = Object.assign({}, currentModel);
         this.color = currentModel.color ? currentModel.color : this.color;
         if (event.target.id == "edit") {
-            this.model["linkDownload"] = [window.location.origin, 'baseLayer', id + "_.zip"].join("/")
+            this.model["linkDownload"] = [window.location.origin, 'baseLayer', id + ".zip"].join("/")
         }
     }
 
