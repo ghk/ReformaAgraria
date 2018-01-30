@@ -558,8 +558,9 @@ input:checked+.slider:before {
 
 .event-card .card-body {
     padding: 0.5rem;
-    overflow: hidden;
-    text-overflow: ellipsis;    
+    max-height: 12rem;
+    overflow-x: auto;
+    text-overflow: ellipsis;
 }
 
 .event-card:hover {
