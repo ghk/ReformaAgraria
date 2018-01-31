@@ -1,20 +1,24 @@
 ﻿import { Injectable } from '@angular/core';
 import { Http, Headers, Response, URLSearchParams } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { ProgressHttp } from "angular-progress-http";
 
 import 'rxjs/add/operator/map'
 import * as urljoin from 'url-join';
+import * as jwt from 'jsonwebtoken';
 
 import { LoginViewModel as User } from '../models/gen/loginViewModel';
 import { RequestHelper } from '../helpers/request';
-import { ProgressHttp } from "angular-progress-http";
+import { SharedService } from './shared';
+
 
 @Injectable()
 export class AccountService {
     constructor(
         private http: Http,
         private cookieService: CookieService,
+        private sharedService: SharedService,
         private progressHttp: ProgressHttp
     ) { }
 
@@ -25,16 +29,18 @@ export class AccountService {
                 let resp = response.json();
                 if (resp && resp.data && resp.data.accessToken) {
                     this.cookieService.set('accessToken', resp.data.accessToken, 30, '/');
-                    this.cookieService.set('currentUser', resp.data.userName, 30, '/');
+                    this.sharedService.setCurrentUser(jwt.decode(resp.data.accessToken));
                 }
                 return resp.data;
             })
             .catch(this.handleError);
     }
     
-    logout() {
-        this.cookieService.delete('accessToken');
-        this.cookieService.delete('currentUser');      
+    async logout() {
+        //let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
+        //await this.http.post('/api/account/logout', null).toPromise();
+        this.cookieService.deleteAll('/');
+        this.sharedService.setCurrentUser(null);        
     }
 
     register(user: User) {
@@ -92,6 +98,7 @@ export class AccountService {
     }
 
     private handleError(error: Response | any) {
+        console.log(error);
         let errMsg: string;
         if (error instanceof Response) {
             try {

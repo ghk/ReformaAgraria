@@ -6,30 +6,42 @@ import { Region } from "../models/gen/region";
 
 @Injectable()
 export class SharedService {
-
-    public region: Region;
-    private _region$: ReplaySubject<Region>;
-    private _toraSummary$: ReplaySubject<any[]>;
+    
+    public region: Region;    
+    private user: any;
+    private region$: ReplaySubject<Region>;
+    private toraSummary$: ReplaySubject<any[]>;
 
     constructor() {
-        this._region$ = new ReplaySubject(1);
-        this._toraSummary$ = new ReplaySubject(1);
+        this.region$ = new ReplaySubject(1);
+        this.toraSummary$ = new ReplaySubject(1);
     }
 
     public getRegion() {
-        return this._region$;
+        return this.region$;
     }
 
     public setRegion(region: Region) {
         this.region = region;
-        this._region$.next(region);
+        this.region$.next(region);
     }
 
     public getToraSummary() {
-        return this._toraSummary$;
+        return this.toraSummary$;
     }
 
     public setToraSummary(tora: any[]) {
-        this._toraSummary$.next(tora);
+        this.toraSummary$.next(tora);
+    }
+
+    public getCurrentUser() {
+        return this.user;
+    }
+
+    public setCurrentUser(user: any) {
+        // WTF? Because jwt payload role can contain string or array
+        if (user)
+            user['role'] = [].concat(user['role']);
+        this.user = user;
     }
 }

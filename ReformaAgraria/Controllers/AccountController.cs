@@ -80,8 +80,7 @@ namespace ReformaAgraria.Controllers
                         requestAt = requestAt,
                         expiresIn = TokenAuthOption.ExpiresSpan.TotalSeconds,
                         tokenType = TokenAuthOption.TokenType,
-                        accessToken = token,
-                        userName = claimsUser.UserName
+                        accessToken = token                        
                     }
                 });
             }
