@@ -1,4 +1,4 @@
-﻿<nav>
+﻿<nav class="sidebar col-sm-3 col-md-2 col-xl-2 d-none d-sm-block bg-dark">
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
             <a class="nav-link" routerLink="/home/{{regionId}}" routerLinkActive="active">
@@ -7,17 +7,18 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" routerLink="/calendar/{{regionId}}" routerLinkActive="active">
-                <span class="oi oi-calendar" aria-hidden="true"></span>Kalendar Kegiatan</a>
+                <span class="oi oi-calendar" aria-hidden="true"></span>Kalendar Kegiatan
+            </a>
         </li>
-        <!--<li class="nav-item">
-            <a class="nav-link" href="#"><span class="oi oi-people" aria-hidden="true"></span>Tim Kerja</a>
-        </li>-->
         <li class="nav-item">
             <a class="nav-link" routerLink="/map" routerLinkActive="active">
-                <span class="oi oi-map" aria-hidden="true"></span>Peta</a>
+                <span class="oi oi-map" aria-hidden="true"></span>Peta
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" routerLink="/library" routerLinkActive="active" href="javascript:void(0)"><span class="oi oi-list" aria-hidden="true"></span>Pustaka</a>
+            <a class="nav-link" routerLink="/library" routerLinkActive="active" href="javascript:void(0)">
+                <span class="oi oi-list" aria-hidden="true"></span>Pustaka
+            </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" routerLink="/account/usermanagement" routerLinkActive="active">
@@ -25,16 +26,4 @@
             </a>
         </li>
     </ul>
-
-    <!--<ul class="nav nav-pills flex-column">
-        <li class="nav-item">
-            <a class="nav-link" href="#"><span class="oi oi-task" aria-hidden="true"></span>Permasalahan</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#"><span class="oi oi-document" aria-hidden="true"></span>Laporan pertemuan</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Another nav item</a>
-        </li>
-    </ul>-->    
 </nav>

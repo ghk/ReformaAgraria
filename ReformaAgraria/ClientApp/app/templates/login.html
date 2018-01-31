@@ -3,30 +3,27 @@
         <div class="col-lg-4 col-md-8 col-sm-8 col-xs-12 mx-auto">
             <div class="card">
                 <div class="card-body">
-                    <div class="image-login-style mx-auto">
-                        <img src="/images/bp3ti.png" class="img-fluid" alt="responsive image">
+                    <div class="login-image mx-auto">
+                        <img class="img-fluid" src="/images/bp3ti.png" alt="responsive image">
                     </div>
-
                     <h5 class="text-center">Sistem Navigasi Reforma Agraria &amp; Perhutanan Sosial</h5>
                     <ra-alert></ra-alert>
-                    
-                    <form name="form" class="col-12 was-validated" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+                    <form class="col-12 was-validated" name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
                         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
                             <label for="email">Email</label>
-                            <input type="text" class="form-control is-invalid" placeholder="Email" name="email" [(ngModel)]="model.email" #email="ngModel" required />
+                            <input type="text" class="form-control is-invalid" name="email" placeholder="Email" [(ngModel)]="model.email" #email="ngModel" required />
                             <div *ngIf="f.submitted && !email.valid" class="help-block invalid-feedback">Email is required</div>
                         </div>
                         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control is-invalid" placeholder="Password" name="password" [(ngModel)]="model.password" #password="ngModel" required />
-                            <div *ngIf="f.submitted && !password.valid" class="help-block invalid-feedback">Password is required</div>
+                            <input type="password" class="form-control is-invalid" name="password" placeholder="Password" [(ngModel)]="model.password" #password="ngModel" required />
+                            <div class="help-block invalid-feedback" *ngIf="f.submitted && !password.valid">Password is required</div>
                         </div>
                         <div class="form-group">
-                            <button class="btn btn-primary btn-block">Login</button>                    
-                            <a [routerLink]="['/account/forgotpassword']" class="btn btn-link btn-block">Lupa Kata Kunci?</a>
+                            <button class="btn btn-primary btn-block">Login</button>
+                            <a class="btn btn-link btn-block" [routerLink]="['/account/forgotpassword']">Lupa Kata Kunci?</a>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>

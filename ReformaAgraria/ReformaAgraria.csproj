@@ -27,7 +27,10 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
+    <Compile Remove="ClientApp\app\templates\environments\**" />
     <Content Remove="ClientApp\**" />
+    <EmbeddedResource Remove="ClientApp\app\templates\environments\**" />
+    <None Remove="ClientApp\app\templates\environments\**" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="appsettings.Development.json" />
@@ -40,8 +43,6 @@
     <None Remove="ClientApp\app\pipes\regionBreadcrumb.ts" />
     <None Remove="ClientApp\app\pipes\enum.ts" />
     <None Remove="ClientApp\app\services\crud.ts" />
-    <None Remove="ClientApp\app\templates\environments\environment.prod.ts" />
-    <None Remove="ClientApp\app\templates\environments\environment.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Docs\" />
@@ -62,8 +63,6 @@
     <TypeScriptCompile Include="ClientApp\app\pipes\regionBreadcrumb.ts" />
     <TypeScriptCompile Include="ClientApp\app\pipes\enum.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\crud.ts" />
-    <TypeScriptCompile Include="ClientApp\app\templates\environments\environment.prod.ts" />
-    <TypeScriptCompile Include="ClientApp\app\templates\environments\environment.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Update="ClientApp\app\models\gen\actProposalDocumentCheckList.ts">

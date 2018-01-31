@@ -1,18 +1,26 @@
-﻿<!--start nav topbar-->
-<nav class="navbar navbar-expand-md navbar-dark fixed-top justify-content-between">
-
-    <div id="mySidenav" class="sidenav-drawer">
-        <div class="d-flex" style="justify-content: space-between">
-            <a class="nav-link" routerLink="/home/{{regionId}}" routerLinkActive="active">Dashboard</a>
+﻿<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <div class="sidenav-drawer" id="mySidenav">
+        <div class="d-flex justify-content-between">
+            <a class="nav-link" routerLink="/home/{{regionId}}" routerLinkActive="active">
+                <span class="oi oi-bar-chart" aria-hidden="true"></span>Dashboard
+            </a>
             <a class="nav-link close-btn" data-toggle="collapse" data-target="#mySidenav">&times;</a>            
         </div>        
-        <a class="nav-link" routerLink="/calendar/{{regionId}}" routerLinkActive="active">Kalendar Kegiatan</a>
-        <a class="nav-link" routerLink="/map" routerLinkActive="active">Peta</a>
-        <a class="nav-link" routerLink="/library" routerLinkActive="active">Pustaka</a>
-        <a class="nav-link" routerLink="/account/usermanagement" routerLinkActive="active">Pengguna</a>
+        <a class="nav-link" routerLink="/calendar/{{regionId}}" routerLinkActive="active">
+            <span class="oi oi-calendar" aria-hidden="true"></span>Kalendar Kegiatan
+        </a>
+        <a class="nav-link" routerLink="/map" routerLinkActive="active">
+            <span class="oi oi-map" aria-hidden="true"></span>Peta
+        </a>
+        <a class="nav-link" routerLink="/library" routerLinkActive="active">
+            <span class="oi oi-list" aria-hidden="true"></span>Pustaka
+        </a>
+        <a class="nav-link" routerLink="/account/usermanagement" routerLinkActive="active">
+            <span class="oi oi-people" aria-hidden="true"></span>Pengguna
+        </a>
     </div>
 
-    <button class="navbar-toggler d-md-none d-lg-none align-middle" data-toggle="collapse" data-target="#mySidenav" style="width: 56px; height: 40px;" type="button">
+    <button class="navbar-toggler d-md-none d-lg-none align-middle" type="button" data-toggle="collapse" data-target="#mySidenav">
         <span class="oi oi-chevron-right"></span>
     </button>
 
@@ -23,9 +31,9 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ol class="breadcrumb mr-auto" style="background-color:#1976D2; margin-top:20px; padding: 0 0 0 0;">
+        <ol class="breadcrumb mr-auto">
             <li class="breadcrumb-item active" *ngFor="let r of (region | regionBreadcrumb)">
-                <a [routerLink]="['/home', convertRegionId(r.id)]">{{ r.name }}</a>
+                <a class="breadcrumb-item-link" [routerLink]="['/home', convertRegionId(r.id)]">{{ r.name }}</a>
             </li>
         </ol>
 
@@ -62,6 +70,4 @@
             <button type="button" class="btn btn-sml btn-outline-warning my-2 my-sm-0" (click)="logout()">Logout</button>
         </form>
     </div>
-
 </nav>
-<!--end nav topbar-->

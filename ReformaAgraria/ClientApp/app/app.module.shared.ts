@@ -26,7 +26,6 @@ import { EventCalendarComponent } from './components/eventCalendar';
 import { EventCardComponent } from './components/eventCard';
 import { VillageComponent } from './components/village';
 import { TeamComponent } from './components/team';
-import { VillageBorderComponent } from './components/village-border';
 import { ToraMapComponent } from './components/toraMap';
 import { ToraHeaderComponent } from './components/toraHeader';
 import { ToraSummaryComponent } from './components/toraSummary';
@@ -82,7 +81,6 @@ import './styles/app.scss';
         EventCardComponent,
         VillageComponent,
         TeamComponent,
-        VillageBorderComponent,
         ToraHeaderComponent,
         ToraSummaryComponent,
         ToraListComponent,
