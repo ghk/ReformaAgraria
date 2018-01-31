@@ -59,7 +59,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     logout(): void {
-        this.accountService.logout().subscribe();
+        this.accountService.logout();
         this.router.navigateByUrl('/account/login');
     }
 

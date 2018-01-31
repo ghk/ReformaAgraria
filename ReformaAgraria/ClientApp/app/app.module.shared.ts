@@ -134,7 +134,7 @@ import './styles/app.scss';
                     { path: 'login', component: LoginComponent },
                     { path: 'forgotpassword', component: ForgotPasswordComponent },
                     { path: 'resetpassword', component: ResetPasswordComponent },
-                    { path: 'usermanagement', component: UserManagementComponent }
+                    { path: 'usermanagement', component: UserManagementComponent, canActivate: [AuthGuard], data: { roles: ['Administrator']} }
                 ]
             },
             { path: '**', redirectTo: 'home' }
