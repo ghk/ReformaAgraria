@@ -156,8 +156,8 @@ namespace ReformaAgraria.Controllers
             return Ok();
         }
 
-        [HttpPost("password/reset")]
-        public async Task<IActionResult> ResetPassword(string id, string token, string password)
+        [HttpPost("password/reset/{id}/{token}")]
+        public async Task<IActionResult> ResetPassword(string id, string token, [FromBody]Dictionary<string, string> data)
         {
             var user = _userManager.FindByIdAsync(id).Result;
 
@@ -165,7 +165,7 @@ namespace ReformaAgraria.Controllers
             if (!authorizeResult.Succeeded)
                 return Forbid();
 
-            IdentityResult result = _userManager.ResetPasswordAsync(user, token.Replace(" ", "+"), password).Result;
+            IdentityResult result = _userManager.ResetPasswordAsync(user, token.Replace(" ", "+"), data["newPassword"]).Result;
             if (result.Succeeded)
                 return Ok();
             return BadRequest(result.Errors);
@@ -174,7 +174,6 @@ namespace ReformaAgraria.Controllers
         [HttpPost("password/change/{id}")]        
         public async Task<IActionResult> ChangePassword(string id, [FromBody]Dictionary<string, string> data)
         {
-            var newPassword = data["newPassword"];
             var user = await _userManager.FindByIdAsync(id);
 
             var authorizeResult = await _authorizationService.AuthorizeAsync(User, user, new AccountEditRequirement());
@@ -182,7 +181,7 @@ namespace ReformaAgraria.Controllers
                 return Forbid();
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            return await ResetPassword(id, token, newPassword);
+            return await ResetPassword(id, token, data);
         }
 
         [HttpGet("user")]

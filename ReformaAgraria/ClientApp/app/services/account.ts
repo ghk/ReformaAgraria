@@ -54,12 +54,8 @@ export class AccountService {
 
     resetPassword(id: string, token: string, password: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        let params = new URLSearchParams();
-        params.append('id', id);
-        params.append('token', token);
-        params.append('password', password);
-        requestOptions.params = params;
-        return this.http.post('/api/account/password/reset', params, requestOptions);
+        let body = { 'password': password };
+        return this.http.post('/api/account/password/reset/' + id + '/' + token, body, requestOptions);
     }
 
     changePassword(id: string, newPassword: string) {
