@@ -73,9 +73,12 @@ export class UserManagementComponent {
     delete(id: string, email: string) {
         this.id = id;
         this.email = email;
+        console.log(this.id);
+        console.log(this.email);
     }
 
     deleteUser() {
+        console.log('masuk');
         this.loadingDeleteUserModal = true;
         this.showDeleteUserModal = false;
         this.accountService.deleteUser(this.id)
