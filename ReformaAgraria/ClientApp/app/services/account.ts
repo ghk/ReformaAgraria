@@ -63,11 +63,8 @@ export class AccountService {
 
     changePassword(id: string, newPassword: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        let params = new URLSearchParams();
-        params.append('id', id);
-        params.append('newPassword', newPassword);
-        requestOptions.params = params;
-        return this.http.post('/api/account/password/change', params, requestOptions);
+        let body = { 'newPassword': newPassword };
+        return this.http.post('/api/account/password/change/' + id, body, requestOptions);
     }
 
     getAllUser() {

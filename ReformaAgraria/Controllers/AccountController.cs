@@ -172,10 +172,9 @@ namespace ReformaAgraria.Controllers
             return BadRequest(result.Errors);
         }
 
-        [HttpPost("password/change")]        
-        public async Task<IActionResult> ChangePassword([FromBody]Dictionary<string, string> data)
+        [HttpPost("password/change/{id}")]        
+        public async Task<IActionResult> ChangePassword(string id, [FromBody]Dictionary<string, string> data)
         {
-            var id = data["id"];
             var newPassword = data["newPassword"];
             var user = await _userManager.FindByIdAsync(id);
 
@@ -205,7 +204,6 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpGet("user/{id}")]
-        [Authorize(Policy = "Administrator")]
         public ReformaAgrariaUser GetUserById(string id)
         {
             return _userManager.FindByIdAsync(id).Result;
