@@ -2,11 +2,13 @@
 import { Subscription } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
+import { Region } from '../models/gen/region';
+import { RegionType } from '../models/gen/regionType';
+
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { ToraObjectService } from '../services/gen/toraObject';
-import { RegionType } from '../models/gen/regionType';
-import { Region } from '../models/gen/region';
+
 
 @Component({
     selector: 'ra-tora-summary',
@@ -14,11 +16,13 @@ import { Region } from '../models/gen/region';
 })
 export class ToraSummaryComponent implements OnInit, OnDestroy {
     subscription: Subscription;
-    summaries: any = [];
     region: Region;
-    loading: boolean = true;    
-    order: string = "region.name";
     RegionType: RegionType;
+
+    summaries: any = [];
+
+    loading: boolean = true;
+    order: string = "region.name";
 
     constructor(
         private regionService: RegionService,

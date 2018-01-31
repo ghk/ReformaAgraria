@@ -18,7 +18,7 @@ export class EventHelper {
         return event;
     }
 
-    static deserialize(event: Event, actions?:CalendarEventAction[]) : CalendarEvent<Event> {
+    static deserialize(event: Event, actions?: CalendarEventAction[]): CalendarEvent<Event> {
         let evColor = this.getEventColor(event);
         let color = {
             primary: evColor,
@@ -37,14 +37,14 @@ export class EventHelper {
             resizable: {
                 beforeStart: true,
                 afterEnd: true
-            },        
+            },
             actions: actions ? actions : [],
             meta: event
         };
         return calEvent;
     }
 
-    static serializeMany(calEvents: CalendarEvent<Event>[]) : Event[] {
+    static serializeMany(calEvents: CalendarEvent<Event>[]): Event[] {
         let events = [];
         calEvents.forEach(calEvent => {
             events.push(this.serialize(calEvent));
@@ -52,7 +52,7 @@ export class EventHelper {
         return events;
     }
 
-    static deserializeMany(events: Event[], actions?:CalendarEventAction[]) : CalendarEvent[] {
+    static deserializeMany(events: Event[], actions?: CalendarEventAction[]): CalendarEvent[] {
         let calEvents = [];
         events.forEach(event => {
             calEvents.push(this.deserialize(event, actions));
@@ -61,7 +61,7 @@ export class EventHelper {
     }
 
     static getEventColor(event: Event): string {
-        switch(event.eventType.id) {
+        switch (event.eventType.id) {
             case '1.1':
             case '1.2':
             case '1.3':

@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class TranslatePipe implements PipeTransform {
     transform(value, args: string[]): any {
-        switch(value) {
+        switch (value) {
             case 'Uneducated':
                 return 'Tidak Sekolah';
             case 'ElementarySchool':
@@ -82,7 +82,7 @@ export class TranslatePipe implements PipeTransform {
             case 'NotSpecified':
                 return 'Tidak Disebutkan';
             default:
-                return value;                
+                return value;
         }
     }
 }

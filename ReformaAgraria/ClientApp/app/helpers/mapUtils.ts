@@ -1,7 +1,8 @@
 ﻿import * as L from 'leaflet';
 
 export class MapUtils {
-    public static readonly BUILDING_COLORS = [{
+
+    static readonly BUILDING_COLORS = [{
         "description": 'Sekolah',
         "color": 'darkgreen',
         "value": 'school'
@@ -39,7 +40,7 @@ export class MapUtils {
         "value": 'port'
     }];
 
-    public static readonly LANDUSE_COLORS = [{
+    static readonly LANDUSE_COLORS = [{
         "description": 'Perumahan',
         "color": 'black',
         "value": 'residential'
@@ -73,20 +74,7 @@ export class MapUtils {
         "value": 'spring'
     }]
 
-    public static readonly INFRASTRUCTURE_MARKERS = []
-
-    static createGeoJson(): any {
-        return {
-            "type": "FeatureCollection",
-            "crs": {
-                "type": "name",
-                "properties": {
-                    "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
-                }
-            },
-            "features": []
-        }
-    }
+    static readonly INFRASTRUCTURE_MARKERS = []
 
     static setGeoJsonLayer(geoJson: any, options?: any): L.GeoJSON {
         return L.geoJSON(geoJson, options);
