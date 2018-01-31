@@ -1,8 +1,11 @@
 ﻿import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 import { Observable, ReplaySubject } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 import { Region } from "../models/gen/region";
+
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class SharedService {
@@ -12,7 +15,9 @@ export class SharedService {
     private region$: ReplaySubject<Region>;
     private toraSummary$: ReplaySubject<any[]>;
 
-    constructor() {
+    constructor(
+        private cookieService: CookieService
+    ) {
         this.region$ = new ReplaySubject(1);
         this.toraSummary$ = new ReplaySubject(1);
     }
@@ -35,13 +40,19 @@ export class SharedService {
     }
 
     public getCurrentUser() {
+        if (!this.user) {
+            let accessToken = this.cookieService.get('accessToken');
+            if (!accessToken)
+                return null;
+            
+            let payload = jwt.decode(accessToken);
+            if (!payload)
+                return null;
+            
+            payload.role = [].concat(payload.role);
+            this.user = payload;
+        }
+        
         return this.user;
-    }
-
-    public setCurrentUser(user: any) {
-        // WTF? Because jwt payload role can contain string or array
-        if (user)
-            user['role'] = [].concat(user['role']);
-        this.user = user;
     }
 }
