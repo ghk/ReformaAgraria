@@ -6,7 +6,6 @@ import { ProgressHttp } from "angular-progress-http";
 
 import 'rxjs/add/operator/map'
 import * as urljoin from 'url-join';
-import * as jwt from 'jsonwebtoken';
 
 import { LoginViewModel as User } from '../models/gen/loginViewModel';
 import { RequestHelper } from '../helpers/request';
@@ -28,19 +27,17 @@ export class AccountService {
             .map(response => {                
                 let resp = response.json();
                 if (resp && resp.data && resp.data.accessToken) {
-                    this.cookieService.set('accessToken', resp.data.accessToken, 30, '/');
-                    this.sharedService.setCurrentUser(jwt.decode(resp.data.accessToken));
+                    this.cookieService.set('accessToken', resp.data.accessToken, 30, '/');                 
                 }
                 return resp.data;
             })
             .catch(this.handleError);
     }
     
-    async logout() {
+    logout() {
         //let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
         //await this.http.post('/api/account/logout', null).toPromise();
         this.cookieService.deleteAll('/');
-        this.sharedService.setCurrentUser(null);        
     }
 
     register(user: User) {
@@ -95,7 +92,6 @@ export class AccountService {
     }
 
     private handleError(error: Response | any) {
-        console.log(error);
         let errMsg: string;
         if (error instanceof Response) {
             try {
