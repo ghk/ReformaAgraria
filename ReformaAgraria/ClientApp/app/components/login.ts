@@ -21,20 +21,18 @@ export class LoginComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // reset login status
-        this.accountService.logout();
         // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
     login() {
-        this.accountService.login(this.model)
-            .subscribe(
-                data => {
-                    this.router.navigate([this.returnUrl]);
-                },
-                error => {
-                    this.alertService.error(error);
-                });
+        this.accountService.login(this.model).subscribe(
+            data => {
+                this.router.navigate([this.returnUrl]);
+            },
+            error => {
+                this.alertService.error(error);
+            }
+        );
     }    
 }

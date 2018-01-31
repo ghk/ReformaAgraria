@@ -24,8 +24,8 @@ export class AccountService {
             .map(response => {                
                 let resp = response.json();
                 if (resp && resp.data && resp.data.accessToken) {
-                    this.cookieService.set('accessToken', resp.data.accessToken);
-                    this.cookieService.set('currentUser', resp.data.email);
+                    this.cookieService.set('accessToken', resp.data.accessToken, 30, '/');
+                    this.cookieService.set('currentUser', resp.data.userName, 30, '/');
                 }
                 return resp.data;
             })
@@ -34,9 +34,7 @@ export class AccountService {
     
     logout() {
         this.cookieService.delete('accessToken');
-        this.cookieService.delete('currentUser');
-        return this.http.post('/api/account/logout', null)
-            .catch(this.handleError);
+        this.cookieService.delete('currentUser');      
     }
 
     register(user: User) {
