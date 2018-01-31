@@ -140,6 +140,7 @@ namespace ReformaAgraria.Controllers
         }        
 
         [HttpPost("password/recovery")]
+        [AllowAnonymous]
         public async Task<IActionResult> SendPasswordRecoveryLink([FromBody] LoginViewModel model)
         {
             var user = _userManager.FindByEmailAsync(model.Email).Result;
@@ -149,7 +150,7 @@ namespace ReformaAgraria.Controllers
                 return Forbid();
 
             var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
-            string resetLink = Request.Scheme + "://" + Request.Host + "/account/resetpassword?id=" + user.Id + "&token=" + token;
+            string resetLink = Request.Scheme + "://" + Request.Host + "/account/resetpassword?email=" + user.Email + "&id=" + user.Id + "&token=" + token;
             MailController mc = new MailController(_iconfiguration);
             string body = "Klik tautan di bawah ini untuk mereset password anda. </br><a href='" + resetLink + "'>Reset Password</a>";
             mc.SendEmail("Reset Password", body, new MailAddress(user.Email, user.UserName));
@@ -202,6 +203,7 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpGet("user/{id}")]
+        [Authorize(Policy = "Administrator")]
         public ReformaAgrariaUser GetUserById(string id)
         {
             return _userManager.FindByIdAsync(id).Result;

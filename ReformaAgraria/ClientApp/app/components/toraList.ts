@@ -188,7 +188,7 @@ export class ToraListComponent implements OnInit, OnDestroy {
         this.toraObjectService.deleteById(this.objectId)
             .subscribe(
             data => {
-                this.toastr.success('Data is successfully deleted.', null);
+                this.toastr.success('Data berhasil dihapus', null);
                 this.getToraObjects(this.region.id);
                 (<any>$('#deleteModal')).modal('hide');
             },

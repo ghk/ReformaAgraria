@@ -32,7 +32,7 @@ export class ResetPasswordComponent {
             .subscribe(params => {
                 this.model.token = params['token'];
                 this.model.id = params['id'];
-                this.getUserById(this.model.id);
+                this.model.email = params['email'];
             });
     }
 
@@ -44,23 +44,12 @@ export class ResetPasswordComponent {
             data => {
                 this.loading = false;
                 this.showPage = true;
-                this.toastr.success('Password is successfully Reset', null);
+                this.toastr.success('Password berhasil diubah', null);
                 this.router.navigate(['/account/login']);
             },
             error => {
                 this.loading = false;
                 this.showPage = true;
-                this.toastr.error(error, null);
-            });
-    }
-
-    getUserById(id: string) {
-        this.accountService.getUserById(this.model.id)
-            .subscribe(
-            data => {
-                this.model.email = data.email;
-            },
-            error => {
                 this.toastr.error(error, null);
             });
     }

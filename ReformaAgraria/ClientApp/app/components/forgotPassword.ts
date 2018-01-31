@@ -25,7 +25,7 @@ export class ForgotPasswordComponent {
         this.accountService.sendPasswordRecoveryLink(this.model)
             .subscribe(
                 data => {
-                    this.toastr.success('Email sent.', null);
+                    this.toastr.success('Email terkirim', null);
                     this.router.navigate(['/account/login']);
                     this.loading = false;
                     this.showPage = true;

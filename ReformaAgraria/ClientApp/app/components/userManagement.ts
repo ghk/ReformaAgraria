@@ -84,7 +84,7 @@ export class UserManagementComponent {
         this.accountService.deleteUser(this.id)
             .subscribe(
             data => {
-                this.toastr.success('User ' + this.email + ' is successfully deleted.', null);
+                this.toastr.success('Pengguna ' + this.email + ' berhasil dihapus', null);
                 this.showListUser();
                 this.loadingDeleteUserModal = false;
                 this.showDeleteUserModal = true;
@@ -111,7 +111,7 @@ export class UserManagementComponent {
             this.loadingEditEmailModal = false;
             this.showEditEmailModal = true;
             (<any>$('#modalEditEmail')).modal('hide');
-            this.toastr.success('User is successfully updated.', null);
+            this.toastr.success('Data pengguna berhasil diubah', null);
         },
             error => {
                 this.loadingEditEmailModal = false;
@@ -130,7 +130,7 @@ export class UserManagementComponent {
                 this.loadingChangePasswordModal = false;
                 this.showChangePasswordModal = true;
                 (<any>$('#modalEditPassword')).modal('hide');
-                this.toastr.success('Password is successfully changed.', null);
+                this.toastr.success('Password berhasil diubah', null);
             },
             error => {
                 this.loadingChangePasswordModal = false;
@@ -149,7 +149,7 @@ export class UserManagementComponent {
                 this.loadingAddUserModal = false;
                 this.showAddUserModal = true;
                 (<any>$('#modalAddUser')).modal('hide');
-                this.toastr.success('Registration successful', null)
+                this.toastr.success('Registrasi berhasil', null)
             },
             error => {
                 this.loadingAddUserModal = false;
