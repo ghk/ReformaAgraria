@@ -10,6 +10,7 @@ using System.Net;
 using System.Collections.Generic;
 using ReformaAgraria.Models.ViewModels;
 using ReformaAgraria.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
@@ -20,11 +21,13 @@ namespace ReformaAgraria.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ILogger<LibraryController> _logger;
 
-        public LibraryController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment, IHttpContextAccessor contextAccessor) : base(dbContext)
+        public LibraryController(ReformaAgrariaDbContext dbContext, IHostingEnvironment hostingEnvironment, IHttpContextAccessor contextAccessor, ILogger<LibraryController> logger) : base(dbContext)
         {
             _hostingEnvironment = hostingEnvironment;
             _contextAccessor = contextAccessor;
+            _logger = logger;
         }
 
         [HttpPost("upload")]

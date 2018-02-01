@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReformaAgraria.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using ReformaAgraria.Models;
+using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
@@ -15,10 +16,12 @@ namespace ReformaAgraria.Controllers
     public class SearchController : ControllerBase
     {
         protected DbContext dbContext;
+        private readonly ILogger<SearchController> _logger;
 
-        public SearchController(ReformaAgrariaDbContext dbContext)
+        public SearchController(ReformaAgrariaDbContext dbContext, ILogger<SearchController> logger)
         {
             this.dbContext = dbContext;
+            _logger = logger;
         }
         
         [HttpGet("{keywords}")]

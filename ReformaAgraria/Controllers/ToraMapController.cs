@@ -25,6 +25,7 @@ using System.Collections;
 using GeoAPI.Geometries;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
@@ -35,15 +36,18 @@ namespace ReformaAgraria.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ILogger<ToraMapController> _logger;
 
         public ToraMapController(
             ReformaAgrariaDbContext dbContext, 
             IHostingEnvironment hostingEnvironment, 
-            IHttpContextAccessor contextAccessor
+            IHttpContextAccessor contextAccessor,
+            ILogger<ToraMapController> logger
         ) : base(dbContext)
         {
             _hostingEnvironment = hostingEnvironment;
             _contextAccessor = contextAccessor;
+            _logger = logger;
         }
 
         [HttpPost("upload")]

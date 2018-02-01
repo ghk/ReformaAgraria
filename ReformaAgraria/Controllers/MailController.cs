@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,11 @@ namespace ReformaAgraria.Controllers
     public class MailController
     {
         private readonly IConfiguration _iconfiguration;
+        private readonly ILogger<MailController> _logger;
 
-        public MailController(IConfiguration iconfiguration) {
+        public MailController(IConfiguration iconfiguration, ILogger<MailController> logger) {
             _iconfiguration = iconfiguration;
+            _logger = logger;
         }
 
         public void SendEmail(string subject, string body, MailAddress toAddress)

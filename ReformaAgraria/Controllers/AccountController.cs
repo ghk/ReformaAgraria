@@ -29,6 +29,7 @@ namespace ReformaAgraria.Controllers
         private readonly UserManager<ReformaAgrariaUser> _userManager;
         private readonly SignInManager<ReformaAgrariaUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
+        private readonly ILogger<MailController> _mailLogger;
         private readonly TokenAuthOption _tokenOptions;
         private readonly IConfiguration _iconfiguration;
         private readonly IAuthorizationService _authorizationService;
@@ -38,6 +39,7 @@ namespace ReformaAgraria.Controllers
             UserManager<ReformaAgrariaUser> userManager,
             SignInManager<ReformaAgrariaUser> signInManager,
             ILogger<AccountController> logger,
+            ILogger<MailController> mailLogger,
             IOptions<TokenAuthOption> tokenOptions,
             IConfiguration iconfiguration,
             IAuthorizationService authorizationService
@@ -50,6 +52,7 @@ namespace ReformaAgraria.Controllers
             _tokenOptions = tokenOptions.Value;
             _iconfiguration = iconfiguration;
             _authorizationService = authorizationService;
+            _mailLogger = mailLogger;
         }
 
         // [ValidateAntiForgeryToken]
@@ -151,7 +154,7 @@ namespace ReformaAgraria.Controllers
 
             var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
             string resetLink = Request.Scheme + "://" + Request.Host + "/account/resetpassword?email=" + user.Email + "&id=" + user.Id + "&token=" + token;
-            MailController mc = new MailController(_iconfiguration);
+            MailController mc = new MailController(_iconfiguration, _mailLogger);
             string body = "Klik tautan di bawah ini untuk mereset password anda. </br><a href='" + resetLink + "'>Reset Password</a>";
             mc.SendEmail("Reset Password", body, new MailAddress(user.Email, user.UserName));
             return Ok();
