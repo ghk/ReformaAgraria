@@ -86,19 +86,16 @@
     </div>
 </div>
 
-<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 0">
-            <div class="modal-body">                        
-                <h2 class="text-center">Hapus {{model.label}} ?</h2>               
+<div class="modal fade" id="delete-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-delete">
+                <h4 class="modal-title">Hapus data?</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary focus" data-backdrop="false" data-dismiss="modal">
-                    <i class="fa fa-save"></i>Batal
-                </button>
-                <button type="submit" class="btn btn-danger" data-backdrop="false" (click)=deleteOverlay(model)>
-                    <i class="fa fa-save"></i>Hapus
-                </button>
+            <div class="modal-footer modal-delete">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-danger" data-dismiss="modal" (click)="deleteOverlay(model)">Hapus</button>
             </div>
         </div>
     </div>

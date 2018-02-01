@@ -224,30 +224,17 @@
 <!-- end modal change password -->
 
 <!-- start modal deleteUser -->
-<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="alert alert-light alert-dismissible fade show" role="alert">
-            <ng-container *ngIf="loadingDeleteUserModal">
-                <div class="form-row col-12">
-                    <div class="col-12">
-                        <div id="loader"></div>
-                    </div>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="showDeleteUserModal">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <div class="form-row col-12">
-                    <div class="col-12">
-                        <h2 class="alert-heading">Hapus data?</h2>
-                    </div>
-                </div>
-                <div class="nav justify-content-end pb-2 mt-4 mr-3">
-                    <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-danger" (click)="deleteUser()" data-dismiss="modal">Hapus</button>
-                </div>
-            </ng-container>
+<div class="modal fade" id="modalDelete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-delete">
+                <h4 class="modal-title">Hapus data?</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-footer modal-delete">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteUser()">Hapus</button>
+            </div>
         </div>
     </div>
 </div>

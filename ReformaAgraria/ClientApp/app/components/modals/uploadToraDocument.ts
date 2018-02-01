@@ -54,11 +54,11 @@ export class ModalUploadToraDocumentComponent implements OnInit, OnDestroy {
         this.toraObjectService.upload(formData, this.progressListener.bind(this))
             .subscribe(
             data => {
-                this.toastr.success('File is successfully uploaded')
+                this.toastr.success('File berhasil diupload')
                 this.isSaveSuccess$.next(true);
             },
             error => {
-                this.toastr.error('Unable to upload the file')
+                this.toastr.error('Upload file gagal')
                 this.isSaveSuccess$.next(false);
             }
         );

@@ -183,20 +183,16 @@
 </div>
 
 <!-- alert delete modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="alert alert-light alert-dismissible fade show" role="alert">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="form-row col-12">
-                <div class="col-12">
-                    <h3 class="alert-heading pb-4">Hapus data?</h3>
-                </div>
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-delete">
+                <h4 class="modal-title">Hapus data?</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="nav justify-content-end pb-2 mt-4 mr-3">
-                <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-danger" (click)="onConfirmDelete()">Hapus</button>
+            <div class="modal-footer modal-delete">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="onConfirmDelete()">Hapus</button>
             </div>
         </div>
     </div>
