@@ -1,0 +1,175 @@
+﻿<div class="card w-100">
+    <div class="card-body">
+        <div class="d-flex card-title" style="justify-content: space-between;">
+            <h4>Detil Kegiatan</h4>
+        </div>
+        <a href="#" download id="download"></a>
+        <table class="table table-responsive-sm" id="table-event-detail">
+            <caption>
+                <button type="button" class="btn btn-primary" title="Print" (click)="onUpdateEvent()">
+                    <span class="oi oi-pencil" style="margin-right: 10px;"></span>Ubah
+                </button>
+            </caption>
+            <tbody>
+                <tr class="row">
+                    <td class="col-md-2 text-left">Tipe</td>
+                    <td class="col-md-1 text-center">:</td>
+                    <td class="col-md-9 text-left">{{event?.eventType?.id}} - {{event?.eventType?.name}}</td>
+                </tr>
+                <tr class="row">
+                    <td class="col-md-2 text-left">Deskripsi</td>
+                    <td class="col-md-1 text-center">:</td>
+                    <td class="col-md-9 text-left">{{event?.description}}</td>
+                </tr>
+                <tr class="row">
+                    <td class="col-md-2 text-left">Waktu Mulai</td>
+                    <td class="col-md-1 text-center">:</td>
+                    <td class="col-md-9 text-left">{{event?.startDate | date:'dd MMM yyyy HH:mm a'}}</td>
+                </tr>
+                <tr class="row">
+                    <td class="col-md-2 text-left">Waktu Selesai</td>
+                    <td class="col-md-1 text-center">:</td>
+                    <td class="col-md-9 text-left">{{event?.endDate | date:'dd MMM yyyy HH:mm a'}}</td>
+                </tr>
+                <tr class="row">
+                    <td class="col-md-2 text-left">Lokasi</td>
+                    <td class="col-md-1 text-center">:</td>
+                    <td class="col-md-9 text-left">{{region?.name}}</td>
+                </tr>
+                <tr class="row">
+                    <td class="col-md-2 text-left">Uraian Hasil</td>
+                    <td class="col-md-1 text-center">:</td>
+                    <td class="col-md-9 text-left">{{event?.resultDescription}}</td>
+                </tr>
+                <tr class="row">
+                    <td class="col-md-2 text-left">Daftar Peserta</td>
+                    <td class="col-md-1 text-center">:</td>
+                    <td class="col-md-9 text-left">{{event?.attendees}}</td>
+                </tr>
+                <tr class="row">
+                    <td class="col-md-2 text-left">Lampiran</td>
+                    <td class="col-md-1 text-center">:</td>
+                    <td class="col-md-9 text-left">
+                        <ng-container *ngIf="attachments?.length > 0">
+                            <ng-container *ngFor="let attachment of attachments">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <a href="javascript:void(0)" (click)="download(attachment)">{{attachment}}</a>
+                                        <br />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="javascript:void(0)" (click)="delete()"><span class="oi oi-trash"></span></a>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <a href="#" download id="download"></a>
+                            <br />
+                        </ng-container>
+                        <div class="upload-btn-wrapper">
+                            <button class="btn-custom"><small>Unggah Lampiran</small></button>
+                            <input type="file" name="myfile" (change)="onChangeUpload($event.target.files[0], 'attachment')" />
+                        </div>
+                    </td>
+                </tr>
+                <tr class="row">
+                    <td class="col-md-2 text-left">Foto Kegiatan</td>
+                    <td class="col-md-1 text-center">:</td>
+                    <td class="col-md-9 text-left">
+                        <div class="upload-btn-wrapper">
+                            <button class="btn-custom"><small>Unggah Foto</small></button>
+                            <input type="file" (change)="onChangeUpload($event.target.files[0], 'photos')" />
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<ng-template #eventModal>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Ubah Kegiatan</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="eventModalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="onSaveEvent()">
+            <div class="form-group row">
+                <label for="title" class="col-sm-2 col-form-label">Tipe</label>
+                <div class="col-sm-10">
+                    <select class="form-control" [(ngModel)]="event.fkEventTypeId" name="eventType">
+                        <option *ngFor="let eventType of eventTypes" [ngValue]="eventType.id">{{eventType.id}} - {{eventType.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="description" class="col-sm-2 col-form-label">Deskripsi</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control" name="description" rows="5" [(ngModel)]="event.description">
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="startDate" class="col-sm-2 col-form-label d-flex align-items-center">Waktu Mulai</label>
+                <div class="col-sm-5 d-flex align-items-center">
+                    <input bsDatepicker type="text" class="form-control" name="startDate" placement="top"
+                           [(ngModel)]="event.startDate">
+                </div>
+                <div class="col-sm-2">
+                    <timepicker [(ngModel)]="event.startDate" [showMeridian]="false" name="startTime"></timepicker>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="endDate" class="col-sm-2 col-form-label d-flex align-items-center">Waktu Selesai</label>
+                <div class="col-sm-5 d-flex align-items-center">
+                    <input bsDatepicker type="text" class="form-control" name="endDate" placement="top"
+                           [(ngModel)]="event.endDate">
+                </div>
+                <div class="col-sm-2">
+                    <timepicker [(ngModel)]="event.endDate" [showMeridian]="false" name="endTime"></timepicker>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="location" class="col-sm-2 col-form-label">Lokasi</label>
+                <div class="col-sm-10">
+                    <input [(ngModel)]="selected"
+                           [typeahead]="dataSource"
+                           [typeaheadMinLength]="3"
+                           [typeaheadItemTemplate]="searchRegionTemplate"
+                           typeaheadOptionField="label"
+                           (typeaheadOnSelect)="onSearchSelected($event)"
+                           name="search"
+                           autocomplete="off"
+                           class="typehead form-control mr-sm-2"
+                           type="text"
+                           placeholder="Cari Lokasi"
+                           aria-label="Search">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="resultDescription" class="col-sm-2 col-form-label">Uraian Hasil</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control" name="resultDescription" rows="5" [(ngModel)]="event.resultDescription">
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="attendees" class="col-sm-2 col-form-label">Daftar Peserta</label>
+                <div class="col-sm-10">
+                    <textarea type="text" class="form-control" name="attendees" rows="5" [(ngModel)]="event.attendees">
+                    </textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Simpan</button>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #searchRegionTemplate let-model="item" let-index="index">
+    <div>
+        <span>{{ model.label }}</span>
+        <span style="font-size:0.6rem;" *ngIf="model.type === 0"><i>Kabupaten</i></span>
+        <span style="font-size:0.6rem;" *ngIf="model.type === 1"><i>Kecamatan</i></span>
+        <span style="font-size:0.6rem;" *ngIf="model.type === 2"><i>Desa</i></span>
+    </div>
+</ng-template>

@@ -10,6 +10,10 @@ using ReformaAgraria.Models;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ReformaAgraria.Models.ViewModels;
+using ReformaAgraria.Helpers;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ReformaAgraria.Controllers
 {
@@ -18,14 +22,49 @@ namespace ReformaAgraria.Controllers
     [Authorize(Policy = "Bearer")]
     public class EventController : CrudControllerAsync<Event, int>
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger<EventController> _logger;
 
         public EventController(
             ReformaAgrariaDbContext dbContext,
+            IHostingEnvironment hostingEnvironment,
             ILogger<EventController> logger
         ) : base(dbContext)
         {
-            this._logger = logger;
+            _hostingEnvironment = hostingEnvironment;
+            _logger = logger;
+        }
+
+        [HttpPost("upload")]
+        public void UploadAttachment([FromForm]UploadEventDetailViewModel document)
+        {
+            var eventDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "event");
+            var eventFilePath = Path.Combine(eventDirectoryPath, document.EventId, document.UploadType.ToLower(), document.File.FileName);
+
+            using (var stream = document.File.OpenReadStream())
+            {
+                IOHelper.StreamCopy(eventFilePath, document.File);
+            }
+        }
+
+        [HttpGet("getdocumentsname")]
+        public string[] GetDocumentsName()
+        {
+            var eventId = GetQueryString<string>("id");
+            var type = GetQueryString<string>("type");
+            
+            var eventFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "event", eventId, type.ToLower());
+            
+            try
+            {
+                var results = Directory.GetFiles(eventFilePath).Select(Path.GetFileName).ToArray();
+                return results;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
         }
 
         protected override IQueryable<Event> ApplyQuery(IQueryable<Event> query)

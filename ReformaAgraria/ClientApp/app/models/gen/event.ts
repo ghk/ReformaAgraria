@@ -8,6 +8,8 @@ export interface Event extends BaseEntity<number> {
     startDate?: Date;
     endDate?: Date;
     fkRegionId?: string;
+    resultDescription?: string;
+    attendees?: string;
     region?: Region;
     fkEventTypeId?: string;
     eventType?: EventType;

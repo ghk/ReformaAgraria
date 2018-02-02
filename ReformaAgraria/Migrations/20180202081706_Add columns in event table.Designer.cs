@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180202081706_Add columns in event table")]
+    partial class Addcolumnsineventtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

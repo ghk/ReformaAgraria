@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Docs\" />
+    <Folder Include="wwwroot\event\15\" />
     <Folder Include="wwwroot\template\" />
     <Folder Include="wwwroot\tora\document\72.10.09.2001\" />
   </ItemGroup>
@@ -163,6 +164,9 @@
     </None>
     <None Update="ClientApp\app\models\gen\uploadBaseLayerViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\UploadBaseLayerViewModel.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\uploadEventDetailViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\UploadEventDetailViewModel.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\uploadLibraryViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\UploadLibraryViewModel.cs</CustomToolNamespace>

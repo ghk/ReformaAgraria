@@ -36,6 +36,7 @@ import { ResetPasswordComponent } from './components/resetPassword';
 import { UserManagementComponent } from './components/userManagement';
 import { MapComponent } from './components/map';
 import { LibraryComponent } from './components/library';
+import { EventDetailComponent } from './components/eventDetail';
 
 import { ModalToraObjectFormComponent } from './components/modals/toraObjectForm';
 import { ModalToraSubjectFormComponent } from './components/modals/toraSubjectForm';
@@ -94,7 +95,8 @@ import './styles/app.scss';
         RegionBreadcrumbPipe,
         EnumPipe,
         TranslatePipe,
-        LibraryComponent
+        LibraryComponent,
+        EventDetailComponent
     ],
     entryComponents: [
         ModalToraObjectFormComponent,
@@ -126,7 +128,8 @@ import './styles/app.scss';
                     { path: 'toradetail/:id', component: ToraDetailComponent },
                     { path: 'calendar/:id', component: EventCalendarComponent },
                     { path: 'map', component: MapComponent },
-                    { path: 'library', component: LibraryComponent }
+                    { path: 'library', component: LibraryComponent },
+                    { path: 'calendardetail/:id', component: EventDetailComponent }
                 ]
             },
             {

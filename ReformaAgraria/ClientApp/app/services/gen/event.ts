@@ -107,6 +107,21 @@ export class EventService implements CrudService<Event, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
+    public getDocumentsName(id: string, type: string, query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'event', 'getdocumentsname?id=' + id + '&type=' + type),
+            null,
+            progressListener,
+            null
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+
     public deleteById(id: any, progressListener?: any): Observable<number> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
@@ -117,6 +132,22 @@ export class EventService implements CrudService<Event, number>{
             null,
             null,
             progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+
+    public upload(model: FormData, progressListener?: any): Observable<Event> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+        options.headers.delete('Content-Type');
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'event', 'upload'),
+            model,
+            null,
+            progressListener,
         );
 
         return request.map(res => res.json()).catch(this.handleError);

@@ -92,7 +92,7 @@ namespace ReformaAgraria.Controllers
                 return BadRequest(new RequestResult
                 {
                     State = RequestState.Failed,
-                    Message = "Email or password is invalid"
+                    Message = "Email atau password salah"
                 });
             }
         }

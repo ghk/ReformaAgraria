@@ -20,6 +20,10 @@ namespace ReformaAgraria.Models
 
         public string FkRegionId { get; set; }
 
+        public string ResultDescription { get; set; }
+
+        public string Attendees { get; set; }
+
         [ForeignKey("FkRegionId")]
         public Region Region { get; set; }
 

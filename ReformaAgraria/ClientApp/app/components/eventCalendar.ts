@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Subscription, Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -73,6 +73,7 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
+        private router: Router,
         private modalService: BsModalService,
         private toastrService: ToastrService,
         private bsLocaleService: BsLocaleService,
@@ -188,6 +189,9 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
         }
         if (action === 'Deleted') {
             this.deleteConfirmationModalRef = this.modalService.show(this.deleteConfirmationModal);
+        }
+        if (action === 'Clicked') {
+            this.router.navigateByUrl('calendardetail/' + event.meta.id);
         }
     }
 
