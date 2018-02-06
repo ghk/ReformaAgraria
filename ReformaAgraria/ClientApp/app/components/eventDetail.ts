@@ -151,7 +151,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     onSaveEvent(): void {
         this.eventService.update(this.event, null).subscribe(
             result => {
-                this.resetEvent();
                 this.eventModalRef.hide();
                 this.toastr.success("Event berhasil disimpan");
                 this.getData(this.event.id);
