@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Progress } from "angular-progress-http";
+import { Image, Action, ImageModalEvent, Description } from 'angular-modal-gallery';
 
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
@@ -21,6 +22,8 @@ import { Query } from '../models/query';
 
 import * as moment from 'moment';
 
+import * as $ from 'jquery';
+
 @Component({
     selector: 'ra-event-detail',
     templateUrl: '../templates/eventDetail.html',
@@ -36,9 +39,23 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     selected: any;
     progress: Progress;
     attachments: any[] = [];
+    attachment: any;
     photos: any[] = [];
+    loading: boolean = true;
 
     eventModalRef: BsModalRef;
+
+    openModalWindow: boolean = false;
+    imagePointer: number = 0;
+
+    openModalWindowObservable: boolean = false;
+    imagePointerObservable: number = 0;
+    image: Image;
+    imagesArray: Array<Image> = [];
+    images: Observable<Array<Image>> = Observable.of(this.imagesArray).delay(300);
+    imagesArraySubscribed: Array<Image>;
+    private subscription: Subscription;
+    private imagesArraySubscription: Subscription;
 
     constructor(        
         private toastr: ToastrService,
@@ -59,6 +76,47 @@ export class EventDetailComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(sub => sub.unsubscribe());
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+        if (this.imagesArraySubscription) {
+            this.imagesArraySubscription.unsubscribe();
+        }
+    }
+
+    openImageModalObservable(image: Image) {
+        this.subscription = this.images.subscribe((val: Image[]) => {
+            this.imagePointerObservable = val.indexOf(image);
+            this.openModalWindowObservable = true;
+        });
+    }
+
+    onImageLoaded(event: ImageModalEvent) {
+        // angular-modal-gallery will emit this event if it will load successfully input images
+        console.log('onImageLoaded action: ' + Action[event.action]);
+        console.log('onImageLoaded result:' + event.result);
+    }
+
+    onVisibleIndex(event: ImageModalEvent) {
+        console.log('action: ' + Action[event.action]);
+        console.log('result:' + event.result);
+    }
+
+    onIsFirstImage(event: ImageModalEvent) {
+        console.log('onfirst action: ' + Action[event.action]);
+        console.log('onfirst result:' + event.result);
+    }
+
+    onIsLastImage(event: ImageModalEvent) {
+        console.log('onlast action: ' + Action[event.action]);
+        console.log('onlast result:' + event.result);
+    }
+
+    onCloseImageModal(event: ImageModalEvent) {
+        console.log('onClose action: ' + Action[event.action]);
+        console.log('onClose result:' + event.result);
+        this.openModalWindow = false;
+        this.openModalWindowObservable = false;
     }
 
     getData(id: number) {
@@ -71,6 +129,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
                 let eventTypeQuery: Query = { data: { 'type': 'getAllByRegionType', 'regionType': 2 } };
                 this.eventTypeService.getAll(eventTypeQuery, null).subscribe(eventTypes => {
                     this.eventTypes = eventTypes;
+                    this.loading = false;
                 });
             });
         })
@@ -105,12 +164,12 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         this.eventService.upload(formData, this.progressListener.bind(this))
             .subscribe(
             data => {
-                console.log('sukses');
+                this.getAttachment(this.event.id);
+                this.getPhotos(this.event.id);
                 this.toastr.success('File berhasil diupload');
             },
             error => {
                 this.toastr.error('Upload file gagal');
-                console.log('gagal');
             }
             );
     }
@@ -124,15 +183,27 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     }
 
     getPhotos(eventId) {
-        //this.eventService.getDocumentsName(eventId.toString(), 'photos', this.progressListener.bind(this))
-        //    .subscribe(
-        //    data => {
-        //        this.photos = data;
-        //        for (var i = 0; i < this.photos.length; i++) {
-        //            this.photos[i] = '../../../wwwroot/event/' + eventId + '/photos/' + this.photos[i];
-        //        }
-        //        console.log(this.photos);
-        //    });
+        this.eventService.getDocumentsName(eventId.toString(), 'photos', this.progressListener.bind(this))
+            .subscribe(
+            data => {
+                this.photos = data;
+                if (this.photos != null) {
+                    this.imagesArray.length = 0;
+                    for (var i = 0; i < this.photos.length; i++) {
+                        this.image = new Image(
+                            '/event/' + eventId + '/photos/' + this.photos[i],
+                            '/event/' + eventId + '/photos/' + this.photos[i],
+                            this.photos[i],
+                            null
+                        )
+                        this.imagesArray.push(this.image);
+                    }
+                }
+                this.imagesArraySubscription = Observable.of(null).delay(500).subscribe(() => {
+                    this.imagesArraySubscribed = this.imagesArray;
+                });
+            });
+        
     }
 
     download(fileName) {
@@ -165,21 +236,21 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     }
     
 
-    delete() {
-        //this.libraryId = id;
+    delete(attachment) {
+        this.attachment = attachment;
     }
 
-    deleteLibrary() {
-        //this.libraryService.delete(this.libraryId)
-        //    .subscribe(
-        //    data => {
-        //        this.toastr.success('Data berhasil dihapus', null);
-        //        this.getAll();
-        //        (<any>$('#deleteModal')).modal('hide');
-        //    },
-        //    error => {
-        //        this.toastr.error(error, null);
-        //    });
+    deleteAttachment() {
+        this.eventService.deleteAttachment(this.event.id.toString(), this.attachment)
+            .subscribe(
+            data => {
+                this.toastr.success('data berhasil dihapus', null);
+                this.getAttachment(this.event.id);
+                (<any>$('#deletemodal')).modal('hide');
+            },
+            error => {
+                this.toastr.error(error, null);
+            });
     }
 
     onDownload(id, title, extension) {

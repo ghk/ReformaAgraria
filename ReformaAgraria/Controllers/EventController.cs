@@ -14,6 +14,7 @@ using ReformaAgraria.Models.ViewModels;
 using ReformaAgraria.Helpers;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using ReformaAgraria.Security;
 
 namespace ReformaAgraria.Controllers
 {
@@ -36,7 +37,7 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("upload")]
-        public void UploadAttachment([FromForm]UploadEventDetailViewModel document)
+        public string Upload([FromForm]UploadEventDetailViewModel document)
         {
             var eventDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "event");
             var eventFilePath = Path.Combine(eventDirectoryPath, document.EventId, document.UploadType.ToLower(), document.File.FileName);
@@ -45,6 +46,8 @@ namespace ReformaAgraria.Controllers
             {
                 IOHelper.StreamCopy(eventFilePath, document.File);
             }
+
+            return "Success";
         }
 
         [HttpGet("getdocumentsname")]
@@ -65,6 +68,23 @@ namespace ReformaAgraria.Controllers
 
                 return null;
             }
+        }
+
+        [HttpPost("deleteattachment")]
+        public string DeleteAttachment()
+        {
+            var eventId = GetQueryString<string>("id");
+            var attachment = GetQueryString<string>("attachment");
+
+            var eventFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "event", eventId, "attachment", attachment);
+
+            if (System.IO.File.Exists(eventFilePath))
+            {
+                System.IO.File.Delete(eventFilePath);
+                return "Success";
+            }
+
+            return "Failed";
         }
 
         protected override IQueryable<Event> ApplyQuery(IQueryable<Event> query)

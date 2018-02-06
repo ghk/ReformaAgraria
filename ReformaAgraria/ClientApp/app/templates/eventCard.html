@@ -4,11 +4,16 @@
         <div class="card-deck" *ngIf="events && events.length > 0">
             <div class="card event-card" *ngFor="let event of events" [style.borderColor]="event.color" (click)="onCardClicked(event)">
                 <h6 class="card-header text-center" [style.backgroundColor]="event.color">
-                    {{event.startDate | date:'dd MMM'}} {{event.endDate ? '- ' + (event.endDate | date: 'dd MMM') : ''}}
+                    <ng-container *ngIf="isOneDayEvent(event.startDate, event.endDate)">
+                        {{event.startDate | date:'dd MMM'}}
+                    </ng-container>
+                    <ng-container *ngIf="!isOneDayEvent(event.startDate, event.endDate)">
+                        {{event.startDate | date:'dd MMM'}} {{event.endDate ? '- ' + (event.endDate | date: 'dd MMM') : ''}}
+                    </ng-container>
                 </h6>
                 <div class="card-body">
-                    <p class="card-title" style="font-size:0.8rem;">{{event.eventType?.name}}</p>
                     <p class="card-text" style="font-size:0.7rem;">{{RegionType[event.region?.type]}} {{event.region?.name}}</p>
+                    <p class="card-title" style="font-size:0.8rem;">{{event.eventType?.id}} - {{event.eventType?.name}}</p>
                 </div>                
             </div>
         </div>

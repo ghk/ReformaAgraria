@@ -13,6 +13,7 @@ import { RegionType } from '../models/gen/regionType';
 import { EventHelper } from '../helpers/event';
 
 import * as moment from 'moment';
+import * as $ from 'jquery';
 
 
 @Component({
@@ -56,16 +57,23 @@ export class EventCardComponent implements OnInit, OnDestroy {
             events.forEach(event => {
                 event.startDate = event.startDate ? moment.utc(event.startDate).toDate() : null;
                 event.endDate = event.endDate ? moment.utc(event.endDate).toDate() : null;
-                event['color'] = EventHelper.getEventColor(event);                
+                event['color'] = EventHelper.getEventColor(event);
             });
 
             this.events = events;
         });
     }    
 
+    isOneDayEvent(startDate: Date, endDate: Date) {
+        if (moment.utc(startDate).format('dd MMM') == moment.utc(endDate).format('dd MMM')) {
+            return true;
+        }
+
+        return false;
+    }
+
     onCardClicked(event: Event) {
-        let regionId = this.region.id.split('.').join('_');
-        this.router.navigate(['calendar', regionId], {queryParams: { date: moment(event.startDate).format('DD-MM-YYYY') } });
+        this.router.navigateByUrl('calendardetail/' + event.id);
     }
 
 }

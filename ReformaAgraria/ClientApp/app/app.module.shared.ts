@@ -16,6 +16,9 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { CalendarModule } from 'angular-calendar';
+import 'hammerjs';
+import 'mousetrap';
+import { ModalGalleryModule } from 'angular-modal-gallery';
 
 import { AppComponent } from './components/app';
 import { HeaderComponent } from './components/header';
@@ -114,6 +117,7 @@ import './styles/app.scss';
         ToastrModule.forRoot(),
         ColorPickerModule,
         NgPipesModule,
+        ModalGalleryModule.forRoot(),
         TypeaheadModule.forRoot(),
         TabsModule.forRoot(),
         ModalModule.forRoot(),

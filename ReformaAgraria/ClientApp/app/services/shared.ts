@@ -14,12 +14,14 @@ export class SharedService {
     private user: any;
     private region$: ReplaySubject<Region>;
     private toraSummary$: ReplaySubject<any[]>;
+    private toraMapReloadedStatus$: ReplaySubject<boolean>;
 
     constructor(
         private cookieService: CookieService
     ) {
         this.region$ = new ReplaySubject(1);
         this.toraSummary$ = new ReplaySubject(1);
+        this.toraMapReloadedStatus$ = new ReplaySubject(1);
     }
 
     public getRegion() {
@@ -37,6 +39,14 @@ export class SharedService {
 
     public setToraSummary(tora: any[]) {
         this.toraSummary$.next(tora);
+    }
+
+    public getToraMapReloadedStatus() {
+        return this.toraMapReloadedStatus$;
+    }
+
+    public setToraMapReloadedStatus(status: boolean) {
+        this.toraMapReloadedStatus$.next(status);
     }
 
     public getCurrentUser() {

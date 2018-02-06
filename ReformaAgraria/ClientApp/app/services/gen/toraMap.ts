@@ -139,14 +139,14 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public download(id: number, query?: Query, progressListener?: any): Observable<any> {
+    public download(id: string, by: string, query?: Query, progressListener?: any): Observable<any> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         options.responseType = ResponseContentType.Blob;                
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'toramap', 'download', id),
+            urljoin(this.serverUrl, 'toramap', 'download', id, by),
             null,
             progressListener,
             null,

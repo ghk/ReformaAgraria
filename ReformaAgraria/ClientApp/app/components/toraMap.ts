@@ -49,7 +49,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     downloadModel: any = {};
 
     subscription: Subscription;
-    toraSubscription: Subscription;
+    toraMapSubscription: Subscription;
     
     kecamatanList: Region[];
     desaList: Region[];
@@ -92,11 +92,22 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                 this.applyOverlayTora(data);
             });     
         });
+
+        this.toraMapSubscription = this.sharedService.getToraMapReloadedStatus().subscribe(r => {
+            if (r = true) {
+                let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
+                this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
+                    this.applyOverlayTora(data);
+                    this.sharedService.setToraMapReloadedStatus(false);
+                }); 
+            }    
+        })
     }
 
     ngOnDestroy(): void {
         this.map.remove();
         this.subscription.unsubscribe();
+        this.toraMapSubscription.unsubscribe();
     }
 
     getRegionList(region: Region) {
@@ -194,7 +205,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     }
 
     onSubmitDownloadForm() {
-        this.toraMapService.download(this.downloadModel.tora.id).subscribe(data => {
+        this.toraMapService.download(this.downloadModel.tora.id.toString(), 'toramapid').subscribe(data => {
             let blob = new Blob([data.blob()], { type: 'application/zip' });
             saveAs(blob, this.downloadModel.tora.id + '.zip');
         });

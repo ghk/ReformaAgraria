@@ -122,6 +122,21 @@ export class EventService implements CrudService<Event, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
+    public deleteAttachment(id: string, attachment: string, query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, query);
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'event', 'deleteattachment?id=' + id + '&attachment=' + attachment),
+            null,
+            progressListener,
+            null
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+
     public deleteById(id: any, progressListener?: any): Observable<number> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(

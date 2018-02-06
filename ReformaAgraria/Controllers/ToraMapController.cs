@@ -84,16 +84,23 @@ namespace ReformaAgraria.Controllers
             return toraMap;
         }       
 
-        [HttpGet("download/{id}")]
-        public async Task<FileStreamResult> Download(int id)
+        [HttpGet("download/{id}/{by}")]
+        public async Task<FileStreamResult> Download(string id, string by)
         {
-            var toraMap = await dbContext.Set<ToraMap>()
-                .Where(tm => tm.Id == id)
+            var toraMap = new ToraMap(); ;
+            if (by.ToLower() == "regionid")
+            {
+                toraMap = await dbContext.Set<ToraMap>()
+                .Where(tm => tm.FkRegionId == id)
                 .FirstOrDefaultAsync();
-
-            //if (toraMap == null)
-                // TODO: Throw Exception
-            
+            }
+            else
+            {
+                toraMap = await dbContext.Set<ToraMap>()
+                .Where(tm => tm.Id == Convert.ToInt32(id))
+                .FirstOrDefaultAsync();
+            }
+                        
             var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
             var toraMapPath = Path.Combine(toraMapDirectoryPath, toraMap.FkRegionId, toraMap.Id + ".zip");
             var memory = new MemoryStream();

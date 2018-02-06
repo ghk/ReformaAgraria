@@ -5,82 +5,116 @@
         </div>
         <a href="#" download id="download"></a>
         <table class="table table-responsive-sm" id="table-event-detail">
-            <caption>
+            <caption *ngIf="!loading">
                 <button type="button" class="btn btn-primary" title="Print" (click)="onUpdateEvent()">
                     <span class="oi oi-pencil" style="margin-right: 10px;"></span>Ubah
                 </button>
             </caption>
             <tbody>
-                <tr class="row">
-                    <td class="col-md-2 text-left">Tipe</td>
-                    <td class="col-md-1 text-center">:</td>
-                    <td class="col-md-9 text-left">{{event?.eventType?.id}} - {{event?.eventType?.name}}</td>
-                </tr>
-                <tr class="row">
-                    <td class="col-md-2 text-left">Deskripsi</td>
-                    <td class="col-md-1 text-center">:</td>
-                    <td class="col-md-9 text-left">{{event?.description}}</td>
-                </tr>
-                <tr class="row">
-                    <td class="col-md-2 text-left">Waktu Mulai</td>
-                    <td class="col-md-1 text-center">:</td>
-                    <td class="col-md-9 text-left">{{event?.startDate | date:'dd MMM yyyy HH:mm a'}}</td>
-                </tr>
-                <tr class="row">
-                    <td class="col-md-2 text-left">Waktu Selesai</td>
-                    <td class="col-md-1 text-center">:</td>
-                    <td class="col-md-9 text-left">{{event?.endDate | date:'dd MMM yyyy HH:mm a'}}</td>
-                </tr>
-                <tr class="row">
-                    <td class="col-md-2 text-left">Lokasi</td>
-                    <td class="col-md-1 text-center">:</td>
-                    <td class="col-md-9 text-left">{{region?.name}}</td>
-                </tr>
-                <tr class="row">
-                    <td class="col-md-2 text-left">Uraian Hasil</td>
-                    <td class="col-md-1 text-center">:</td>
-                    <td class="col-md-9 text-left">{{event?.resultDescription}}</td>
-                </tr>
-                <tr class="row">
-                    <td class="col-md-2 text-left">Daftar Peserta</td>
-                    <td class="col-md-1 text-center">:</td>
-                    <td class="col-md-9 text-left">{{event?.attendees}}</td>
-                </tr>
-                <tr class="row">
-                    <td class="col-md-2 text-left">Lampiran</td>
-                    <td class="col-md-1 text-center">:</td>
-                    <td class="col-md-9 text-left">
-                        <ng-container *ngIf="attachments?.length > 0">
-                            <ng-container *ngFor="let attachment of attachments">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <a href="javascript:void(0)" (click)="download(attachment)">{{attachment}}</a>
-                                        <br />
+                <ng-container *ngIf="loading">
+                    <tr>
+                        <td colspan="12">
+                            <div class="col-md-12">
+                                <div id="loader"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-container>
+                <ng-container *ngIf="!loading">
+                    <tr class="row">
+                        <td class="col-md-2 text-left">Tipe</td>
+                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-9 text-left">{{event?.eventType?.id}} - {{event?.eventType?.name}}</td>
+                    </tr>
+                    <tr class="row">
+                        <td class="col-md-2 text-left">Deskripsi</td>
+                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-9 text-left">{{event?.description}}</td>
+                    </tr>
+                    <tr class="row">
+                        <td class="col-md-2 text-left">Waktu Mulai</td>
+                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-9 text-left">{{event?.startDate | date:'dd MMM yyyy HH:mm a'}}</td>
+                    </tr>
+                    <tr class="row">
+                        <td class="col-md-2 text-left">Waktu Selesai</td>
+                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-9 text-left">{{event?.endDate | date:'dd MMM yyyy HH:mm a'}}</td>
+                    </tr>
+                    <tr class="row">
+                        <td class="col-md-2 text-left">Lokasi</td>
+                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-9 text-left">{{region?.name}}</td>
+                    </tr>
+                    <tr class="row">
+                        <td class="col-md-2 text-left">Uraian Hasil</td>
+                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-9 text-left">{{event?.resultDescription?.length > 0 ? event?.resultDescription : '-'}}</td>
+                    </tr>
+                    <tr class="row">
+                        <td class="col-md-2 text-left">Daftar Peserta</td>
+                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-9 text-left">{{event?.attendees?.length > 0 ? event?.attendee : '-'}}</td>
+                    </tr>
+                    <tr class="row">
+                        <td class="col-md-2 text-left">Lampiran</td>
+                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-9 text-left">
+                            <div class="upload-btn-wrapper">
+                                <button class="btn-custom"><small>Unggah Lampiran</small></button>
+                                <input type="file" name="myfile" (change)="onChangeUpload($event.target.files[0], 'attachment')" />
+                            </div>
+                            <ng-container *ngIf="attachments?.length > 0">
+                                <ng-container *ngFor="let attachment of attachments">
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a href="javascript:void(0)" (click)="download(attachment)">{{attachment}}</a>
+                                            <br />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button data-toggle="modal" data-target="#deleteModal" type="button" class="btn btn-link">
+                                                <span class="oi oi-trash" title="Delete" (click)="delete(attachment)"></span>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <a href="javascript:void(0)" (click)="delete()"><span class="oi oi-trash"></span></a>
-                                    </div>
-                                </div>
+                                </ng-container>
+                                <a href="#" download id="download"></a>
                             </ng-container>
-                            <a href="#" download id="download"></a>
-                            <br />
-                        </ng-container>
-                        <div class="upload-btn-wrapper">
-                            <button class="btn-custom"><small>Unggah Lampiran</small></button>
-                            <input type="file" name="myfile" (change)="onChangeUpload($event.target.files[0], 'attachment')" />
-                        </div>
-                    </td>
-                </tr>
-                <tr class="row">
-                    <td class="col-md-2 text-left">Foto Kegiatan</td>
-                    <td class="col-md-1 text-center">:</td>
-                    <td class="col-md-9 text-left">
-                        <div class="upload-btn-wrapper">
-                            <button class="btn-custom"><small>Unggah Foto</small></button>
-                            <input type="file" (change)="onChangeUpload($event.target.files[0], 'photos')" />
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                    <tr class="row">
+                        <td class="col-md-2 text-left">Foto Kegiatan</td>
+                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-9 text-left">
+                            <div class="upload-btn-wrapper">
+                                <button class="btn-custom"><small>Unggah Foto</small></button>
+                                <input type="file" (change)="onChangeUpload($event.target.files[0], 'photos')" />
+                            </div>
+                            <div *ngFor="let img of images | async; let i = index">
+                                <div class="float-left" *ngIf="i <= 3">
+                                    <a class="more" *ngIf="i==3" (click)="openImageModalObservable(img)">
+                                        +{{(images | async)?.length - 3}}
+                                        more
+                                    </a>
+                                    <img *ngIf="i < 3" class="list-img" src="{{img.thumb}}" (click)="openImageModalObservable(img)" alt='{{img.description}}' />
+                                </div>
+                            </div>
+                            <div *ngIf="openModalWindowObservable">
+                                <modal-gallery [modalImages]="images"
+                                               [imagePointer]="imagePointerObservable"
+                                               [downloadable]="true"
+                                               [buttonsConfig]="{download: true, extUrl: false, close: true}"
+                                               [enableCloseOutside]="true"
+                                               (hasData)="onImageLoaded($event)"
+                                               (close)="onCloseImageModal($event)"
+                                               (show)="onVisibleIndex($event)"
+                                               (firstImage)="onIsFirstImage($event)"
+                                               (lastImage)="onIsLastImage($event)"></modal-gallery>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-container>
             </tbody>
         </table>
     </div>
@@ -164,6 +198,21 @@
         </form>
     </div>
 </ng-template>
+
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-delete">
+                <h4 class="modal-title">Hapus data?</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-footer modal-delete">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteAttachment()">Hapus</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <ng-template #searchRegionTemplate let-model="item" let-index="index">
     <div>
