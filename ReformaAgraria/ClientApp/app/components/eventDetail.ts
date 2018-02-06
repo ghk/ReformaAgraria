@@ -57,7 +57,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
     private imagesArraySubscription: Subscription;
 
-    constructor(        
+    constructor(
         private toastr: ToastrService,
         private sharedService: SharedService,
         private regionService: RegionService,
@@ -122,6 +122,8 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     getData(id: number) {
         this.eventService.getById(id, null, null).subscribe(event => {
             this.event = event;
+            this.event.startDate = moment.utc(this.event.startDate).local().toDate();
+            this.event.endDate = moment.utc(this.event.endDate).local().toDate();
             this.getAttachment(id);
             this.getPhotos(id);
             this.regionService.getById(event.fkRegionId, null, null).subscribe(region => {
@@ -203,7 +205,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
                     this.imagesArraySubscribed = this.imagesArray;
                 });
             });
-        
+
     }
 
     download(fileName) {
@@ -211,7 +213,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         $("#download").attr("href", link);
         $('#download')[0].click();
     }
-    
+
     progressListener(progress: Progress) {
         this.progress = progress;
     }
@@ -234,7 +236,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
 
         this.event = event;
     }
-    
+
 
     delete(attachment) {
         this.attachment = attachment;
@@ -256,6 +258,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     onDownload(id, title, extension) {
         var link = [window.location.origin, 'library', id + "_" + title + extension].join("/")
         $("#download").attr("href", link);
-        $('#download')[0].click();        
+        $('#download')[0].click();
     }
 }

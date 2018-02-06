@@ -5,10 +5,10 @@
             <div class="card event-card" *ngFor="let event of events" [style.borderColor]="event.color" (click)="onCardClicked(event)">
                 <h6 class="card-header text-center" [style.backgroundColor]="event.color">
                     <ng-container *ngIf="isOneDayEvent(event.startDate, event.endDate)">
-                        {{event.startDate | date:'dd MMM'}}
+                        <span style="color:white">{{event.startDate | date:'dd MMM'}}</span>
                     </ng-container>
                     <ng-container *ngIf="!isOneDayEvent(event.startDate, event.endDate)">
-                        {{event.startDate | date:'dd MMM'}} {{event.endDate ? '- ' + (event.endDate | date: 'dd MMM') : ''}}
+                        <span style="color:white">{{event.startDate | date:'dd MMM'}} {{event.endDate ? '- ' + (event.endDate | date: 'dd MMM') : ''}}</span>
                     </ng-container>
                 </h6>
                 <div class="card-body">
