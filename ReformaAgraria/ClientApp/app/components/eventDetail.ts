@@ -11,6 +11,7 @@ import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { EventService } from '../services/gen/event';
 import { EventTypeService } from "../services/gen/eventType";
+import { SearchService } from "../services/gen/search";
 
 import { Event } from '../models/gen/event';
 import { FormHelper } from '../helpers/form';
@@ -42,6 +43,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     attachment: any;
     photos: any[] = [];
     loading: boolean = true;
+    dataSource: any;
 
     eventModalRef: BsModalRef;
 
@@ -54,8 +56,8 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     imagesArray: Array<Image> = [];
     images: Observable<Array<Image>> = Observable.of(this.imagesArray).delay(300);
     imagesArraySubscribed: Array<Image>;
-    private subscription: Subscription;
-    private imagesArraySubscription: Subscription;
+    subscription: Subscription;
+    imagesArraySubscription: Subscription;
 
     constructor(
         private toastr: ToastrService,
@@ -64,13 +66,17 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         private eventService: EventService,
         private route: ActivatedRoute,
         private modalService: BsModalService,
-        private eventTypeService: EventTypeService
+        private eventTypeService: EventTypeService,
+        private searchService: SearchService
     ) { }
 
     ngOnInit(): void {
         this.subscriptions.push(this.route.params.subscribe(params => {
             let eventId: number = params['id'];
             this.getData(eventId);
+            this.dataSource = Observable.create((observer: any) => { observer.next(this.selected); })
+                .switchMap((keywords: string) => this.searchService.searchRegion(keywords))
+                .catch((error: any) => { console.log(error); return []; });
         }));
     }
 
