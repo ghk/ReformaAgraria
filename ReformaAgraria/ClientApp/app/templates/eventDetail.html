@@ -29,7 +29,7 @@
                     <tr class="row">
                         <td class="col-md-2 text-left">Deskripsi</td>
                         <td class="col-md-1 text-center">:</td>
-                        <td class="col-md-9 text-left">{{event?.description}}</td>
+                        <td class="col-md-9 text-left">{{event?.description?.length > 0 ? event?.description : '-'}}</td>
                     </tr>
                     <tr class="row">
                         <td class="col-md-2 text-left">Waktu Mulai</td>
@@ -54,7 +54,7 @@
                     <tr class="row">
                         <td class="col-md-2 text-left">Daftar Peserta</td>
                         <td class="col-md-1 text-center">:</td>
-                        <td class="col-md-9 text-left">{{event?.attendees?.length > 0 ? event?.attendee : '-'}}</td>
+                        <td class="col-md-9 text-left">{{event?.attendees?.length > 0 ? event?.attendees : '-'}}</td>
                     </tr>
                     <tr class="row">
                         <td class="col-md-2 text-left">Lampiran</td>
