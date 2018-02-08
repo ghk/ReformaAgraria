@@ -16,9 +16,9 @@ namespace ReformaAgraria.Models
         public string Name { get; set; }
 
         public decimal Size { get; set; }
-       
-        public string TotalTenants { get; set; }
 
+        public int TotalSubjects { get; set; }
+       
         public RegionalStatus RegionalStatus { get; set; }
         
         public string LandType { get; set; }

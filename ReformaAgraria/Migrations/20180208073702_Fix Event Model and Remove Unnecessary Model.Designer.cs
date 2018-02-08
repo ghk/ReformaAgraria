@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180208073702_Fix Event Model and Remove Unnecessary Model")]
+    partial class FixEventModelandRemoveUnnecessaryModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -683,9 +684,6 @@ namespace ReformaAgraria.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnName("status");
-
-                    b.Property<int>("TotalSubjects")
-                        .HasColumnName("total_subjects");
 
                     b.HasKey("Id")
                         .HasName("pk_tora_object");

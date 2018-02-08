@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Reflection;
 
 namespace MicrovacWebCore
@@ -30,10 +31,10 @@ namespace MicrovacWebCore
                 model = m;
             }
 
-            PrePersist(model);
+            PrePersist(HttpMethod.Post, model);
             dbSet.Add(model);
             dbContext.SaveChanges();
-            PostPersist(model);
+            PostPersist(HttpMethod.Post, model);
             return model.Id;
         }
 
@@ -48,10 +49,10 @@ namespace MicrovacWebCore
                 model = m;
             }
 
-            PrePersist(model);
+            PrePersist(HttpMethod.Put, model);
             dbContext.Entry(model).State = EntityState.Modified;
             dbContext.SaveChanges();
-            PostPersist(model);
+            PostPersist(HttpMethod.Put, model);
             return model.Id;
         }
 
@@ -59,8 +60,10 @@ namespace MicrovacWebCore
         public virtual TId Delete(TId id)
         {
             var model = new TModel { Id = id };
+            PrePersist(HttpMethod.Delete, model);
             dbContext.Entry(model).State = EntityState.Deleted;
             dbContext.SaveChanges();
+            PostPersist(HttpMethod.Delete, model);
             return model.Id;
         }
 
@@ -77,8 +80,8 @@ namespace MicrovacWebCore
             property.SetValue(target, property.GetValue(source), null);
         }
         
-        protected virtual void PrePersist(TModel model) { }
-        protected virtual void PostPersist(TModel model) { }
+        protected virtual void PrePersist(HttpMethod method, TModel model) { }
+        protected virtual void PostPersist(HttpMethod method, TModel model) { }
     }
       
 }

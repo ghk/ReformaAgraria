@@ -83,7 +83,7 @@ namespace ReformaAgraria.Controllers
                                     to.Size = 0;
                                 }
 
-                                to.TotalTenants = worksheet.Cells[(i + 7), 4].Value != null ? worksheet.Cells[(i + 7), 4].Value.ToString().Trim().Split(" ")[0] : "";
+                                //to.TotalTenants = worksheet.Cells[(i + 7), 4].Value != null ? worksheet.Cells[(i + 7), 4].Value.ToString().Trim().Split(" ")[0] : "";
 
                                 if (worksheet.Cells[(i + 8), 4].Value != null)
                                 {
@@ -161,9 +161,7 @@ namespace ReformaAgraria.Controllers
                     }
 
                     foreach (var toraObject in toraObjects)
-                    {
-                        CalculateSize(toraObject.Id);
-                    }
+                        Calculate(toraObject);
 
                     IOHelper.StreamCopy(toraDocumentFilePath, document.File);
                 }
@@ -206,7 +204,7 @@ namespace ReformaAgraria.Controllers
                     worksheet.Cells["D5"].Value = region.Parent.Name;
                     worksheet.Cells["D6"].Value = region.Parent.Parent.Name;
                     worksheet.Cells["D7"].Value = 0;
-                    worksheet.Cells["D8"].Value = objectModel.TotalTenants;
+                    worksheet.Cells["D8"].Value = subjectModel.Count;
                     worksheet.Cells["D9"].Value = TranslateHelper.Translate(objectModel.RegionalStatus.ToString());
                     worksheet.Cells["D10"].Value = TranslateHelper.Translate(objectModel.LandType);
                     worksheet.Cells["D11"].Value = objectModel.Livelihood;
@@ -292,32 +290,35 @@ namespace ReformaAgraria.Controllers
             return finalResult;
         }
 
-        [HttpGet("calculate/size/all")]
-        public IActionResult CalculateSizeAll()
+        [HttpGet("calculate/all")]
+        public IActionResult Calculate()
         {
             var toraObjects = dbContext.Set<ToraObject>().ToList();
             foreach (var toraObject in toraObjects)
-            {
-                CalculateSize(toraObject.Id);
-            }
+                Calculate(toraObject);
             return Ok();
         }
 
-        [HttpGet("calculate/size/{id}")]
-        public IActionResult CalculateSize(int id)
+        [HttpGet("calculate/{id}")]
+        public IActionResult Calculate(int id)
         {
             var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == id);
             if (toraObject == null)
                 // TODO: Throw validation exception
                 return NotFound();
-            
-            var size = dbContext.Set<ToraMap>().Where(tm => tm.FkToraObjectId == id).Sum(tm => tm.Size);
-            toraObject.Size = size;
 
+            Calculate(toraObject);            
+            return Ok();
+        }
+
+        private void Calculate(ToraObject toraObject)
+        {
+            var size = dbContext.Set<ToraMap>().Where(tm => tm.FkToraObjectId == toraObject.Id).Sum(tm => tm.Size);
+            var totalSubjects = dbContext.Set<ToraSubject>().Where(ts => ts.FkToraObjectId == toraObject.Id).Count();
+            toraObject.Size = size;
+            toraObject.TotalSubjects = totalSubjects;
             dbContext.Update(toraObject);
             dbContext.SaveChanges();
-
-            return Ok();
         }
 
         protected override IQueryable<ToraObject> ApplyQuery(IQueryable<ToraObject> query)

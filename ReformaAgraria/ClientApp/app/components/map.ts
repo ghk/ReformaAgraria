@@ -125,7 +125,7 @@ export class MapComponent implements OnInit, OnDestroy {
                     '<tr><td>Kecamatan</td><td>:</td><td>' + data.region.parent.name + '</td></tr>' +
                     '<tr><td>Desa</td><td>:</td><td>' + data.region.name + '</td></tr>' +
                     '<tr><td>Luas</td><td>:</td><td>' + data.toraObject.size + ' ha</td></tr>' +
-                    '<tr><td>Jumlah Penduduk</td><td>:</td><td>' + data.toraObject.totalTenants + '</td></tr></tbody></table>');
+                    '<tr><td>Jumlah Penduduk</td><td>:</td><td>' + data.toraObject.totalSubjects + '</td></tr></tbody></table>');
 
                 layer.addTo(this.map);
             }

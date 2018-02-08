@@ -283,12 +283,12 @@ export class ToraMapComponent implements OnInit, OnDestroy {
 
     getGeoJsonTora(data: ToraMap, currentColor): any {
         var size;
-        var totalTenants;
-        if (data.toraObject.totalTenants == '0' || data.toraObject.totalTenants == '') {
-            totalTenants = '-';
+        var totalSubjects;
+        if (data.toraObject.totalSubjects == '0' || data.toraObject.totalSubjects == '') {
+            totalSubjects = '-';
         }
         else {
-            totalTenants = data.toraObject.totalTenants;
+            totalSubjects = data.toraObject.totalSubjects;
         }
         if (data.toraObject.size.toString() == '0' || data.toraObject.size.toString() == '') {
             size = '-';

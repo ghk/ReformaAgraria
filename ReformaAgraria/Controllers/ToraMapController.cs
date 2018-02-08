@@ -26,6 +26,7 @@ using GeoAPI.Geometries;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models.ViewModels;
 using Microsoft.Extensions.Logging;
+using System.Net.Http;
 
 namespace ReformaAgraria.Controllers
 {
@@ -52,9 +53,14 @@ namespace ReformaAgraria.Controllers
 
         [HttpPost("upload")]
         public async Task<ToraMap> Upload([FromForm]UploadToraMapViewModel model)
-        {                       
+        {
+            var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == model.ToraObjectId);
+            if (toraObject == null)
+                // TODO: Throw validation error
+                return null;
+
             var toraMap = dbContext.Set<ToraMap>()
-                .Where(tm => tm.FkToraObjectId == model.ToraObjectId)
+                .Where(tm => tm.FkToraObjectId == toraObject.Id)
                 .FirstOrDefault();
 
             if (toraMap == null)
@@ -74,12 +80,17 @@ namespace ReformaAgraria.Controllers
             toraMap.Geojson = TopologyHelper.GetGeojson(features);
             toraMap.Size = TopologyHelper.GetArea(features);
 
+            // Update tora object size
+            toraObject.Size += toraMap.Size;
+            dbContext.Update(toraObject);
+
             await dbContext.SaveChangesAsync();
 
+            // Copy map file to disk
             var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
             var regionDirectoryPath = Path.Combine(toraMapDirectoryPath, model.RegionId);
             var destinationFilePath = Path.Combine(regionDirectoryPath, toraMap.Id + ".zip");
-            IOHelper.StreamCopy(destinationFilePath, model.File);           
+            IOHelper.StreamCopy(destinationFilePath, model.File);                       
 
             return toraMap;
         }       
@@ -110,6 +121,21 @@ namespace ReformaAgraria.Controllers
             }
             memory.Position = 0;
             return File(memory, "application/zip", Path.GetFileName(toraMapPath));
+        }
+
+        protected override void PostPersist(HttpMethod method, ToraMap model)
+        {
+            if (method == HttpMethod.Put)
+                return;
+
+            var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == model.FkToraObjectId);
+            if (method == HttpMethod.Post)
+                toraObject.Size += model.Size;
+            else if (method == HttpMethod.Delete)
+                toraObject.Size -= model.Size;
+
+            dbContext.Update(toraObject);
+            dbContext.SaveChanges();
         }
 
         protected override IQueryable<ToraMap> ApplyQuery(IQueryable<ToraMap> query)

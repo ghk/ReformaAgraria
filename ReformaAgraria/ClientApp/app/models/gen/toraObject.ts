@@ -9,7 +9,7 @@ export interface ToraObject extends BaseEntity<number> {
     id?: number;
     name?: string;
     size?: number;
-    totalTenants?: string;
+    totalSubjects?: string;
     regionalStatus?: RegionalStatus;
     landType?: string;
     livelihood?: string;

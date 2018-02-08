@@ -6,6 +6,7 @@ using OfficeOpenXml;
 using ReformaAgraria.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 
 namespace ReformaAgraria.Controllers
 {
@@ -210,6 +211,21 @@ namespace ReformaAgraria.Controllers
 
                 return ts;
             }
+        }
+
+        protected override void PostPersist(HttpMethod method, ToraSubject model)
+        {
+            if (method == HttpMethod.Put)
+                return;
+
+            var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == model.FkToraObjectId);
+            if (method == HttpMethod.Post)
+                toraObject.TotalSubjects += 1;
+            else if (method == HttpMethod.Delete)
+                toraObject.TotalSubjects -= 1;
+
+            dbContext.Update(toraObject);
+            dbContext.SaveChanges();
         }
 
         protected override IQueryable<ToraSubject> ApplyQuery(IQueryable<ToraSubject> query)

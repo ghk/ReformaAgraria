@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -31,10 +32,10 @@ namespace MicrovacWebCore
                 model = m;
             }
 
-            PrePersist(model);
+            await PrePersist(HttpMethod.Post, model);
             dbSet.Add(model);
             await dbContext.SaveChangesAsync();
-            PostPersist(model);
+            await PostPersist(HttpMethod.Post, model);
             return model.Id;
         }
 
@@ -49,10 +50,10 @@ namespace MicrovacWebCore
                 model = m;
             }
 
-            PrePersist(model);
+            await PrePersist(HttpMethod.Put, model);
             dbContext.Entry(model).State = EntityState.Modified;
             await dbContext.SaveChangesAsync();
-            PostPersist(model);
+            await PostPersist(HttpMethod.Put, model);
             return model.Id;
         }
 
@@ -60,8 +61,10 @@ namespace MicrovacWebCore
         public virtual async Task<TId> DeleteAsync(TId id)
         {
             var model = new TModel { Id = id };
+            await PrePersist(HttpMethod.Delete, model);
             dbContext.Entry(model).State = EntityState.Deleted;
             await dbContext.SaveChangesAsync();
+            await PostPersist(HttpMethod.Delete, model);
             return model.Id;
         }
 
@@ -78,8 +81,8 @@ namespace MicrovacWebCore
             property.SetValue(target, property.GetValue(source), null);
         }
 
-        protected virtual void PrePersist(TModel model) { }
-        protected virtual void PostPersist(TModel model) { }
+        protected virtual async Task PrePersist(HttpMethod method, TModel model) { }
+        protected virtual async Task PostPersist(HttpMethod method, TModel model) { }
     }
 
 }

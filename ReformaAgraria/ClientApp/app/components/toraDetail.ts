@@ -105,7 +105,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
 
             this.toraSubjectService.getAll(toraSubjectQuery, null).subscribe(toraSubjects => {
                 this.toraSubjects = toraSubjects;
-                this.toraObject.totalTenants = this.toraSubjects.length.toString();
+                this.toraObject.totalSubjects = this.toraSubjects.length.toString();
             });
 
             this.toraObjectService.getSummary(toraObject.fkRegionId).subscribe(summary => {
