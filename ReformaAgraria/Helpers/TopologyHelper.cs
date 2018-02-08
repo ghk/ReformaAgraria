@@ -42,6 +42,13 @@ namespace ReformaAgraria.Helpers
             return features;
         }
 
+        public static FeatureCollection GetFeatureCollection(string geojson)
+        {
+            var reader = new GeoJsonReader();
+            var features = reader.Read<FeatureCollection>(geojson);
+            return features;
+        }
+
         public static FeatureCollection GetFeatureCollectionWgs84(string shapefilePath)
         {
             GeometryFactory geometryFactory = new GeometryFactory();
@@ -51,7 +58,7 @@ namespace ReformaAgraria.Helpers
             features = TopologyHelper.TransformProjection(features, projection, GeographicCoordinateSystem.WGS84);
             features.CRS = new NamedCRS("urn:ogc:def:crs:OGC:1.3:CRS84");
             return features;
-        }
+        }        
 
         public static FeatureCollection GetFeatureCollectionWgs84(IFormFile file)
         {

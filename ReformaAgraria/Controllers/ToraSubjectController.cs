@@ -25,40 +25,22 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
         }
 
-        public ToraSubject Upload(List<Dictionary<string, int>> objectIdList, ExcelPackage package)
+        public ToraSubject Upload(List<ToraObject> toraObjects, ExcelPackage package)
         {
             using (package)
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets[2];
-                int rowCount = worksheet.Dimension.Rows;
                 ToraSubject ts = new ToraSubject();
-                int age;
-                decimal size;
-                int totalFamilyMembers;
 
-                for (int i = 2; i <= rowCount; i++)
+                for (int i = 2; i <= worksheet.Dimension.Rows; i++)
                 {
                     ts = new ToraSubject();
 
-                    if (objectIdList[0].Count <= 1)
-                    {
-                        ts.FkToraObjectId = int.Parse(objectIdList[0].Values.ElementAt(0).ToString());
-                    }
-                    else
-                    {
-                        for (int j = 0; j < objectIdList[0].Count(); j++)
-                        {
-                            if (objectIdList[0].Keys.ElementAt(j).ToString().Trim().ToLower().Contains(worksheet.Cells[i, 10].Value != null ? worksheet.Cells[i, 10].Value.ToString().Trim().ToLower() : "null"))
-                            {
-                                ts.FkToraObjectId = int.Parse(objectIdList[0].Values.ElementAt(j).ToString());
-                                break;
-                            }
-                            else
-                            {
-                                ts.FkToraObjectId = int.Parse(objectIdList[0].Values.ElementAt(0).ToString());
-                            }
-                        }
-                    }
+                    var toraObjectName = worksheet.Cells[i, 10].Value != null ? worksheet.Cells[i, 10].Value.ToString().Trim().ToLower() : null;
+                    var toraObject = toraObjects.FirstOrDefault(to => to.Name.ToLowerInvariant() == toraObjectName);
+                    if (toraObject == null)
+                        continue;
+                    ts.FkToraObjectId = toraObject.Id;
 
                     ts.Name = worksheet.Cells[i, 2].Value != null ? worksheet.Cells[i, 2].Value.ToString().Trim() : "";
 
@@ -109,7 +91,7 @@ namespace ReformaAgraria.Controllers
 
                     if (worksheet.Cells[i, 6].Value != null)
                     {
-                        if (int.TryParse(worksheet.Cells[i, 6].Value.ToString().Trim().ToLower().Split(" ")[0], out age))
+                        if (int.TryParse(worksheet.Cells[i, 6].Value.ToString().Trim().ToLower().Split(" ")[0], out int age))
                         {
                             ts.Age = age;
                         }
@@ -165,7 +147,7 @@ namespace ReformaAgraria.Controllers
 
                     if (worksheet.Cells[i, 8].Value != null)
                     {
-                        if (int.TryParse(worksheet.Cells[i, 8].Value.ToString().Trim(), out totalFamilyMembers))
+                        if (int.TryParse(worksheet.Cells[i, 8].Value.ToString().Trim(), out int totalFamilyMembers))
                         {
                             ts.TotalFamilyMembers = totalFamilyMembers;
                         }
@@ -206,7 +188,7 @@ namespace ReformaAgraria.Controllers
 
                     if (worksheet.Cells[i, 11].Value != null)
                     {
-                        if (decimal.TryParse(worksheet.Cells[i, 11].Value.ToString().Trim().Split(" ")[0].Replace(",", "."), out size))
+                        if (decimal.TryParse(worksheet.Cells[i, 11].Value.ToString().Trim().Split(" ")[0].Replace(",", "."), out decimal size))
                         {
                             ts.Size = size;
                         }

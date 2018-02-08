@@ -16,13 +16,13 @@ namespace ReformaAgraria.Models
 
         public DateTime StartDate { get; set; }
 
-        public DateTime? EndDate { get; set; }
-
-        public string FkRegionId { get; set; }
+        public DateTime? EndDate { get; set; }        
 
         public string ResultDescription { get; set; }
 
         public string Attendees { get; set; }
+
+        public string FkRegionId { get; set; }
 
         [ForeignKey("FkRegionId")]
         public Region Region { get; set; }

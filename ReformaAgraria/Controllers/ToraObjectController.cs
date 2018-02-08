@@ -55,8 +55,7 @@ namespace ReformaAgraria.Controllers
                 {
                     ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
                     int rowCount = worksheet.Dimension.Rows;
-                    Dictionary<string, int> objectIdDict = new Dictionary<string, int>();
-                    List<Dictionary<string, int>> objectIdList = new List<Dictionary<string, int>>();
+                    List<ToraObject> toraObjects = new List<ToraObject>();
 
                     for (int i = 1; i <= rowCount; i += 22)
                     {
@@ -149,18 +148,16 @@ namespace ReformaAgraria.Controllers
                                 to.FormalAdvocacyProgress = worksheet.Cells[(i + 20), 4].Value != null ? worksheet.Cells[(i + 20), 4].Value.ToString().Trim() : "";
                                 to.NonFormalAdvocacyProgress = worksheet.Cells[(i + 22), 4].Value != null ? worksheet.Cells[(i + 22), 4].Value.ToString().Trim() : "";
 
-                                int objectId = Post(to);
-                                objectIdDict.Add(to.Name, objectId);
+                                Post(to);
+                                toraObjects.Add(to);
                             }
                         }
                     }
 
-                    objectIdList.Add(objectIdDict);
-
-                    if (objectIdList.Count > 0 && workbook.Worksheets.Count > 1)
+                    if (workbook.Worksheets.Count > 1)
                     {
                         ToraSubjectController ts = new ToraSubjectController(_context, _hostingEnvironment, _tsLogger);
-                        ts.Upload(objectIdList, package);
+                        ts.Upload(toraObjects, package);
                     }
 
                     IOHelper.StreamCopy(toraDocumentFilePath, document.File);
@@ -203,7 +200,7 @@ namespace ReformaAgraria.Controllers
                     worksheet.Cells["D4"].Value = region.Name;
                     worksheet.Cells["D5"].Value = region.Parent.Name;
                     worksheet.Cells["D6"].Value = region.Parent.Parent.Name;
-                    worksheet.Cells["D7"].Value = objectModel.Size;
+                    worksheet.Cells["D7"].Value = 0;
                     worksheet.Cells["D8"].Value = objectModel.TotalTenants;
                     worksheet.Cells["D9"].Value = TranslateHelper.Translate(objectModel.RegionalStatus.ToString());
                     worksheet.Cells["D10"].Value = TranslateHelper.Translate(objectModel.LandType);
@@ -288,6 +285,36 @@ namespace ReformaAgraria.Controllers
                 .ToList();
 
             return finalResult;
+        }
+
+        [HttpGet("calculate/size/all")]
+        public IActionResult CalculateSizeAll()
+        {
+            var toraObjects = dbContext.Set<ToraObject>().ToList();
+            foreach (var toraObject in toraObjects)
+            {
+                CalculateSize(toraObject.Id);
+            }
+            return Ok();
+        }
+
+        [HttpGet("calculate/size/{id}")]
+        public IActionResult CalculateSize(int id)
+        {
+            var toraMaps = dbContext.Set<ToraMap>().Where(tm => tm.FkToraObjectId == id).ToList();
+            decimal size = 0;
+            foreach (var toraMap in toraMaps)
+            {
+                size += toraMap.Size;
+            }
+
+            var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == id);
+            toraObject.Size = size;
+
+            dbContext.Update(toraObject);
+            dbContext.SaveChanges();
+
+            return Ok();
         }
 
         protected override IQueryable<ToraObject> ApplyQuery(IQueryable<ToraObject> query)

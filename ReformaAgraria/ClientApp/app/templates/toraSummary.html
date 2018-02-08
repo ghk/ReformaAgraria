@@ -58,7 +58,7 @@
                             <td class="text-left">
                                 <a [routerLink]="['/home', convertRegionId(summary.region.id)]" href="javascript:void(0)">{{summary.region.name}}</a>
                             </td>
-                            <td class="table-data-padding text-right">{{summary.totalSize > 0 ? (summary.totalSize | number : '1.2-2') : '-'}}</td>
+                            <td class="table-data-padding text-right">{{summary.totalSize > 0 ? (summary.totalSize / 10000 | number : '1.2-2') : '-'}}</td>
                             <td class="text-right">{{summary.totalToraObjects > 0 ? (summary.totalToraObjects | number) : '-'}}</td>
                             <td class="text-right">{{summary.totalToraSubjects > 0 ? (summary.totalToraSubjects | number) : '-'}}</td>
                         </tr>

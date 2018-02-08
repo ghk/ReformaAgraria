@@ -118,67 +118,7 @@ export class ToraListComponent implements OnInit, OnDestroy {
                     this.toraObjectModalRef.hide();                  
                 }
             }); 
-    }
-
-    addOrEditObject(model) {
-        if (this.state == 'edit') {
-            this.editObject(model);
-        }
-        else {
-            this.addObject(model);
-        }
-    }
-
-    addOrEditSubject(model) {
-        if (this.state == 'edit') {
-            this.editSubject(model);
-        }
-        else {
-            //this.addSubject(model);
-        }
-    }
-
-    add() {
-        this.model = [];
-        this.model.fkRegionId = this.region.id;
-        this.state = 'add';
-    }
-
-    addObject(model) {
-        this.toraObjectService.create(model).subscribe(
-            data => {
-                this.toastr.success("Penambahan Berhasil", null);
-            },
-            error => {
-                this.toastr.error(error, null);
-            }
-        );
-    }
-
-    editObject(model) {
-        this.toraObjectService.update(model).subscribe(
-            data => {
-                this.toastr.success("Pengeditan Berhasil", null);
-            },
-            error => {
-                this.toastr.error(error, null);
-            }
-        );
-    }
-
-    editSubject(model) {
-        this.subjectModel.name = model.name;
-        this.subjectModel.maritalStatus = model.maritalStatus;
-        this.subjectModel.address = model.address;
-        this.subjectModel.gender = model.gender;
-        this.subjectModel.age = model.age;
-        this.subjectModel.educationalAttainment = model.educationalAttainment;
-        this.subjectModel.totalFamilyMembers = model.totalFamilyMembers;
-        this.subjectModel.landStatus = model.landStatus;
-        this.subjectModel.landLocation = model.landLocation;
-        this.subjectModel.size = model.size;
-        this.subjectModel.plantTypes = model.plantTypes;
-    }
+    }     
 
     delete(id) {
         this.objectId = id;
