@@ -32,89 +32,87 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>1</td>
+                                    <td scope="row">1</td>
                                     <td>Nama Lokasi</td>
-                                    <td colspan="2">{{toraObject?.name}}</td>
+                                    <td colspan="3">{{toraObject?.name}}</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td scope="row">2</td>
                                     <td>Desa</td>
-                                    <td colspan="2">{{toraObject?.region?.name}}</td>
+                                    <td colspan="3">{{toraObject?.region?.name}}</td>
                                 </tr>
                                 <tr>
-                                    <td>3</td>
+                                    <td scope="row">3</td>
                                     <td>Kecamatan</td>
-                                    <td colspan="2">{{toraObject?.region?.parent?.name}}</td>
+                                    <td colspan="3">{{toraObject?.region?.parent?.name}}</td>
                                 </tr>
                                 <tr>
-                                    <td>4</td>
+                                    <td scope="row">4</td>
                                     <td>Kabupaten</td>
-                                    <td colspan="2">{{toraObject?.region?.parent?.parent?.name}}</td>
+                                    <td colspan="3">{{toraObject?.region?.parent?.parent?.name}}</td>
                                 </tr>
                                 <tr>
-                                    <td>5</td>
+                                    <td scope="row">5</td>
                                     <td>Luas Wilayah Objek</td>
-                                    <td colspan="2">{{toraObject?.size}}</td>
+                                    <td colspan="3">{{toraObject?.size ? (toraObject?.size / 10000 | number: '1.2-2') : '-'}} ha</td>
                                 </tr>
                                 <tr>
-                                    <td>6</td>
+                                    <td scope="row">6</td>
                                     <td>Jumlah Penggarap</td>
-                                    <td colspan="2">{{toraObject?.totalSubjects}}</td>
+                                    <td colspan="3">{{toraObject?.totalSubjects}}</td>
                                 </tr>
                                 <tr>
-                                    <td>7</td>
+                                    <td scope="row">7</td>
                                     <td>Status Kawasan</td>
-                                    <td colspan="2">
+                                    <td colspan="3">
                                         {{toraObject?.regionalStatus ? (RegionalStatus[toraObject?.regionalStatus] | translate) : '-'}}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>8</td>
+                                    <td scope="row">8</td>
                                     <td>Klasifikasi bentang Lahan</td>
-                                    <td colspan="2">
+                                    <td colspan="3">
                                         {{toraObject?.landType | translate}}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>9</td>
+                                    <td scope="row">9</td>
                                     <td>Tipe Penggunaan Lahan</td>
-                                    <td colspan="2">{{toraObject?.livelihood}}</td>
+                                    <td colspan="3">{{toraObject?.livelihood}}</td>
                                 </tr>
                                 <tr>
-                                    <td>10</td>
+                                    <td scope="row">10</td>
                                     <td>Usulan Skema</td>
-                                    <td colspan="2">{{toraObject?.proposedTreatment}}</td>
+                                    <td colspan="3">{{toraObject?.proposedTreatment}}</td>
                                 </tr>
                                 <tr>
-                                    <td>11</td>
+                                    <td scope="row">11</td>
                                     <td>Tahapan</td>
-                                    <td colspan="2">
-                                        {{toraObject?.status ? (Status[toraObject?.status] | translate) : '-'}}
-                                    </td>
+                                    <td colspan="3">{{toraObject?.status ? (Status[toraObject?.status] | translate) : '-'}}</td>
                                 </tr>
                                 <tr>
                                     <th scope="col">No</th>
                                     <th scope="col" colspan="4">Data Pendukung</th>
                                 </tr>
                                 <tr>
-                                    <td>1</td>
+                                    <td scope="row">1</td>
                                     <td>Status Tanah</td>
                                     <td colspan="2">
                                         {{toraObject?.landStatus ? (LandStatus[toraObject?.landStatus] | translate) : '-'}}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td scope="row">2</td>
                                     <td>Sejarah Penguasaan Tanah</td>
                                     <td colspan="2">{{toraObject?.landTenureHistory}}</td>
                                 </tr>
                                 <tr>
-                                    <td>3</td>
+                                    <td scope="row">3</td>
                                     <td>Kronologi Konflik</td>
                                     <td colspan="2">{{toraObject?.conflictChronology}}</td>
                                 </tr>
                                 <tr>
-                                    <td rowspan="4">4</td>
+                                    <td scope="row" rowspan="4">4</td>
                                     <td rowspan="4">Progres Langkah Advokasi</td>
                                     <td rowspan="2">Jalur Formal: </td>
                                     <td rowspan="2">{{toraObject?.formalAdvocacyProgress}}</td>
@@ -149,7 +147,7 @@
                                     <th scope="col">Lokasi lahan garapan</th>
                                     <th scope="col">Luas (ha)</th>
                                     <th scope="col">Jenis tanaman</th>
-                                    <th scope="col"></th>
+                                    <th scope="col" colspan="2"></th>
                                 </tr>
                             </thead>
                             <tbody>
