@@ -383,6 +383,12 @@ h1 {
     min-height: 9.5rem;
     max-height: 9.5rem;
     margin-bottom: 0.5rem;
+
+    @include media-breakpoint-down(sm) {
+        max-width: none;
+        min-height: 8rem;
+        max-height: 8rem;
+    }
 }
 
 .event-card .card-body {
@@ -395,6 +401,7 @@ h1 {
 .event-card:hover {
     cursor: pointer;
 }
+
 
 /**
  *  Custom Upload
@@ -428,7 +435,7 @@ h1 {
 
 /**
  *  Login image
- */
+ */ripsi
 .login-image {
     width: 180px;
     padding-bottom: 20px;
@@ -438,5 +445,21 @@ h1 {
 .agraria-issues-header {
     .card-body {
         padding: 0 1.25rem;
+    }
+}
+
+
+#table-event-detail {
+    tr.row {
+        margin: 0;
+    }
+    @include media-breakpoint-down(sm) {
+        tbody {
+            tr {
+                td:nth-child(1) {
+                    font-weight: bold;
+                }
+            }
+        }
     }
 }

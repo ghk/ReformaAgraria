@@ -23,42 +23,42 @@
                 <ng-container *ngIf="!loading">
                     <tr class="row">
                         <td class="col-md-2 text-left">Tipe</td>
-                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-1 d-none d-md-block text-center">:</td>
                         <td class="col-md-9 text-left">{{event?.eventType?.id}} - {{event?.eventType?.name}}</td>
                     </tr>
                     <tr class="row">
                         <td class="col-md-2 text-left">Deskripsi</td>
-                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-1 d-none d-md-block text-center">:</td>
                         <td class="col-md-9 text-left">{{event?.description?.length > 0 ? event?.description : '-'}}</td>
                     </tr>
                     <tr class="row">
                         <td class="col-md-2 text-left">Waktu Mulai</td>
-                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-1 d-none d-md-block text-center">:</td>
                         <td class="col-md-9 text-left">{{event?.startDate | date:'dd MMM yyyy HH:mm a'}}</td>
                     </tr>
                     <tr class="row">
                         <td class="col-md-2 text-left">Waktu Selesai</td>
-                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-1 d-none d-md-block text-center">:</td>
                         <td class="col-md-9 text-left">{{event?.endDate | date:'dd MMM yyyy HH:mm a'}}</td>
                     </tr>
                     <tr class="row">
                         <td class="col-md-2 text-left">Lokasi</td>
-                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-1 d-none d-md-block text-center">:</td>
                         <td class="col-md-9 text-left">{{region?.name}}</td>
                     </tr>
                     <tr class="row">
                         <td class="col-md-2 text-left">Uraian Hasil</td>
-                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-1 d-none d-md-block text-center">:</td>
                         <td class="col-md-9 text-left">{{event?.resultDescription?.length > 0 ? event?.resultDescription : '-'}}</td>
                     </tr>
                     <tr class="row">
                         <td class="col-md-2 text-left">Daftar Peserta</td>
-                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-1 d-none d-md-block text-center">:</td>
                         <td class="col-md-9 text-left">{{event?.attendees?.length > 0 ? event?.attendees : '-'}}</td>
                     </tr>
                     <tr class="row">
                         <td class="col-md-2 text-left">Lampiran</td>
-                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-1 d-none d-md-block text-center">:</td>
                         <td class="col-md-9 text-left">
                             <div class="upload-btn-wrapper">
                                 <button class="btn-custom"><small>Unggah Lampiran</small></button>
@@ -85,7 +85,7 @@
                     </tr>
                     <tr class="row">
                         <td class="col-md-2 text-left">Foto Kegiatan</td>
-                        <td class="col-md-1 text-center">:</td>
+                        <td class="col-md-1 d-none d-md-block text-center">:</td>
                         <td class="col-md-9 text-left">
                             <div class="upload-btn-wrapper">
                                 <button class="btn-custom"><small>Unggah Foto</small></button>

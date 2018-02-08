@@ -11,9 +11,9 @@
                         <span style="color:white">{{event.startDate | date:'dd MMM'}} {{event.endDate ? '- ' + (event.endDate | date: 'dd MMM') : ''}}</span>
                     </ng-container>
                 </h6>
-                <div class="card-body">
+                <div class="card-body" style="padding-bottom: 0;">
                     <p class="card-text" style="font-size:0.7rem;">{{RegionType[event.region?.type]}} {{event.region?.name}}</p>
-                    <p class="card-title" style="font-size:0.8rem;">{{event.eventType?.id}} - {{event.eventType?.name}}</p>
+                    <p class="card-title" style="font-size:0.7rem; margin-bottom: 0;">{{event.eventType?.id}} - {{event.eventType?.name}}</p>
                 </div>                
             </div>
         </div>
