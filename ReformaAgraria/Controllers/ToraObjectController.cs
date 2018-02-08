@@ -160,6 +160,11 @@ namespace ReformaAgraria.Controllers
                         ts.Upload(toraObjects, package);
                     }
 
+                    foreach (var toraObject in toraObjects)
+                    {
+                        CalculateSize(toraObject.Id);
+                    }
+
                     IOHelper.StreamCopy(toraDocumentFilePath, document.File);
                 }
                 
@@ -301,14 +306,12 @@ namespace ReformaAgraria.Controllers
         [HttpGet("calculate/size/{id}")]
         public IActionResult CalculateSize(int id)
         {
-            var toraMaps = dbContext.Set<ToraMap>().Where(tm => tm.FkToraObjectId == id).ToList();
-            decimal size = 0;
-            foreach (var toraMap in toraMaps)
-            {
-                size += toraMap.Size;
-            }
-
             var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == id);
+            if (toraObject == null)
+                // TODO: Throw validation exception
+                return NotFound();
+            
+            var size = dbContext.Set<ToraMap>().Where(tm => tm.FkToraObjectId == id).Sum(tm => tm.Size);
             toraObject.Size = size;
 
             dbContext.Update(toraObject);
