@@ -19,7 +19,7 @@
                                 <button type="button" class="btn btn-primary" title="Upload" (click)="onToraMapUpload()">
                                     <span class="oi oi-data-transfer-upload" style="margin-right: 10px;"></span>Unggah Peta
                                 </button>
-                                <button type="button" class="btn btn-primary" title="Download" (click)="onToraMapDownload(toraObject?.region?.id, toraObject?.name)">
+                                <button type="button" class="btn btn-primary" title="Download" (click)="onToraMapDownload(toraObject)">
                                     <span class="oi oi-data-transfer-download" style="margin-right: 10px;"></span>Unduh Peta
                                 </button>
                                 <input id="toraMapUploader" type="file" name="myfile" style="visibility:hidden" (change)="onToraMapUploaderChanged($event.target.files[0])" />
