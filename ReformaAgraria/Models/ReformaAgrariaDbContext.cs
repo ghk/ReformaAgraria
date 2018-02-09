@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using EntityFrameworkCore.Triggers;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MicrovacWebCore;
 using System;
@@ -10,9 +11,14 @@ using System.Threading.Tasks;
 namespace ReformaAgraria.Models
 {
     public class ReformaAgrariaDbContext : IdentityDbContext<ReformaAgrariaUser>
-    {
+    {     
         public ReformaAgrariaDbContext(DbContextOptions<ReformaAgrariaDbContext> options) : base(options)
         {
+        }
+
+        static ReformaAgrariaDbContext()
+        {
+            AddTriggers();
         }
 
         public DbSet<Region> Region { get; set; }
@@ -84,25 +90,64 @@ namespace ReformaAgraria.Models
         public override int SaveChanges()
         {
             AddTimestamps();
-            return base.SaveChanges();
+            return this.SaveChangesWithTriggers(base.SaveChanges, acceptAllChangesOnSuccess: true);
         }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             AddTimestamps();
-            return base.SaveChanges(acceptAllChangesOnSuccess);
+            return this.SaveChangesWithTriggers(base.SaveChanges, acceptAllChangesOnSuccess);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             AddTimestamps();
-            return base.SaveChangesAsync(cancellationToken);
+            return this.SaveChangesWithTriggersAsync(base.SaveChangesAsync, acceptAllChangesOnSuccess: true, cancellationToken: cancellationToken);
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
         {
             AddTimestamps();
-            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+            return this.SaveChangesWithTriggersAsync(base.SaveChangesAsync, acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private static void AddTriggers()
+        {
+            Triggers<ToraSubject>.Inserting += entry =>
+            {
+                var toraObject = entry.Context.Set<ToraObject>().First(to => to.Id == entry.Entity.FkToraObjectId);
+                toraObject.TotalSubjects += 1;
+                entry.Context.Update(toraObject);
+            };
+
+            Triggers<ToraSubject>.Deleting += entry =>
+            {
+                var toraObjectId = entry.Context.Set<ToraSubject>()
+                    .Where(ts => ts.Id == entry.Entity.Id)
+                    .Select(ts => ts.FkToraObjectId)
+                    .First();
+                var toraObject = entry.Context.Set<ToraObject>().First(to => to.Id == toraObjectId);
+                toraObject.TotalSubjects -= 1;
+                entry.Context.Update(toraObject);
+            };
+
+            Triggers<ToraMap>.Inserting += entry =>
+            {
+                var toraObject = entry.Context.Set<ToraObject>().First(to => to.Id == entry.Entity.FkToraObjectId);
+                toraObject.Size += entry.Entity.Size;
+                entry.Context.Update(toraObject);
+            };
+
+            Triggers<ToraMap>.Deleting += entry =>
+            {
+                var toraMapSize = entry.Context.Set<ToraMap>()
+                    .Where(tm => tm.Id == entry.Entity.Id)
+                    .Select(tm => tm.Size)
+                    .First();
+                var toraObject = entry.Context.Set<ToraObject>().FirstOrDefault(to => to.Id == entry.Entity.FkToraObjectId);
+                toraObject.Size -= entry.Entity.Size;
+                entry.Context.Update(toraObject);
+            };
         }
 
         private void AddTimestamps()

@@ -170,7 +170,11 @@
     {
         var result = new List<Method>();
         foreach (var method in item.Methods) 
-        {
+        {            
+            var isNotGenerated = method.Attributes.Any(attr => attr.Name == "NotGenerated");
+            if (isNotGenerated)
+                continue;
+
             var isApi = method.Attributes.Any(attr => 
                 attr.Name == "HttpPost" ||
                 attr.Name == "HttpPut" ||

@@ -139,14 +139,14 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public download(id: string, by: string, query?: Query, progressListener?: any): Observable<any> {
+    public download(id: number, query?: Query, progressListener?: any): Observable<any> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         options.responseType = ResponseContentType.Blob;                
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'toramap', 'download', encodeURIComponent(id), encodeURIComponent(by)),
+            urljoin(this.serverUrl, 'toramap', 'download', id),
             null,
             progressListener,
             null,
@@ -155,15 +155,39 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         return request.catch(this.handleError)
     }
     
-    private handleError(error: Response | any) {
-        let errMsg: string;
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        return Observable.throw(errMsg);
+    public downloadByToraObject(toraObjectId: number, query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+        options.responseType = ResponseContentType.Blob;                
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'toramap', 'download', 'toraobject', toraObjectId),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.catch(this.handleError)
+    }
+    
+    public downloadByRegion(regionId: string, query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+        options.responseType = ResponseContentType.Blob;                
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'toramap', 'download', 'region', encodeURIComponent(regionId)),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.catch(this.handleError)
+    }
+    
+    private handleError(error: Response) {
+        return Observable.throw(error);
     }
 }

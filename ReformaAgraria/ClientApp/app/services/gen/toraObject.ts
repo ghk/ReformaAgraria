@@ -124,22 +124,6 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public post(model: ToraObject, progressListener?: any): Observable<number> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, null);
-                        
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'POST',
-            urljoin(this.serverUrl, 'toraobject'),
-            model,
-            null,
-            progressListener,
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-    
     public upload(model: FormData, progressListener?: any): Observable<ToraObject> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         options.headers.delete('Content-Type');                
@@ -220,15 +204,7 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    private handleError(error: Response | any) {
-        let errMsg: string;
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        return Observable.throw(errMsg);
+    private handleError(error: Response) {
+        return Observable.throw(error);
     }
 }

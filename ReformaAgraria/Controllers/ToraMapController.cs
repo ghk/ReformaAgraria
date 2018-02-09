@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MicrovacWebCore;
+using MicrovacWebCore.Exceptions;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
@@ -65,10 +66,6 @@ namespace ReformaAgraria.Controllers
             toraMap.Geojson = TopologyHelper.GetGeojson(features);
             toraMap.Size = TopologyHelper.GetArea(features);
 
-            // Update tora object size
-            toraObject.Size += toraMap.Size;
-            dbContext.Update(toraObject);
-
             await dbContext.SaveChangesAsync();
 
             // Copy map file to disk
@@ -80,23 +77,35 @@ namespace ReformaAgraria.Controllers
             return toraMap;
         }
 
-        [HttpGet("download/{id}/{by}")]
-        public async Task<FileStreamResult> Download(string id, string by)
+        [HttpGet("download/{id}")]
+        public async Task<FileStreamResult> Download(int id)
         {
-            var toraMap = new ToraMap(); ;
-            if (by.ToLower() == "regionid")
-            {
-                toraMap = await dbContext.Set<ToraMap>()
-                .Where(tm => tm.FkRegionId == id)
-                .FirstOrDefaultAsync();
-            }
-            else
-            {
-                toraMap = await dbContext.Set<ToraMap>()
-                .Where(tm => tm.Id == Convert.ToInt32(id))
-                .FirstOrDefaultAsync();
-            }
+            var toraMap = await dbContext.Set<ToraMap>().FirstOrDefaultAsync(tm => tm.Id == id);
+            if (toraMap == null)
+                throw new NotFoundException();
+            return await Download(toraMap);
+        }
 
+        [HttpGet("download/toraobject/{toraObjectId}")]
+        public async Task<FileStreamResult> DownloadByToraObject(int toraObjectId)
+        {
+            var toraMap = await dbContext.Set<ToraMap>().FirstOrDefaultAsync(tm => tm.FkToraObjectId == toraObjectId);
+            if (toraMap == null)
+                throw new NotFoundException();
+            return await Download(toraMap);
+        }
+
+        [HttpGet("download/region/{regionId}")]
+        public async Task<FileStreamResult> DownloadByRegion(string regionId)
+        {
+            var toraMap = await dbContext.Set<ToraMap>().FirstOrDefaultAsync(tm => tm.FkRegionId == regionId);
+            if (toraMap == null)
+                throw new NotFoundException();
+            return await Download(toraMap);
+        }
+
+        private async Task<FileStreamResult> Download(ToraMap toraMap)
+        {
             var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
             var toraMapPath = Path.Combine(toraMapDirectoryPath, toraMap.FkRegionId, toraMap.Id + ".zip");
             var memory = new MemoryStream();
@@ -106,24 +115,7 @@ namespace ReformaAgraria.Controllers
             }
             memory.Position = 0;
             return File(memory, "application/zip", Path.GetFileName(toraMapPath));
-        }
-
-        protected override void PrePersist(HttpMethod method, ToraMap model)
-        {
-            if (method == HttpMethod.Put)
-                return;
-
-            var toraMap = dbContext.Set<ToraMap>().First(tm => tm.Id == model.Id);
-            var toraObject = dbContext.Set<ToraObject>().First(to => to.Id == toraMap.FkToraObjectId);
-
-            if (method == HttpMethod.Post)
-                toraObject.Size += toraMap.Size;
-            else if (method == HttpMethod.Delete)
-                toraObject.Size = (toraObject.Size - toraMap.Size < 0) ? 0 : (toraObject.Size - toraMap.Size);
-
-            dbContext.Update(toraObject);
-            dbContext.SaveChanges();
-        }
+        }      
 
         protected override IQueryable<ToraMap> ApplyQuery(IQueryable<ToraMap> query)
         {

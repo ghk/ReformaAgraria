@@ -123,7 +123,7 @@ export class EventService implements CrudService<Event, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public upload(model: FormData, progressListener?: any): Observable<string> {
+    public upload(model: FormData, progressListener?: any): Observable<any> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         options.headers.delete('Content-Type');                
         let request = RequestHelper.getHttpRequest(
@@ -155,7 +155,7 @@ export class EventService implements CrudService<Event, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public deleteAttachment(id: string, attachment: string, progressListener?: any): Observable<string> {
+    public deleteAttachment(id: string, attachment: string, progressListener?: any): Observable<any> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
                         
         let request = RequestHelper.getHttpRequest(
@@ -171,15 +171,7 @@ export class EventService implements CrudService<Event, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    private handleError(error: Response | any) {
-        let errMsg: string;
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        return Observable.throw(errMsg);
+    private handleError(error: Response) {
+        return Observable.throw(error);
     }
 }

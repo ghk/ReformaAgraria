@@ -168,10 +168,7 @@ namespace ReformaAgraria.Controllers
                     {
                         ToraSubjectController ts = new ToraSubjectController(_context, _hostingEnvironment, _tsLogger);
                         ts.Upload(toraObjects, package);
-                    }
-
-                    foreach (var toraObject in toraObjects)
-                        ToraObjectHelper.Calculate(dbContext, toraObject);
+                    }               
 
                     IOHelper.StreamCopy(toraDocumentFilePath, document.File);
                 }

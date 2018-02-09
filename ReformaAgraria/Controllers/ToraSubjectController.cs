@@ -26,7 +26,7 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
         }
 
-        public ToraSubject Upload(List<ToraObject> toraObjects, ExcelPackage package)
+        public void Upload(List<ToraObject> toraObjects, ExcelPackage package)
         {
             using (package)
             {
@@ -208,28 +208,9 @@ namespace ReformaAgraria.Controllers
 
                     Post(ts);
                 }
-
-                return ts;
             }
         }
-
-        protected override void PrePersist(HttpMethod method, ToraSubject model)
-        {
-            if (method == HttpMethod.Put)
-                return;
-
-            var toraSubject = dbContext.Set<ToraSubject>().First(ts => ts.Id == model.Id);
-            var toraObject = dbContext.Set<ToraObject>().First(to => to.Id == toraSubject.FkToraObjectId);
-
-            if (method == HttpMethod.Post)
-                toraObject.TotalSubjects += 1;
-            else if (method == HttpMethod.Delete)
-                toraObject.TotalSubjects = (toraObject.TotalSubjects - 1 < 0) ? 0 : (toraObject.TotalSubjects - 1);
-
-            dbContext.Update(toraObject);
-            dbContext.SaveChanges();
-        }
-
+      
         protected override IQueryable<ToraSubject> ApplyQuery(IQueryable<ToraSubject> query)
         {
             var type = GetQueryString<string>("type");

@@ -192,10 +192,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         this.toraMapService.upload(formData).subscribe(
             data => {
                 this.toastr.success("Upload File Berhasil", null);
-                let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
-                this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
-                    this.applyOverlayTora(data);
-                });   
+                this.sharedService.setToraMapReloadedStatus(true);
                 this.clearModal();
             },
             error => {
@@ -205,7 +202,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     }
 
     onSubmitDownloadForm() {
-        this.toraMapService.download(this.downloadModel.tora.id.toString(), 'toramapid').subscribe(data => {
+        this.toraMapService.downloadByToraObject(this.downloadModel.tora.id).subscribe(data => {
             let blob = new Blob([data.blob()], { type: 'application/zip' });
             saveAs(blob, this.downloadModel.tora.id + '.zip');
         });
@@ -322,6 +319,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     }
 
     applyOverlayTora(data) {
+        this.layers.length = 0;
         data.forEach(result => {
             let geojson = this.getGeoJsonTora(result, '#FF0000');
             this.layers.push(geojson);

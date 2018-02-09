@@ -164,8 +164,8 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         );
     }
 
-    onToraMapDownload(id, name) {
-        this.toraMapService.download(id, 'regionid').subscribe(data => {
+    onToraMapDownload(id) {
+        this.toraMapService.download(id).subscribe(data => {
             let blob = new Blob([data.blob()], { type: 'application/zip' });
             saveAs(blob, name + '.zip');
         })

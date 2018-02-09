@@ -87,31 +87,7 @@ export class AccountService {
         return this.http.put('/api/account/user/' + id, body, requestOptions);
     }
 
-    private handleError(error: Response | any) {
-        let errMsg: string;
-        if (error instanceof Response) {
-            try {
-                var body = error.json() || '';
-                if (body.length > 1) {
-                    body = body[1];
-                }
-                var err = null;
-                if (body.message != undefined) {
-                    err = body.message;
-                }
-                else if (body.description != undefined) {
-                    err = body.description;
-                }
-                else {
-                    err = JSON.stringify(body);
-                }
-                errMsg = `${err}`;
-            } catch (e) {
-                errMsg = `Unable to perform this request`;
-            }
-        } else {
-            errMsg = 'Unable to perform this request';
-        }
-        return Observable.throw(errMsg);
+    private handleError(error: Response) {        
+        return Observable.throw(error);
     }
 }

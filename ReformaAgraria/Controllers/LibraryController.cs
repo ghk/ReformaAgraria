@@ -52,11 +52,11 @@ namespace ReformaAgraria.Controllers
         [HttpDelete("delete/{id}")]
         public override int Delete(int id)
         {
-            var webRootPath = Path.Combine(_hostingEnvironment.WebRootPath, "library");
+            var libraryPath = Path.Combine(_hostingEnvironment.WebRootPath, "library");
             string fileName = id + "_";
-            string[] Files = Directory.GetFiles(webRootPath);
+            string[] files = Directory.GetFiles(libraryPath);
 
-            foreach (string file in Files)
+            foreach (var file in files)
             {
                 if (file.Contains(fileName))
                 {
