@@ -10,6 +10,13 @@ $theme-colors: (
     danger: $red,
     light: $gray-100,
     dark: $gray-800
-  );
+); 
 
-  
+$sizes: map-merge((
+   5: 5%,
+  10: 10%,
+  15: 15%,
+  20: 20%,
+  30: 30%,
+  33: 33%
+), $sizes);

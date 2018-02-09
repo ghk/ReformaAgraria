@@ -11,16 +11,16 @@
                         <table class="table table-bordered table-responsive-sm bg-light my-3 table-object">
                             <caption>
                                 <button type="button" class="btn btn-primary" title="Print" (click)="onExport()">
-                                    <span class="oi oi-print" style="margin-right: 10px;"></span>Export
+                                    <span class="oi oi-print mr-1"></span>Export
                                 </button>
                                 <button type="button" class="btn btn-primary" title="Edit" (click)="onShowToraObjectForm()">
-                                    <span class="oi oi-pencil" style="margin-right: 10px;"></span>Ubah Objek
+                                    <span class="oi oi-pencil mr-1"></span>Ubah Objek
                                 </button>
                                 <button type="button" class="btn btn-primary" title="Upload" (click)="onToraMapUpload()">
-                                    <span class="oi oi-data-transfer-upload" style="margin-right: 10px;"></span>Unggah Peta
+                                    <span class="oi oi-data-transfer-upload mr-1"></span>Unggah Peta
                                 </button>
-                                <button type="button" class="btn btn-primary" title="Download" (click)="onToraMapDownload(toraObject)">
-                                    <span class="oi oi-data-transfer-download" style="margin-right: 10px;"></span>Unduh Peta
+                                <button type="button" class="btn btn-primary mt-1" title="Download" (click)="onToraMapDownload(toraObject)">
+                                    <span class="oi oi-data-transfer-download mr-1"></span>Unduh Peta
                                 </button>
                                 <input id="toraMapUploader" type="file" name="myfile" style="visibility:hidden" (change)="onToraMapUploaderChanged($event.target.files[0])" />
                             </caption>
@@ -33,7 +33,7 @@
                             <tbody>
                                 <tr>
                                     <td scope="row">1</td>
-                                    <td>Nama Lokasi</td>
+                                    <td class="w-15">Nama Lokasi</td>
                                     <td colspan="3">{{toraObject?.name}}</td>
                                 </tr>
                                 <tr>
@@ -135,18 +135,18 @@
                             </caption>
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col">No</th>
                                     <th scope="col">Nama</th>
-                                    <th scope="col">Status pernikahan</th>
+                                    <th scope="col">Status Pernikahan</th>
                                     <th scope="col">Alamat</th>
-                                    <th scope="col">Jenis kelamin</th>
+                                    <th scope="col">Jenis Kelamin</th>
                                     <th scope="col">Umur</th>
                                     <th scope="col">Pendidikan</th>
-                                    <th scope="col">Jumlah keluarga</th>
-                                    <th scope="col">Status tanah</th>
-                                    <th scope="col">Lokasi lahan garapan</th>
+                                    <th scope="col">Jumlah Keluarga</th>
+                                    <th scope="col">Status Tanah</th>
+                                    <th scope="col">Lokasi Lahan Garapan</th>
                                     <th scope="col">Luas (ha)</th>
-                                    <th scope="col">Jenis tanaman</th>
+                                    <th scope="col">Jenis Tanaman</th>
                                     <th scope="col" colspan="2"></th>
                                 </tr>
                             </thead>
