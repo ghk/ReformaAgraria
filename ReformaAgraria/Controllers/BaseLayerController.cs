@@ -29,7 +29,7 @@ namespace ReformaAgraria.Controllers
         {
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
-        }        
+        }
 
         [HttpPost("upload")]
         public async Task<BaseLayer> Upload([FromForm]UploadBaseLayerViewModel model)
@@ -41,7 +41,7 @@ namespace ReformaAgraria.Controllers
 
             if (baseLayer == null)
             {
-                baseLayer = new BaseLayer();                
+                baseLayer = new BaseLayer();
                 dbContext.Entry(baseLayer).State = EntityState.Added;
             }
             else
@@ -53,13 +53,13 @@ namespace ReformaAgraria.Controllers
             baseLayer.Color = model.Color;
 
             if (baseLayer.Id <= 0 || model.File != null)
-            {                
+            {
                 baseLayer.Geojson = GetGeoJson(model.File);
                 await dbContext.SaveChangesAsync();
                 var baseLayerDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "baseLayer");
                 var destinationFilePath = Path.Combine(baseLayerDirectoryPath, baseLayer.Id + ".zip");
                 IOHelper.StreamCopy(destinationFilePath, model.File);
-            } 
+            }
             else
             {
                 await dbContext.SaveChangesAsync();
@@ -70,7 +70,7 @@ namespace ReformaAgraria.Controllers
 
         [HttpDelete("{id}")]
         public override async Task<int> DeleteAsync(int id)
-        {           
+        {
             var baseLayerDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "baseLayer");
             var destinationFilePath = Path.Combine(baseLayerDirectoryPath, id + ".zip");
             if (System.IO.File.Exists(destinationFilePath))

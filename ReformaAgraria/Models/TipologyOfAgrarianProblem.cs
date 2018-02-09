@@ -1,12 +1,13 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class TipologyOfAgrarianProblem: BaseEntity<int>
+    public class TipologyOfAgrarianProblem : BaseEntity<int>
     {
-        public TipologyOfAgrarianProblem() { }
+        public TipologyOfAgrarianProblem()
+        {
+        }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -31,7 +32,7 @@ namespace ReformaAgraria.Models
         public bool ObjectDataCheckList { get; set; }
 
         public bool LandTenureHistoryDataCheckList { get; set; }
-        
+
         public string ContactPerson { get; set; }
 
         public LandType LandType { get; set; }
@@ -51,7 +52,7 @@ namespace ReformaAgraria.Models
         public decimal ForestSize { get; set; }
 
         public decimal MereSize { get; set; }
-        
+
         public int? FkCoordinateId { get; set; }
 
         [ForeignKey("FkCoordinateId")]
@@ -61,6 +62,5 @@ namespace ReformaAgraria.Models
 
         [ForeignKey("FkRegionId")]
         public Region Region { get; set; }
-
     }
 }

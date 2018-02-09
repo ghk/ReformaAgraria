@@ -58,7 +58,7 @@ namespace ReformaAgraria.Helpers
             features = TopologyHelper.TransformProjection(features, projection, GeographicCoordinateSystem.WGS84);
             features.CRS = new NamedCRS("urn:ogc:def:crs:OGC:1.3:CRS84");
             return features;
-        }        
+        }
 
         public static FeatureCollection GetFeatureCollectionWgs84(IFormFile file)
         {
@@ -141,7 +141,7 @@ namespace ReformaAgraria.Helpers
             FeatureCollection features, ICoordinateSystem source, ICoordinateSystem dest)
         {
             var transformer = GetCoordinateTransformer(source, dest);
-            
+
             foreach (var feature in features.Features)
             {
                 var transformFilter = new CoordinateTransformationFilter(transformer);
@@ -160,7 +160,7 @@ namespace ReformaAgraria.Helpers
             var coordinate = features.Features.FirstOrDefault().Geometry.GetGeometryN(1).Centroid.Coordinate;
             var zone = 1 + (int)Math.Floor((coordinate.X + 180) / 6);
             var zoneIsNorth = (coordinate.Y * Math.PI / 180) < 0 ? false : true;
-            features = TransformProjection(features, GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WGS84_UTM(zone, zoneIsNorth));            
+            features = TransformProjection(features, GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WGS84_UTM(zone, zoneIsNorth));
 
             decimal area = 0;
             foreach (var feature in features.Features)
@@ -178,8 +178,8 @@ namespace ReformaAgraria.Helpers
             var newFeatures = new FeatureCollection();
             foreach (var feature in features.Features)
             {
-                var newAttributes = new AttributesTable();                
-                foreach(var attributeName in feature.Attributes.GetNames())
+                var newAttributes = new AttributesTable();
+                foreach (var attributeName in feature.Attributes.GetNames())
                 {
                     newAttributes.Add(attributeName, feature.Attributes[attributeName]);
                 }

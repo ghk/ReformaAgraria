@@ -2,10 +2,6 @@
 using Serilog;
 using Serilog.Core;
 using Serilog.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReformaAgraria.Helpers
 {
@@ -29,7 +25,7 @@ namespace ReformaAgraria.Helpers
         {
             return logger
                 .WriteTo.Logger(l => l
-                    .MinimumLevel.Warning()                    
+                    .MinimumLevel.Warning()
                     .WriteTo.RollingFile("./Logs/Warning-{Date}.txt"))
                 .WriteTo.Logger(l => l
                     .MinimumLevel.Error()
@@ -41,7 +37,7 @@ namespace ReformaAgraria.Helpers
             return logger
                 .WriteTo.Logger(l => l
                     .Filter.ByIncludingOnly(Matching.FromSource<T>())
-                    .WriteTo.RollingFile("./Logs/" +  typeof(T).Name + "-{Date}.txt")
+                    .WriteTo.RollingFile("./Logs/" + typeof(T).Name + "-{Date}.txt")
                 );
         }
     }

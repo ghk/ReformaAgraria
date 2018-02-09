@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MicrovacWebCore;
-using ReformaAgraria.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MicrovacWebCore;
+using ReformaAgraria.Models;
+using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace ReformaAgraria.Controllers
 {
@@ -56,6 +51,5 @@ namespace ReformaAgraria.Controllers
 
             return query;
         }
-
     }
 }

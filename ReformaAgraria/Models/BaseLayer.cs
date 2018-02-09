@@ -1,12 +1,13 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
     public class BaseLayer : BaseEntity<int>
     {
-        public BaseLayer() { }
+        public BaseLayer()
+        {
+        }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -15,8 +16,7 @@ namespace ReformaAgraria.Models
         public string Label { get; set; }
 
         public string Color { get; set; }
-        
-        public string Geojson { get; set; }
 
+        public string Geojson { get; set; }
     }
 }

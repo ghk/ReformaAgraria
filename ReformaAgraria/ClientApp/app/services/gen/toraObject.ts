@@ -124,6 +124,22 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
+    public post(model: ToraObject, progressListener?: any): Observable<number> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'toraobject'),
+            model,
+            null,
+            progressListener,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
     public upload(model: FormData, progressListener?: any): Observable<ToraObject> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         options.headers.delete('Content-Type');                
@@ -164,6 +180,38 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
             options,
             'GET',
             urljoin(this.serverUrl, 'toraobject', 'summary', encodeURIComponent(id)),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public calculateAll(query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'toraobject', 'calculate', 'all'),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public calculate(id: number, query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'toraobject', 'calculate', id),
             null,
             progressListener,
             null,

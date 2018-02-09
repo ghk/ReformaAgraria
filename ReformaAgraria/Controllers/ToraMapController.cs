@@ -1,32 +1,17 @@
-using System;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using OfficeOpenXml;
-using MicrovacWebCore;
-using ReformaAgraria.Models;
 using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.IO.Compression;
-using Newtonsoft.Json;
-using GeoJSON.Net.Geometry;
-using GeoJSON.Net.Converters;
-using ProjNet.CoordinateSystems.Transformations;
-using ProjNet.CoordinateSystems;
-using System.Net;
-using ReformaAgraria.Security;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.IO;
-using NetTopologySuite.Features;
-using System.Collections;
-using GeoAPI.Geometries;
-using ReformaAgraria.Helpers;
-using ReformaAgraria.Models.ViewModels;
 using Microsoft.Extensions.Logging;
+using MicrovacWebCore;
+using ReformaAgraria.Helpers;
+using ReformaAgraria.Models;
+using ReformaAgraria.Models.ViewModels;
+using System;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace ReformaAgraria.Controllers
 {
@@ -40,8 +25,8 @@ namespace ReformaAgraria.Controllers
         private readonly ILogger<ToraMapController> _logger;
 
         public ToraMapController(
-            ReformaAgrariaDbContext dbContext, 
-            IHostingEnvironment hostingEnvironment, 
+            ReformaAgrariaDbContext dbContext,
+            IHostingEnvironment hostingEnvironment,
             IHttpContextAccessor contextAccessor,
             ILogger<ToraMapController> logger
         ) : base(dbContext)
@@ -90,10 +75,10 @@ namespace ReformaAgraria.Controllers
             var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
             var regionDirectoryPath = Path.Combine(toraMapDirectoryPath, model.RegionId);
             var destinationFilePath = Path.Combine(regionDirectoryPath, toraMap.Id + ".zip");
-            IOHelper.StreamCopy(destinationFilePath, model.File);                       
+            IOHelper.StreamCopy(destinationFilePath, model.File);
 
             return toraMap;
-        }       
+        }
 
         [HttpGet("download/{id}/{by}")]
         public async Task<FileStreamResult> Download(string id, string by)
@@ -111,7 +96,7 @@ namespace ReformaAgraria.Controllers
                 .Where(tm => tm.Id == Convert.ToInt32(id))
                 .FirstOrDefaultAsync();
             }
-                        
+
             var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
             var toraMapPath = Path.Combine(toraMapDirectoryPath, toraMap.FkRegionId, toraMap.Id + ".zip");
             var memory = new MemoryStream();
@@ -123,16 +108,18 @@ namespace ReformaAgraria.Controllers
             return File(memory, "application/zip", Path.GetFileName(toraMapPath));
         }
 
-        protected override void PostPersist(HttpMethod method, ToraMap model)
+        protected override void PrePersist(HttpMethod method, ToraMap model)
         {
             if (method == HttpMethod.Put)
                 return;
 
-            var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == model.FkToraObjectId);
+            var toraMap = dbContext.Set<ToraMap>().First(tm => tm.Id == model.Id);
+            var toraObject = dbContext.Set<ToraObject>().First(to => to.Id == toraMap.FkToraObjectId);
+
             if (method == HttpMethod.Post)
-                toraObject.Size += model.Size;
+                toraObject.Size += toraMap.Size;
             else if (method == HttpMethod.Delete)
-                toraObject.Size -= model.Size;
+                toraObject.Size = (toraObject.Size - toraMap.Size < 0) ? 0 : (toraObject.Size - toraMap.Size);
 
             dbContext.Update(toraObject);
             dbContext.SaveChanges();
@@ -144,7 +131,7 @@ namespace ReformaAgraria.Controllers
 
             if (type == "getAllByRegion")
             {
-                var regionId = GetQueryString<string>("regionId");                    
+                var regionId = GetQueryString<string>("regionId");
                 if (!string.IsNullOrWhiteSpace(regionId))
                     query = query.Where(r => r.FkRegionId.Contains(regionId));
             }
@@ -162,6 +149,6 @@ namespace ReformaAgraria.Controllers
             }
 
             return query;
-        }       
+        }
     }
 }

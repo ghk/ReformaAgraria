@@ -5,6 +5,7 @@ import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
+import { UploadEventDetailViewModel } from '../../models/gen/uploadEventDetailViewModel';
 import { Event } from '../../models/gen/event';
 import { EnvironmentService } from '../../services/environment';
 import { CrudService } from '../../services/crud';
@@ -107,36 +108,6 @@ export class EventService implements CrudService<Event, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public getDocumentsName(id: string, type: string, query?: Query, progressListener?: any): Observable<any> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, query);
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'GET',
-            urljoin(this.serverUrl, 'event', 'getdocumentsname?id=' + id + '&type=' + type),
-            null,
-            progressListener,
-            null
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-
-    public deleteAttachment(id: string, attachment: string, query?: Query, progressListener?: any): Observable<any> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, query);
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'POST',
-            urljoin(this.serverUrl, 'event', 'deleteattachment?id=' + id + '&attachment=' + attachment),
-            null,
-            progressListener,
-            null
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-
     public deleteById(id: any, progressListener?: any): Observable<number> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
@@ -151,10 +122,10 @@ export class EventService implements CrudService<Event, number>{
 
         return request.map(res => res.json()).catch(this.handleError);
     }
-
-    public upload(model: FormData, progressListener?: any): Observable<Event> {
+    
+    public upload(model: FormData, progressListener?: any): Observable<string> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
-        options.headers.delete('Content-Type');
+        options.headers.delete('Content-Type');                
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
@@ -163,6 +134,38 @@ export class EventService implements CrudService<Event, number>{
             model,
             null,
             progressListener,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public getDocumentsNames(id: string, type: string, query?: Query, progressListener?: any): Observable<string[]> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'event', 'documents?id=${encodeuricomponent(id)}&type=${encodeuricomponent(type)}'),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public deleteAttachment(id: string, attachment: string, progressListener?: any): Observable<string> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'DELETE',
+            urljoin(this.serverUrl, 'event', 'attachments?id=${encodeuricomponent(id)}&attachment=${encodeuricomponent(attachment)}'),
+            null,
+            progressListener,
+            null,
         );
 
         return request.map(res => res.json()).catch(this.handleError);

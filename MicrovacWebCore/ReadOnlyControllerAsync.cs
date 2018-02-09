@@ -12,7 +12,11 @@ namespace MicrovacWebCore
     public class ReadOnlyControllerAsync<TModel, TId> : ModelControllerAsync<TModel, TId>
         where TModel : class, IModel<TId>, new()
     {
-        public ReadOnlyControllerAsync(DbContext dbContext) : base(dbContext) { IdField = "Id"; }
+        public ReadOnlyControllerAsync(DbContext dbContext) : base(dbContext)
+        {
+            IdField = "Id";
+        }
+
         public string IdField { get; set; }
 
         protected List<Expression<Func<TModel, Object>>> SingleIncludes =
@@ -160,7 +164,5 @@ namespace MicrovacWebCore
                 ListIncludes.Add(include);
             }
         }
-
     }
-
 }

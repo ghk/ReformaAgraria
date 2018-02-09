@@ -146,7 +146,7 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'toramap', 'download', id, by),
+            urljoin(this.serverUrl, 'toramap', 'download', encodeURIComponent(id), encodeURIComponent(by)),
             null,
             progressListener,
             null,

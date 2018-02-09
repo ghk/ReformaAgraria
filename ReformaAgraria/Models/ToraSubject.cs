@@ -1,13 +1,14 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class ToraSubject: BaseEntity<int>
+    public class ToraSubject : BaseEntity<int>
     {
-        public ToraSubject() { }
-        
+        public ToraSubject()
+        {
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override int Id { get; set; }

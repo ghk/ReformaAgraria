@@ -13,8 +13,6 @@ import { RegionType } from '../models/gen/regionType';
 import { EventHelper } from '../helpers/event';
 
 import * as moment from 'moment';
-import * as $ from 'jquery';
-
 
 @Component({
     selector: 'ra-event-card',
@@ -73,7 +71,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
     }
 
     onCardClicked(event: Event) {
-        this.router.navigateByUrl('calendardetail/' + event.id);
+        this.router.navigateByUrl('event/' + event.id);
     }
 
 }

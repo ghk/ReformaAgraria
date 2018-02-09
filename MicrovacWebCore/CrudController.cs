@@ -11,14 +11,15 @@ namespace MicrovacWebCore
     public class CrudController<TModel, TId> : ReadOnlyController<TModel, TId>
         where TModel : class, IModel<TId>, new()
     {
-
         protected List<Expression<Func<TModel, Object>>> PostFields =
             new List<Expression<Func<TModel, object>>>();
 
         protected List<Expression<Func<TModel, Object>>> PutFields =
             new List<Expression<Func<TModel, object>>>();
 
-        public CrudController(DbContext dbContext) : base(dbContext) { }
+        public CrudController(DbContext dbContext) : base(dbContext)
+        {
+        }
 
         [HttpPost]
         public virtual TId Post([FromBody] TModel model)
@@ -70,7 +71,7 @@ namespace MicrovacWebCore
         private void SetModelProperty(Expression<Func<TModel, Object>> memberLamda, TModel source, TModel target)
         {
             var memberSelectorExpression = memberLamda.Body as MemberExpression;
-            if(memberSelectorExpression == null)
+            if (memberSelectorExpression == null)
             {
                 var convertExpression = memberLamda.Body as UnaryExpression;
                 memberSelectorExpression = convertExpression.Operand as MemberExpression;
@@ -79,9 +80,13 @@ namespace MicrovacWebCore
             var val = property.GetValue(source);
             property.SetValue(target, property.GetValue(source), null);
         }
-        
-        protected virtual void PrePersist(HttpMethod method, TModel model) { }
-        protected virtual void PostPersist(HttpMethod method, TModel model) { }
+
+        protected virtual void PrePersist(HttpMethod method, TModel model)
+        {
+        }
+
+        protected virtual void PostPersist(HttpMethod method, TModel model)
+        {
+        }
     }
-      
 }

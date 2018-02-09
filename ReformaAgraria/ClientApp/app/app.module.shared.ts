@@ -1,3 +1,7 @@
+import 'hammerjs';
+import 'mousetrap';
+import 'bootstrap';
+
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,8 +20,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { CalendarModule } from 'angular-calendar';
-import 'hammerjs';
-import 'mousetrap';
 import { ModalGalleryModule } from 'angular-modal-gallery';
 
 import { AppComponent } from './components/app';
@@ -44,6 +46,7 @@ import { EventDetailComponent } from './components/eventDetail';
 import { ModalToraObjectFormComponent } from './components/modals/toraObjectForm';
 import { ModalToraSubjectFormComponent } from './components/modals/toraSubjectForm';
 import { ModalUploadToraDocumentComponent } from './components/modals/uploadToraDocument';
+import { ModalDeleteComponent } from './components/modals/delete';
 
 import { CookieService } from 'ngx-cookie-service';
 import { EnvironmentService } from './services/environment';
@@ -69,7 +72,6 @@ import { defineLocale } from 'ngx-bootstrap';
 import { id } from './helpers/id';
 defineLocale('id', id);
 
-import 'bootstrap';
 import './styles/app.scss';
 
 @NgModule({
@@ -87,6 +89,8 @@ import './styles/app.scss';
         ToraDetailComponent,
         ToraMapComponent,
         MapComponent,
+        LibraryComponent,
+        EventDetailComponent,
         AlertComponent,
         LoginComponent,        
         ForgotPasswordComponent,
@@ -95,16 +99,16 @@ import './styles/app.scss';
         ModalToraObjectFormComponent,
         ModalToraSubjectFormComponent,
         ModalUploadToraDocumentComponent,
+        ModalDeleteComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
-        TranslatePipe,
-        LibraryComponent,
-        EventDetailComponent
+        TranslatePipe     
     ],
     entryComponents: [
         ModalToraObjectFormComponent,
         ModalToraSubjectFormComponent,
-        ModalUploadToraDocumentComponent
+        ModalUploadToraDocumentComponent,
+        ModalDeleteComponent
     ],
     imports: [
         LeafletModule,
@@ -133,7 +137,7 @@ import './styles/app.scss';
                     { path: 'calendar/:id', component: EventCalendarComponent },
                     { path: 'map', component: MapComponent },
                     { path: 'library', component: LibraryComponent },
-                    { path: 'calendardetail/:id', component: EventDetailComponent }
+                    { path: 'event/:id', component: EventDetailComponent }
                 ]
             },
             {

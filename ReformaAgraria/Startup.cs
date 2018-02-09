@@ -1,15 +1,20 @@
+using FluentValidation;
+using GlobalExceptionHandler.WebApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MicrovacWebCore.Exceptions;
+using Newtonsoft.Json;
+using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Security;
 using System;
@@ -57,7 +62,7 @@ namespace ReformaAgraria
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.User.AllowedUserNameCharacters =
-                          "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
             });
 
@@ -86,16 +91,16 @@ namespace ReformaAgraria
             var tokenValidationParameters = new TokenValidationParameters
             {
                 //When this line commented, got invalid token audience error
-                ValidAudience = "MyAudience",
-                ValidIssuer = "MyIssuer",
+                ValidAudience = "ReformaAgrariaAudience",
+                ValidIssuer = "ReformaAgrariaIssuer",
                 // When receiving a token, check that we've signed it.
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["Security:SecretKey"])),
                 // When receiving a token, check that it is still valid.
                 RequireExpirationTime = true,
                 ValidateLifetime = true,
-                // This defines the maximum allowable clock skew - i.e. provides a tolerance on the token expiry time 
-                // when validating the lifetime. As we're creating the tokens locally and validating them on the same 
+                // This defines the maximum allowable clock skew - i.e. provides a tolerance on the token expiry time
+                // when validating the lifetime. As we're creating the tokens locally and validating them on the same
                 // machines which should have synchronised time, this can be set to zero. Where external tokens are
                 // used, some leeway here could be useful.
                 ClockSkew = TimeSpan.FromMinutes(0)
@@ -108,7 +113,6 @@ namespace ReformaAgraria
                     options.SaveToken = true;
                     options.TokenValidationParameters = tokenValidationParameters;
                 });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -116,16 +120,70 @@ namespace ReformaAgraria
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
                     HotModuleReplacement = true
                 });
             }
-            else
+
+            app.UseExceptionHandler().WithConventions(x =>
             {
-                app.UseExceptionHandler("/Home/Error");
-            }
+                x.ContentType = "application/json";
+
+                if (env.IsDevelopment())
+                {
+                    x.MessageFormatter(s => JsonConvert.SerializeObject(new RequestResult()
+                    {
+                        Message = s.Message,
+                        StackTrace = s.StackTrace
+                    }));
+                }
+                else
+                {
+                    x.MessageFormatter(s => JsonConvert.SerializeObject(new RequestResult()
+                    {
+                        Message = "An error occurred whilst processing your request",
+                    }));
+                }
+
+                x.ForException<NotFoundException>().ReturnStatusCode(StatusCodes.Status404NotFound)
+                   .UsingMessageFormatter((ex, context) =>
+                       JsonConvert.SerializeObject(new RequestResult()
+                       {
+                           Message = ex.Message
+                       })
+                   );
+
+                x.ForException<UnauthorizedException>().ReturnStatusCode(StatusCodes.Status403Forbidden)
+                   .UsingMessageFormatter((ex, context) =>
+                       JsonConvert.SerializeObject(new RequestResult()
+                       {
+                           Message = ex.Message
+                       })
+                   );
+
+                x.ForException<BadRequestException>().ReturnStatusCode(StatusCodes.Status400BadRequest)
+                   .UsingMessageFormatter((ex, context) =>
+                   {
+                       var exception = (BadRequestException)ex;
+                       return JsonConvert.SerializeObject(new RequestResult()
+                       {
+                           Message = exception.Message,
+                           Data = exception.Errors
+                       });
+                   });
+
+                x.ForException<ValidationException>().ReturnStatusCode(StatusCodes.Status400BadRequest)
+                    .UsingMessageFormatter((ex, context) =>
+                    {
+                        var exception = (ValidationException)ex;
+                        return JsonConvert.SerializeObject(new RequestResult()
+                        {
+                            Message = exception.Message,
+                            Data = exception.Errors
+                        });
+                    });
+            });
 
             app.UseStaticFiles();
 

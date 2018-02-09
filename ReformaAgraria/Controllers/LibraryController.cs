@@ -1,16 +1,14 @@
-using System;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using MicrovacWebCore;
-using ReformaAgraria.Models;
 using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using System.Net;
-using System.Collections.Generic;
-using ReformaAgraria.Models.ViewModels;
-using ReformaAgraria.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MicrovacWebCore;
+using ReformaAgraria.Helpers;
+using ReformaAgraria.Models;
+using ReformaAgraria.Models.ViewModels;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ReformaAgraria.Controllers
 {
@@ -32,7 +30,7 @@ namespace ReformaAgraria.Controllers
 
         [HttpPost("upload")]
         public async Task<Library> Upload([FromForm]UploadLibraryViewModel model)
-        {            
+        {
             var content = new Library
             {
                 Title = model.Title,
@@ -53,7 +51,7 @@ namespace ReformaAgraria.Controllers
 
         [HttpDelete("delete/{id}")]
         public override int Delete(int id)
-        {           
+        {
             var webRootPath = Path.Combine(_hostingEnvironment.WebRootPath, "library");
             string fileName = id + "_";
             string[] Files = Directory.GetFiles(webRootPath);
@@ -65,8 +63,8 @@ namespace ReformaAgraria.Controllers
                     System.IO.File.Delete(file);
                 }
             }
-            
+
             return base.Delete(id);
-        }        
+        }
     }
 }

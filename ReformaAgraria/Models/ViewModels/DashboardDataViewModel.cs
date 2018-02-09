@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ReformaAgraria.Models.ViewModels
+﻿namespace ReformaAgraria.Models.ViewModels
 {
     public class DashboardDataViewModel
     {

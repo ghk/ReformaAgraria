@@ -213,16 +213,18 @@ namespace ReformaAgraria.Controllers
             }
         }
 
-        protected override void PostPersist(HttpMethod method, ToraSubject model)
+        protected override void PrePersist(HttpMethod method, ToraSubject model)
         {
             if (method == HttpMethod.Put)
                 return;
 
-            var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == model.FkToraObjectId);
+            var toraSubject = dbContext.Set<ToraSubject>().First(ts => ts.Id == model.Id);
+            var toraObject = dbContext.Set<ToraObject>().First(to => to.Id == toraSubject.FkToraObjectId);
+
             if (method == HttpMethod.Post)
                 toraObject.TotalSubjects += 1;
             else if (method == HttpMethod.Delete)
-                toraObject.TotalSubjects -= 1;
+                toraObject.TotalSubjects = (toraObject.TotalSubjects - 1 < 0) ? 0 : (toraObject.TotalSubjects - 1);
 
             dbContext.Update(toraObject);
             dbContext.SaveChanges();

@@ -282,20 +282,8 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     }
 
     getGeoJsonTora(data: ToraMap, currentColor): any {
-        var size;
-        var totalSubjects;
-        if (data.toraObject.totalSubjects == '0' || data.toraObject.totalSubjects == '') {
-            totalSubjects = '-';
-        }
-        else {
-            totalSubjects = data.toraObject.totalSubjects;
-        }
-        if (data.toraObject.size.toString() == '0' || data.toraObject.size.toString() == '') {
-            size = '-';
-        }
-        else {
-            size = data.toraObject.size.toFixed(2) + ' ha';
-        }
+        var size = data.toraObject.size ? (data.toraObject.size / 10000).toFixed(2) + ' ha' : '-';
+        var totalSubjects = data.toraObject.totalSubjects || '-';
 
         let geoJsonOptions = {
             style: (feature) => {
@@ -311,7 +299,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                     '<tr><td>Kecamatan</td><td>:</td><td><a href="/home/' + data.region.parent.id.split('.').join('_') + '">' + data.region.parent.name + '</td></tr>' +
                     '<tr><td>Desa</td><td>:</td><td><a href="/home/' + data.region.id.split('.').join('_') + '">' + data.region.name + '</td></tr>' +
                     '<tr><td>Luas</td><td>:</td><td>' + size + '</td></tr>' +
-                    '<tr><td>Jumlah Penggarap</td><td>:</td><td>' + data.toraObject.toraSubjects.length + '</td></tr></tbody></table>');       
+                    '<tr><td>Jumlah Penggarap</td><td>:</td><td>' + totalSubjects + '</td></tr></tbody></table>');       
             }
         };      
 

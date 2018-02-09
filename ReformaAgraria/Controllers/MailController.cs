@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 
 namespace ReformaAgraria.Controllers
 {
@@ -15,7 +10,8 @@ namespace ReformaAgraria.Controllers
         private readonly IConfiguration _iconfiguration;
         private readonly ILogger<MailController> _logger;
 
-        public MailController(IConfiguration iconfiguration, ILogger<MailController> logger) {
+        public MailController(IConfiguration iconfiguration, ILogger<MailController> logger)
+        {
             _iconfiguration = iconfiguration;
             _logger = logger;
         }
@@ -47,5 +43,4 @@ namespace ReformaAgraria.Controllers
             }
         }
     }
-
 }

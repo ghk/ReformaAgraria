@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
+using Serilog;
 using System;
 using System.IO;
-using Serilog;
-using ReformaAgraria.Helpers;
 
 namespace ReformaAgraria
 {
@@ -29,7 +29,7 @@ namespace ReformaAgraria
                     }
                 }
                 host.Run();
-            } 
+            }
             catch (Exception ex)
             {
                 Log.Fatal(ex, "Host terminated unexpectedly");

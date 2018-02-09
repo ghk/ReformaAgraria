@@ -191,7 +191,7 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
             this.deleteConfirmationModalRef = this.modalService.show(this.deleteConfirmationModal);
         }
         if (action === 'Clicked') {
-            this.router.navigateByUrl('calendardetail/' + event.meta.id);
+            this.router.navigateByUrl('event/' + event.meta.id);
         }
     }
 

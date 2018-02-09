@@ -5,7 +5,9 @@ namespace ReformaAgraria.Models
 {
     public class ToraMap : BaseEntity<int>
     {
-        public ToraMap() { }
+        public ToraMap()
+        {
+        }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -27,6 +29,5 @@ namespace ReformaAgraria.Models
 
         [ForeignKey("FkRegionId")]
         public Region Region { get; set; }
-
     }
 }

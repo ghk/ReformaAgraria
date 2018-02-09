@@ -5,8 +5,8 @@ namespace ReformaAgraria.Security
 {
     public class TokenAuthOption
     {
-        public string Audience { get; set; } = "MyAudience";
-        public string Issuer { get; set; } = "MyIssuer";
+        public string Audience { get; set; } = "ReformaAgrariaAudience";
+        public string Issuer { get; set; } = "ReformaAgrariaIssuer";
 
         public static TimeSpan ExpiresSpan { get; } = TimeSpan.FromDays(7);
         public static string TokenType { get; } = "Bearer";

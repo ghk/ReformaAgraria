@@ -1,5 +1,4 @@
-﻿
-namespace ReformaAgraria.Models
+﻿namespace ReformaAgraria.Models
 {
     public enum Codefication
     {

@@ -1,21 +1,23 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using MicrovacWebCore.Exceptions;
+using MicrovacWebCore.Helpers;
+using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
 using ReformaAgraria.Security;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
-using MicrovacWebCore.Helpers;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ReformaAgraria.Controllers
 {
@@ -62,39 +64,30 @@ namespace ReformaAgraria.Controllers
         {
             var user = _signInManager.UserManager.Users.Where(u => u.Email == model.Email).FirstOrDefault();
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, isPersistent: true, lockoutOnFailure: false);
-            if (result.Succeeded)
+            if (!result.Succeeded)
+                throw new BadRequestException("Email atau Password salah");
+
+            var claimsUser = await _userManager.FindByEmailAsync(model.Email);
+            var claims = _userManager.GetClaimsAsync(claimsUser);
+            var id = new ClaimsIdentity(claims.Result);
+
+            id.AddClaim(new Claim(ClaimTypes.Email, claimsUser.Email));
+            id.AddClaim(new Claim(ClaimTypes.NameIdentifier, claimsUser.Id));
+
+            var requestAt = DateTime.Now;
+            var expiresIn = requestAt + TokenAuthOption.ExpiresSpan;
+            var token = GenerateToken(expiresIn, id);
+
+            return Ok(new RequestResult
             {
-                var claimsUser = await _userManager.FindByEmailAsync(model.Email);
-                var claims = _userManager.GetClaimsAsync(claimsUser);
-                var id = new ClaimsIdentity(claims.Result);
-
-                id.AddClaim(new Claim(ClaimTypes.Email, claimsUser.Email));
-                id.AddClaim(new Claim(ClaimTypes.NameIdentifier, claimsUser.Id));
-
-                var requestAt = DateTime.Now;
-                var expiresIn = requestAt + TokenAuthOption.ExpiresSpan;
-                var token = GenerateToken(expiresIn, id);
-
-                return Ok(new RequestResult
+                Data = new
                 {
-                    State = RequestState.Success,
-                    Data = new
-                    {
-                        requestAt = requestAt,
-                        expiresIn = TokenAuthOption.ExpiresSpan.TotalSeconds,
-                        tokenType = TokenAuthOption.TokenType,
-                        accessToken = token                        
-                    }
-                });
-            }
-            else
-            {
-                return BadRequest(new RequestResult
-                {
-                    State = RequestState.Failed,
-                    Message = "Email atau password salah"
-                });
-            }
+                    requestAt = requestAt,
+                    expiresIn = TokenAuthOption.ExpiresSpan.TotalSeconds,
+                    tokenType = TokenAuthOption.TokenType,
+                    accessToken = token
+                }
+            });
         }
 
         [HttpPost("register")]
@@ -123,7 +116,10 @@ namespace ReformaAgraria.Controllers
                         transaction.Commit();
                         return Ok();
                     }
-                    return BadRequest(result.Errors);
+
+                    var exception = new BadRequestException();
+                    exception.Errors = result.Errors;
+                    throw exception;
                 }
                 catch (Exception ex)
                 {
@@ -131,7 +127,6 @@ namespace ReformaAgraria.Controllers
                     throw ex;
                 }
             }
-
         }
 
         [HttpPost("logout")]
@@ -140,17 +135,16 @@ namespace ReformaAgraria.Controllers
         {
             await _signInManager.SignOutAsync();
             return Ok();
-        }        
+        }
 
         [HttpPost("password/recovery")]
         [AllowAnonymous]
         public async Task<IActionResult> SendPasswordRecoveryLink([FromBody] LoginViewModel model)
         {
             var user = _userManager.FindByEmailAsync(model.Email).Result;
-
             var authorizeResult = await _authorizationService.AuthorizeAsync(User, user, new AccountEditRequirement());
             if (!authorizeResult.Succeeded)
-                return Forbid();
+                throw new UnauthorizedException();
 
             var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
             string resetLink = Request.Scheme + "://" + Request.Host + "/account/resetpassword?email=" + user.Email + "&id=" + user.Id + "&token=" + token;
@@ -175,7 +169,7 @@ namespace ReformaAgraria.Controllers
             return BadRequest(result.Errors);
         }
 
-        [HttpPost("password/change/{id}")]        
+        [HttpPost("password/change/{id}")]
         public async Task<IActionResult> ChangePassword(string id, [FromBody]Dictionary<string, string> data)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -196,7 +190,8 @@ namespace ReformaAgraria.Controllers
             var result = new List<object>();
             foreach (var user in users)
             {
-                result.Add(new ReformaAgrariaUser {
+                result.Add(new ReformaAgrariaUser
+                {
                     Id = user.Id,
                     Email = user.Email,
                     FullName = user.FullName

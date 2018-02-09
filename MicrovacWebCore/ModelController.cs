@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MicrovacWebCore
-{    
+{
     public class ModelController<TModel, TId> : ControllerBase
         where TModel : class, IModel<TId>, new()
     {
@@ -21,9 +20,10 @@ namespace MicrovacWebCore
 
         public class Updator
         {
-            DbContext dbContext;
-            DbSet<TModel> dbSet;
-            TModel model;
+            private DbContext dbContext;
+            private DbSet<TModel> dbSet;
+            private TModel model;
+
             public Updator(DbContext dbContext, DbSet<TModel> dbSet, TModel model)
             {
                 this.dbContext = dbContext;
@@ -41,7 +41,8 @@ namespace MicrovacWebCore
 
                 return this;
             }
-            public Updator  Set<TProperty>(Expression<Func<TModel, TProperty>> memberLamda)
+
+            public Updator Set<TProperty>(Expression<Func<TModel, TProperty>> memberLamda)
             {
                 dbContext.Entry<TModel>(model).Property(memberLamda).IsModified = true;
                 return this;

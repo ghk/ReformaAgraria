@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using ReformaAgraria.Models;
+using ReformaAgraria.Models.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ReformaAgraria.Models.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using ReformaAgraria.Models;
-using Microsoft.Extensions.Logging;
 
 namespace ReformaAgraria.Controllers
 {
@@ -23,7 +22,7 @@ namespace ReformaAgraria.Controllers
             this.dbContext = dbContext;
             _logger = logger;
         }
-        
+
         [HttpGet("{keywords}")]
         public async Task<List<SearchViewModel>> Search(string keywords)
         {
@@ -33,7 +32,7 @@ namespace ReformaAgraria.Controllers
             result.AddRange(regionResult);
 
             var toraObjectResult = await SearchByToraObject(keywords);
-            result.AddRange(toraObjectResult);          
+            result.AddRange(toraObjectResult);
 
             return result.OrderBy(x => x.Label).ToList();
         }
@@ -61,9 +60,11 @@ namespace ReformaAgraria.Controllers
                     case RegionType.Kabupaten:
                         type = SearchType.Kabupaten;
                         break;
+
                     case RegionType.Kecamatan:
                         type = SearchType.Kecamatan;
                         break;
+
                     default:
                         type = SearchType.Desa;
                         break;

@@ -154,14 +154,14 @@
         var prepend = "";
         foreach (var p in method.Parameters) {
             if (p.Attributes.Any(attr => attr.Name == "FromBody"))
-                prepend += "model: " + p.Type.Name;
+                prepend += "model: " + p.Type.Name + ", ";
             else if (p.Attributes.Any(attr => attr.Name == "FromForm"))
-                prepend += "model: FormData";
+                prepend += "model: FormData, ";
             else
-                prepend += p.Name + ": " + p.Type.Name;
+                prepend += p.Name + ": " + p.Type.Name + ", ";
         }
         if (prepend.Length > 0) 
-            parameters = prepend + ", " + parameters;
+            parameters = prepend + parameters;
 
         return parameters;
     }
@@ -170,7 +170,11 @@
     {
         var result = new List<Method>();
         foreach (var method in item.Methods) 
-        {
+        {            
+            var isNotGenerated = method.Attributes.Any(attr => attr.Name == "NotGenerated");
+            if (isNotGenerated)
+                continue;
+
             var isApi = method.Attributes.Any(attr => 
                 attr.Name == "HttpPost" ||
                 attr.Name == "HttpPut" ||

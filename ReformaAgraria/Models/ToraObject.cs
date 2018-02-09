@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class ToraObject: BaseEntity<int>
+    public class ToraObject : BaseEntity<int>
     {
-        public ToraObject() { }
-        
+        public ToraObject()
+        {
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override int Id { get; set; }
@@ -18,15 +19,15 @@ namespace ReformaAgraria.Models
         public decimal Size { get; set; }
 
         public int TotalSubjects { get; set; }
-       
+
         public RegionalStatus RegionalStatus { get; set; }
-        
+
         public string LandType { get; set; }
 
         public string Livelihood { get; set; }
-        
+
         public string ProposedTreatment { get; set; }
-        
+
         public LandStatus LandStatus { get; set; }
 
         public string LandTenureHistory { get; set; }

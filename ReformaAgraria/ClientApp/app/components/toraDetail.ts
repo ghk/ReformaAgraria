@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { ModalToraObjectFormComponent } from './modals/toraObjectForm';
 import { ModalToraSubjectFormComponent } from './modals/toraSubjectForm';
+import { ModalDeleteComponent } from './modals/delete';
 
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
@@ -19,6 +20,7 @@ import { ToraMapService } from '../services/gen/toraMap';
 import { Region } from '../models/gen/region';
 import { ToraObject } from '../models/gen/toraObject';
 import { ToraSubject } from '../models/gen/toraSubject';
+
 import { Query } from '../models/query';
 import { RegionalStatus } from '../models/gen/regionalStatus';
 import { LandStatus } from '../models/gen/landStatus';
@@ -34,9 +36,12 @@ import { Status } from '../models/gen/status';
 export class ToraDetailComponent implements OnInit, OnDestroy {
     toraObjectModalRef: BsModalRef;
     toraSubjectModalRef: BsModalRef;
+    deleteModalRef: BsModalRef;
+
     routeSubscription: Subscription;
     toraObjectFormSubscription: Subscription;
     toraSubjectFormSubscription: Subscription;
+    deleteSubscription: Subscription;
 
     RegionalStatus = RegionalStatus;
     LandStatus = LandStatus;
@@ -75,6 +80,8 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
             this.toraObjectFormSubscription.unsubscribe();
         if (this.toraSubjectFormSubscription)
             this.toraSubjectFormSubscription.unsubscribe();
+        if (this.deleteSubscription)
+            this.deleteSubscription.unsubscribe();
     }
 
     getData(toraObjectId: number): void {
@@ -104,8 +111,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
             }
 
             this.toraSubjectService.getAll(toraSubjectQuery, null).subscribe(toraSubjects => {
-                this.toraSubjects = toraSubjects;
-                this.toraObject.totalSubjects = this.toraSubjects.length.toString();
+                this.toraSubjects = toraSubjects;                
             });
 
             this.toraObjectService.getSummary(toraObject.fkRegionId).subscribe(summary => {
@@ -125,8 +131,8 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         this.toraObjectModalRef = this.modalService.show(ModalToraObjectFormComponent, { 'class': 'modal-lg' });
         this.toraObjectModalRef.content.setToraObject(this.toraObject);
         if (!this.toraObjectFormSubscription)
-            this.toraObjectFormSubscription = this.toraObjectModalRef.content.isSaveSuccess$.subscribe(success => {
-                if (success) {
+            this.toraObjectFormSubscription = this.toraObjectModalRef.content.isSaveSuccess$.subscribe(error => {
+                if (!error) {
                     this.getData(this.toraObject.id);
                     this.toraObjectFormSubscription.unsubscribe();
                     this.toraObjectFormSubscription = null;
@@ -165,31 +171,29 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         })
     }
 
-    onDelete(id) {
-        this.toraSubjectId = id;
+    onDeleteToraSubject(toraSubject: ToraSubject): void {
+        this.deleteModalRef = this.modalService.show(ModalDeleteComponent);
+        this.deleteModalRef.content.setModel(toraSubject);
+        this.deleteModalRef.content.setService(this.toraSubjectService);
+        this.deleteModalRef.content.setLabel(toraSubject.name);
+        if (!this.deleteSubscription)
+            this.deleteSubscription = this.deleteModalRef.content.isDeleteSuccess$.subscribe(error => {
+                if (!error) {
+                    this.getData(this.toraObject.id);
+                    this.deleteSubscription.unsubscribe();
+                    this.deleteSubscription = null;
+                    this.deleteModalRef.hide();
+                }
+            })
     }
-
-    onConfirmDelete() {
-        this.toraSubjectService.deleteById(this.toraSubjectId)
-            .subscribe(
-            data => {
-                this.toastr.success('Data berhasil dihapus.', null);
-                this.getData(this.toraObjectId);
-                (<any>$('#deleteModal')).modal('hide');
-            },
-            error => {
-                this.toastr.error(error, null);
-            });
-    }
-
 
     onShowToraSubjectForm(toraSubject: ToraSubject): void {
         this.toraSubjectModalRef = this.modalService.show(ModalToraSubjectFormComponent, { 'class': 'modal-lg' });
         this.toraSubjectModalRef.content.setToraObject(this.toraObject);
         this.toraSubjectModalRef.content.setToraSubject(toraSubject);
         if (!this.toraSubjectFormSubscription)
-            this.toraSubjectFormSubscription = this.toraSubjectModalRef.content.isSaveSuccess$.subscribe(success => {
-                if (success) {
+            this.toraSubjectFormSubscription = this.toraSubjectModalRef.content.isSaveSuccess$.subscribe(error => {
+                if (!error) {
                     this.getData(this.toraObject.id);
                     this.toraSubjectFormSubscription.unsubscribe();
                     this.toraSubjectFormSubscription = null;

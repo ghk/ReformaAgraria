@@ -3,9 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class ToraMapAttribute: BaseEntity<int>
+    public class ToraMapAttribute : BaseEntity<int>
     {
-        public ToraMapAttribute() { }
+        public ToraMapAttribute()
+        {
+        }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -28,6 +30,5 @@ namespace ReformaAgraria.Models
 
         [ForeignKey("FkRegionId")]
         public Region Region { get; set; }
-
     }
 }

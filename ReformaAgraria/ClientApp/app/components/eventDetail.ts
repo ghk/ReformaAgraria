@@ -182,7 +182,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     }
 
     getAttachment(eventId) {
-        this.eventService.getDocumentsName(eventId.toString(), 'attachment', this.progressListener.bind(this))
+        this.eventService.getDocumentsNames(eventId.toString(), 'attachment', this.progressListener.bind(this))
             .subscribe(
             data => {
                 this.attachments = data;
@@ -190,7 +190,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     }
 
     getPhotos(eventId) {
-        this.eventService.getDocumentsName(eventId.toString(), 'photos', this.progressListener.bind(this))
+        this.eventService.getDocumentsNames(eventId.toString(), 'photos', this.progressListener.bind(this))
             .subscribe(
             data => {
                 this.photos = data;

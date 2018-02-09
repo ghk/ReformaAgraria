@@ -25,7 +25,6 @@
                     <th (click)="sorted('Luas')">Luas (ha)</th>
                     <th (click)="sorted('Status')">Status Tanah</th>
                     <th (click)="sorted('Usulan')">Usulan Skema</th>
-                    <!--<th>Koordinat</th>-->
                     <th>Tahapan</th>
                     <th></th>
                     <th></th>
@@ -51,7 +50,6 @@
                             <td>{{object.size > 0 ? (object.size / 10000 | number : '1.2-2') : '-'}}</td>
                             <td>{{LandStatus[object.landStatus] | translate}}</td>
                             <td>{{object.proposedTreatment ? object.proposedTreatment : '-'}}</td>
-                            <!--<td>Image</td>-->
                             <td>{{Status[object.status] | translate}}</td>
                             <td title="edit">
                                 <button type="button" class="btn btn-link">
@@ -60,7 +58,7 @@
                             </td>
                             <td data-toggle="modal" data-target="#deleteModal" title="hapus">
                                 <button type="button" class="btn btn-link">
-                                    <span class="oi oi-trash" title="Hapus" (click)="delete(object.id)"></span>
+                                    <span class="oi oi-trash" title="Hapus" (click)="onDeleteToraObject(object)"></span>
                                 </button>
                             </td>
                         </tr>
@@ -76,23 +74,3 @@
         <!-- end table data utama -->
     </div>
 </div>
-
-<!-- MODAL -->
-
-
-<!-- alert delete modal -->
-<div class="modal fade" id="deleteModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header modal-delete">
-                <h4 class="modal-title">Hapus data?</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-footer modal-delete">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteObject()">Hapus</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- end alert delete modal -->

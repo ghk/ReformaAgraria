@@ -30,7 +30,7 @@ export class ModalToraSubjectFormComponent implements OnInit, OnDestroy {
     toraObject: ToraObject;
     toraSubject: ToraSubject;
 
-    private isSaveSuccess$: ReplaySubject<boolean> = new ReplaySubject(1);   
+    private isSaveSuccess$: ReplaySubject<any> = new ReplaySubject(1);   
 
     constructor(
         public bsModalRef: BsModalRef,
@@ -59,11 +59,11 @@ export class ModalToraSubjectFormComponent implements OnInit, OnDestroy {
         this.toraSubjectService.createOrUpdate(this.toraSubject, null).subscribe(
             success => {
                 this.toastr.success("Subjek TORA berhasil disimpan");
-                this.isSaveSuccess$.next(true);
+                this.isSaveSuccess$.next(null);
             },
             error => {
                 this.toastr.error("Ada kesalahan dalam penyimpanan");
-                this.isSaveSuccess$.next(false);
+                this.isSaveSuccess$.next(error);
             }
         );
     }

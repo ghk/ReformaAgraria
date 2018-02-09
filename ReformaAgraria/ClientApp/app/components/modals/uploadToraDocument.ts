@@ -20,7 +20,7 @@ export class ModalUploadToraDocumentComponent implements OnInit, OnDestroy {
     region: Region;
     model: UploadToraDocumentViewModel;
 
-    private isSaveSuccess$: ReplaySubject<boolean> = new ReplaySubject(1);
+    private isSaveSuccess$: ReplaySubject<any> = new ReplaySubject(1);
     
     progress: Progress;
 
@@ -55,11 +55,11 @@ export class ModalUploadToraDocumentComponent implements OnInit, OnDestroy {
             .subscribe(
             data => {
                 this.toastr.success('File berhasil diupload')
-                this.isSaveSuccess$.next(true);
+                this.isSaveSuccess$.next(null);
             },
             error => {
                 this.toastr.error('Upload file gagal')
-                this.isSaveSuccess$.next(false);
+                this.isSaveSuccess$.next(error);
             }
         );
     }

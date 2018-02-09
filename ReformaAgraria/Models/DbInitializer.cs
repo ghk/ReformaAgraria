@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
-using Microsoft.AspNetCore.Identity;
-using System.Threading.Tasks;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ReformaAgraria.Models
 {
@@ -30,6 +30,5 @@ namespace ReformaAgraria.Models
             if (!context.UserClaims.Any(r => r.ClaimType == ClaimTypes.Role && r.ClaimValue == "Administrator"))
                 await userManager.AddClaimAsync(adminUser, new Claim(ClaimTypes.Role, "Administrator"));
         }
-           
     }
 }

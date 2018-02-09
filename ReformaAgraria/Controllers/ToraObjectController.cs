@@ -1,15 +1,16 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MicrovacWebCore;
+using MicrovacWebCore.Exceptions;
+using MicrovacWebCore.Helpers;
 using OfficeOpenXml;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
+using ReformaAgraria.Models.Validators;
 using ReformaAgraria.Models.ViewModels;
-using ReformaAgraria.Security;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,9 +38,18 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
             _tsLogger = tsLogger;
         }
-       
+
+        [HttpPost]
+        [NotGenerated]
+        public override int Post([FromBody] ToraObject model)
+        {
+            var validator = new ToraObjectValidator();
+            validator.ValidateAndThrow(model);
+            return base.Post(model);
+        }
+
         [HttpPost("upload")]
-        public ToraObject Upload([FromForm]UploadToraDocumentViewModel document)
+        public ToraObject Upload([FromForm] UploadToraDocumentViewModel document)
         {
             var toraDocumentDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "document");
             var toraDocumentFilePath = Path.Combine(toraDocumentDirectoryPath, document.RegionId, document.File.FileName);
@@ -161,11 +171,11 @@ namespace ReformaAgraria.Controllers
                     }
 
                     foreach (var toraObject in toraObjects)
-                        Calculate(toraObject);
+                        ToraObjectHelper.Calculate(dbContext, toraObject);
 
                     IOHelper.StreamCopy(toraDocumentFilePath, document.File);
                 }
-                
+
                 return to;
             }
         }
@@ -173,7 +183,7 @@ namespace ReformaAgraria.Controllers
         [HttpGet("download/{id}")]
         public async Task<FileStreamResult> Download(int id)
         {
-            var objectModel = dbContext.Set<ToraObject>().FirstOrDefault(t => t.Id == id);           
+            var objectModel = dbContext.Set<ToraObject>().FirstOrDefault(t => t.Id == id);
 
             var region = dbContext.Set<Region>()
                 .Include(r => r.Parent)
@@ -241,7 +251,7 @@ namespace ReformaAgraria.Controllers
 
             outputStream.Position = 0;
             return File(outputStream, "application/xlsx", "tora.xlsx");
-        }      
+        }
 
         [HttpGet("summary/{id}")]
         public List<DashboardDataViewModel> GetSummary(string id)
@@ -291,12 +301,12 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpGet("calculate/all")]
-        public IActionResult Calculate()
+        public IActionResult CalculateAll()
         {
             var toraObjects = dbContext.Set<ToraObject>().ToList();
             foreach (var toraObject in toraObjects)
-                Calculate(toraObject);
-            return Ok();
+                ToraObjectHelper.Calculate(dbContext, toraObject);
+            return Ok(new RequestResult() { Message = "Success" });
         }
 
         [HttpGet("calculate/{id}")]
@@ -304,21 +314,10 @@ namespace ReformaAgraria.Controllers
         {
             var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == id);
             if (toraObject == null)
-                // TODO: Throw validation exception
-                return NotFound();
+                throw new NotFoundException();
 
-            Calculate(toraObject);            
-            return Ok();
-        }
-
-        private void Calculate(ToraObject toraObject)
-        {
-            var size = dbContext.Set<ToraMap>().Where(tm => tm.FkToraObjectId == toraObject.Id).Sum(tm => tm.Size);
-            var totalSubjects = dbContext.Set<ToraSubject>().Where(ts => ts.FkToraObjectId == toraObject.Id).Count();
-            toraObject.Size = size;
-            toraObject.TotalSubjects = totalSubjects;
-            dbContext.Update(toraObject);
-            dbContext.SaveChanges();
+            ToraObjectHelper.Calculate(dbContext, toraObject);
+            return Ok(new RequestResult() { Message = "Success" });
         }
 
         protected override IQueryable<ToraObject> ApplyQuery(IQueryable<ToraObject> query)

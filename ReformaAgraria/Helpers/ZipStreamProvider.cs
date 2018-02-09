@@ -1,15 +1,11 @@
 ﻿using NetTopologySuite.IO.Streams;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReformaAgraria.Helpers
 {
     public class ZipStreamProvider : IStreamProvider
-    {    
+    {
         public ZipStreamProvider(string kind, ZipArchiveEntry zipEntry, bool validateZip = false)
         {
             Kind = kind;

@@ -8,17 +8,21 @@ using System.Linq.Expressions;
 
 namespace MicrovacWebCore
 {
-    public class ReadOnlyController<TModel, TId>: ModelController<TModel, TId>
-        where TModel: class, IModel<TId>, new() 
+    public class ReadOnlyController<TModel, TId> : ModelController<TModel, TId>
+        where TModel : class, IModel<TId>, new()
     {
-        public ReadOnlyController(DbContext dbContext) : base(dbContext) { IdField = "Id"; }
+        public ReadOnlyController(DbContext dbContext) : base(dbContext)
+        {
+            IdField = "Id";
+        }
+
         public string IdField { get; set; }
 
-        protected List<Expression<Func<TModel, Object>>> SingleIncludes = 
-            new List<Expression<Func<TModel,object>>>();
+        protected List<Expression<Func<TModel, Object>>> SingleIncludes =
+            new List<Expression<Func<TModel, object>>>();
 
-        protected List<Expression<Func<TModel, Object>>> ListIncludes = 
-            new List<Expression<Func<TModel,object>>>();
+        protected List<Expression<Func<TModel, Object>>> ListIncludes =
+            new List<Expression<Func<TModel, object>>>();
 
         protected bool AllowGetAll = true;
 
@@ -28,12 +32,12 @@ namespace MicrovacWebCore
             if (!AllowGetAll)
                 throw new ApplicationException("GetAll is not allowed");
             IQueryable<TModel> exp = dbSet;
-            
+
             foreach (var include in ListIncludes)
             {
                 exp = exp.Include(include);
             }
-            
+
             exp = ApplyQuery(exp);
             exp = ApplyPageAndSort(exp);
             return exp.ToList();
@@ -52,12 +56,12 @@ namespace MicrovacWebCore
         public virtual TModel Get(TId id)
         {
             IQueryable<TModel> exp = null;
-            
-            if(typeof(TId) == typeof(String))
-                exp = dbSet.Where(IdField + "=\"" + id +"\"");
+
+            if (typeof(TId) == typeof(String))
+                exp = dbSet.Where(IdField + "=\"" + id + "\"");
             else
                 exp = dbSet.Where(IdField + "=" + id);
-            
+
             foreach (var include in SingleIncludes)
             {
                 exp = exp.Include(include);
@@ -78,7 +82,7 @@ namespace MicrovacWebCore
             var pageBegin = GetQueryString<int>("page", 1);
             var pageLength = GetQueryString<int>("perPage", 0);
             var sortFields = GetQueryString<string>("sort", IdField);
-            
+
             query = Sort(query, sortFields);
             query = Page(query, pageBegin, pageLength);
             return query;
@@ -119,11 +123,12 @@ namespace MicrovacWebCore
         protected virtual IQueryable<TModel> Sort(IQueryable<TModel> query, string sortFields)
         {
             var sortFieldsArray = sortFields.Split(',');
-            foreach(var sortField in sortFieldsArray)
+            foreach (var sortField in sortFieldsArray)
             {
                 var sortOrder = "ASC";
                 var newSortField = sortField;
-                if (sortField.StartsWith('-')) {
+                if (sortField.StartsWith('-'))
+                {
                     newSortField = sortField.Remove(0, 1);
                     sortOrder = "DESC";
                 }
@@ -143,24 +148,23 @@ namespace MicrovacWebCore
 
         protected void SingleInclude(params Expression<Func<TModel, Object>>[] includes)
         {
-            foreach(var include in includes)
+            foreach (var include in includes)
                 SingleIncludes.Add(include);
         }
 
         protected void ListInclude(params Expression<Func<TModel, Object>>[] includes)
         {
-            foreach(var include in includes)
+            foreach (var include in includes)
                 ListIncludes.Add(include);
         }
 
         protected void Include(params Expression<Func<TModel, Object>>[] includes)
         {
-            foreach (var include in includes) { 
+            foreach (var include in includes)
+            {
                 SingleIncludes.Add(include);
                 ListIncludes.Add(include);
             }
         }
-
     }
-   
 }

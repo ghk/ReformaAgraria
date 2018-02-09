@@ -58,7 +58,7 @@ namespace ReformaAgraria.Models
                 // Replace table names
                 entity.Relational().TableName = entity.Relational().TableName.ToSnakeCase();
 
-                // Replace column names            
+                // Replace column names
                 foreach (var property in entity.GetProperties())
                 {
                     property.Relational().ColumnName = property.Name.ToSnakeCase();

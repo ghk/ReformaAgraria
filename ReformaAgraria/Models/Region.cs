@@ -1,14 +1,14 @@
-﻿using MicrovacWebCore;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class Region: BaseEntity<string>
+    public class Region : BaseEntity<string>
     {
-        public Region() { }
-        
+        public Region()
+        {
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override string Id { get; set; }

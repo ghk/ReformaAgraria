@@ -3,13 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReformaAgraria.Models
 {
-    public class VillageMapAttribute: BaseEntity<int>
+    public class VillageMapAttribute : BaseEntity<int>
     {
-        public VillageMapAttribute() { }
+        public VillageMapAttribute()
+        {
+        }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public override int Id { get; set; }        
+        public override int Id { get; set; }
 
         public decimal Size { get; set; }
 
@@ -18,7 +20,7 @@ namespace ReformaAgraria.Models
         public Status BorderSettingStatus { get; set; }
 
         public string Attachment { get; set; }
-        
+
         public int? FkCoordinateId { get; set; }
 
         [ForeignKey("FkCoordinateId")]
@@ -28,6 +30,5 @@ namespace ReformaAgraria.Models
 
         [ForeignKey("FkRegionId")]
         public Region Region { get; set; }
-
     }
 }

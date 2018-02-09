@@ -12,14 +12,15 @@ namespace MicrovacWebCore
     public class CrudControllerAsync<TModel, TId> : ReadOnlyControllerAsync<TModel, TId>
         where TModel : class, IModel<TId>, new()
     {
-
         protected List<Expression<Func<TModel, Object>>> PostFields =
             new List<Expression<Func<TModel, object>>>();
 
         protected List<Expression<Func<TModel, Object>>> PutFields =
             new List<Expression<Func<TModel, object>>>();
 
-        public CrudControllerAsync(DbContext dbContext) : base(dbContext) { }
+        public CrudControllerAsync(DbContext dbContext) : base(dbContext)
+        {
+        }
 
         [HttpPost]
         public virtual async Task<TId> PostAsync([FromBody] TModel model)
@@ -81,8 +82,12 @@ namespace MicrovacWebCore
             property.SetValue(target, property.GetValue(source), null);
         }
 
-        protected virtual async Task PrePersist(HttpMethod method, TModel model) { }
-        protected virtual async Task PostPersist(HttpMethod method, TModel model) { }
-    }
+        protected virtual async Task PrePersist(HttpMethod method, TModel model)
+        {
+        }
 
+        protected virtual async Task PostPersist(HttpMethod method, TModel model)
+        {
+        }
+    }
 }

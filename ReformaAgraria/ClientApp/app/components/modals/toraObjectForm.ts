@@ -34,7 +34,7 @@ export class ModalToraObjectFormComponent implements OnInit, OnDestroy {
     kabupaten: Region;
     desa: Region;  
 
-    private isSaveSuccess$: ReplaySubject<boolean> = new ReplaySubject(1);   
+    private isSaveSuccess$: ReplaySubject<any> = new ReplaySubject(1);   
 
     constructor(
         public bsModalRef: BsModalRef,
@@ -81,11 +81,11 @@ export class ModalToraObjectFormComponent implements OnInit, OnDestroy {
         this.toraObjectService.createOrUpdate(this.toraObject, null).subscribe(
             success => {
                 this.toastr.success("Objek TORA berhasil disimpan");
-                this.isSaveSuccess$.next(true);
+                this.isSaveSuccess$.next(null);
             },
             error => {
                 this.toastr.error("Ada kesalahan dalam penyimpanan");
-                this.isSaveSuccess$.next(false);
+                this.isSaveSuccess$.next(error);
             }
         );
     }

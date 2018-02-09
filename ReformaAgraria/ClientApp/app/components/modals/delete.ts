@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import { BehaviorSubject, Subscription } from "rxjs";
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ReplaySubject } from "rxjs";
 import { BsModalRef } from "ngx-bootstrap";
 import { ToastrService } from "ngx-toastr";
 import { Progress } from "angular-progress-http";
@@ -13,12 +13,13 @@ import { CrudService } from "../../services/crud";
     selector: 'modal-delete',
     templateUrl: '../../templates/modals/delete.html',
 })
-export class ModalDeleteComponent implements OnInit, OnDestroy {   
-    subscription: Subscription;
+export class ModalDeleteComponent implements OnInit, OnDestroy {       
     model: BaseEntity<any>;
     label: string;
     service: CrudService<BaseEntity<any>, any>;
     progress: Progress; 
+
+    private isDeleteSuccess$: ReplaySubject<any> = new ReplaySubject(1);   
 
     constructor(
         public bsModalRef: BsModalRef,
@@ -35,13 +36,17 @@ export class ModalDeleteComponent implements OnInit, OnDestroy {
         this.service.deleteById(this.model.id, null).subscribe(
             success => {
                 this.toastrService.success("Data berhasil dihapus");
-                this.bsModalRef.hide();
+                this.isDeleteSuccess$.next(null);
             },
             error => {
                 this.toastrService.error("Ada kesalahan dalam penghapusan");
-                this.bsModalRef.hide();
+                this.isDeleteSuccess$.next(error);
             }
         );
+    }
+
+    onDeclineDelete(): void {
+        this.bsModalRef.hide();
     }
     
     setModel(model: BaseEntity<any>): void {
@@ -50,6 +55,10 @@ export class ModalDeleteComponent implements OnInit, OnDestroy {
 
     setService(service: CrudService<BaseEntity<any>, any>): void {
         this.service = service;
+    }
+
+    setLabel(label: string): void {
+        this.label = label;
     }
 
     progressListener(progress: Progress) {
