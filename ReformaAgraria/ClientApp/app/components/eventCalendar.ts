@@ -4,6 +4,7 @@ import { Subject, Subscription, Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { ModalEventCalendarFormComponent } from "./modals/eventCalendarForm";
 import { BsLocaleService } from 'ngx-bootstrap/datepicker/bs-locale.service';
 
 import { Query } from '../models/query';
@@ -14,8 +15,6 @@ import { SearchViewModel } from '../models/gen/searchViewModel';
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { EventService } from '../services/gen/event';
-import { EventTypeService } from '../services/gen/eventType';
-import { SearchService } from '../services/gen/search';
 import { EventHelper } from '../helpers/event';
 import { CustomDateFormatter } from '../helpers/customDateFormatter';
 
@@ -45,16 +44,15 @@ import * as moment from 'moment';
     providers: [{ provide: CalendarDateFormatter, useClass: CustomDateFormatter }]
 })
 export class EventCalendarComponent implements OnInit, OnDestroy {
-    @ViewChild('eventModal') eventModal: TemplateRef<any>;
     @ViewChild('deleteConfirmationModal') deleteConfirmationModal: TemplateRef<any>;
 
     region: Region;
     subscriptions: Subscription[] = [];
 
+    event: Event;
     events: Event[];
     eventTypes: EventType[];
     calEvents: CalendarEvent[] = [];
-    modelEvent: Event;
 
     view: string = 'month';
     viewDate: Date = new Date();
@@ -64,12 +62,9 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
     weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
     weekendDays: number[] = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
 
-    eventModalRef: BsModalRef;
+    eventCalendarModalRef: BsModalRef;
     deleteConfirmationModalRef: BsModalRef;
     minDate: Date = new Date();
-
-    selected: any;
-    dataSource: any;
 
     constructor(
         private route: ActivatedRoute,
@@ -79,12 +74,18 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
         private bsLocaleService: BsLocaleService,
         private sharedService: SharedService,
         private regionService: RegionService,
-        private searchService: SearchService,
         private eventService: EventService,
-        private eventTypeService: EventTypeService,
     ) { }
 
     ngOnInit(): void {
+        this.initFunction();
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    initFunction() {
         this.bsLocaleService.use('id');
 
         this.subscriptions.push(this.route.params.subscribe(params => {
@@ -108,14 +109,6 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
                 this.activeDayIsOpen = true;
             };
         }));
-
-        this.dataSource = Observable.create((observer: any) => { observer.next(this.selected); } )
-            .switchMap((keywords: string) => this.searchService.searchRegion(keywords))
-            .catch((error: any) => { console.log(error); return []; });
-    }
-
-    ngOnDestroy(): void {
-        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     getData(): void {
@@ -123,11 +116,6 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
         this.eventService.getAll(eventQuery, null).subscribe(events => {
             this.events = events;
             this.calEvents = EventHelper.deserializeMany(events, this.getActions());
-        });
-
-        let eventTypeQuery: Query = { data: { 'type': 'getAllByRegionType', 'regionType': this.region.type } };
-        this.eventTypeService.getAll(eventTypeQuery, null).subscribe(eventTypes => {
-            this.eventTypes = eventTypes;
         });
     }
 
@@ -167,7 +155,6 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
 
         this.eventService.update(ev.meta, null).subscribe(
             result => {
-                this.resetEvent();
                 this.toastrService.success("Event berhasil disimpan");
                 this.getData();
             },
@@ -180,75 +167,52 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
     }
 
     onHandleEvent(action: string, event: CalendarEvent<Event>): void {
-        this.modelEvent = event.meta;
-        if (action === 'Edited') {           
-            this.regionService.getById(event.meta.fkRegionId).subscribe(region => {
-                this.selected = region.name;
-                this.onAddEvent(this.eventModal); 
-            });                                   
+        if (action === 'Edited') {
+            this.event = event.meta;
+            console.log(this.event);
+            this.onShowEventCalendarForm("Ubah")
         }
         if (action === 'Deleted') {
+            this.event = event.meta;
             this.deleteConfirmationModalRef = this.modalService.show(this.deleteConfirmationModal);
         }
         if (action === 'Clicked') {
             this.router.navigateByUrl('event/' + event.meta.id);
         }
     }
-
-    onAddEvent(template: TemplateRef<any>): void {
-        this.eventModalRef = this.modalService.show(template, { class: 'modal-lg' });
-    }
-
-    onSaveEvent(): void {
-        this.eventService.createOrUpdate(this.modelEvent, null).subscribe(
-            result => {
-                this.resetEvent();
-                this.eventModalRef.hide();
-                this.toastrService.success("Event berhasil disimpan");                
-                this.getData();
-            },
-            error => {
-                this.eventModalRef.hide();
-                this.toastrService.error("Ada kesalahan dalam penyimpanan");                
+    
+    onShowEventCalendarForm(action: string): void {
+        this.eventCalendarModalRef = this.modalService.show(ModalEventCalendarFormComponent, { 'class': 'modal-lg' });
+        if (action === "Ubah") {
+            this.event.region = this.region;
+            this.eventCalendarModalRef.content.setEvent(this.event, null, action);
+        }
+        else {
+            this.eventCalendarModalRef.content.setEvent(null, this.region, action);
+        }
+        this.subscriptions.push(this.eventCalendarModalRef.content.isSaveSuccess$.subscribe(error => {
+            if (!error) {
+                this.initFunction();
+                this.eventCalendarModalRef.hide();
             }
-        );
-    }
-
-    onSearchSelected(model: any) {
-        let svm: SearchViewModel = model.item;
-        this.modelEvent.fkRegionId = svm.value;
+        }));
     }
 
     onConfirmDelete(): void {
-        this.eventService.deleteById(this.modelEvent.id, null).subscribe(
-            result => { 
-                this.resetEvent();
+        this.eventService.deleteById(this.event.id, null).subscribe(
+            result => {
                 this.deleteConfirmationModalRef.hide();
-                this.toastrService.success("Event berhasil dihapus");                
+                this.toastrService.success("Event berhasil dihapus");
                 this.getData();
             },
-            error => { 
-                this.resetEvent();
-                this.deleteConfirmationModalRef.hide();                
-                this.toastrService.error("Ada kesalahan dalam penghapusan");                
+            error => {
+                this.deleteConfirmationModalRef.hide();
+                this.toastrService.error("Ada kesalahan dalam penghapusan");
             }
         );
     }
 
     onDeclineDelete(): void {
-        this.resetEvent();
         this.deleteConfirmationModalRef.hide();
-    }
-
-    resetEvent(): void {
-        let event: Event = {
-            startDate: null,
-            endDate: null,
-            description: null,
-            fkRegionId: null,
-            fkEventTypeId: null
-        };
-
-        this.modelEvent = event;
     }
 }

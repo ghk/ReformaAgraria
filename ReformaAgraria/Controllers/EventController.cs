@@ -45,8 +45,12 @@ namespace ReformaAgraria.Controllers
         public string[] GetDocumentsNames([FromQuery]string id, [FromQuery]string type)
         {
             var eventFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "event", id, type.ToLower());
-            var results = Directory.GetFiles(eventFilePath).Select(Path.GetFileName).ToArray();
-            return results;
+            if (Directory.Exists(eventFilePath))
+            {
+                var results = Directory.GetFiles(eventFilePath).Select(Path.GetFileName).ToArray();
+                return results;
+            }
+            return null;
         }
 
         [HttpDelete("attachments")]

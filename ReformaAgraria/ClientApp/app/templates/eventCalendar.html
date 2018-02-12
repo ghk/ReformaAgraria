@@ -32,7 +32,7 @@
                 <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):locale }}</h3>
             </div>
             <div class="col-md-4 text-center text-md-right">
-                <div class="btn btn-primary" (click)="resetEvent(); onAddEvent(eventModal);">
+                <div class="btn btn-primary" (click)="onShowEventCalendarForm('Tambah')">
                     Tambah Kegiatan
                 </div>
             </div>
@@ -55,98 +55,9 @@
     </div>
 </div>
 
-<ng-template #eventModal>
-    <div class="modal-header">
-        <h4 class="modal-title pull-left">{{ modelEvent.id ? 'Ubah Kegiatan' : 'Tambah Kegiatan' }}</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="eventModalRef.hide()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form (ngSubmit)="onSaveEvent()">
-            <div class="form-group row">
-                <label for="title" class="col-sm-2 col-form-label">Tipe</label>
-                <div class="col-sm-10">
-                    <select class="form-control" [(ngModel)]="modelEvent.fkEventTypeId" name="eventType">
-                        <option *ngFor="let eventType of eventTypes" [ngValue]="eventType.id">{{eventType.id}} - {{eventType.name}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="description" class="col-sm-2 col-form-label">Deskripsi</label>
-                <div class="col-sm-10">
-                    <textarea type="text" class="form-control" name="description" rows="5" [(ngModel)]="modelEvent.description">
-                    </textarea>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="startDate" class="col-sm-2 col-form-label d-flex align-items-center">Waktu Mulai</label>
-                <div class="col-sm-5 d-flex align-items-center">
-                    <input bsDatepicker type="text" class="form-control" name="startDate" placement="top"
-                        [(ngModel)]="modelEvent.startDate">                    
-                </div>
-                <div class="col-sm-2">
-                    <timepicker [(ngModel)]="modelEvent.startDate" [showMeridian]="false" name="startTime"></timepicker>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="endDate" class="col-sm-2 col-form-label d-flex align-items-center">Waktu Selesai</label>
-                <div class="col-sm-5 d-flex align-items-center">
-                    <input bsDatepicker type="text" class="form-control" name="endDate" placement="top"
-                        [(ngModel)]="modelEvent.endDate">                    
-                </div>
-                <div class="col-sm-2">
-                    <timepicker [(ngModel)]="modelEvent.endDate" [showMeridian]="false" name="endTime"></timepicker>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="location" class="col-sm-2 col-form-label">Lokasi</label>
-                <div class="col-sm-10">
-                    <input [(ngModel)]="selected" 
-                        [typeahead]="dataSource"
-                        [typeaheadMinLength]="3"
-                        [typeaheadItemTemplate]="searchRegionTemplate"
-                        typeaheadOptionField="label"
-                        (typeaheadOnSelect)="onSearchSelected($event)"
-                        name="search"
-                        autocomplete="off"
-                        class="typehead form-control mr-sm-2" 
-                        type="text" 
-                        placeholder="Cari Lokasi" 
-                        aria-label="Search">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="resultDescription" class="col-sm-2 col-form-label">Uraian Hasil</label>
-                <div class="col-sm-10">
-                    <textarea type="text" class="form-control" name="resultDescription" rows="5" [(ngModel)]="modelEvent.resultDescription">
-                    </textarea>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="attendees" class="col-sm-2 col-form-label">Daftar Peserta</label>
-                <div class="col-sm-10">
-                    <textarea type="text" class="form-control" name="attendees" rows="5" [(ngModel)]="modelEvent.attendees">
-                    </textarea>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-success">Simpan</button>
-        </form>
-    </div>
-</ng-template>
-
-<ng-template #searchRegionTemplate let-model="item" let-index="index">
-    <div>
-        <span>{{ model.label }}</span>
-        <span style="font-size:0.6rem;" *ngIf="model.type === 0"><i>Kabupaten</i></span>
-        <span style="font-size:0.6rem;" *ngIf="model.type === 1"><i>Kecamatan</i></span>
-        <span style="font-size:0.6rem;" *ngIf="model.type === 2"><i>Desa</i></span>
-    </div>
-</ng-template>
-
 <ng-template #deleteConfirmationModal>  
     <div class="modal-body text-center">
-        <p>Hapus {{ modelEvent.title }} ?</p>
+        <p>Hapus kegiatan ini ?</p>
         <button type="button" class="btn btn-default" (click)="onConfirmDelete()">Ya</button>
         <button type="button" class="btn btn-primary focus" (click)="onDeclineDelete()">Tidak</button>
     </div>

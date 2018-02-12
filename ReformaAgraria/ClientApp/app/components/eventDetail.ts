@@ -20,6 +20,7 @@ import { RegionType } from "../models/gen/regionType";
 import { SearchViewModel } from '../models/gen/searchViewModel';
 import { EventType } from "../models/gen/eventType";
 import { Query } from '../models/query';
+import { ModalEventCalendarFormComponent } from "./modals/eventCalendarForm";
 
 import * as moment from 'moment';
 
@@ -30,22 +31,17 @@ import * as $ from 'jquery';
     templateUrl: '../templates/eventDetail.html',
 })
 export class EventDetailComponent implements OnInit, OnDestroy {
-    @ViewChild('eventModal') eventModal: TemplateRef<any>;
-
     event: Event;
     subscriptions: Subscription[] = [];
     region: Region;
     regionType: RegionType;
-    eventTypes: EventType[];
-    selected: any;
     progress: Progress;
     attachments: any[] = [];
     attachment: any;
     photos: any[] = [];
-    loading: boolean = true;
-    dataSource: any;
 
-    eventModalRef: BsModalRef;
+    eventCalendarModalRef: BsModalRef;
+    eventCalendarFormSubscription: Subscription;
 
     openModalWindow: boolean = false;
     imagePointer: number = 0;
@@ -74,9 +70,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.route.params.subscribe(params => {
             let eventId: number = params['id'];
             this.getData(eventId);
-            this.dataSource = Observable.create((observer: any) => { observer.next(this.selected); })
-                .switchMap((keywords: string) => this.searchService.searchRegion(keywords))
-                .catch((error: any) => { console.log(error); return []; });
         }));
     }
 
@@ -134,32 +127,23 @@ export class EventDetailComponent implements OnInit, OnDestroy {
             this.getPhotos(id);
             this.regionService.getById(event.fkRegionId, null, null).subscribe(region => {
                 this.region = region;
-                let eventTypeQuery: Query = { data: { 'type': 'getAllByRegionType', 'regionType': 2 } };
-                this.eventTypeService.getAll(eventTypeQuery, null).subscribe(eventTypes => {
-                    this.eventTypes = eventTypes;
-                    this.loading = false;
-                });
             });
         })
     }
 
-    onUpdateEvent(): void {
-        this.selected = this.region.name;
-        this.eventModalRef = this.modalService.show(this.eventModal, { class: 'modal-lg' });
-    }
-
-    onSaveEvent(): void {
-        this.eventService.update(this.event, null).subscribe(
-            result => {
-                this.eventModalRef.hide();
-                this.toastr.success("Event berhasil disimpan");
-                this.getData(this.event.id);
-            },
-            error => {
-                this.eventModalRef.hide();
-                this.toastr.error("Ada kesalahan dalam penyimpanan");
-            }
-        );
+    onShowEventCalendarForm(): void {
+        this.event.region = this.region;
+        this.eventCalendarModalRef = this.modalService.show(ModalEventCalendarFormComponent, { 'class': 'modal-lg' });
+        this.eventCalendarModalRef.content.setEvent(this.event, null, 'Ubah');
+        if (!this.eventCalendarFormSubscription)
+            this.eventCalendarFormSubscription = this.eventCalendarModalRef.content.isSaveSuccess$.subscribe(error => {
+                if (!error) {
+                    this.getData(this.event.id);
+                    this.eventCalendarFormSubscription.unsubscribe();
+                    this.eventCalendarFormSubscription = null;
+                    this.eventCalendarModalRef.hide();
+                }
+            });
     }
 
     onChangeUpload(file: File, uploadType) {
@@ -222,26 +206,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     progressListener(progress: Progress) {
         this.progress = progress;
     }
-
-    onSearchSelected(model: any) {
-        let svm: SearchViewModel = model.item;
-        this.event.fkRegionId = svm.value;
-    }
-
-    resetEvent(): void {
-        let event: Event = {
-            startDate: null,
-            endDate: null,
-            description: null,
-            resultDescription: null,
-            attendees: null,
-            fkRegionId: null,
-            fkEventTypeId: null
-        };
-
-        this.event = event;
-    }
-
 
     delete(attachment) {
         this.attachment = attachment;
