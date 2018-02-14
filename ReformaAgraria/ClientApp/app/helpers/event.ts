@@ -63,13 +63,13 @@ export class EventHelper {
     static getEventColor(event: Event): string {
         switch (event.region.type) {
             case 2:
-                return '#FF0058'
+                return '#09833A'
             case 3:
-                return '#4835E8'
+                return '#BBD86E'
             case 4:
-                return '#36a009'
+                return '#C3976A'
             default:
-                return '#36a009'
+                return '#C3976A'
         }
 
     }
