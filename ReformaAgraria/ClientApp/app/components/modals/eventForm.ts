@@ -18,10 +18,10 @@ import { Region } from "../../models/gen/region";
 
 
 @Component({
-    selector: 'modal-event-calendar-form',
-    templateUrl: '../../templates/modals/eventCalendarForm.html',
+    selector: 'modal-event-form',
+    templateUrl: '../../templates/modals/eventForm.html',
 })
-export class ModalEventCalendarFormComponent implements OnInit, OnDestroy {
+export class ModalEventFormComponent implements OnInit, OnDestroy {
     progress: Progress;
     subscription: Subscription;
     
@@ -29,7 +29,6 @@ export class ModalEventCalendarFormComponent implements OnInit, OnDestroy {
     eventTypes: EventType[];
     selected: any;
     dataSource: any;
-    action: string = null;
 
     private isSaveSuccess$: ReplaySubject<any> = new ReplaySubject(1);
 
@@ -55,17 +54,11 @@ export class ModalEventCalendarFormComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
     
-    setEvent(event: Event, region: Region, action: string): void {
-        if (event != null) {
-            this.event = JSON.parse(JSON.stringify(event));
-            this.selected = this.event.region.name;
-        }
-        else {
-            this.event.fkRegionId = JSON.parse(JSON.stringify(region.id));
-            this.selected = region.name;
-        }
-
-        this.action = action;
+    setEvent(event: Event): void {
+        if (!event)
+            return;
+        this.event = JSON.parse(JSON.stringify(event));
+        this.selected = this.event.region.name;                
     }
 
     onSearchSelected(model: any) {
@@ -73,32 +66,17 @@ export class ModalEventCalendarFormComponent implements OnInit, OnDestroy {
         this.event.fkRegionId = svm.value;
     }
 
-    onSaveEvent(): void {
-        if (this.action === 'Ubah') {
-            console.log(this.event);
-            this.eventService.update(this.event, null).subscribe(
-                result => {
-                    this.toastr.success("Event berhasil disimpan");
-                    this.isSaveSuccess$.next(null);
-                },
-                error => {
-                    this.toastr.error("Ada kesalahan dalam penyimpanan");
-                    this.isSaveSuccess$.next(error);
-                }
-            );
-        }
-        else {
-            this.eventService.create(this.event, null).subscribe(
-                result => {
-                    this.toastr.success("Event berhasil disimpan");
-                    this.isSaveSuccess$.next(null);
-                },
-                error => {
-                    this.toastr.error("Ada kesalahan dalam penyimpanan");
-                    this.isSaveSuccess$.next(error);
-                }
-            );
-        }
+    onSaveEvent(): void {   
+        this.eventService.createOrUpdate(this.event, null).subscribe(
+            result => {
+                this.toastr.success("Event berhasil disimpan");
+                this.isSaveSuccess$.next(null);
+            },
+            error => {
+                this.toastr.error("Ada kesalahan dalam penyimpanan");
+                this.isSaveSuccess$.next(error);
+            }
+        );        
     }
 
     progressListener(progress: Progress) {

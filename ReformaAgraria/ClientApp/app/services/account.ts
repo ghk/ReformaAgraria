@@ -48,14 +48,13 @@ export class AccountService {
 
     sendPasswordRecoveryLink(user: User) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        return this.http.post('/api/account/password/recovery', user, requestOptions)
+        return this.http.post('/api/account/password/recover', user, requestOptions)
             .catch(this.handleError);
     }
 
-    resetPassword(id: string, token: string, password: string) {
+    resetPassword(id: string, token: string) {
         let requestOptions = RequestHelper.getRequestOptions(this.cookieService, null);
-        let body = { 'password': password };
-        return this.http.post('/api/account/password/reset/' + id + '/' + token, body, requestOptions);
+        return this.http.get('/api/account/password/reset/' + id + '/' + token, requestOptions);
     }
 
     changePassword(id: string, newPassword: string) {

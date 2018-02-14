@@ -32,14 +32,12 @@
                 <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):locale }}</h3>
             </div>
             <div class="col-md-4 text-center text-md-right">
-                <div class="btn btn-primary" (click)="onShowEventCalendarForm('Tambah')">
+                <div class="btn btn-primary" (click)="onShowEventForm(null)">
                     Tambah Kegiatan
                 </div>
             </div>
         </div>
-
         <br>
-
         <div [ngSwitch]="view">
             <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="calEvents" [locale]="locale" [weekStartsOn]="weekStartsOn"
                 [weekendDays]="weekendDays" [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="onDayClicked($event.day)"

@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MicrovacWebCore;
+using MicrovacWebCore.Helpers;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
@@ -14,8 +16,8 @@ namespace ReformaAgraria.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    //[Authorize(Policy = "Bearer")]
-    public class LibraryController : CrudController<Library, int>
+    [Authorize(Policy = "Bearer")]
+    public class LibraryController : CrudControllerAsync<Library, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _contextAccessor;
@@ -34,9 +36,7 @@ namespace ReformaAgraria.Controllers
             var content = new Library
             {
                 Title = model.Title,
-                FileExtension = Path.GetExtension(model.File.FileName),
-                DateCreated = DateTime.Now,
-                DateModified = DateTime.Now
+                FileExtension = Path.GetExtension(model.File.FileName)               
             };
 
             dbContext.Add(content);
@@ -44,13 +44,14 @@ namespace ReformaAgraria.Controllers
 
             var webRootPath = Path.Combine(_hostingEnvironment.WebRootPath, "library");
             var destinationFile = Path.Combine(webRootPath, (content.Id.ToString() + "_" + content.Title + content.FileExtension));
-            IOHelper.StreamCopy(destinationFile, model.File);
+            await IOHelper.StreamCopyAsync(destinationFile, model.File);
 
             return content;
         }
 
-        [HttpDelete("delete/{id}")]
-        public override int Delete(int id)
+        [HttpDelete("{id}")]
+        [NotGenerated]
+        public override async Task<int> DeleteAsync(int id)
         {
             var libraryPath = Path.Combine(_hostingEnvironment.WebRootPath, "library");
             string fileName = id + "_";
@@ -64,7 +65,7 @@ namespace ReformaAgraria.Controllers
                 }
             }
 
-            return base.Delete(id);
+            return await base.DeleteAsync(id);
         }
     }
 }

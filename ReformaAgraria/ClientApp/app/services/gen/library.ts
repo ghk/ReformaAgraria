@@ -139,22 +139,6 @@ export class LibraryService implements CrudService<Library, number>{
         return request.map(res => res.json()).catch(this.handleError);
     }
     
-    public delete(id: number, progressListener?: any): Observable<number> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, null);
-                        
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'DELETE',
-            urljoin(this.serverUrl, 'library', 'delete', id),
-            null,
-            progressListener,
-            null,
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-    
     private handleError(error: Response) {
         return Observable.throw(error);
     }

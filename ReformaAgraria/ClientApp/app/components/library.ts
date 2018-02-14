@@ -67,7 +67,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
     }
 
     deleteLibrary() {
-        this.libraryService.delete(this.libraryId)
+        this.libraryService.deleteById(this.libraryId)
             .subscribe(
             data => {
                 this.toastr.success('Data berhasil dihapus', null);

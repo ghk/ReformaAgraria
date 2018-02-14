@@ -20,10 +20,10 @@ import { RegionType } from "../models/gen/regionType";
 import { SearchViewModel } from '../models/gen/searchViewModel';
 import { EventType } from "../models/gen/eventType";
 import { Query } from '../models/query';
-import { ModalEventCalendarFormComponent } from "./modals/eventCalendarForm";
+
+import { ModalEventFormComponent } from "./modals/eventForm";
 
 import * as moment from 'moment';
-
 import * as $ from 'jquery';
 
 @Component({
@@ -40,8 +40,8 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     attachment: any;
     photos: any[] = [];
 
-    eventCalendarModalRef: BsModalRef;
-    eventCalendarFormSubscription: Subscription;
+    eventFormModalRef: BsModalRef;
+    eventFormSubscription: Subscription;
 
     openModalWindow: boolean = false;
     imagePointer: number = 0;
@@ -131,17 +131,17 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         })
     }
 
-    onShowEventCalendarForm(): void {
+    onShowEventForm(): void {
         this.event.region = this.region;
-        this.eventCalendarModalRef = this.modalService.show(ModalEventCalendarFormComponent, { 'class': 'modal-lg' });
-        this.eventCalendarModalRef.content.setEvent(this.event, null, 'Ubah');
-        if (!this.eventCalendarFormSubscription)
-            this.eventCalendarFormSubscription = this.eventCalendarModalRef.content.isSaveSuccess$.subscribe(error => {
+        this.eventFormModalRef = this.modalService.show(ModalEventFormComponent, { 'class': 'modal-lg' });
+        this.eventFormModalRef.content.setEvent(this.event, null, 'Ubah');
+        if (!this.eventFormSubscription)
+            this.eventFormSubscription = this.eventFormModalRef.content.isSaveSuccess$.subscribe(error => {
                 if (!error) {
                     this.getData(this.event.id);
-                    this.eventCalendarFormSubscription.unsubscribe();
-                    this.eventCalendarFormSubscription = null;
-                    this.eventCalendarModalRef.hide();
+                    this.eventFormSubscription.unsubscribe();
+                    this.eventFormSubscription = null;
+                    this.eventFormModalRef.hide();
                 }
             });
     }

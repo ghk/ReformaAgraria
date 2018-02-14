@@ -32,6 +32,7 @@ namespace ReformaAgraria.Controllers
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
             };
+
             using (var message = new MailMessage(fromAddress, toAddress)
             {
                 IsBodyHtml = true,
