@@ -30,9 +30,13 @@
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Compile Remove="ClientApp\app\templates\environments\**" />
+    <Compile Remove="wwwroot\event\15\**" />
     <Content Remove="ClientApp\**" />
+    <Content Remove="wwwroot\event\15\**" />
     <EmbeddedResource Remove="ClientApp\app\templates\environments\**" />
+    <EmbeddedResource Remove="wwwroot\event\15\**" />
     <None Remove="ClientApp\app\templates\environments\**" />
+    <None Remove="wwwroot\event\15\**" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="appsettings.Development.json" />
@@ -48,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Docs\" />
-    <Folder Include="wwwroot\event\15\" />
+    <Folder Include="wwwroot\event\" />
     <Folder Include="wwwroot\template\" />
     <Folder Include="wwwroot\tora\document\72.10.09.2001\" />
   </ItemGroup>
