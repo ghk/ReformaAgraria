@@ -134,8 +134,19 @@
                 var neu = u.Remove(0, 2);
                 url += neu.Remove(neu.Length - 1) + ", ";
             }
-            else
-                url += "'" + u.ToLowerInvariant() + "', ";
+            else {
+                var neu = u.ToLowerInvariant();                
+                var isEncodeURI = neu.Contains("encodeuri");                
+                if (isEncodeURI) {
+                    neu = "('" + neu;
+                    neu = neu.Replace("${encodeuricomponent", "' + encodeURIComponent");
+                    neu = neu.Replace("}", " + '"); // "'" WTF? Bug in typewriter
+                    neu = neu.Remove(neu.Length - 4);
+                    url += neu + "), ";
+                }
+                else
+                    url += "'" + neu + "', ";
+            }
         }
         url = url.Remove(url.Length - 2);
         return url + ")";

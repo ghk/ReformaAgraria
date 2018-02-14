@@ -134,8 +134,19 @@
                 var neu = u.Remove(0, 2);
                 url += neu.Remove(neu.Length - 1) + ", ";
             }
-            else
-                url += "'" + u.ToLowerInvariant() + "', ";
+            else {
+                var neu = u.ToLowerInvariant();                
+                var isEncodeURI = neu.Contains("encodeuri");                
+                if (isEncodeURI) {
+                    neu = "('" + neu;
+                    neu = neu.Replace("${encodeuricomponent", "' + encodeURIComponent");
+                    neu = neu.Replace("}", " + '"); // "'" WTF? Bug in typewriter
+                    neu = neu.Remove(neu.Length - 4);
+                    url += neu + "), ";
+                }
+                else
+                    url += "'" + neu + "', ";
+            }
         }
         url = url.Remove(url.Length - 2);
         return url + ")";
@@ -363,15 +374,7 @@ export class $ServiceName $IsCrudController[implements CrudService<$GetFirstType
         $IsBlob[return request.catch(this.handleError)][return request.map(res => res.json()).catch(this.handleError);]
     }
     ]
-    private handleError(error: Response | any) {
-        let errMsg: string;
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        return Observable.throw(errMsg);
+    private handleError(error: Response) {
+        return Observable.throw(error);
     }
 }
