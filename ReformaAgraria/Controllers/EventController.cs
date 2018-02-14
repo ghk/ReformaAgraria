@@ -49,7 +49,7 @@ namespace ReformaAgraria.Controllers
         {
             var eventFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "event", id, type.ToLower());
             if (!Directory.Exists(eventFilePath))
-                throw new NotFoundException();            
+                throw new NotFoundException(); 
             return Directory.GetFiles(eventFilePath).Select(Path.GetFileName);
         }
 

@@ -12,6 +12,7 @@ using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Models.Validators;
 using ReformaAgraria.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -333,6 +334,13 @@ namespace ReformaAgraria.Controllers
                 query = query.Include(to => to.Region)
                     .Include(to => to.Region.Parent)
                     .Include(to => to.Region.Parent.Parent);
+            }
+
+            if (type == "getByStatus")
+            {
+                var status = GetQueryString<string>("status");
+                if (!string.IsNullOrWhiteSpace(status))
+                    query = query.Where(to => to.Status == (Status)Convert.ToInt32(status));
             }
 
             return query;

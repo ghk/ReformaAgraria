@@ -31,6 +31,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
     RegionType = RegionType;
     event: Event;   
     events: Event[];
+    loading: boolean = false;
 
     constructor(
         private router: Router,
@@ -41,6 +42,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
+        this.loading = true;
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             this.region = region;
             this.getData();
@@ -69,6 +71,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
             });
 
             this.events = events;
+            this.loading = false;
         });
     }    
 
