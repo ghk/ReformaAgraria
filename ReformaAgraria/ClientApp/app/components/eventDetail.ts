@@ -32,7 +32,6 @@ import * as $ from 'jquery';
 })
 export class EventDetailComponent implements OnInit, OnDestroy {
     event: Event;
-    subscriptions: Subscription[] = [];
     region: Region;
     regionType: RegionType;
     progress: Progress;
@@ -41,7 +40,10 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     photos: any[] = [];
 
     eventFormModalRef: BsModalRef;
+    subscription: Subscription;
+    routeParamsSubscription: Subscription;
     eventFormSubscription: Subscription;
+    imagesArraySubscription: Subscription;
 
     openModalWindow: boolean = false;
     imagePointer: number = 0;
@@ -52,8 +54,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     imagesArray: Array<Image> = [];
     images: Observable<Array<Image>> = Observable.of(this.imagesArray).delay(300);
     imagesArraySubscribed: Array<Image>;
-    subscription: Subscription;
-    imagesArraySubscription: Subscription;
 
     constructor(
         private toastr: ToastrService,
@@ -67,20 +67,33 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.subscriptions.push(this.route.params.subscribe(params => {
+        this.routeParamsSubscription = this.route.params.subscribe(params => {
             let eventId: number = params['id'];
             this.getData(eventId);
-        }));
+        });
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.forEach(sub => sub.unsubscribe());
+        this.routeParamsSubscription.unsubscribe();
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
         if (this.imagesArraySubscription) {
             this.imagesArraySubscription.unsubscribe();
         }
+    }
+    
+    getData(id: number) {
+        this.eventService.getById(id, null, null).subscribe(event => {
+            this.event = event;
+            this.event.startDate = moment.utc(this.event.startDate).local().toDate();
+            this.event.endDate = moment.utc(this.event.endDate).local().toDate();
+            this.getAttachment(id);
+            this.getPhotos(id);
+            this.regionService.getById(event.fkRegionId, null, null).subscribe(region => {
+                this.region = region;
+            });
+        })
     }
 
     openImageModalObservable(image: Image) {
@@ -118,19 +131,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         this.openModalWindowObservable = false;
     }
 
-    getData(id: number) {
-        this.eventService.getById(id, null, null).subscribe(event => {
-            this.event = event;
-            this.event.startDate = moment.utc(this.event.startDate).local().toDate();
-            this.event.endDate = moment.utc(this.event.endDate).local().toDate();
-            this.getAttachment(id);
-            this.getPhotos(id);
-            this.regionService.getById(event.fkRegionId, null, null).subscribe(region => {
-                this.region = region;
-            });
-        })
-    }
-
     onShowEventForm(): void {
         this.event.region = this.region;
         this.eventFormModalRef = this.modalService.show(ModalEventFormComponent, { 'class': 'modal-lg' });
@@ -138,11 +138,11 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         if (!this.eventFormSubscription)
             this.eventFormSubscription = this.eventFormModalRef.content.isSaveSuccess$.subscribe(error => {
                 if (!error) {
-                    this.getData(this.event.id);
-                    this.eventFormSubscription.unsubscribe();
-                    this.eventFormSubscription = null;
-                    this.eventFormModalRef.hide();
+                    this.getData(this.event.id);                    
                 }
+                this.eventFormSubscription.unsubscribe();
+                this.eventFormSubscription = null;
+                this.eventFormModalRef.hide();
             });
     }
 

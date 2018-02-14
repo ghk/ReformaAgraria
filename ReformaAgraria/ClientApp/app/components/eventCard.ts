@@ -49,6 +49,8 @@ export class EventCardComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
+        if (this.eventFormSubscription)
+            this.eventFormSubscription.unsubscribe();
     }
 
     getData() {
@@ -74,7 +76,6 @@ export class EventCardComponent implements OnInit, OnDestroy {
         if (moment.utc(startDate).format('dd MMM') == moment.utc(endDate).format('dd MMM')) {
             return true;
         }
-
         return false;
     }
 
@@ -84,15 +85,16 @@ export class EventCardComponent implements OnInit, OnDestroy {
 
     onShowEventForm(event: Event): void {
         this.eventFormModalRef = this.modalService.show(ModalEventFormComponent, { 'class': 'modal-lg' });
-        this.eventFormModalRef.content.setEvent(event);        
-        this.eventFormSubscription = this.eventFormModalRef.content.isSaveSuccess$.subscribe(error => {
-            if (!error) {
-                this.getData();
+        this.eventFormModalRef.content.setEvent(event);    
+        if (!this.eventFormSubscription)    
+            this.eventFormSubscription = this.eventFormModalRef.content.isSaveSuccess$.subscribe(error => {
+                if (!error) {
+                    this.getData();                    
+                };
                 this.eventFormSubscription.unsubscribe();
                 this.eventFormSubscription = null;
                 this.eventFormModalRef.hide();
-            }
-        });
+            });
     }
 
 }

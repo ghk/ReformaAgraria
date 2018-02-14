@@ -133,11 +133,11 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         if (!this.toraObjectFormSubscription)
             this.toraObjectFormSubscription = this.toraObjectModalRef.content.isSaveSuccess$.subscribe(error => {
                 if (!error) {
-                    this.getData(this.toraObject.id);
-                    this.toraObjectFormSubscription.unsubscribe();
-                    this.toraObjectFormSubscription = null;
-                    this.toraObjectModalRef.hide();
+                    this.getData(this.toraObject.id);                    
                 }
+                this.toraObjectFormSubscription.unsubscribe();
+                this.toraObjectFormSubscription = null;
+                this.toraObjectModalRef.hide();
             });
     }
 
@@ -177,11 +177,11 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         if (!this.toraSubjectFormSubscription)
             this.toraSubjectFormSubscription = this.toraSubjectModalRef.content.isSaveSuccess$.subscribe(error => {
                 if (!error) {
-                    this.getData(this.toraObject.id);
-                    this.toraSubjectFormSubscription.unsubscribe();
-                    this.toraSubjectFormSubscription = null;
-                    this.toraSubjectModalRef.hide();
+                    this.getData(this.toraObject.id);                    
                 }
+                this.toraSubjectFormSubscription.unsubscribe();
+                this.toraSubjectFormSubscription = null;
+                this.toraSubjectModalRef.hide();
             });
     }
 
@@ -193,11 +193,11 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         if (!this.deleteSubscription)
             this.deleteSubscription = this.deleteModalRef.content.isDeleteSuccess$.subscribe(error => {
                 if (!error) {
-                    this.getData(this.toraObject.id);
-                    this.deleteSubscription.unsubscribe();
-                    this.deleteSubscription = null;
-                    this.deleteModalRef.hide();
+                    this.getData(this.toraObject.id);                    
                 }
+                this.deleteSubscription.unsubscribe();
+                this.deleteSubscription = null;
+                this.deleteModalRef.hide();
             })
     }
 
