@@ -178,6 +178,7 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
             this.onDeleteEvent(event.meta);
         }
         if (action === 'Clicked') {
+            console.log(event);
             this.router.navigateByUrl('event/' + event.meta.id);
         }
     }
