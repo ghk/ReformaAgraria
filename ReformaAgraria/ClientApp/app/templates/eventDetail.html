@@ -76,21 +76,18 @@
                             <button class="btn-custom">
                                 <small>Unggah Foto</small>
                             </button>
-                            <input type="file" (change)="onChangeUpload($event.target.files[0], 'photos')" />
+                            <input type="file" (change)="onChangeUpload($event.target.files[0], 'images')" />
                         </div>
-                        <div *ngFor="let img of images | async; let i = index">
-                            <div class="float-left" *ngIf="i <= 3">
-                                <a class="more" *ngIf="i==3" (click)="openImageModalObservable(img)">
-                                    +{{(images | async)?.length - 3}} more
-                                </a>
-                                <img *ngIf="i < 3" class="list-img" src="{{img.thumb}}" (click)="openImageModalObservable(img)" alt='{{img.description}}'
-                                />
+                        <div *ngFor="let image of images; let i = index">
+                            <div class="float-left">
+                                <a class="more" *ngIf="i > 2" (click)="openGalleryModal(image)">+{{images.length - 3}} more</a>
+                                <img *ngIf="i < 3" class="list-img" src="{{image.thumb}}" (click)="openGalleryModal(image)" alt='{{image.description}}'/>
                             </div>
                         </div>
-                        <div *ngIf="openModalWindowObservable">
-                            <modal-gallery [modalImages]="images" [imagePointer]="imagePointerObservable" [downloadable]="true" [buttonsConfig]="{download: true, extUrl: false, close: true}"
-                                [enableCloseOutside]="true" (hasData)="onImageLoaded($event)" (close)="onCloseImageModal($event)"
-                                (show)="onVisibleIndex($event)" (firstImage)="onIsFirstImage($event)" (lastImage)="onIsLastImage($event)"></modal-gallery>
+                        <div *ngIf="isOpenGalleryModal">
+                            <modal-gallery [modalImages]="images" [imagePointer]="imagePointer" [downloadable]="true" [buttonsConfig]="{download: true, extUrl: false, close: true}"
+                                [enableCloseOutside]="true" (close)="onCloseImageModal($event)" (show)="onVisibleIndex($event)">
+                            </modal-gallery>
                         </div>
                     </td>
                 </tr>

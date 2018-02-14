@@ -37,23 +37,15 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     progress: Progress;
     attachments: any[] = [];
     attachment: any;
-    photos: any[] = [];
 
     eventFormModalRef: BsModalRef;
-    subscription: Subscription;
     routeParamsSubscription: Subscription;
     eventFormSubscription: Subscription;
-    imagesArraySubscription: Subscription;
 
-    openModalWindow: boolean = false;
-    imagePointer: number = 0;
-
-    openModalWindowObservable: boolean = false;
-    imagePointerObservable: number = 0;
+    isOpenGalleryModal: boolean = false;
+    imagePointer: number = 0;    
     image: Image;
-    imagesArray: Array<Image> = [];
-    images: Observable<Array<Image>> = Observable.of(this.imagesArray).delay(300);
-    imagesArraySubscribed: Array<Image>;
+    images: Array<Image> = [];
 
     constructor(
         private toastr: ToastrService,
@@ -75,12 +67,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.routeParamsSubscription.unsubscribe();
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
-        if (this.imagesArraySubscription) {
-            this.imagesArraySubscription.unsubscribe();
-        }
     }
     
     getData(id: number) {
@@ -96,39 +82,20 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         })
     }
 
-    openImageModalObservable(image: Image) {
-        this.subscription = this.images.subscribe((val: Image[]) => {
-            this.imagePointerObservable = val.indexOf(image);
-            this.openModalWindowObservable = true;
-        });
-    }
-
-    onImageLoaded(event: ImageModalEvent) {
-        // angular-modal-gallery will emit this event if it will load successfully input images
-        console.log('onImageLoaded action: ' + Action[event.action]);
-        console.log('onImageLoaded result:' + event.result);
+    openGalleryModal(image: Image) {
+        this.imagePointer = this.images.indexOf(image);
+        this.isOpenGalleryModal = true;
     }
 
     onVisibleIndex(event: ImageModalEvent) {
-        console.log('action: ' + Action[event.action]);
-        console.log('result:' + event.result);
-    }
-
-    onIsFirstImage(event: ImageModalEvent) {
-        console.log('onfirst action: ' + Action[event.action]);
-        console.log('onfirst result:' + event.result);
-    }
-
-    onIsLastImage(event: ImageModalEvent) {
-        console.log('onlast action: ' + Action[event.action]);
-        console.log('onlast result:' + event.result);
-    }
+        //console.log('action: ' + Action[event.action]);
+        //console.log('result:' + event.result);
+    }  
 
     onCloseImageModal(event: ImageModalEvent) {
-        console.log('onClose action: ' + Action[event.action]);
-        console.log('onClose result:' + event.result);
-        this.openModalWindow = false;
-        this.openModalWindowObservable = false;
+        //console.log('onClose action: ' + Action[event.action]);
+        //console.log('onClose result:' + event.result);
+        this.isOpenGalleryModal = false;
     }
 
     onShowEventForm(): void {
@@ -152,8 +119,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         formData.append('uploadType', uploadType);
         formData.append('file', file);
 
-        this.eventService.upload(formData, this.progressListener.bind(this))
-            .subscribe(
+        this.eventService.upload(formData, this.progressListener.bind(this)).subscribe(
             data => {
                 this.getAttachment(this.event.id);
                 this.getPhotos(this.event.id);
@@ -162,39 +128,35 @@ export class EventDetailComponent implements OnInit, OnDestroy {
             error => {
                 this.toastr.error('Upload file gagal');
             }
-            );
+        );
     }
 
     getAttachment(eventId) {
-        this.eventService.getDocumentsNames(eventId.toString(), 'attachment', this.progressListener.bind(this))
-            .subscribe(
+        this.eventService.getDocumentsNames(eventId.toString(), 'attachment', this.progressListener.bind(this)).subscribe(
             data => {
                 this.attachments = data;
-            });
+            }
+        );
     }
 
     getPhotos(eventId) {
-        this.eventService.getDocumentsNames(eventId.toString(), 'photos', this.progressListener.bind(this))
-            .subscribe(
-            data => {
-                this.photos = data;
-                if (this.photos != null) {
-                    this.imagesArray.length = 0;
-                    for (var i = 0; i < this.photos.length; i++) {
-                        this.image = new Image(
-                            '/event/' + eventId + '/photos/' + this.photos[i],
-                            '/event/' + eventId + '/photos/' + this.photos[i],
-                            this.photos[i],
-                            null
-                        )
-                        this.imagesArray.push(this.image);
-                    }
-                }
-                this.imagesArraySubscription = Observable.of(null).delay(500).subscribe(() => {
-                    this.imagesArraySubscribed = this.imagesArray;
-                });
-            });
+        this.eventService.getDocumentsNames(eventId, 'photos', this.progressListener.bind(this)).subscribe(
+            data => {   
+                if (!data || data.length === 0)
+                    return;
 
+                this.images.length = 0;
+                for (var i = 0; i < data.length; i++) {
+                    this.image = new Image(
+                        '/event/' + eventId + '/photos/' + data[i],
+                        '/event/' + eventId + '/photos/' + data[i],
+                        data[i],
+                        null
+                    );
+                    this.images.push(this.image);
+                }                
+            }
+        );
     }
 
     download(fileName) {
@@ -222,11 +184,5 @@ export class EventDetailComponent implements OnInit, OnDestroy {
             error => {
                 this.toastr.error(error, null);
             });
-    }
-
-    onDownload(id, title, extension) {
-        var link = [window.location.origin, 'library', id + "_" + title + extension].join("/")
-        $("#download").attr("href", link);
-        $('#download')[0].click();
-    }
+    }    
 }
