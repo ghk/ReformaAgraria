@@ -1,18 +1,45 @@
 <div class="card w-100">
     <div class="card-body">
-        <div class="row">
-            <div class="col-md-4 col-sm-6 col-xs-12 header-list-subject text-center">
-                <h2 class="display-4">{{totalSubjects | number}}</h2>
-                <p class="lead">Subjek</p>
+        <ng-container *ngIf="loading">
+            <table width="100%">
+                <tr>
+                    <td colspan="12">
+                        <div class="col-md-12">
+                            <div id="loader"></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </ng-container>
+        <ng-container *ngIf="!loading">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-12 header-list-subject text-center">
+                    <h2 class="display-4">{{totalSubjects | number}}</h2>
+                    <p class="lead">Subjek</p>
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12 header-list-object text-center">
+                    <h2 class="display-4">{{totalObjects | number}}</h2>
+                    <p class="lead">Objek</p>
+                </div>
+                <div class="col-md-4 col-sm-12 header-list-size text-center">
+                    <h2 class="display-4">{{totalSize ? (totalSize / 10000 | number : '1.2-2') : '-'}}</h2>
+                    <p class="lead">Luas (ha)</p>
+                </div>
             </div>
-            <div class="col-md-4 col-sm-6 col-xs-12 header-list-object text-center">
-                <h2 class="display-4">{{totalObjects | number}}</h2>
-                <p class="lead">Objek</p>
+            <div class="row" style="border-top:1px solid rgba(0,0,0,0.2)">
+                <div class="col-md-4 col-sm-6 col-xs-12 header-list-subject text-center">
+                    <h2 class="display-4" style="color:#D2D945">{{proposal | number}}</h2>
+                    <p class="lead">Pengajuan</p>
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12 header-list-object text-center">
+                    <h2 class="display-4" style="color:#FCB13F">{{verification | number}}</h2>
+                    <p class="lead">Verifikasi</p>
+                </div>
+                <div class="col-md-4 col-sm-12 header-list-size text-center">
+                    <h2 class="display-4" style="color:#04BBBF">{{act | number}}</h2>
+                    <p class="lead">Penetapan</p>
+                </div>
             </div>
-            <div class="col-md-4 col-sm-12 header-list-size text-center">
-                <h2 class="display-4">{{totalSize ? (totalSize / 10000 | number : '1.2-2') : '-'}}</h2>
-                <p class="lead">Luas (ha)</p>
-            </div>
-        </div>
+        </ng-container>
     </div>
 </div>

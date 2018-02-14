@@ -1,30 +1,43 @@
 <div class="card">
     <div class="card-body">
-        <div class="row" style="padding-bottom:20px">
-            <div class="col-lg-12">
-                <button class="btn btn-primary" type="button" style="width:158px" (click)="onShowEventForm(null)">Tambah Kegiatan</button>
+        <ng-container *ngIf="loading">
+        <table width="100%">
+            <tr>
+                <td colspan="12">
+                    <div class="col-md-12">
+                        <div id="loader"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </ng-container>
+        <ng-container *ngIf="!loading">
+            <div class="row" style="padding-bottom:20px">
+                <div class="col-lg-12">
+                    <button class="btn btn-primary" type="button" style="width:158px" (click)="onShowEventForm(null)">Tambah Kegiatan</button>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card-text text-center" *ngIf="!events || events.length === 0">Tidak ada kegiatan di {{region?.name}}</div>
-                <div class="card-deck" *ngIf="events && events.length > 0">
-                    <div class="card event-card" *ngFor="let event of events" [style.borderColor]="event.color" (click)="onCardClicked(event)">
-                        <h6 class="card-header text-center" [style.backgroundColor]="event.color">
-                            <ng-container *ngIf="isOneDayEvent(event.startDate, event.endDate)">
-                                <span style="color:white">{{event.startDate | date:'dd MMM'}}</span>
-                            </ng-container>
-                            <ng-container *ngIf="!isOneDayEvent(event.startDate, event.endDate)">
-                                <span style="color:white">{{event.startDate | date:'dd MMM'}} {{event.endDate ? '- ' + (event.endDate | date: 'dd MMM') : ''}}</span>
-                            </ng-container>
-                        </h6>
-                        <div class="card-body" style="padding-bottom: 0;">
-                            <p class="card-text" style="font-size:0.7rem;">{{RegionType[event.region?.type]}} {{event.region?.name}}</p>
-                            <p class="card-title" style="font-size:0.7rem; margin-bottom: 0;">{{event.eventType?.id}} - {{event.eventType?.name}}</p>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card-text text-center" *ngIf="!events || events.length === 0">Tidak ada kegiatan di {{region?.name}}</div>
+                    <div class="card-deck" *ngIf="events && events.length > 0">
+                        <div class="card event-card" *ngFor="let event of events" [style.borderColor]="event.color" (click)="onCardClicked(event)">
+                            <h6 class="card-header text-center" [style.backgroundColor]="event.color">
+                                <ng-container *ngIf="isOneDayEvent(event.startDate, event.endDate)">
+                                    <span style="color:white">{{event.startDate | date:'dd MMM'}}</span>
+                                </ng-container>
+                                <ng-container *ngIf="!isOneDayEvent(event.startDate, event.endDate)">
+                                    <span style="color:white">{{event.startDate | date:'dd MMM'}} {{event.endDate ? '- ' + (event.endDate | date: 'dd MMM') : ''}}</span>
+                                </ng-container>
+                            </h6>
+                            <div class="card-body" style="padding-bottom: 0;">
+                                <p class="card-text" style="font-size:0.7rem;">{{RegionType[event.region?.type]}} {{event.region?.name}}</p>
+                                <p class="card-title" style="font-size:0.7rem; margin-bottom: 0;">{{event.eventType?.id}} - {{event.eventType?.name}}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </ng-container>
+</div>
 </div>

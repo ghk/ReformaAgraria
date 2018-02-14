@@ -64,6 +64,7 @@ namespace ReformaAgraria.Controllers
         {
             var user = _signInManager.UserManager.Users.Where(u => u.Email == model.Email).FirstOrDefault();
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, isPersistent: true, lockoutOnFailure: false);
+            _logger.LogInformation("loginResult", result);
             if (!result.Succeeded)
                 throw new BadRequestException("Email atau Password salah");
 
