@@ -178,6 +178,7 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
             this.onDeleteEvent(event.meta);
         }
         if (action === 'Clicked') {
+            console.log(event);
             this.router.navigateByUrl('event/' + event.meta.id);
         }
     }
@@ -185,14 +186,15 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
     onShowEventForm(event: Event): void {
         this.eventFormModalRef = this.modalService.show(ModalEventFormComponent, { 'class': 'modal-lg' });
         this.eventFormModalRef.content.setEvent(event);
-        this.eventFormSubscription = this.eventFormModalRef.content.isSaveSuccess$.subscribe(error => {
-            if (!error) {
-                this.getData();
+        if (!this.eventFormSubscription)
+            this.eventFormSubscription = this.eventFormModalRef.content.isSaveSuccess$.subscribe(error => {
+                if (!error) {
+                    this.getData();                    
+                }
                 this.eventFormSubscription.unsubscribe();
                 this.eventFormSubscription = null;
                 this.eventFormModalRef.hide();
-            }
-        });
+            });
     }
 
     onDeleteEvent(event: Event): void {
@@ -200,14 +202,15 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
         this.deleteModalRef.content.setModel(event);
         this.deleteModalRef.content.setService(this.eventService);
         this.deleteModalRef.content.setLabel("Kegiatan");
-        this.deleteSubscription = this.deleteModalRef.content.isDeleteSuccess$.subscribe(error => {
-            if (!error) {
-                this.getData();
+        if (!this.deleteSubscription)
+            this.deleteSubscription = this.deleteModalRef.content.isDeleteSuccess$.subscribe(error => {
+                if (!error) {
+                    this.getData();                    
+                }
                 this.deleteSubscription.unsubscribe();
                 this.deleteSubscription = null;
                 this.deleteModalRef.hide();
-            }
-        });
+            });
     }
 
    
