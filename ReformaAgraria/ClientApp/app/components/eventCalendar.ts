@@ -4,7 +4,6 @@ import { Subject, Subscription, Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { ModalEventCalendarFormComponent } from "./modals/eventCalendarForm";
 import { BsLocaleService } from 'ngx-bootstrap/datepicker/bs-locale.service';
 
 import { Query } from '../models/query';
@@ -12,11 +11,14 @@ import { Region } from '../models/gen/region';
 import { Event } from '../models/gen/event';
 import { EventType } from '../models/gen/eventType';
 import { SearchViewModel } from '../models/gen/searchViewModel';
+
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { EventService } from '../services/gen/event';
+
 import { EventHelper } from '../helpers/event';
 import { CustomDateFormatter } from '../helpers/customDateFormatter';
+import { ModalEventFormComponent } from "./modals/eventForm";
 
 import {
     CalendarEvent,
@@ -37,6 +39,7 @@ import {
 } from 'date-fns';
 
 import * as moment from 'moment';
+import { ModalDeleteComponent } from './modals/delete';
 
 @Component({
     selector: 'ra-event-calendar',
@@ -44,10 +47,14 @@ import * as moment from 'moment';
     providers: [{ provide: CalendarDateFormatter, useClass: CustomDateFormatter }]
 })
 export class EventCalendarComponent implements OnInit, OnDestroy {
-    @ViewChild('deleteConfirmationModal') deleteConfirmationModal: TemplateRef<any>;
+    eventFormModalRef: BsModalRef;
+    deleteModalRef: BsModalRef;    
 
-    region: Region;
-    subscriptions: Subscription[] = [];
+    region: Region;    
+    routeParamsSubscription: Subscription;
+    routeQueryParamsSubscription: Subscription;
+    eventFormSubscription: Subscription;
+    deleteSubscription: Subscription;
 
     event: Event;
     events: Event[];
@@ -61,9 +68,7 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
     locale: string = 'id-ID';
     weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
     weekendDays: number[] = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
-
-    eventCalendarModalRef: BsModalRef;
-    deleteConfirmationModalRef: BsModalRef;
+    
     minDate: Date = new Date();
 
     constructor(
@@ -78,17 +83,9 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.initFunction();
-    }
-
-    ngOnDestroy(): void {
-        this.subscriptions.forEach(sub => sub.unsubscribe());
-    }
-
-    initFunction() {
         this.bsLocaleService.use('id');
 
-        this.subscriptions.push(this.route.params.subscribe(params => {
+        this.routeParamsSubscription = this.route.params.subscribe(params => {
             let regionId: string = params['id'] !== null ? params['id'] : '72.1';
             regionId = regionId.replace(/_/g, '.');
             this.regionService.getById(regionId, null, null).subscribe(region => {
@@ -96,9 +93,9 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
                 this.sharedService.setRegion(region);
                 this.getData();
             })
-        }));
+        });
 
-        this.subscriptions.push(this.route.queryParams.subscribe(params => {
+        this.routeQueryParamsSubscription = this.route.queryParams.subscribe(params => {
             let dateParam = params['date'] || null;
             if (!dateParam)
                 return;
@@ -108,7 +105,16 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
                 this.viewDate = momentDate.toDate();
                 this.activeDayIsOpen = true;
             };
-        }));
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.routeParamsSubscription.unsubscribe();
+        this.routeQueryParamsSubscription.unsubscribe();
+        if (this.eventFormSubscription)
+            this.eventFormSubscription.unsubscribe();
+        if (this.deleteSubscription)
+            this.deleteSubscription.unsubscribe();
     }
 
     getData(): void {
@@ -137,13 +143,11 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
     }
 
     onDayClicked({ date, events }: { date: Date; events: CalendarEvent<Event>[] }): void {
-        if (isSameMonth(date, this.viewDate)) {
-            if ((isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) || events.length === 0) {
-                this.activeDayIsOpen = false;
-            } else {
-                this.activeDayIsOpen = true;
-                this.viewDate = date;
-            }
+        if ((isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) || events.length === 0) {
+            this.activeDayIsOpen = false;
+        } else {
+            this.activeDayIsOpen = true;
+            this.viewDate = date;
         }
     }
 
@@ -168,51 +172,43 @@ export class EventCalendarComponent implements OnInit, OnDestroy {
 
     onHandleEvent(action: string, event: CalendarEvent<Event>): void {
         if (action === 'Edited') {
-            this.event = event.meta;
-            console.log(this.event);
-            this.onShowEventCalendarForm("Ubah")
+            this.onShowEventForm(event.meta);
         }
         if (action === 'Deleted') {
-            this.event = event.meta;
-            this.deleteConfirmationModalRef = this.modalService.show(this.deleteConfirmationModal);
+            this.onDeleteEvent(event.meta);
         }
         if (action === 'Clicked') {
             this.router.navigateByUrl('event/' + event.meta.id);
         }
     }
     
-    onShowEventCalendarForm(action: string): void {
-        this.eventCalendarModalRef = this.modalService.show(ModalEventCalendarFormComponent, { 'class': 'modal-lg' });
-        if (action === "Ubah") {
-            this.event.region = this.region;
-            this.eventCalendarModalRef.content.setEvent(this.event, null, action);
-        }
-        else {
-            this.eventCalendarModalRef.content.setEvent(null, this.region, action);
-        }
-        this.subscriptions.push(this.eventCalendarModalRef.content.isSaveSuccess$.subscribe(error => {
+    onShowEventForm(event: Event): void {
+        this.eventFormModalRef = this.modalService.show(ModalEventFormComponent, { 'class': 'modal-lg' });
+        this.eventFormModalRef.content.setEvent(event);
+        this.eventFormSubscription = this.eventFormModalRef.content.isSaveSuccess$.subscribe(error => {
             if (!error) {
-                this.initFunction();
-                this.eventCalendarModalRef.hide();
-            }
-        }));
-    }
-
-    onConfirmDelete(): void {
-        this.eventService.deleteById(this.event.id, null).subscribe(
-            result => {
-                this.deleteConfirmationModalRef.hide();
-                this.toastrService.success("Event berhasil dihapus");
                 this.getData();
-            },
-            error => {
-                this.deleteConfirmationModalRef.hide();
-                this.toastrService.error("Ada kesalahan dalam penghapusan");
+                this.eventFormSubscription.unsubscribe();
+                this.eventFormSubscription = null;
+                this.eventFormModalRef.hide();
             }
-        );
+        });
     }
 
-    onDeclineDelete(): void {
-        this.deleteConfirmationModalRef.hide();
+    onDeleteEvent(event: Event): void {
+        this.deleteModalRef = this.modalService.show(ModalDeleteComponent);
+        this.deleteModalRef.content.setModel(event);
+        this.deleteModalRef.content.setService(this.eventService);
+        this.deleteModalRef.content.setLabel("Kegiatan");
+        this.deleteSubscription = this.deleteModalRef.content.isDeleteSuccess$.subscribe(error => {
+            if (!error) {
+                this.getData();
+                this.deleteSubscription.unsubscribe();
+                this.deleteSubscription = null;
+                this.deleteModalRef.hide();
+            }
+        });
     }
+
+   
 }

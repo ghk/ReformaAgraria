@@ -4,13 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MicrovacWebCore;
+using MicrovacWebCore.Exceptions;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ReformaAgraria.Controllers
 {
@@ -33,32 +36,30 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("upload")]
-        public IActionResult Upload([FromForm]UploadEventDetailViewModel document)
+        public async Task<IActionResult> Upload([FromForm]UploadEventDetailViewModel document)
         {
             var eventDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "event");
             var eventFilePath = Path.Combine(eventDirectoryPath, document.EventId, document.UploadType.ToLower(), document.File.FileName);
-            IOHelper.StreamCopy(eventFilePath, document.File);
+            await IOHelper.StreamCopyAsync(eventFilePath, document.File);
             return Ok(new RequestResult() { Message = "Success" });
         }
 
         [HttpGet("documents")]
-        public string[] GetDocumentsNames([FromQuery]string id, [FromQuery]string type)
+        public IEnumerable<string> GetDocumentsNames([FromQuery]string id, [FromQuery]string type)
         {
             var eventFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "event", id, type.ToLower());
-            if (Directory.Exists(eventFilePath))
-            {
-                var results = Directory.GetFiles(eventFilePath).Select(Path.GetFileName).ToArray();
-                return results;
-            }
-            return null;
+            if (!Directory.Exists(eventFilePath))
+                throw new NotFoundException();            
+            return Directory.GetFiles(eventFilePath).Select(Path.GetFileName);
         }
 
         [HttpDelete("attachments")]
         public IActionResult DeleteAttachment([FromQuery]string id, [FromQuery]string attachment)
         {
             var eventFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "event", id, "attachment", attachment);
-            if (System.IO.File.Exists(eventFilePath))
-                System.IO.File.Delete(eventFilePath);
+            if (!System.IO.File.Exists(eventFilePath))
+                throw new NotFoundException();
+            System.IO.File.Delete(eventFilePath);
             return Ok(new RequestResult() { Message = "Success" });
         }
 

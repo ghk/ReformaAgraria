@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +19,8 @@ namespace ReformaAgraria.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    //[Authorize(Policy = "Bearer")]
-    public class ToraMapController : CrudController<ToraMap, int>
+    [Authorize(Policy = "Bearer")]
+    public class ToraMapController : CrudControllerAsync<ToraMap, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _contextAccessor;
@@ -40,14 +41,11 @@ namespace ReformaAgraria.Controllers
         [HttpPost("upload")]
         public async Task<ToraMap> Upload([FromForm]UploadToraMapViewModel model)
         {
-            var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == model.ToraObjectId);
+            var toraObject = await dbContext.Set<ToraObject>().FirstOrDefaultAsync(to => to.Id == model.ToraObjectId);
             if (toraObject == null)
-                // TODO: Throw validation error
-                return null;
+                throw new NotFoundException();
 
-            var toraMap = dbContext.Set<ToraMap>()
-                .Where(tm => tm.FkToraObjectId == toraObject.Id)
-                .FirstOrDefault();
+            var toraMap = await dbContext.Set<ToraMap>().FirstOrDefaultAsync(tm => tm.FkToraObjectId == toraObject.Id);
 
             if (toraMap == null)
             {
@@ -72,7 +70,7 @@ namespace ReformaAgraria.Controllers
             var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
             var regionDirectoryPath = Path.Combine(toraMapDirectoryPath, model.RegionId);
             var destinationFilePath = Path.Combine(regionDirectoryPath, toraMap.Id + ".zip");
-            IOHelper.StreamCopy(destinationFilePath, model.File);
+            await IOHelper.StreamCopyAsync(destinationFilePath, model.File);
 
             return toraMap;
         }

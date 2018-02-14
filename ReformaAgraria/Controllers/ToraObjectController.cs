@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,8 +21,8 @@ namespace ReformaAgraria.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    //[Authorize(Policy = "Bearer")]
-    public class ToraObjectController : CrudController<ToraObject, int>
+    [Authorize(Policy = "Bearer")]
+    public class ToraObjectController : CrudControllerAsync<ToraObject, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger<ToraObjectController> _logger;
@@ -41,15 +42,15 @@ namespace ReformaAgraria.Controllers
 
         [HttpPost]
         [NotGenerated]
-        public override int Post([FromBody] ToraObject model)
+        public override async Task<int> PostAsync([FromBody] ToraObject model)
         {
             var validator = new ToraObjectValidator();
             validator.ValidateAndThrow(model);
-            return base.Post(model);
+            return await base.PostAsync(model);
         }
 
         [HttpPost("upload")]
-        public ToraObject Upload([FromForm] UploadToraDocumentViewModel document)
+        public async Task<ToraObject> Upload([FromForm] UploadToraDocumentViewModel document)
         {
             var toraDocumentDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "document");
             var toraDocumentFilePath = Path.Combine(toraDocumentDirectoryPath, document.RegionId, document.File.FileName);
@@ -158,7 +159,7 @@ namespace ReformaAgraria.Controllers
                                 to.FormalAdvocacyProgress = worksheet.Cells[(i + 20), 4].Value != null ? worksheet.Cells[(i + 20), 4].Value.ToString().Trim() : "";
                                 to.NonFormalAdvocacyProgress = worksheet.Cells[(i + 22), 4].Value != null ? worksheet.Cells[(i + 22), 4].Value.ToString().Trim() : "";
 
-                                Post(to);
+                                await PostAsync(to);
                                 toraObjects.Add(to);
                             }
                         }
@@ -167,10 +168,10 @@ namespace ReformaAgraria.Controllers
                     if (workbook.Worksheets.Count > 1)
                     {
                         ToraSubjectController ts = new ToraSubjectController(_context, _hostingEnvironment, _tsLogger);
-                        ts.Upload(toraObjects, package);
+                        await ts.Upload(toraObjects, package);
                     }               
 
-                    IOHelper.StreamCopy(toraDocumentFilePath, document.File);
+                    await IOHelper.StreamCopyAsync(toraDocumentFilePath, document.File);
                 }
 
                 return to;
@@ -180,16 +181,15 @@ namespace ReformaAgraria.Controllers
         [HttpGet("download/{id}")]
         public async Task<FileStreamResult> Download(int id)
         {
-            var objectModel = dbContext.Set<ToraObject>().FirstOrDefault(t => t.Id == id);
-
-            var region = dbContext.Set<Region>()
+            var objectModel = await dbContext.Set<ToraObject>().FirstOrDefaultAsync(t => t.Id == id);
+            var region = await dbContext.Set<Region>()
                 .Include(r => r.Parent)
                 .Include(r => r.Parent.Parent)
-                .FirstOrDefault(r => r.Id == objectModel.FkRegionId);
+                .FirstOrDefaultAsync(r => r.Id == objectModel.FkRegionId);
 
-            List<ToraSubject> subjectModel = dbContext.Set<ToraSubject>()
+            List<ToraSubject> subjectModel = await dbContext.Set<ToraSubject>()
                 .Where(r => r.FkToraObjectId == objectModel.Id)
-                .ToList();
+                .ToListAsync();
 
             var templateFileName = @"Template_Object_Subject_Tora.xlsx";
             var templateFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "template", templateFileName);
@@ -251,14 +251,14 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpGet("summary/{id}")]
-        public List<DashboardDataViewModel> GetSummary(string id)
+        public async Task<List<DashboardDataViewModel>> GetSummary(string id)
         {
             var results = new List<DashboardDataViewModel>();
-            var region = dbContext.Set<Region>().First(r => r.Id == id);
-            var children = dbContext.Set<Region>()
+            var region = await dbContext.Set<Region>().FirstAsync(r => r.Id == id);
+            var children = await dbContext.Set<Region>()
                 .Where(r => r.FkParentId == id)
                 .OrderBy(x => x.Name)
-                .ToList();
+                .ToListAsync();
 
             if (children.Count == 0)
                 children.Add(region);
@@ -274,9 +274,9 @@ namespace ReformaAgraria.Controllers
             foreach (var toraObject in toraObjects)
             {
                 var toraObjectIds = toraObject.Data.Select(t => t.Id);
-                var totalToraSubjects = dbContext.Set<ToraSubject>()
+                var totalToraSubjects = await dbContext.Set<ToraSubject>()
                         .Where(ts => toraObjectIds.Contains(ts.FkToraObjectId))
-                        .Count();
+                        .CountAsync();
 
                 var dashboardData = new DashboardDataViewModel
                 {
@@ -298,18 +298,18 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpGet("calculate/all")]
-        public IActionResult CalculateAll()
+        public async Task<IActionResult> CalculateAll()
         {
-            var toraObjects = dbContext.Set<ToraObject>().ToList();
+            var toraObjects = await dbContext.Set<ToraObject>().ToListAsync();
             foreach (var toraObject in toraObjects)
                 ToraObjectHelper.Calculate(dbContext, toraObject);
             return Ok(new RequestResult() { Message = "Success" });
         }
 
         [HttpGet("calculate/{id}")]
-        public IActionResult Calculate(int id)
+        public async Task<IActionResult> Calculate(int id)
         {
-            var toraObject = dbContext.Set<ToraObject>().FirstOrDefault(to => to.Id == id);
+            var toraObject = await dbContext.Set<ToraObject>().FirstOrDefaultAsync(to => to.Id == id);
             if (toraObject == null)
                 throw new NotFoundException();
 

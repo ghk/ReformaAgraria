@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -57,7 +58,6 @@ namespace ReformaAgraria.Controllers
             _mailLogger = mailLogger;
         }
 
-        // [ValidateAntiForgeryToken]
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
@@ -114,11 +114,13 @@ namespace ReformaAgraria.Controllers
                     if (result.Succeeded)
                     {
                         transaction.Commit();
-                        return Ok();
+                        return Ok(new RequestResult() { Message = "Success" });
                     }
 
-                    var exception = new BadRequestException();
-                    exception.Errors = result.Errors;
+                    var exception = new BadRequestException
+                    {
+                        Errors = result.Errors
+                    };
                     throw exception;
                 }
                 catch (Exception ex)
@@ -134,59 +136,67 @@ namespace ReformaAgraria.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return Ok();
+            return Ok(new RequestResult() { Message = "Success" });
         }
 
-        [HttpPost("password/recovery")]
-        [AllowAnonymous]
-        public async Task<IActionResult> SendPasswordRecoveryLink([FromBody] LoginViewModel model)
+        [HttpPost("password/recover")]
+        public async Task<IActionResult> RecoverPassword([FromBody] LoginViewModel model)
         {
-            var user = _userManager.FindByEmailAsync(model.Email).Result;
+            var user = await _userManager.FindByEmailAsync(model.Email);
             var authorizeResult = await _authorizationService.AuthorizeAsync(User, user, new AccountEditRequirement());
             if (!authorizeResult.Succeeded)
                 throw new UnauthorizedException();
 
-            var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
-            string resetLink = Request.Scheme + "://" + Request.Host + "/account/resetpassword?email=" + user.Email + "&id=" + user.Id + "&token=" + token;
-            MailController mc = new MailController(_iconfiguration, _mailLogger);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            string resetLink = Request.Scheme + "://" + Request.Host + "/account/password/reset/" + "&id=" + user.Id + "&token=" + token;
             string body = "Klik tautan di bawah ini untuk mereset password anda. </br><a href='" + resetLink + "'>Reset Password</a>";
+            MailController mc = new MailController(_iconfiguration, _mailLogger);            
             mc.SendEmail("Reset Password", body, new MailAddress(user.Email, user.UserName));
-            return Ok();
+
+            return Ok(new RequestResult() { Message = "Success" });
         }
 
-        [HttpPost("password/reset/{id}/{token}")]
-        public async Task<IActionResult> ResetPassword(string id, string token, [FromBody]Dictionary<string, string> data)
+        [HttpGet("password/reset/{id}/{token}")]
+        public async Task<IActionResult> ResetPassword(string id, string token)
         {
-            var user = _userManager.FindByIdAsync(id).Result;
-
+            var user = await _userManager.FindByIdAsync(id);
             var authorizeResult = await _authorizationService.AuthorizeAsync(User, user, new AccountEditRequirement());
             if (!authorizeResult.Succeeded)
-                return Forbid();
+                throw new UnauthorizedException();
 
-            IdentityResult result = _userManager.ResetPasswordAsync(user, token.Replace(" ", "+"), data["newPassword"]).Result;
-            if (result.Succeeded)
-                return Ok();
-            return BadRequest(result.Errors);
+            var newPassword = Guid.NewGuid().ToString("n").Substring(0, 8);
+            var result = await _userManager.ResetPasswordAsync(user, token.Replace(" ", "+"), newPassword);
+            if (!result.Succeeded)
+                throw new BadRequestException();
+
+            string body = "Password baru anda: " + newPassword;
+            MailController mc = new MailController(_iconfiguration, _mailLogger);
+            mc.SendEmail("New Password", body, new MailAddress(user.Email, user.UserName));
+            return Ok(new RequestResult() { Message = "Success" });            
         }
 
         [HttpPost("password/change/{id}")]
         public async Task<IActionResult> ChangePassword(string id, [FromBody]Dictionary<string, string> data)
         {
             var user = await _userManager.FindByIdAsync(id);
-
             var authorizeResult = await _authorizationService.AuthorizeAsync(User, user, new AccountEditRequirement());
             if (!authorizeResult.Succeeded)
-                return Forbid();
-
+                throw new UnauthorizedException();
+                        
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            return await ResetPassword(id, token, data);
+            var result = await _userManager.ResetPasswordAsync(user, token, data["newPassword"]);
+            if (!result.Succeeded)
+                throw new BadRequestException();
+
+            return Ok(new RequestResult() { Message = "Success" });
         }
 
         [HttpGet("user")]
         [Authorize(Policy = "Administrator")]
-        public List<object> GetAllUser()
+        public async Task<List<object>> GetAllUser()
         {
-            var users = _context.Users.ToList();
+            var users = await _context.Users.ToListAsync();
             var result = new List<object>();
             foreach (var user in users)
             {
@@ -202,20 +212,24 @@ namespace ReformaAgraria.Controllers
 
         [HttpGet("user/{id}")]
         [Authorize(Policy = "Administrator")]
-        public ReformaAgrariaUser GetUserById(string id)
+        public async Task<ReformaAgrariaUser> GetUserById(string id)
         {
-            return _userManager.FindByIdAsync(id).Result;
+            var user = await _userManager.FindByIdAsync(id);
+            return new ReformaAgrariaUser
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FullName = user.FullName
+            };
         }
 
         [HttpDelete("user/{id}")]
         [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var userDetail = _userManager.FindByIdAsync(id).Result;
-
-            await _userManager.DeleteAsync(userDetail);
-
-            return Ok();
+            var user = await _userManager.FindByIdAsync(id);
+            await _userManager.DeleteAsync(user);
+            return Ok(new RequestResult() { Message = "Success" });
         }
 
         [HttpPut("user/{id}")]
@@ -225,17 +239,20 @@ namespace ReformaAgraria.Controllers
             var newEmail = data["email"];
             using (var transaction = _context.Database.BeginTransaction())
             {
-                var userDetail = _userManager.FindByIdAsync(id).Result;
+                var user = await _userManager.FindByIdAsync(id);
+                user.Email = newEmail;
+                user.NormalizedEmail = newEmail.ToUpper();
+                user.UserName = newEmail;
+                user.NormalizedUserName = newEmail.ToUpper();
 
-                userDetail.Email = newEmail;
-                userDetail.NormalizedEmail = newEmail.ToUpper();
-                userDetail.UserName = newEmail;
-                userDetail.NormalizedUserName = newEmail.ToUpper();
-                IdentityResult result = await _userManager.UpdateAsync(userDetail);
+                var result = await _userManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                    throw new BadRequestException();
+                
                 transaction.Commit();
             }
 
-            return Ok();
+            return Ok(new RequestResult() { Message = "Success" });
         }
 
         private string GenerateToken(DateTime expires, ClaimsIdentity claims)

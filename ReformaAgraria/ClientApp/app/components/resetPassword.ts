@@ -39,7 +39,7 @@ export class ResetPasswordComponent {
     resetPassword() {
         this.loading = true;
         this.showPage = false;
-        this.accountService.resetPassword(this.model.id, this.model.token, this.model.password)
+        this.accountService.changePassword(this.model.id, this.model.password)
             .subscribe(
             data => {
                 this.loading = false;

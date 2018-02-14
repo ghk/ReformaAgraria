@@ -37,7 +37,7 @@ namespace ReformaAgraria.Controllers
             BaseLayer baseLayer = null;
 
             if (model.Id > 0)
-                baseLayer = dbContext.Set<BaseLayer>().Where(o => o.Id == model.Id).FirstOrDefault();
+                baseLayer = await dbContext.Set<BaseLayer>().FirstOrDefaultAsync(o => o.Id == model.Id);
 
             if (baseLayer == null)
             {
@@ -54,11 +54,13 @@ namespace ReformaAgraria.Controllers
 
             if (baseLayer.Id <= 0 || model.File != null)
             {
-                baseLayer.Geojson = GetGeoJson(model.File);
+                var features = TopologyHelper.GetFeatureCollectionWgs84(model.File);
+                baseLayer.Geojson = TopologyHelper.GetGeojson(features);
                 await dbContext.SaveChangesAsync();
+
                 var baseLayerDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "baseLayer");
                 var destinationFilePath = Path.Combine(baseLayerDirectoryPath, baseLayer.Id + ".zip");
-                IOHelper.StreamCopy(destinationFilePath, model.File);
+                await IOHelper.StreamCopyAsync(destinationFilePath, model.File);
             }
             else
             {
@@ -82,19 +84,6 @@ namespace ReformaAgraria.Controllers
         protected override IQueryable<BaseLayer> ApplyQuery(IQueryable<BaseLayer> query)
         {
             return query;
-        }
-
-        private string GetGeoJson(IFormFile file)
-        {
-            //var tempDirectoryPath = IOHelper.ExtractTempZip(file);
-            //var shapeFilePath = Directory.GetFiles(tempDirectoryPath).FirstOrDefault(fileName => fileName.Contains("shp"));
-            //var features = TopologyHelper.GetFeatureCollectionWgs84(shapefilePath);
-            //var geojson = TopologyHelper.GetGeojson(features);
-            //Directory.Delete(tempDirectoryPath, true);
-
-            var features = TopologyHelper.GetFeatureCollectionWgs84(file);
-            var geojson = TopologyHelper.GetGeojson(features);
-            return geojson;
         }
     }
 }

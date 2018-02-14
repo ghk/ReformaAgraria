@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,13 +8,14 @@ using ReformaAgraria.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace ReformaAgraria.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    //[Authorize(Policy = "Bearer")]
-    public class ToraSubjectController : CrudController<ToraSubject, int>
+    [Authorize(Policy = "Bearer")]
+    public class ToraSubjectController : CrudControllerAsync<ToraSubject, int>
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger<ToraSubjectController> _logger;
@@ -26,7 +28,7 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
         }
 
-        public void Upload(List<ToraObject> toraObjects, ExcelPackage package)
+        public async Task Upload(List<ToraObject> toraObjects, ExcelPackage package)
         {
             using (package)
             {
@@ -206,7 +208,7 @@ namespace ReformaAgraria.Controllers
                     ts.PlantTypes = worksheet.Cells[i, 12].Value != null ? worksheet.Cells[i, 12].Value.ToString().Trim() : "";
                     ts.Notes = worksheet.Cells[i, 13].Value != null ? worksheet.Cells[i, 13].Value.ToString().Trim() : "";
 
-                    Post(ts);
+                    await PostAsync(ts);
                 }
             }
         }

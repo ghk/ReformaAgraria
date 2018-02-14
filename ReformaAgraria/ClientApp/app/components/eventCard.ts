@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { ModalEventCalendarFormComponent } from './modals/eventCalendarForm';
+import { ModalEventFormComponent } from './modals/eventForm';
 
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
@@ -23,14 +23,13 @@ import * as moment from 'moment';
     templateUrl: '../templates/eventCard.html'
 })
 export class EventCardComponent implements OnInit, OnDestroy {
-    eventCalendarModalRef: BsModalRef;
-
+    eventFormModalRef: BsModalRef;
     subscription: Subscription;
+    eventFormSubscription: Subscription;
+    
     region: Region;
     RegionType = RegionType;
-    event: Event;
-    eventCalendarFormSubscription: Subscription;
-
+    event: Event;   
     events: Event[];
 
     constructor(
@@ -83,18 +82,17 @@ export class EventCardComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('event/' + event.id);
     }
 
-    onShowEventCalendarForm(): void {
-        this.eventCalendarModalRef = this.modalService.show(ModalEventCalendarFormComponent, { 'class': 'modal-lg' });
-        this.eventCalendarModalRef.content.setEvent(null, this.region, 'Tambah');
-        if (!this.eventCalendarFormSubscription)
-            this.eventCalendarFormSubscription = this.eventCalendarModalRef.content.isSaveSuccess$.subscribe(error => {
-                if (!error) {
-                    this.getData();
-                    this.eventCalendarFormSubscription.unsubscribe();
-                    this.eventCalendarFormSubscription = null;
-                    this.eventCalendarModalRef.hide();
-                }
-            });
+    onShowEventForm(event: Event): void {
+        this.eventFormModalRef = this.modalService.show(ModalEventFormComponent, { 'class': 'modal-lg' });
+        this.eventFormModalRef.content.setEvent(event);        
+        this.eventFormSubscription = this.eventFormModalRef.content.isSaveSuccess$.subscribe(error => {
+            if (!error) {
+                this.getData();
+                this.eventFormSubscription.unsubscribe();
+                this.eventFormSubscription = null;
+                this.eventFormModalRef.hide();
+            }
+        });
     }
 
 }

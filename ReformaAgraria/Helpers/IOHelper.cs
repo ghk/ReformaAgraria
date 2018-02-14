@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
 
 namespace ReformaAgraria.Helpers
 {
@@ -20,6 +21,15 @@ namespace ReformaAgraria.Helpers
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 file.CopyTo(stream);
+            }
+        }
+
+        public static async Task StreamCopyAsync(string filePath, IFormFile file)
+        {
+            CreateDirectory(filePath);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
             }
         }
 
