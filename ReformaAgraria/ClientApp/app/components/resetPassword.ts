@@ -27,12 +27,14 @@ export class ResetPasswordComponent {
     ) { }
 
     ngOnInit() {
+        console.log('masuk');
         this.route
             .queryParams
             .subscribe(params => {
                 this.model.token = params['token'];
                 this.model.id = params['id'];
                 this.model.email = params['email'];
+                console.log(this.model);
             });
     }
 
