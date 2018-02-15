@@ -1,15 +1,14 @@
 ﻿import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-
 import { ToastrService } from 'ngx-toastr';
-import { AccountService } from '../services/account';
+
+import { AccountService } from '../services/gen/account';
 
 
 @Component({
     selector: 'ra-reset-password',
     templateUrl: '../templates/resetPassword.html'
 })
-
 export class ResetPasswordComponent {
     model: any = {};
     user: any = {};
@@ -27,15 +26,13 @@ export class ResetPasswordComponent {
     ) { }
 
     ngOnInit() {
-        console.log('masuk');
-        this.route
-            .queryParams
-            .subscribe(params => {
+        this.route.queryParams.subscribe(
+            params => {
                 this.model.token = params['token'];
                 this.model.id = params['id'];
                 this.model.email = params['email'];
-                console.log(this.model);
-            });
+            }
+        );
     }
 
     resetPassword() {
@@ -43,17 +40,17 @@ export class ResetPasswordComponent {
         this.showPage = false;
         this.accountService.changePassword(this.model.id, this.model.password)
             .subscribe(
-            data => {
-                this.loading = false;
-                this.showPage = true;
-                this.toastr.success('Password berhasil diubah', null);
-                this.router.navigate(['/account/login']);
-            },
-            error => {
-                this.loading = false;
-                this.showPage = true;
-                this.toastr.error(error, null);
-            });
+                data => {
+                    this.loading = false;
+                    this.showPage = true;
+                    this.toastr.success('Password berhasil diubah', null);
+                    this.router.navigate(['/account/login']);
+                },
+                error => {
+                    this.loading = false;
+                    this.showPage = true;
+                    this.toastr.error(error, null);
+                });
     }
 
     validateResetPasswordForm() {

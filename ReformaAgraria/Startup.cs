@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MicrovacWebCore.Exceptions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Security;
@@ -126,6 +127,12 @@ namespace ReformaAgraria
                 });
             }
 
+            var jsonSerializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
             app.UseExceptionHandler().WithConventions(x =>
             {
                 x.ContentType = "application/json";
@@ -136,14 +143,14 @@ namespace ReformaAgraria
                     {
                         Message = s.Message,
                         StackTrace = s.StackTrace
-                    }));
+                    }, jsonSerializerSettings));
                 }
                 else
                 {
                     x.MessageFormatter(s => JsonConvert.SerializeObject(new RequestResult()
                     {
                         Message = "An error occurred whilst processing your request",
-                    }));
+                    }, jsonSerializerSettings));
                 }
 
                 x.ForException<NotFoundException>().ReturnStatusCode(StatusCodes.Status404NotFound)
@@ -151,7 +158,7 @@ namespace ReformaAgraria
                        JsonConvert.SerializeObject(new RequestResult()
                        {
                            Message = ex.Message
-                       })
+                       }, jsonSerializerSettings)
                    );
 
                 x.ForException<UnauthorizedException>().ReturnStatusCode(StatusCodes.Status403Forbidden)
@@ -159,7 +166,7 @@ namespace ReformaAgraria
                        JsonConvert.SerializeObject(new RequestResult()
                        {
                            Message = ex.Message
-                       })
+                       }, jsonSerializerSettings)
                    );
 
                 x.ForException<BadRequestException>().ReturnStatusCode(StatusCodes.Status400BadRequest)
@@ -170,7 +177,7 @@ namespace ReformaAgraria
                        {
                            Message = exception.Message,
                            Data = exception.Errors
-                       });
+                       }, jsonSerializerSettings);
                    });
 
                 x.ForException<ValidationException>().ReturnStatusCode(StatusCodes.Status400BadRequest)
@@ -181,7 +188,7 @@ namespace ReformaAgraria
                         {
                             Message = exception.Message,
                             Data = exception.Errors
-                        });
+                        }, jsonSerializerSettings);
                     });
             });
 

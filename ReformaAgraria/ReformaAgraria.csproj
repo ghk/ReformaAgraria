@@ -177,11 +177,17 @@
     <None Update="ClientApp\app\models\gen\uploadToraMapViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\UploadToraMapViewModel.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\userViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\UserViewModel.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\villageMapAttribute.ts">
       <CustomToolNamespace>Models\VillageMapAttribute.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\villageProfile.ts">
       <CustomToolNamespace>Models\VillageProfile.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\services\gen\account.ts">
+      <CustomToolNamespace>Controllers\AccountController.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\services\gen\baseLayer.ts">
       <CustomToolNamespace>Controllers\BaseLayerController.cs</CustomToolNamespace>

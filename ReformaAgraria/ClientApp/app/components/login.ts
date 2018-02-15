@@ -1,37 +1,40 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
-import { AlertService } from '../services/alert';
-import { AccountService } from '../services/account';
+import { AccountService } from '../services/gen/account';
+import { LoginViewModel } from '../models/gen/loginViewModel';
 
 @Component({
-    moduleId: 'ra-login',
+    selector: 'ra-login',
     templateUrl: '../templates/login.html'
 })
-
 export class LoginComponent implements OnInit {
-    model: any = {};
+    model: LoginViewModel = {};
+    message: string;
     returnUrl: string;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private accountService: AccountService,
-        private alertService: AlertService,
+        private cookieService: CookieService,
+        private accountService: AccountService,        
     ) { }
 
     ngOnInit() {
-        // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
     login() {
         this.accountService.login(this.model).subscribe(
-            data => {
-                this.router.navigate([this.returnUrl]);
+            resp => {
+                if (resp && resp.data && resp.data.accessToken) {
+                    this.cookieService.set('accessToken', resp.data.accessToken, 30, '/');                 
+                }
+                this.router.navigate([this.returnUrl]);                
             },
-            error => {
-                this.alertService.error(error);
+            error => {                
+                this.message = error.message;
             }
         );
     }

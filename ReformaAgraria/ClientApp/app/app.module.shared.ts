@@ -4,7 +4,7 @@ import 'bootstrap';
 
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
@@ -34,7 +34,6 @@ import { ToraHeaderComponent } from './components/toraHeader';
 import { ToraSummaryComponent } from './components/toraSummary';
 import { ToraListComponent } from './components/toraList';
 import { ToraDetailComponent } from './components/toraDetail';
-import { AlertComponent } from './components/alert';
 import { LoginComponent } from './components/login';
 import { ForgotPasswordComponent } from './components/forgotPassword';
 import { ResetPasswordComponent } from './components/resetPassword';
@@ -52,9 +51,8 @@ import { ModalEventFormComponent } from './components/modals/eventForm';
 import { CookieService } from 'ngx-cookie-service';
 import { EnvironmentService } from './services/environment';
 import { SharedService } from './services/shared';
-import { AlertService } from './services/alert';
-import { AccountService } from './services/account';
 import { AuthGuard } from './services/authGuard';
+import { AccountService } from './services/gen/account';
 import { RegionService } from './services/gen/region';
 import { ToraObjectService } from './services/gen/toraObject';
 import { ToraSubjectService } from './services/gen/toraSubject';
@@ -92,7 +90,6 @@ import './styles/app.scss';
         MapComponent,
         LibraryComponent,
         EventDetailComponent,
-        AlertComponent,
         LoginComponent,        
         ForgotPasswordComponent,
         ResetPasswordComponent,
@@ -118,6 +115,7 @@ import './styles/app.scss';
         HttpModule,
         BrowserModule,
         FormsModule,
+        ReactiveFormsModule,
         ProgressHttpModule,
         CommonModule,
         BrowserAnimationsModule,
@@ -158,7 +156,6 @@ import './styles/app.scss';
         EnvironmentService,
         SharedService,
         CookieService,        
-        AlertService,
         AuthGuard,
         AccountService,        
         RegionService,

@@ -5,16 +5,16 @@ import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
-import { UploadEventDetailViewModel } from '../../models/gen/uploadEventDetailViewModel';
-import { Event } from '../../models/gen/event';
+import { LoginViewModel } from '../../models/gen/loginViewModel';
+import { UserViewModel } from '../../models/gen/userViewModel';
 import { EnvironmentService } from '../../services/environment';
-import { CrudService } from '../../services/crud';
+
 import { RequestHelper } from '../../helpers/request';
 
 import * as urljoin from 'url-join';
 
 @Injectable()
-export class EventService implements CrudService<Event, number>{        
+export class AccountService {        
 
     private serverUrl: string;
    
@@ -24,148 +24,162 @@ export class EventService implements CrudService<Event, number>{
         private environmentService: EnvironmentService) { 
         this.serverUrl = this.environmentService.getEnvironment().serverUrl;
     }
-
-    public getAll(query?: Query, progressListener?: any): Observable<Array<Event>> { 
-        let options = RequestHelper.getRequestOptions(this.cookieService, query);
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'GET',
-            urljoin(this.serverUrl, 'event'),            
-            null,
-            progressListener,
-            null
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-
-    public count(query?: Query, progressListener?: any): Observable<number> { 
-        let options = RequestHelper.getRequestOptions(this.cookieService, query);
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'GET',
-            urljoin(this.serverUrl, 'event', 'count'),
-            null,
-            progressListener,
-            null
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-
-    public getById(id: number, query?: Query, progressListener?: any): Observable<Event> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, query);
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'GET',
-            urljoin(this.serverUrl, 'event', id),
-            null,
-            progressListener,
-            null
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-
-    public createOrUpdate(model: Event, progressListener?: any): Observable<number> {
-        if (!model['id']) {
-            return this.create(model, progressListener);
-        } else if (model['id']) {
-            return this.update(model, progressListener);       
-        }
-    }
-
-    public create(model: Event, progressListener?: any): Observable<number> {
+    
+    public login(model: LoginViewModel, progressListener?: any): Observable<any> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'POST',
-            urljoin(this.serverUrl, 'event'),            
+            urljoin(this.serverUrl, 'account', 'login'),
             model,
             null,
-            progressListener
+            progressListener,
         );
 
         return request.map(res => res.json()).catch(this.handleError);
     }
-
-    public update(model: Event, progressListener?: any): Observable<number> {
+    
+    public register(model: LoginViewModel, progressListener?: any): Observable<any> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'account', 'register'),
+            model,
+            null,
+            progressListener,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public logout(query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'account', 'logout'),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public recoverPassword(model: LoginViewModel, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'account', 'password', 'recover'),
+            model,
+            null,
+            progressListener,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public resetPassword(email: string, token: string, query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'account', 'password', ('reset?email=' + encodeURIComponent(email) + '&token=' + encodeURIComponent(token))),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public changePassword(email: string, model: { [key: string]: string; }, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'account', 'password', 'change', encodeURIComponent(email)),
+            model,
+            null,
+            progressListener,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public getAll(query?: Query, progressListener?: any): Observable<UserViewModel[]> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'account', 'user'),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public getById(id: string, query?: Query, progressListener?: any): Observable<UserViewModel> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'account', 'user', encodeURIComponent(id)),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public deleteById(id: string, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'DELETE',
+            urljoin(this.serverUrl, 'account', 'user', encodeURIComponent(id)),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public updateUserEmail(id: string, model: { [key: string]: string; }, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'PUT',
-            urljoin(this.serverUrl, 'event'),
-            model,
-            null,
-            progressListener
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-
-    public deleteById(id: any, progressListener?: any): Observable<number> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, null);
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'DELETE',
-            urljoin(this.serverUrl, 'event', id),
-            null,
-            null,
-            progressListener
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-    
-    public upload(model: FormData, progressListener?: any): Observable<any> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, null);
-        options.headers.delete('Content-Type');                
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'POST',
-            urljoin(this.serverUrl, 'event', 'upload'),
+            urljoin(this.serverUrl, 'account', 'user', encodeURIComponent(id)),
             model,
             null,
             progressListener,
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-    
-    public getDocumentsNames(id: string, type: string, query?: Query, progressListener?: any): Observable<string[]> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, null);
-                        
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'GET',
-            urljoin(this.serverUrl, 'event', ('documents?id=' + encodeURIComponent(id) + '&type=' + encodeURIComponent(type))),
-            null,
-            progressListener,
-            null,
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-    
-    public deleteAttachment(id: string, attachment: string, progressListener?: any): Observable<any> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, null);
-                        
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'DELETE',
-            urljoin(this.serverUrl, 'event', ('attachments?id=' + encodeURIComponent(id) + '&attachment=' + encodeURIComponent(attachment))),
-            null,
-            progressListener,
-            null,
         );
 
         return request.map(res => res.json()).catch(this.handleError);

@@ -55,7 +55,7 @@ namespace ReformaAgraria.Helpers
             var reader = new ShapefileDataReader(shapefilePath, geometryFactory);
             var features = GetFeatureCollection(reader);
             var projection = GetProjection(shapefilePath);
-            features = TopologyHelper.TransformProjection(features, projection, GeographicCoordinateSystem.WGS84);
+            features = TransformProjection(features, projection, GeographicCoordinateSystem.WGS84);
             features.CRS = new NamedCRS("urn:ogc:def:crs:OGC:1.3:CRS84");
             return features;
         }
@@ -76,19 +76,10 @@ namespace ReformaAgraria.Helpers
                 var shapeStream = new ZipStreamProvider(StreamTypes.Shape, shapeEntry);
                 var indexStream = new ZipStreamProvider(StreamTypes.Index, indexEntry);
                 var dataStream = new ZipStreamProvider(StreamTypes.Data, dbfEntry);
-                IStreamProvider projectionStream = null;
-                IStreamProvider dataEncodingStream = null;
-                IStreamProvider spatialIndexStream = null;
-                IStreamProvider spatialIndexIndexStream = null;
-
-                if (projectionEntry != null)
-                    projectionStream = new ZipStreamProvider(StreamTypes.Projection, projectionEntry);
-                if (dataEncodingEntry != null)
-                    dataEncodingStream = new ZipStreamProvider(StreamTypes.DataEncoding, dataEncodingEntry);
-                if (spatialIndexEntry != null)
-                    spatialIndexStream = new ZipStreamProvider(StreamTypes.SpatialIndex, spatialIndexEntry);
-                if (spatialIndexIndexEntry != null)
-                    spatialIndexIndexStream = new ZipStreamProvider(StreamTypes.SpatialIndexIndex, spatialIndexIndexEntry);
+                var projectionStream = projectionEntry == null ? null : new ZipStreamProvider(StreamTypes.Projection, projectionEntry);
+                var dataEncodingStream = dataEncodingEntry == null ? null : new ZipStreamProvider(StreamTypes.DataEncoding, dataEncodingEntry);
+                var spatialIndexStream = spatialIndexEntry == null ? null : new ZipStreamProvider(StreamTypes.SpatialIndex, spatialIndexEntry);
+                var spatialIndexIndexStream = spatialIndexIndexEntry == null ? null : new ZipStreamProvider(StreamTypes.SpatialIndexIndex, spatialIndexIndexEntry);
 
                 var registry = new ShapefileStreamProviderRegistry(shapeStream, dataStream, indexStream,
                     true, true, true, dataEncodingStream, projectionStream, spatialIndexStream, spatialIndexIndexStream);
@@ -96,7 +87,7 @@ namespace ReformaAgraria.Helpers
                 var reader = new ShapefileDataReader(registry, new GeometryFactory());
                 var features = GetFeatureCollection(reader);
                 var projection = GetProjection(projectionEntry);
-                features = TopologyHelper.TransformProjection(features, projection, GeographicCoordinateSystem.WGS84);
+                features = TransformProjection(features, projection, GeographicCoordinateSystem.WGS84);
                 features.CRS = new NamedCRS("urn:ogc:def:crs:OGC:1.3:CRS84");
                 return features;
             }

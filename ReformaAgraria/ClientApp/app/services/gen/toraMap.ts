@@ -187,7 +187,39 @@ export class ToraMapService implements CrudService<ToraMap, number>{
         return request.catch(this.handleError)
     }
     
+    public calculate(query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'toramap', 'calculate', 'all'),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public calculateById(id: number, query?: Query, progressListener?: any): Observable<any> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+                        
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'GET',
+            urljoin(this.serverUrl, 'toramap', 'calculate', id),
+            null,
+            progressListener,
+            null,
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
     private handleError(error: Response) {
-        return Observable.throw(error);
+        return Observable.throw(error.json());
     }
 }

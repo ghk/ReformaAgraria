@@ -5,64 +5,48 @@
         <main class="col-sm-9 col-md-10 ml-sm-auto pt-4" role="main">
             <div class="card w-100">
                 <div class="card-body">
-                    <div *ngIf="isListUserShown">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="d-flex card-title" style="justify-content: space-between;">
-                                    <h2>Manajemen Akun</h2>
-
-                                    <div class="nav justify-content-end my-2 mr-3">
-                                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalAddUser" title="Tambah Akun"
-                                            (click)="clearForm()">
-                                            <span class="oi oi-plus"></span>
-                                        </button>
-                                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex card-title" style="justify-content: space-between;">
+                                <h2>Manajemen Akun</h2>
+                                <div class="nav justify-content-end my-2 mr-3">
+                                    <button type="button" class="btn btn-outline-primary" title="Tambah Akun" (click)="onShowAddUser(addUserModal)">
+                                        <span class="oi oi-plus"></span>
+                                    </button>
                                 </div>
-                                <table class="table table-responsive-sm table-sm tableAccount">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama</th>
-                                            <th>Email</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngIf="loading">
-                                            <tr>
-                                                <td colspan="12">
-                                                    <div class="col-md-12">
-                                                        <div id="loader"></div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </ng-container>
-                                        <ng-container *ngIf="showPage">
-                                            <tr *ngFor="let user of allUsers">
-                                                <td>{{user.fullName}}</td>
-                                                <td>{{user.email}}</td>
-                                                <td span="2">
-                                                    <div class="dropdown show">
-                                                        <button class="btn btn-link dropdown-toggle" href="javascript:void(0)" title="Ubah Email atau Password" role="button" id="dropdownEditLink"
-                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <span class="oi oi-pencil"></span>
-                                                        </button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownEditLink">
-                                                            <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalEditEmail" (click)="update(user.id, user.email)">Ubah Email</button>
-                                                            <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modalEditPassword" (click)="update(user.id, user.email)">Ubah Password</button>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-link" data-toggle="modal" data-target="#modalDelete" href="javascript:void(0)" title="Hapus" (click)="delete(user.id, user.email)">
-                                                        <span class="oi oi-x"></span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </ng-container>
-                                    </tbody>
-                                </table>
                             </div>
+                            <table class="table table-responsive-sm table-sm tableAccount">
+                                <thead>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th colspan="2"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let user of users">
+                                        <td>{{user.fullName}}</td>
+                                        <td>{{user.email}}</td>
+                                        <td span="2">
+                                            <div class="dropdown show">
+                                                <button class="btn btn-link dropdown-toggle" title="Ubah Email atau Password" role="button" id="dropdownEditLink" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+                                                    <span class="oi oi-pencil"></span>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownEditLink">
+                                                    <button class="dropdown-item" type="button" (click)="onShowEditEmail(editEmailModal, user)">Ubah Email</button>
+                                                    <button class="dropdown-item" type="button" (click)="onShowEditPassword(editPasswordModal, user)">Ubah Password</button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-link" title="Hapus" (click)="onDeleteUser(user)">
+                                                <span class="oi oi-x"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -71,171 +55,125 @@
     </div>
 </div>
 
-<!-- Modal -->
 <!-- modal addUser -->
-<div class="modal fade" id="modalAddUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-
-        <div class="modal-content">
-            <form name="form" class="was-validated" (submit)="isValid && addUser()">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Tambah Pengguna</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <ng-container *ngIf="loadingAddUserModal">
-                    <div class="modal-body">
-                        <div class="col-12">
-                            <div id="loader"></div>
-                        </div>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="showAddUserModal">
-                    <div class="modal-body">
-                        <div class="col-12">
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <label for="email">Nama</label>
-                                    <input type="text" class="form-control" name="name" placeholder="Nama" [(ngModel)]="model.FullName" />
-                                </div>
-
-                                <div class="form-group col-md-12">
-                                    <label for="email">Email</label>
-                                    <input type="text" class="form-control" name="email" placeholder="Email" [(ngModel)]="model.Email" #email="ngModel" required
-                                        (keyup)="validateAddUserForm($event)" />
-                                    <label for="email" id="invalidEmail" *ngIf="invalidEmail.length > 0">{{this.invalidEmail}}</label>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <label for="password">Password</label>
-                                    <input type="password" class="form-control is-invalid" name="password" placeholder="Password" [(ngModel)]="model.Password"
-                                        #password="ngModel" required (keyup)="validateAddUserForm($event)" />
-                                    <label for="password" id="invalidPassword" *ngIf="invalidPassword.length > 0">{{this.invalidPassword}}</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" (click)="showListUser()" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </ng-container>
-            </form>
+<ng-template #addUserModal>
+    <form [formGroup]="addUserForm" (submit)="!addUserForm.invalid && addUser()">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Tambah Pengguna</h5>
+            <button type="button" class="close" aria-label="Close" (click)="addUserModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-    </div>
-</div>
+        <div class="modal-body">
+            <div class="col-12">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="email">Nama</label>
+                        <input type="text" class="form-control" formControlName="fullName" name="name" placeholder="Nama" 
+                            autocomplete="off" [ngClass]="{'is-invalid': fullNameControl.invalid}">
+                        <div class="invalid-feedback" *ngIf="fullNameControl.errors?.required">Nama diperlukan</div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="email">Email</label>
+                        <input type="text" class="form-control" formControlName="email" name="email" placeholder="Email" 
+                            autocomplete="off" [ngClass]="{'is-invalid': emailControl.invalid}">
+                        <div class="invalid-feedback" *ngIf="emailControl.errors?.required">Email diperlukan</div>
+                        <ng-container *ngIf="emailControl.invalid && (emailControl.dirty || emailControl.touched)">
+                            <div class="invalid-feedback" *ngIf="emailControl.errors.email">Email tidak valid</div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" formControlName="password" name="password" placehoder="Password"
+                            autocomplete="off" [ngClass]="{'is-invalid': passwordControl.invalid}">
+                        <div class="invalid-feedback" *ngIf="passwordControl.errors?.required">Password diperlukan</div>
+                        <ng-container *ngIf="passwordControl.invalid && (passwordControl.dirty || passwordControl.touched)">
+                            <div class="invalid-feedback" *ngIf="passwordControl.errors?.minlength">Password terlalu pendek (min 5)</div>
+                        </ng-container>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="confirmPassword">Konfirmasi Password</label>
+                        <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Konfirmasi password"
+                            autocomplete="off" [ngClass]="{'is-invalid': confirmPasswordControl.invalid}">
+                        <div class="invalid-feedback" *ngIf="confirmPasswordControl.errors?.required">Konfirmasi Password diperlukan</div>
+                        <div class="invalid-feedback" *ngIf="confirmPasswordControl.errors?.match">Password dan konfirmasi tidak sama</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="addUserModalRef.hide()">Tutup</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+    </form>
+</ng-template>
 <!-- end modal addUser -->
 
 <!-- start modal change email -->
-<div class="modal fade" id="modalEditEmail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form name="form" class="was-validated" (submit)="isValid && updateUser()">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ganti email</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+<ng-template #editEmailModal>
+    <form [formGroup]="editEmailForm" (submit)="!editEmailForm.invalid && updateUserEmail()">
+        <div class="modal-header">
+            <h5 class="modal-title">Ganti email</h5>
+            <button type="button" class="close" aria-label="Close" (click)="editEmailModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="col-12">
+                <div class="form-group col-md-12">
+                    <label for="newEmail">Email</label>
+                    <input type="text" class="form-control" formControlName="newEmail" name="newEmail" placeholder="Masukkan email baru anda"
+                        autocomplete="off" [ngClass]="{'is-invalid': newEmailControl.invalid}">
+                    <div class="invalid-feedback" *ngIf="newEmailControl.errors?.required">Email diperlukan</div>
+                    <ng-container *ngIf="newEmailControl.invalid && (newEmailControl.dirty || newEmailControl.touched)">
+                        <div class="invalid-feedback" *ngIf="newEmailControl.errors.email">Email tidak valid</div>
+                    </ng-container>
                 </div>
-                <ng-container *ngIf="loadingEditEmailModal">
-                    <div class="modal-body">
-                        <div class="col-12">
-                            <div id="loader"></div>
-                        </div>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="showEditEmailModal">
-                    <div class="modal-body">
-                        <div class="col-12">
-                            <div class="form-row">
-                                <div class="form-group col-md-12 was-validated">
-                                    <label for="newEmail">Email</label>
-                                    <input type="text" class="form-control" onfocus="this.select();" name="newEmail" [(ngModel)]="model.newEmail" #newEmail="ngModel"
-                                        required (keyup)="validateUpdateEmailForm($event)" />
-                                    <small id="changeEmaillHelp" class="form-text text-muted">Masukan email baru anda</small>
-                                    <label for="newEmail" *ngIf="invalidEmail.length > 0">{{this.invalidEmail}}</label>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" (click)="showListUser()" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </ng-container>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="editEmailModalRef.hide()">Tutup</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+    </form>
+</ng-template>
 <!-- end modal change email -->
 
 <!-- start modal change password -->
-<div class="modal fade" id="modalEditPassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form name="form" class="was-validated" (submit)="isValid && changePassword()">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ganti password</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+<ng-template #editPasswordModal>
+    <form [formGroup]="editPasswordForm" (submit)="!editPasswordForm.invalid && updateUserPassword()">
+        <div class="modal-header">
+            <h5 class="modal-title">Ganti password</h5>
+            <button type="button" class="close" aria-label="Close" (click)="editPasswordModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="newPassword">Password Baru</label>
+                    <input type="password" class="form-control" formControlName="newPassword" name="newPassword" placehoder="Password"
+                        autocomplete="off" [ngClass]="{'is-invalid': newPasswordControl.invalid}">
+                    <div class="invalid-feedback" *ngIf="newPasswordControl.errors?.required">Password diperlukan</div>
+                    <ng-container *ngIf="newPasswordControl.invalid && (newPasswordControl.dirty || newPasswordControl.touched)">
+                        <div class="invalid-feedback" *ngIf="newPasswordControl.errors?.minlength">Password terlalu pendek (min 5)</div>
+                    </ng-container>
                 </div>
-                <ng-container *ngIf="loadingChangePasswordModal">
-                    <div class="modal-body">
-                        <div class="col-12">
-                            <div id="loader"></div>
-                        </div>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="showChangePasswordModal">
-                    <div class="modal-body">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="newPassword">Password Baru</label>
-                                <input type="password" class="form-control" name="newPassword" [(ngModel)]="model.newPassword" #password="ngModel" required
-                                    (keyup)="validateUpdatePasswordForm($event)" />
-                                <small id="changePasswordlHelp1" class="form-text text-muted"></small>
-                                <label for="newPassword" *ngIf="invalidPassword.length > 0">{{this.invalidPassword}}</label>
-                            </div>
-                            <div class="form-group">
-                                <label for="confirmPassword">Konfirmasi Password Baru</label>
-                                <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #password="ngModel"
-                                    required (keyup)="validatePasswordMatch($event)" />
-                                <label for="confirmPassword" *ngIf="unmatchedPassword.length > 0">{{this.unmatchedPassword}}</label>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </ng-container>
-            </form>
+                <div class="form-group">
+                    <label for="confirmPassword">Konfirmasi Password Baru</label>
+                    <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Konfirmasi password"
+                        autocomplete="off" [ngClass]="{'is-invalid': confirmNewPasswordControl.invalid}">
+                    <div class="invalid-feedback" *ngIf="confirmNewPasswordControl.errors?.required">Konfirmasi Password diperlukan</div>
+                    <div class="invalid-feedback" *ngIf="confirmNewPasswordControl.errors?.match">Password dan konfirmasi tidak sama</div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="editPasswordModalRef.hide()">Tutup</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+    </form>
+</ng-template>
 <!-- end modal change password -->
-
-<!-- start modal deleteUser -->
-<div class="modal fade" id="modalDelete">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header modal-delete">
-                <h4 class="modal-title">Hapus data?</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-footer modal-delete">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteUser()">Hapus</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- end modal deleteUser -->

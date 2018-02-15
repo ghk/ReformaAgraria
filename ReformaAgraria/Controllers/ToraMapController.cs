@@ -108,7 +108,7 @@ namespace ReformaAgraria.Controllers
             var toraMaps = await dbContext.Set<ToraMap>().ToListAsync();
             foreach (var toraMap in toraMaps)
             {
-                Calculate(toraMap);
+                ToraHelper.CalculateToraMapSize(dbContext, toraMap);
             }
             return Ok(new RequestResult() { Message = "Success" });
         }
@@ -117,13 +117,8 @@ namespace ReformaAgraria.Controllers
         public async Task<IActionResult> CalculateById(int id)
         {
             var toraMap = await dbContext.Set<ToraMap>().FirstOrDefaultAsync(tm => tm.Id == id);
-            Calculate(toraMap);
-            return Ok(new RequestResult() { Message = "Success" });
-        }
-
-        private async Task Calculate(ToraMap toraMap)
-        {
             ToraHelper.CalculateToraMapSize(dbContext, toraMap);
+            return Ok(new RequestResult() { Message = "Success" });
         }
 
         private async Task<FileStreamResult> Download(ToraMap toraMap)
