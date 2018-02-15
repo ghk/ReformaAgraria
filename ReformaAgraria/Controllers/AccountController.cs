@@ -141,24 +141,23 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("password/recover")]
+        [AllowAnonymous]
         public async Task<IActionResult> RecoverPassword([FromBody] LoginViewModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
-            var authorizeResult = await _authorizationService.AuthorizeAsync(User, user, new AccountEditRequirement());
-            if (!authorizeResult.Succeeded)
-                throw new UnauthorizedException();
+            if (user == null)
+                throw new NotFoundException();
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            string resetLink = Request.Scheme + "://" + Request.Host + "/account/password/reset/" + "&id=" + user.Id + "&token=" + token;
+            string resetLink = Request.Scheme + "://" + Request.Host + "/account/resetpassword" + "?id=" + user.Id + "&token=" + token + "&email=" + user.Email;
             string body = "Klik tautan di bawah ini untuk mereset password anda. </br><a href='" + resetLink + "'>Reset Password</a>";
             MailController mc = new MailController(_iconfiguration, _mailLogger);            
             mc.SendEmail("Reset Password", body, new MailAddress(user.Email, user.UserName));
 
             return Ok(new RequestResult() { Message = "Success" });
         }
-
-        [HttpGet("password/reset/{id}/{token}")]
+        
         public async Task<IActionResult> ResetPassword(string id, string token)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -178,12 +177,12 @@ namespace ReformaAgraria.Controllers
         }
 
         [HttpPost("password/change/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> ChangePassword(string id, [FromBody]Dictionary<string, string> data)
         {
             var user = await _userManager.FindByIdAsync(id);
-            var authorizeResult = await _authorizationService.AuthorizeAsync(User, user, new AccountEditRequirement());
-            if (!authorizeResult.Succeeded)
-                throw new UnauthorizedException();
+            if (user == null)
+                throw new NotFoundException();
                         
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, token, data["newPassword"]);
