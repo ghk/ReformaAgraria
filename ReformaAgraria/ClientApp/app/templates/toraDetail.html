@@ -65,7 +65,7 @@
                                     <td scope="row">7</td>
                                     <td>Status Kawasan</td>
                                     <td colspan="3">
-                                        {{toraObject?.regionalStatus ? (RegionalStatus[toraObject?.regionalStatus] | translate) : '-'}}
+                                        {{RegionalStatus[toraObject?.regionalStatus] |translate}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -88,7 +88,7 @@
                                 <tr>
                                     <td scope="row">11</td>
                                     <td>Tahapan</td>
-                                    <td colspan="3">{{toraObject?.status ? (Status[toraObject?.status] | translate) : '-'}}</td>
+                                    <td colspan="3">{{Status[toraObject?.status] | translate}}</td>
                                 </tr>
                                 <tr>
                                     <th scope="col">No</th>
@@ -98,7 +98,7 @@
                                     <td scope="row">1</td>
                                     <td>Status Tanah</td>
                                     <td colspan="2">
-                                        {{toraObject?.landStatus ? (LandStatus[toraObject?.landStatus] | translate) : '-'}}
+                                        {{LandStatus[toraObject?.landStatus] | translate}}
                                     </td>
                                 </tr>
                                 <tr>

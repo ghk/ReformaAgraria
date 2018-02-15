@@ -157,7 +157,7 @@ namespace ReformaAgraria.Helpers
         public static decimal GetArea(FeatureCollection feats)
         {
             var features = feats.Clone();
-            var coordinate = features.Features.FirstOrDefault().Geometry.GetGeometryN(1).Centroid.Coordinate;
+            var coordinate = features.Features.FirstOrDefault().Geometry.Coordinates.FirstOrDefault();
             var zone = 1 + (int)Math.Floor((coordinate.X + 180) / 6);
             var zoneIsNorth = (coordinate.Y * Math.PI / 180) < 0 ? false : true;
             features = TransformProjection(features, GeographicCoordinateSystem.WGS84, ProjectedCoordinateSystem.WGS84_UTM(zone, zoneIsNorth));

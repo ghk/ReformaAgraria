@@ -303,7 +303,7 @@ namespace ReformaAgraria.Controllers
         {
             var toraObjects = await dbContext.Set<ToraObject>().ToListAsync();
             foreach (var toraObject in toraObjects)
-                ToraObjectHelper.Calculate(dbContext, toraObject);
+                ToraHelper.CalculateToraObject(dbContext, toraObject);
             return Ok(new RequestResult() { Message = "Success" });
         }
 
@@ -314,7 +314,7 @@ namespace ReformaAgraria.Controllers
             if (toraObject == null)
                 throw new NotFoundException();
 
-            ToraObjectHelper.Calculate(dbContext, toraObject);
+            ToraHelper.CalculateToraObject(dbContext, toraObject);
             return Ok(new RequestResult() { Message = "Success" });
         }
 
