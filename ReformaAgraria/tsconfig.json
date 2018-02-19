@@ -8,7 +8,7 @@
     "emitDecoratorMetadata": true,
     "skipDefaultLibCheck": true,
     "strict": false,
-    "lib": [ "es6", "dom" ],
+    "lib": [ "es2016", "dom" ],
     "types": [ "webpack-env" ]
   },
   "exclude": [ "bin", "node_modules" ],

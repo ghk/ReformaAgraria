@@ -3,7 +3,7 @@ import 'mousetrap';
 import 'bootstrap';
 
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
@@ -12,7 +12,7 @@ import { ProgressHttpModule } from 'angular-progress-http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { ColorPickerModule } from 'angular4-color-picker';
+import { ColorPickerModule } from 'ngx-color-picker';
 import { NgPipesModule } from 'ngx-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -71,6 +71,9 @@ import { defineLocale } from 'ngx-bootstrap';
 import { id } from './helpers/id';
 defineLocale('id', id);
 
+import localeId from '@angular/common/locales/id';
+registerLocaleData(localeId, 'id');
+
 import './styles/app.scss';
 
 @NgModule({
@@ -93,7 +96,7 @@ import './styles/app.scss';
         LoginComponent,        
         ForgotPasswordComponent,
         ResetPasswordComponent,
-        UserManagementComponent,        
+        UserManagementComponent,     
         ModalToraObjectFormComponent,
         ModalToraSubjectFormComponent,
         ModalUploadToraDocumentComponent,
@@ -167,7 +170,7 @@ import './styles/app.scss';
         EventTypeService,
         LibraryService,
         SearchService,
-        { provide: LOCALE_ID, useValue: 'id-ID' }
+        { provide: LOCALE_ID, useValue: 'id' }
     ]
 })
 export class AppModuleShared {

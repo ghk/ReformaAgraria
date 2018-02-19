@@ -3,12 +3,9 @@
         <div class="d-flex card-title" style="justify-content: space-between;">
             <h4>Detil Kegiatan</h4>
         </div>
-        <ng-container *ngIf="loading">
-            <div id="loader"></div>
-        </ng-container>
-        <table class="table table-responsive-sm" id="table-event-detail" *ngIf="!loading">
+        <table class="table table-responsive-sm" id="table-event-detail">
             <caption>
-                <button type="button" class="btn btn-primary" title="Ubah" (click)="onShowEventForm(null)">
+                <button type="button" class="btn btn-primary" title="Ubah" (click)="onShowEventForm()">
                     <span class="oi oi-pencil" style="margin-right: 10px;"></span>Ubah
                 </button>
             </caption>

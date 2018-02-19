@@ -101,7 +101,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     onShowEventForm(): void {
         this.event.region = this.region;
         this.eventFormModalRef = this.modalService.show(ModalEventFormComponent, { 'class': 'modal-lg' });
-        this.eventFormModalRef.content.setEvent(this.event, null, 'Ubah');
+        this.eventFormModalRef.content.setEvent(this.event);
         if (!this.eventFormSubscription)
             this.eventFormSubscription = this.eventFormModalRef.content.isSaveSuccess$.subscribe(error => {
                 if (!error) {

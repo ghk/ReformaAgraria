@@ -2,23 +2,6 @@
   "ConnectionStrings": {
     "DefaultConnection": "Server=database.neon.microvac;Port=5094;Database=reforma_agraria;User Id=postgres;Password=postgres"
   },
-  "Logging": {
-    "IncludeScopes": false,
-    "Debug": {
-      "LogLevel": {
-        "Default": "Debug",
-        "System": "Information",
-        "Microsoft": "Information"
-      }
-    },
-    "Console": {
-      "LogLevel": {
-        "Default": "Debug",
-        "System": "Information",
-        "Microsoft": "Information"
-      }
-    }
-  },
   "Security": {
     "SecretKey": "microvacmicrovac"
   },

@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const AngularCompilerPlugin = require('@ngtools/webpack').AngularCompilerPlugin;
 const AotPlugin = require('@ngtools/webpack').AotPlugin;
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -18,13 +19,13 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                //{ test: /\.ts$/, include: /ClientApp/, use: isDevBuild ? ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] : ['@ngtools/webpack', 'angular2-template-loader'] },
-                { test: /\.ts$/, include: /ClientApp/, use: ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] },
+                { test: /\.ts$/, include: /ClientApp/, use: isDevBuild ? ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] : ['@ngtools/webpack'] },
+                //{ test: /\.ts$/, include: /ClientApp/, use: ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] },
                 { test: /\.html$/, use: 'html-loader?minimize=false' },
                 { test: /\.css$/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize'] },
                 { test: /\.scss/, include: /ClientApp/, loader: ExtractTextPlugin.extract({fallback: 'style-loader', use: 'css-loader!sass-loader'}) },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' },
-                { test: /\.(png|woff|woff2|eot|otf|ttf|svg)(\?|$)/, use: 'url-loader?limit=100000' }
+                { test: /\.(woff|woff2|eot|otf|ttf)(\?|$)/, use: 'url-loader?limit=100000' }
             ]
         },
         plugins: [
@@ -54,6 +55,12 @@ module.exports = (env) => {
             })            
         ] : [
             // Plugins that apply in production builds only
+            new AngularCompilerPlugin({
+                mainPath: path.join(__dirname, 'ClientApp/boot.browser.ts'),
+                tsConfigPath: './tsconfig.json',
+                entryModule: path.join(__dirname, 'ClientApp/app/app.module.browser#AppModule'),
+                exclude: ['./**/*.server.ts']
+            }),
             new webpack.optimize.UglifyJsPlugin()
             //new AotPlugin({
             //    tsConfigPath: './tsconfig.json',

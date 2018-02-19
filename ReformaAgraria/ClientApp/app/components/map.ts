@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ColorPickerService } from 'angular4-color-picker';
+import { ColorPickerService } from 'ngx-color-picker';
 import { ToastrService } from 'ngx-toastr';
 
 import { SharedService } from "../services/shared";
@@ -44,7 +44,7 @@ export class MapComponent implements OnInit, OnDestroy {
     initialData: any[] = [];
     isOverlayAdded: boolean;
 
-    private color: string = "#127bdc";
+    color: string = "#127bdc";
 
     constructor(
         private baseLayerService: BaseLayerService,
