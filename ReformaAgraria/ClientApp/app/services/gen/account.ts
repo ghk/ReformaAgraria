@@ -96,7 +96,7 @@ export class AccountService {
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'account', 'password', ('reset?email=' + encodeURIComponent(email) + '&token=' + encodeURIComponent(token))),
+            urljoin(this.serverUrl, 'account', 'password', 'reset?email=', encodeURIComponent(email), '&token=', encodeURIComponent(token)),
             null,
             progressListener,
             null,
@@ -186,6 +186,6 @@ export class AccountService {
     }
     
     private handleError(error: Response) {
-        return Observable.throw(error.json());
+        return Observable.throw(error);
     }
 }

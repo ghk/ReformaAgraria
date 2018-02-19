@@ -143,9 +143,9 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
     updateUserEmail(): void {   
         const model = this.editEmailForm.value;  
-        let newEmail = model.newEmail as string;
+        let newEmail = model.newEmail as string;      
 
-        this.accountService.updateUserEmail(this.currentUser.email, {'email': newEmail}).subscribe(
+        this.accountService.updateUserEmail(this.currentUser.id, { 'email': newEmail }).subscribe(
             data => {                
                 this.getAllUser();
                 this.toastr.success('Email berhasil diubah', null);

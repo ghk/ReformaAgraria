@@ -146,7 +146,7 @@ export class EventService implements CrudService<Event, number>{
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'event', ('documents?id=' + encodeURIComponent(id) + '&type=' + encodeURIComponent(type))),
+            urljoin(this.serverUrl, 'event', 'documents?id=', encodeURIComponent(id), '&type=', encodeURIComponent(type)),
             null,
             progressListener,
             null,
@@ -162,7 +162,7 @@ export class EventService implements CrudService<Event, number>{
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, 'event', ('attachments?id=' + encodeURIComponent(id) + '&attachment=' + encodeURIComponent(attachment))),
+            urljoin(this.serverUrl, 'event', 'attachments?id=', encodeURIComponent(id), '&attachment=', encodeURIComponent(attachment)),
             null,
             progressListener,
             null,
@@ -172,6 +172,6 @@ export class EventService implements CrudService<Event, number>{
     }
     
     private handleError(error: Response) {
-        return Observable.throw(error.json());
+        return Observable.throw(error);
     }
 }

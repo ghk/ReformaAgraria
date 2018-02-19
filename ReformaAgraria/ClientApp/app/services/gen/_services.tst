@@ -2,7 +2,6 @@
     using Typewriter.Extensions.WebApi;
     using System.Text;
 
-    static string serviceNamespaces = "ReformaAgraria.Controllers";
     string ServiceName(Class c) => c.Name.Replace("Controller", "Service");
 
     string GetCamelCase(string str) 
@@ -130,24 +129,18 @@
         {
             if (u == "api")
                 continue;
-            if (u.StartsWith("${")) {
-                var neu = u.Remove(0, 2);
-                url += neu.Remove(neu.Length - 1) + ", ";
-            }
-            else {
-                var neu = u.ToLowerInvariant();                
-                var isEncodeURI = neu.Contains("encodeuri");                
-                if (isEncodeURI) {
-                    neu = "('" + neu;
-                    neu = neu.Replace("${encodeuricomponent", "' + encodeURIComponent");
-                    neu = neu.Replace("}", " + '"); // "'" WTF? Bug in typewriter
-                    neu = neu.Remove(neu.Length - 4);
-                    url += neu + "), ";
-                }
-                else
-                    url += "'" + neu + "', ";
-            }
+
+            var neu = u;
+            if (!neu.Contains("{"))
+                neu = neu.ToLowerInvariant();
+
+            neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{(.*)\}\?", "', $1, '?");            
+            neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{encodeURIComponent\((.*?(?=\)))\)\}", "', encodeURIComponent($1), '");
+            neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{(.*)\}", "', $1, '");                       
+            url += "'" + neu + "', ";
         }
+        
+        url = System.Text.RegularExpressions.Regex.Replace(url, @", ''", "");
         url = url.Remove(url.Length - 2);
         return url + ")";
     }
@@ -375,6 +368,6 @@ export class $ServiceName $IsCrudController[implements CrudService<$GetFirstType
     }
     ]
     private handleError(error: Response) {
-        return Observable.throw(error.json());
+        return Observable.throw(error);
     }
-}
+}]

@@ -140,6 +140,6 @@ export class LibraryService implements CrudService<Library, number>{
     }
     
     private handleError(error: Response) {
-        return Observable.throw(error.json());
+        return Observable.throw(error);
     }
 }

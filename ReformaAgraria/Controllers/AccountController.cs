@@ -239,17 +239,17 @@ namespace ReformaAgraria.Controllers
 
         [HttpPut("user/{id}")]
         [Authorize(Policy = "Administrator")]
-        public async Task<IActionResult> UpdateUserEmail(string email, [FromBody]Dictionary<string, string> data)
+        public async Task<IActionResult> UpdateUserEmail(string id, [FromBody]Dictionary<string, string> data)
         {
-            var newEmail = data["email"];
-            var user = await _userManager.FindByEmailAsync(email);
+            var email = data["email"];
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
                 throw new BadRequestException();
 
-            user.Email = newEmail;
-            user.NormalizedEmail = newEmail.ToUpper();
-            user.UserName = newEmail;
-            user.NormalizedUserName = newEmail.ToUpper();
+            user.Email = email;
+            user.NormalizedEmail = email.ToUpper();
+            user.UserName = email;
+            user.NormalizedUserName = email.ToUpper();
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)

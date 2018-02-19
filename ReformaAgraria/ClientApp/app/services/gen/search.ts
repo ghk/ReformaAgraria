@@ -57,6 +57,6 @@ export class SearchService {
     }
     
     private handleError(error: Response) {
-        return Observable.throw(error.json());
+        return Observable.throw(error);
     }
 }
