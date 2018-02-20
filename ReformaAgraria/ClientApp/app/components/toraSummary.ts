@@ -43,6 +43,7 @@ export class ToraSummaryComponent implements OnInit, OnDestroy {
 
     getToraObjectSummary(region: Region) {
         this.toraObjectService.getSummary(region.id).subscribe(data => {
+            console.log(data);
             this.summaries = data;
             this.sharedService.setToraSummary(data);
             this.loading = false;
