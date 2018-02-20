@@ -17,9 +17,9 @@ export class ToraHeaderComponent implements OnInit, OnDestroy {
     totalObjects: number;
     totalSubjects: number;
     totalSize: number;
-    proposal: number;
-    verification: number;
-    act: number;
+    totalProposedObjects: number;
+    totalVerifiedObjects: number;
+    totalActualizedObject: number;
     loading: boolean = false;
 
     constructor(
@@ -35,32 +35,21 @@ export class ToraHeaderComponent implements OnInit, OnDestroy {
             this.totalObjects = 0;
             this.totalSubjects = 0;
             this.totalSize = 0;
+            this.totalProposedObjects = 0;
+            this.totalVerifiedObjects = 0;
+            this.totalActualizedObject = 0;
 
             for (var i = 0; i < this.toraSummary.length; i++) {
                 this.totalObjects += this.toraSummary[i].totalToraObjects;
                 this.totalSubjects += this.toraSummary[i].totalToraSubjects;
                 this.totalSize += this.toraSummary[i].totalSize;
+                this.totalProposedObjects += this.toraSummary[i].totalProposedObjects;
+                this.totalVerifiedObjects += this.toraSummary[i].totalVerifiedObjects;
+                this.totalActualizedObject += this.toraSummary[i].totalActualizedObjects;
             }
-
-            this.regionSubscription = this.sharedService.getRegion().subscribe(region => {
-                let query1 = { data: { 'type': 'getByStatus', 'status': 0 } }
-                this.stagesSubscription = this.toraObjectService.getAll(query1, null).subscribe(data => {
-                    this.proposal = data.length;
-                });
-                let query2 = { data: { 'type': 'getByStatus', 'status': 1 } }
-                this.stagesSubscription = this.toraObjectService.getAll(query2, null).subscribe(data => {
-                    this.verification = data.length;
-                });
-                let query3 = { data: { 'type': 'getByStatus', 'status': 2 } }
-                this.stagesSubscription = this.toraObjectService.getAll(query3, null).subscribe(data => {
-                    this.act = data.length;
-                });
-            }); 
 
             this.loading = false;
         });
-
-        
     }
 
     ngOnDestroy(): void {

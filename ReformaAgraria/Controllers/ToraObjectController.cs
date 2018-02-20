@@ -284,7 +284,10 @@ namespace ReformaAgraria.Controllers
                     Region = children.First(c => c.Id == toraObject.Data.Key),
                     TotalSize = toraObject.Data.Sum(t => t.Size),
                     TotalToraObjects = toraObject.Data.Count(),
-                    TotalToraSubjects = totalToraSubjects
+                    TotalToraSubjects = totalToraSubjects,
+                    TotalProposedObjects = toraObject.Data.Where(x => (int)x.Status == 0).Count(),
+                    TotalVerifiedObjects = toraObject.Data.Where(x => (int)x.Status == 1).Count(),
+                    TotalActualizedObjects = toraObject.Data.Where(x => (int)x.Status == 2).Count()
                 };
 
                 results.Add(dashboardData);
@@ -334,13 +337,6 @@ namespace ReformaAgraria.Controllers
                 query = query.Include(to => to.Region)
                     .Include(to => to.Region.Parent)
                     .Include(to => to.Region.Parent.Parent);
-            }
-
-            if (type == "getByStatus")
-            {
-                var status = GetQueryString<string>("status");
-                if (!string.IsNullOrWhiteSpace(status))
-                    query = query.Where(to => to.Status == (Status)Convert.ToInt32(status));
             }
 
             return query;
