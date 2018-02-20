@@ -12,6 +12,7 @@
     <PackageReference Include="FluentValidation" Version="7.4.0" />
     <PackageReference Include="GlobalExceptionHandler" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     <PackageReference Include="NetTopologySuite.IO" Version="1.15.0-pre035" />
