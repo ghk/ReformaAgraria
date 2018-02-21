@@ -61,7 +61,7 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'toramap', id),
+            urljoin(this.serverUrl, 'toramap', id.toString()),
             null,
             progressListener,
             null
@@ -114,7 +114,7 @@ export class ToraMapService implements CrudService<ToraMap, number>{
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, 'toramap', id),
+            urljoin(this.serverUrl, 'toramap', id.toString()),
             null,
             null,
             progressListener

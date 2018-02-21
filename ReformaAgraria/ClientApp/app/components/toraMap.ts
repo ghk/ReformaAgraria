@@ -16,6 +16,8 @@ import * as L from 'leaflet';
 
 import { ModalToraMapUploadFormComponent } from './modals/toraMapUploadForm';
 import { ModalToraMapDownloadFormComponent } from './modals/toraMapDownloadForm';
+import { BaseLayer } from '../models/gen/baseLayer';
+import { FeatureCollection, GeometryObject } from 'geojson';
 
 const LAYERS = {
     "OpenStreetMap": new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
@@ -59,13 +61,14 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         this.zoom = 10;
         this.options = {
             zoomControl: false,
-            layers: [LAYERS["OpenStreetMap"]]
+            layers: [LAYERS['OpenStreetMap']]
         };
+        this.layersControl.baseLayers = LAYERS;
         
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             this.region = region;
-
-            let baseLayerQuery = {};
+            
+            let baseLayerQuery = { data: { type: 'getAllWithoutGeojson' } };
             this.baseLayerService.getAll(baseLayerQuery, null).subscribe(base => {
                 this.applyOverlayBaseLayer(base);
             });                    
@@ -74,6 +77,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
             this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
                 this.applyOverlayTora(data);
             });     
+
         });
 
         this.toraMapSubscription = this.sharedService.getToraMapReloadedStatus().subscribe(r => {
@@ -93,6 +97,12 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
         this.toraMapSubscription.unsubscribe();
     }    
+
+    getBaseLayer(baseLayer: BaseLayer) {
+        this.baseLayerService.getById(baseLayer.id, null).subscribe(data => {
+            this.layersControl.overlays[data.label] = data.geojson;
+        });
+    }
 
     getToraMaps(region: Region) {
         let query = { data: { 'type': 'getAllByRegion', 'regionId': region.id } }
@@ -160,9 +170,9 @@ export class ToraMapComponent implements OnInit, OnDestroy {
 
         let geoJsonOptions = {
             style: (feature) => {
-                let color = "#000";
-                if (color !== "" && color) {
-                    color = currentColor;
+                let color = currentColor;
+                if (!color) {
+                    color = "#000";
                 }
                 return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
             },     
@@ -176,22 +186,34 @@ export class ToraMapComponent implements OnInit, OnDestroy {
             }
         };      
 
-        return L.geoJSON(JSON.parse(data.geojson), geoJsonOptions);
+        return L.geoJSON(JSON.parse(data.geojson), geoJsonOptions);        
     } 
 
-    getGeoJsonBaseLayer(geoJson, currentColor): L.GeoJSON {
+    getGeoJsonBaseLayer(baseLayer: BaseLayer): L.GeoJSON {
         let geoJsonOptions = {
             style: (feature) => {
-                let color = "#000";
-                if (color !== "" && color) {
-                    color = currentColor;
+                let color = baseLayer.color;
+                if (!color) {
+                    color = "#000"
                 }
                 return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
             },          
             onEachFeature: (feature, layer: L.FeatureGroup) => {               
             }
         };
-        return L.geoJSON(geoJson, geoJsonOptions);
+        
+        let geojsonLayer = L.geoJSON(JSON.parse(baseLayer.geojson), geoJsonOptions);    
+        geojsonLayer.onAdd = (map: L.Map) => {
+            let geojson = geojsonLayer.toGeoJSON() as FeatureCollection<GeometryObject, any>;
+            if (geojson.features.length === 0) {
+                this.baseLayerService.getById(baseLayer.id).subscribe(bl => {                    
+                    geojsonLayer.addData(JSON.parse(bl.geojson));
+                });
+            }
+            return geojsonLayer.eachLayer(map.addLayer, map);
+        };
+
+        return geojsonLayer;
     }
 
     applyOverlayTora(data) {
@@ -202,11 +224,11 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         });
     }
 
-    applyOverlayBaseLayer(data) {
+    applyOverlayBaseLayer(baseLayers: BaseLayer[]) {
         this.layersControl['overlays'] = {};
-        data.forEach(result => {         
-            let geojson = this.getGeoJsonBaseLayer(JSON.parse(result.geojson), result.color);
-            this.layersControl.overlays[result.label] = geojson;
+        baseLayers.forEach(baseLayer => {         
+            let geojson = this.getGeoJsonBaseLayer(baseLayer);
+            this.layersControl.overlays[baseLayer.label] = geojson;
         });
     }       
 }

@@ -10,7 +10,6 @@ using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -92,6 +91,20 @@ namespace ReformaAgraria.Controllers
 
         protected override IQueryable<BaseLayer> ApplyQuery(IQueryable<BaseLayer> query)
         {
+            var type = GetQueryString<string>("type");
+
+            if (type == "getAllWithoutGeojson")
+            {
+                query = query.Select(bl => new BaseLayer
+                {
+                    Id = bl.Id,
+                    Color = bl.Color,
+                    Label = bl.Label,
+                    DateCreated = bl.DateCreated,
+                    DateModified = bl.DateModified
+                });
+            }
+
             return query;
         }
     }

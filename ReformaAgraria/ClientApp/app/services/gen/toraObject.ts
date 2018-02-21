@@ -62,7 +62,7 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'toraobject', id),
+            urljoin(this.serverUrl, 'toraobject', id.toString()),
             null,
             progressListener,
             null
@@ -115,7 +115,7 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, 'toraobject', id),
+            urljoin(this.serverUrl, 'toraobject', id.toString()),
             null,
             null,
             progressListener

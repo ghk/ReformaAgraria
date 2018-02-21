@@ -60,7 +60,7 @@ export class RegionService {
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'region', id),
+            urljoin(this.serverUrl, 'region', id.toString()),
             null,
             progressListener,
             null

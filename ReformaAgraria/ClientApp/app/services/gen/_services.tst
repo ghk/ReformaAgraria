@@ -289,7 +289,7 @@ export class $ServiceName $IsCrudController[implements CrudService<$GetFirstType
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, '$GetLowerFirstType', id),
+            urljoin(this.serverUrl, '$GetLowerFirstType', id.toString()),
             null,
             progressListener,
             null
@@ -342,7 +342,7 @@ export class $ServiceName $IsCrudController[implements CrudService<$GetFirstType
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, '$GetLowerFirstType', id),
+            urljoin(this.serverUrl, '$GetLowerFirstType', id.toString()),
             null,
             null,
             progressListener

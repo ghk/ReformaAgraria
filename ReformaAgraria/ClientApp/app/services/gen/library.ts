@@ -61,7 +61,7 @@ export class LibraryService implements CrudService<Library, number>{
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'library', id),
+            urljoin(this.serverUrl, 'library', id.toString()),
             null,
             progressListener,
             null
@@ -114,7 +114,7 @@ export class LibraryService implements CrudService<Library, number>{
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, 'library', id),
+            urljoin(this.serverUrl, 'library', id.toString()),
             null,
             null,
             progressListener

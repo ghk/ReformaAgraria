@@ -61,7 +61,7 @@ export class EventService implements CrudService<Event, number>{
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'event', id),
+            urljoin(this.serverUrl, 'event', id.toString()),
             null,
             progressListener,
             null
@@ -114,7 +114,7 @@ export class EventService implements CrudService<Event, number>{
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, 'event', id),
+            urljoin(this.serverUrl, 'event', id.toString()),
             null,
             null,
             progressListener
