@@ -69,7 +69,7 @@ export class ModalEventFormComponent implements OnInit, OnDestroy {
     onSaveEvent(): void {   
         this.eventService.createOrUpdate(this.event, null).subscribe(
             result => {
-                this.toastr.success("Event berhasil disimpan");
+                this.toastr.success("Event berhasil disimpan");                
                 this.isSaveSuccess$.next(null);
             },
             error => {

@@ -335,6 +335,11 @@ h1 {
     margin-top: -31px;
 }
 
+.leaflet-left .leaflet-control {
+    display: inline-block;
+    float: none;
+}  
+
 .leaflet-control-layers.leaflet-control.control-right-1 {
     position: relative;
     right: 5px;

@@ -47,6 +47,8 @@ import { ModalToraSubjectFormComponent } from './components/modals/toraSubjectFo
 import { ModalUploadToraDocumentComponent } from './components/modals/uploadToraDocument';
 import { ModalDeleteComponent } from './components/modals/delete';
 import { ModalEventFormComponent } from './components/modals/eventForm';
+import { ModalToraMapUploadFormComponent } from './components/modals/toraMapUploadForm';
+import { ModalToraMapDownloadFormComponent } from './components/modals/toraMapDownloadForm';
 
 import { CookieService } from 'ngx-cookie-service';
 import { EnvironmentService } from './services/environment';
@@ -99,9 +101,11 @@ import './styles/app.scss';
         UserManagementComponent,     
         ModalToraObjectFormComponent,
         ModalToraSubjectFormComponent,
-        ModalUploadToraDocumentComponent,
+        ModalUploadToraDocumentComponent,        
         ModalDeleteComponent,
         ModalEventFormComponent,
+        ModalToraMapUploadFormComponent,
+        ModalToraMapDownloadFormComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
         TranslatePipe     
@@ -111,7 +115,9 @@ import './styles/app.scss';
         ModalToraSubjectFormComponent,
         ModalUploadToraDocumentComponent,
         ModalDeleteComponent,
-        ModalEventFormComponent
+        ModalEventFormComponent,
+        ModalToraMapUploadFormComponent,
+        ModalToraMapDownloadFormComponent
     ],
     imports: [
         LeafletModule,

@@ -1,7 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { saveAs } from 'file-saver';
+
+import { Region } from "../models/gen/region";
+import { ToraMap } from '../models/gen/toraMap';
 
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
@@ -9,17 +12,11 @@ import { ToraMapService } from '../services/gen/toraMap';
 import { ToraObjectService } from '../services/gen/toraObject';
 import { BaseLayerService } from "../services/gen/baseLayer";
 
-import { RegionType } from '../models/gen/regionType';
-import { Region } from "../models/gen/region";
-import { ToraMap } from '../models/gen/toraMap';
-import { ToraObject } from '../models/gen/toraObject';
-import { MapUtils } from '../helpers/mapUtils';
-
 import * as L from 'leaflet';
-import * as $ from 'jquery';
-import { geoJSON } from 'leaflet';
 
-const DATA_SOURCES = 'data';
+import { ModalToraMapUploadFormComponent } from './modals/toraMapUploadForm';
+import { ModalToraMapDownloadFormComponent } from './modals/toraMapDownloadForm';
+
 const LAYERS = {
     "OpenStreetMap": new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
     "OpenTopoMap": new L.TileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'),
@@ -32,40 +29,28 @@ const LAYERS = {
     templateUrl: '../templates/toraMap.html',
 })
 export class ToraMapComponent implements OnInit, OnDestroy {
+    downloadModalRef: BsModalRef;
+    uploadModalRef: BsModalRef;
+
+    subscription: Subscription;
+    toraMapSubscription: Subscription;
+
     region: Region;
-    RegionType = RegionType;
 
     map: L.Map;
     options: any;
     center: any;
     zoom: number;
-    controlOverlayShowing: any;
-    afterInit: boolean;
-    overlays: L.Control.Layers;   
-    layersControl: any ;   
+    layersControl: any = {};   
     layers: L.Layer[] = [];  
-    tora = [];
-    uploadModel: any = {};
-    downloadModel: any = {};
-
-    subscription: Subscription;
-    toraMapSubscription: Subscription;
     
-    kecamatanList: Region[];
-    desaList: Region[];
-    toraObjectList: ToraObject[];
-    toraMapList: ToraMap[];
-
-    kabupaten: Region;
-    kecamatan: Region;
-    desa: Region;
+    toraMaps: ToraMap[] = [];
 
     constructor(
         private toastr: ToastrService,
+        private modalService: BsModalService,
         private sharedService: SharedService,
-        private regionService: RegionService,
         private toraMapService: ToraMapService,
-        private toraObjectService: ToraObjectService,
         private baseLayerService: BaseLayerService
     ) { }
 
@@ -78,15 +63,13 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         };
         
         this.subscription = this.sharedService.getRegion().subscribe(region => {
-            this.resetMap();
+            this.region = region;
 
             let baseLayerQuery = {};
             this.baseLayerService.getAll(baseLayerQuery, null).subscribe(base => {
                 this.applyOverlayBaseLayer(base);
-            });
-                    
-            this.region = region;
-            this.getRegionList(this.region);
+            });                    
+            
             let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': region.id } }
             this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
                 this.applyOverlayTora(data);
@@ -94,13 +77,14 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         });
 
         this.toraMapSubscription = this.sharedService.getToraMapReloadedStatus().subscribe(r => {
-            if (r = true) {
-                let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
-                this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
-                    this.applyOverlayTora(data);
-                    this.sharedService.setToraMapReloadedStatus(false);
-                }); 
-            }    
+            if (!r) 
+                return;
+
+            let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
+            this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
+                this.applyOverlayTora(data);
+                this.sharedService.setToraMapReloadedStatus(false);
+            }); 
         })
     }
 
@@ -108,170 +92,62 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         this.map.remove();
         this.subscription.unsubscribe();
         this.toraMapSubscription.unsubscribe();
-    }
-
-    getRegionList(region: Region) {
-        if (region.type === RegionType.Desa) {      
-            this.desaList = [region];  
-            this.regionService.getById(region.fkParentId, null, null).subscribe(region => {
-                this.kecamatanList = [region];                     
-            });
-        }
-
-        if (region.type === RegionType.Kecamatan) {            
-            this.kecamatanList = [region];
-            let desaQuery = { data: { 'type': 'getAllByParent', 'parentId': region.id } };
-            this.regionService.getAll(desaQuery, null).subscribe(regions => {
-                this.desaList = regions;                
-            });
-        }  
-
-        if (region.type === RegionType.Kabupaten) {
-            let kecamatanQuery = { data: { 'type': 'getAllByParent', 'parentId': region.id } };
-            this.regionService.getAll(kecamatanQuery, null).subscribe(regions => {
-                this.kecamatanList = regions;                
-            });
-        }
-    }
-
-    getDesaList(region: Region) {
-        let desaQuery = { data: { 'type': 'getAllByParent', 'parentId': region.id } }; 
-        this.regionService.getAll(desaQuery, null).subscribe(regions => {
-            this.desaList = regions;
-        })
-    }
-
-    getToraObjectList(region: Region) {
-        let query = { data: { 'type': 'getAllByRegion', 'regionId': region.id } }
-        this.toraObjectService.getAll(query, null).subscribe(data => {
-            this.toraObjectList = data;
-        });
-    }
-
-    getToraMapList(region: Region) {
-        let query = { data: { 'type': 'getAllByRegion', 'regionId': region.id } }
-        this.toraMapService.getAll(query, null).subscribe(data => {
-            this.toraMapList = data;
-        });     
-    }
-
-    onUploadFormChange(region: Region, type: string): void {     
-        if (type === 'kecamatan') { 
-            this.uploadModel.desa = null;                        
-            if (region)
-                this.getDesaList(region);
-        }
-        if (region && type === 'desa') {
-            this.getToraObjectList(region);
-        }
-        this.uploadModel.tora = null;
-        this.uploadModel.file = null;
-    } 
-    
-    onDownloadFormChange(region: Region, type: string): void {
-        if (type === 'kecamatan') {
-            this.downloadModel.desa = null;
-            if (region)
-                this.getDesaList(region);
-        }
-        if (region && type === 'desa') {            
-            this.getToraMapList(region);
-        }
-        this.downloadModel.tora = null;
     }    
 
-    onSubmitUploadForm() {
-        $("#upload-modal")['modal']("hide");        
-        
-        let formData = new FormData();
-        formData.append("toraObjectId", this.uploadModel.tora.id);
-        formData.append("toraObjectName", this.uploadModel.tora.name);
-        formData.append("regionId", this.uploadModel.desa.id);
-        formData.append("file", this.uploadModel.file);
+    getToraMaps(region: Region) {
+        let query = { data: { 'type': 'getAllByRegion', 'regionId': region.id } }
+        this.toraMapService.getAll(query, null).subscribe(data => {
+            this.toraMaps = data;
+        });     
+    }     
 
-        this.toraMapService.upload(formData).subscribe(
-            data => {
-                this.toastr.success("Upload File Berhasil", null);
-                this.sharedService.setToraMapReloadedStatus(true);
-                this.clearModal();
-            },
-            error => {
-                this.toastr.error("Ada kesalahan dalam upload", null);
-            }
-        );
-    }
-
-    onSubmitDownloadForm() {
-        this.toraMapService.downloadByToraObject(this.downloadModel.tora.id).subscribe(data => {
-            let blob = new Blob([data.blob()], { type: 'application/zip' });
-            saveAs(blob, this.downloadModel.tora.id + '.zip');
-        });
-    }
-
-    onSelectFile(file: File) {
-        this.uploadModel.file = file;
-    }
-   
-    clearModal() {      
-        let kecamatan = null;
-        let desa = null;        
-        
-        if (this.region.type === RegionType.Kecamatan) {            
-            kecamatan = this.region;
-        }
-        if (this.region.type === RegionType.Desa) {
-            kecamatan = this.kecamatanList.find(r => r.id === this.region.fkParentId);
-            desa = this.region;
-            if (!this.toraObjectList)
-                this.getToraObjectList(this.region);
-            if (!this.toraMapList)
-                this.getToraMapList(this.region);
-        }
-
-        this.uploadModel = {
-            kecamatan: kecamatan,
-            desa: desa,
-            tora: null
-        };
-        this.downloadModel = {
-            kecamatan: kecamatan,
-            desa: desa,
-            tora: null
-        };
-    }
-
-    resetMap(): void {
-        this.layersControl = {
-            baseLayers: LAYERS,
-            overlays: {}
-        };
-
-        this.layers.forEach(layer => {
-            layer.removeFrom(this.map);
-        })
-    }
-    
     setupControlBar() {
         L.control.zoom({
             position: 'bottomright'
         }).addTo(this.map);
 
-        let button = L.Control.extend({
-            options: {
-                position: 'topleft'
-            },
+        let downloadButton = L.Control.extend({
+            options: { position: 'topleft' },
             onAdd: (map: L.Map) => {
                 let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<button type="button" class="btn btn-outline-secondary btn-sm" style="width:44px; height:44px; padding-top: 0.5rem"><strong><i class="material-icons">library_add</i></strong></button>';
+                div.innerHTML = `
+                    <button type="button" class="btn btn-outline-secondary btn-sm" style="width:44px; height:44px;">
+                        <i class="fa fa-download fa-2x"></i>
+                    </button>
+                `;                
                 div.onclick = (e) => { 
-                    this.clearModal();
-                    $("#upload-modal")['modal']("show");
+                    this.onShowDownloadForm();
                 };
                 return div;
             }
         });
-        this.map.addControl(new button());
+        this.map.addControl(new downloadButton());
+
+        let uploadButton = L.Control.extend({
+            options: { position: 'topleft' },
+            onAdd: (map: L.Map) => {
+                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
+                div.innerHTML = `
+                    <button type="button" class="btn btn-outline-secondary btn-sm" style="width:44px; height:44px;">
+                        <i class="fa fa-upload fa-2x"></i>
+                    </button>                    
+                `;                
+                div.onclick = (e) => { 
+                    this.onShowUploadForm();
+                };
+                return div;
+            }
+        });
+        this.map.addControl(new uploadButton());        
     }  
+
+    onShowDownloadForm(): void {
+        this.modalService.show(ModalToraMapDownloadFormComponent);
+    }
+
+    onShowUploadForm(): void {
+        this.modalService.show(ModalToraMapUploadFormComponent);
+    }
 
     onMapReady(map: L.Map): void {
         this.map = map;
@@ -327,6 +203,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     }
 
     applyOverlayBaseLayer(data) {
+        this.layersControl['overlays'] = {};
         data.forEach(result => {         
             let geojson = this.getGeoJsonBaseLayer(JSON.parse(result.geojson), result.color);
             this.layersControl.overlays[result.label] = geojson;

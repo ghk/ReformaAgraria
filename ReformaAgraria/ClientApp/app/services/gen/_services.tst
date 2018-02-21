@@ -136,7 +136,7 @@
 
             neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{(.*)\}\?", "', $1, '?");            
             neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{encodeURIComponent\((.*?(?=\)))\)\}", "', encodeURIComponent($1), '");
-            neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{(.*)\}", "', $1, '");                       
+            neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{(.*)\}", "', $1.toString(), '");                       
             url += "'" + neu + "', ";
         }
         

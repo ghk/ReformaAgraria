@@ -1,0 +1,47 @@
+<form class="form" (ngSubmit)="onFormSubmit()">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Unggah Peta TORA</h5>
+            <button type="button" class="close" (click)="bsModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="search">Lokasi</label>
+                <div class="col-sm-9">
+                    <input [(ngModel)]="selected" [typeahead]="dataSource" [typeaheadMinLength]="3" [typeaheadItemTemplate]="searchRegionTemplate"
+                        typeaheadOptionField="label" (typeaheadOnSelect)="onSearchSelected($event)" name="search" autocomplete="off"
+                        class="typehead form-control mr-sm-2" type="text" placeholder="Cari Lokasi" aria-label="Search">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="tora">Objek TORA</label>
+                <div class="col-sm-9">
+                    <select class="form-control" [disabled]="!selectedRegionId || toraObjects.length === 0" [(ngModel)]="model.toraObjectId" name="tora">                        
+                        <option *ngFor="let toraObject of toraObjects" [ngValue]="toraObject.id">{{toraObject.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="file">File Peta</label>
+                <div class="col-sm-9">
+                    <input #toraMapFile accept=".zip,.rar,.7z" class="form-control" type="file" name="file" (change)="onSelectFile($event.target.files[0])"
+                        [disabled]="!model.toraObjectId">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="!model.file" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Unggah</button>
+        </div>
+    </div>
+</form>
+
+<ng-template #searchRegionTemplate let-model="item" let-index="index">
+    <div>
+        <span>{{ model.label }}</span>
+        <span style="font-size:0.6rem;" *ngIf="model.type === 0"><i>Kabupaten</i></span>
+        <span style="font-size:0.6rem;" *ngIf="model.type === 1"><i>Kecamatan</i></span>
+        <span style="font-size:0.6rem;" *ngIf="model.type === 2"><i>Desa</i></span>
+    </div>
+</ng-template>

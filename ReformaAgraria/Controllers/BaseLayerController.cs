@@ -1,14 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MicrovacWebCore;
+using MicrovacWebCore.Helpers;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
+using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,6 +31,13 @@ namespace ReformaAgraria.Controllers
         {
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
+        }
+
+        [NotGenerated]
+        [MiddlewareFilter(typeof(CompressPipeline))]
+        public override Task<IList<BaseLayer>> GetAllAsync()
+        {
+            return base.GetAllAsync();
         }
 
         [HttpPost("upload")]

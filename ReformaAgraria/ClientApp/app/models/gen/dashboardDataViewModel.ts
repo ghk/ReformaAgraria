@@ -5,4 +5,7 @@ export interface DashboardDataViewModel {
     totalSize?: number;
     totalToraObjects?: number;
     totalToraSubjects?: number;
+    totalProposedObjects?: number;
+    totalVerifiedObjects?: number;
+    totalActualizedObjects?: number;
 }
