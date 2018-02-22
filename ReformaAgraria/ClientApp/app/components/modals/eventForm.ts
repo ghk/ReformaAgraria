@@ -71,23 +71,29 @@ export class ModalEventFormComponent implements OnInit, OnDestroy {
             if (event == null) {
                 this.event = {};
                 this.event.fkRegionId = this.region.id;
-                this.selected = this.region.name;
-                this.selectedRegion = this.region;
                 this.getEventByLatestEventType(this.region);
-            }
+            } 
+
+            this.selected = this.region.name;
+            this.selectedRegion = this.region;
         });
     }
 
     async getEventByLatestEventType(region: Region) {
+        if (this.event.fkEventTypeId)
+            return; 
+
+        let eventTypes = new EventTypePipe().transform(this.eventTypes, region)
+        this.event.fkEventTypeId = eventTypes[0].id;        
+        
         let eventQuery: Query = { page: 1, perPage: 1, sort: '-fkEventTypeId', data: { 'type': 'getAllByRegion', 'regionId': region.id } }
         let events = await this.eventService.getAll(eventQuery, null).toPromise();
-        if (!this.event.fkEventTypeId)
-            this.event.fkEventTypeId = new EventTypePipe().transform(this.eventTypes, region)[0].id;        
-        if (events.length === 0) return;        
-        for (let i = 0; i < this.eventTypes.length; i++) {
-            if (this.eventTypes[i].id == events[0].fkEventTypeId) {
-                if ((i + 1) <= this.eventTypes.length - 1) {
-                    this.event.fkEventTypeId = this.eventTypes[i + 1].id;
+        
+        if (events.length === 0) return;                
+        for (let i = 0; i < eventTypes.length; i++) {
+            if (eventTypes[i].id == events[0].fkEventTypeId) {
+                if ((i + 1) <= eventTypes.length - 1) {
+                    this.event.fkEventTypeId = eventTypes[i + 1].id;
                     break;
                 }
             }
