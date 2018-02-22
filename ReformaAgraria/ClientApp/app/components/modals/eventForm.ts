@@ -51,10 +51,12 @@ export class ModalEventFormComponent implements OnInit, OnDestroy {
             this.eventTypes = eventTypes;
             
             this.regionSubscription = this.sharedService.getRegion().subscribe(region => {
-                this.event.fkRegionId = region.id;
-                this.selected = region.name;
-                this.selectedRegion = region;            
-                this.getEventByLatestEventType(region);
+                if (!this.event.fkRegionId) {
+                    this.event.fkRegionId = region.id;
+                    this.selected = region.name;
+                    this.selectedRegion = region;
+                    this.getEventByLatestEventType(region);
+                }            
             });
         });
 
@@ -70,9 +72,8 @@ export class ModalEventFormComponent implements OnInit, OnDestroy {
     getEventByLatestEventType(region: Region): void {
         let eventQuery: Query = { page: 1, perPage: 1, sort: '-fkEventTypeId', data: { 'type': 'getAllByRegion', 'regionId': region.id } }
         this.eventService.getAll(eventQuery, null).subscribe(events => {        
-            if (events.length === 0)
-                return;
-            
+            if (events.length === 0) return;    
+                    
             for(let i = 0; i < this.eventTypes.length; i++) {
                 if (this.eventTypes[i].id == events[0].fkEventTypeId) {                    
                     if ((i + 1) <= this.eventTypes.length - 1) {

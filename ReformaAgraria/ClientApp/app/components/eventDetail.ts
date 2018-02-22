@@ -75,8 +75,10 @@ export class EventDetailComponent implements OnInit, OnDestroy {
             this.event.endDate = moment.utc(this.event.endDate).local().toDate();
             this.getAttachment(id);
             this.getPhotos(id);
+
             this.regionService.getById(event.fkRegionId, null, null).subscribe(region => {
-                this.region = region;
+                this.region = region;               
+                this.sharedService.setRegion(region);
             });
         })
     }
