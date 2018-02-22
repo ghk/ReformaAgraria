@@ -2,6 +2,6 @@
 
 export interface SearchViewModel { 
     label?: string;
-    value?: string;
+    value?: any;
     type?: SearchType;
 }

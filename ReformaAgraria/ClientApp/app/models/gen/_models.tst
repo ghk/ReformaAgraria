@@ -42,7 +42,7 @@
             return "";
 
 		List<string> neededImports = c.Properties
-			.Where(p => (!p.Type.IsPrimitive || p.Type.IsEnum) && (p.Type.Name != "IFormFile"))
+			.Where(p => (!p.Type.IsPrimitive || p.Type.IsEnum) && p.Type.Name != "IFormFile" && p.Type.Name != "any")
 			.Select(p => "import { " + p.Type.Name.TrimEnd('[',']') + " } from './" + p.Type.name.TrimEnd('[',']') + "';")
 			.ToList();			
 		if (c.BaseClass != null) {

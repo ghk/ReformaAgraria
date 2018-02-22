@@ -9,10 +9,30 @@
 <div class="modal-body">
     <form (ngSubmit)="onSaveEvent()">
         <div class="form-group row">
+            <label for="location" class="col-sm-2 col-form-label">Lokasi</label>
+            <div class="col-sm-10">
+                <input [(ngModel)]="selected"
+                        [typeahead]="dataSource"
+                        [typeaheadMinLength]="3"
+                        [typeaheadItemTemplate]="searchRegionTemplate"
+                        typeaheadOptionField="label"
+                        (typeaheadOnSelect)="onSearchSelected($event)"
+                        name="search"
+                        autocomplete="off"
+                        class="typehead form-control mr-sm-2"
+                        type="text"
+                        placeholder="Cari Lokasi"
+                        aria-label="Search">
+            </div>
+        </div>
+        <div class="form-group row">
             <label for="title" class="col-sm-2 col-form-label">Tipe</label>
             <div class="col-sm-10">
                 <select class="form-control" [(ngModel)]="event.fkEventTypeId" name="eventType">
-                    <option *ngFor="let eventType of eventTypes" [ngValue]="eventType.id">{{eventType.id}} - {{eventType.name}}</option>
+                    <option *ngFor="let eventType of (eventTypes | eventType:selectedRegion)" [ngValue]="eventType.id"
+                        [selected]="!event.fkEventTypeId && latestEventType && latestEventType.id === eventType.id">
+                        {{eventType.id}} - {{eventType.name}}
+                    </option>
                 </select>
             </div>
         </div>
@@ -20,7 +40,7 @@
             <label for="description" class="col-sm-2 col-form-label">Deskripsi</label>
             <div class="col-sm-10">
                 <textarea type="text" class="form-control" name="description" rows="5" [(ngModel)]="event.description">
-                    </textarea>
+                </textarea>
             </div>
         </div>
         <div class="form-group row">
@@ -42,24 +62,7 @@
             <div class="col-sm-2">
                 <timepicker [(ngModel)]="event.endDate" [showMeridian]="false" name="endTime"></timepicker>
             </div>
-        </div>
-        <div class="form-group row">
-            <label for="location" class="col-sm-2 col-form-label">Lokasi</label>
-            <div class="col-sm-10">
-                <input [(ngModel)]="selected"
-                       [typeahead]="dataSource"
-                       [typeaheadMinLength]="3"
-                       [typeaheadItemTemplate]="searchRegionTemplate"
-                       typeaheadOptionField="label"
-                       (typeaheadOnSelect)="onSearchSelected($event)"
-                       name="search"
-                       autocomplete="off"
-                       class="typehead form-control mr-sm-2"
-                       type="text"
-                       placeholder="Cari Lokasi"
-                       aria-label="Search">
-            </div>
-        </div>
+        </div>       
         <div class="form-group row">
             <label for="resultDescription" class="col-sm-2 col-form-label">Uraian Hasil</label>
             <div class="col-sm-10">

@@ -23,11 +23,15 @@ import { Region } from "../../models/gen/region";
 })
 export class ModalEventFormComponent implements OnInit, OnDestroy {
     progress: Progress;
-    subscription: Subscription;
-    
+    regionSubscription: Subscription;
+
+    region: Region;
     event: Event = {};
     eventTypes: EventType[];
+    latestEventType: EventType;
+
     selected: any;
+    selectedRegion: Region;
     dataSource: any;
 
     private isSaveSuccess$: ReplaySubject<any> = new ReplaySubject(1);
@@ -42,16 +46,42 @@ export class ModalEventFormComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        let eventTypeQuery: Query = { data: { 'type': 'getAllByRegionType', 'regionType': 2 } };
+        let eventTypeQuery: Query = { sort: 'id', data: { 'type': 'getAllByRegionType', 'regionType': 2 } };
         this.eventTypeService.getAll(eventTypeQuery, null).subscribe(eventTypes => {
             this.eventTypes = eventTypes;
+            
+            this.regionSubscription = this.sharedService.getRegion().subscribe(region => {
+                this.event.fkRegionId = region.id;
+                this.selected = region.name;
+                this.selectedRegion = region;            
+                this.getEventByLatestEventType(region);
+            });
         });
+
         this.dataSource = Observable.create((observer: any) => { observer.next(this.selected); })
             .switchMap((keywords: string) => this.searchService.searchRegion(keywords))
             .catch((error: any) => { console.log(error); return []; });
     }
 
     ngOnDestroy(): void {
+        this.regionSubscription.unsubscribe();
+    }
+
+    getEventByLatestEventType(region: Region): void {
+        let eventQuery: Query = { page: 1, perPage: 1, sort: '-fkEventTypeId', data: { 'type': 'getAllByRegion', 'regionId': region.id } }
+        this.eventService.getAll(eventQuery, null).subscribe(events => {        
+            if (events.length === 0)
+                return;
+            
+            for(let i = 0; i < this.eventTypes.length; i++) {
+                if (this.eventTypes[i].id == events[0].fkEventTypeId) {                    
+                    if ((i + 1) <= this.eventTypes.length - 1) {
+                        this.latestEventType = this.eventTypes[i + 1]
+                        break;
+                    }
+                }                    
+            }
+        });
     }
     
     setEvent(event: Event): void {
@@ -62,8 +92,9 @@ export class ModalEventFormComponent implements OnInit, OnDestroy {
     }
 
     onSearchSelected(model: any) {
-        let svm: SearchViewModel = model.item;
-        this.event.fkRegionId = svm.value;
+        let svm: SearchViewModel = model.item;        
+        this.selectedRegion = svm.value;
+        this.event.fkRegionId = svm.value.id;
     }
 
     onSaveEvent(): void {   

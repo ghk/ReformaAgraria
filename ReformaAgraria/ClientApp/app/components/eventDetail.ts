@@ -17,7 +17,6 @@ import { Event } from '../models/gen/event';
 import { FormHelper } from '../helpers/form';
 import { Region } from "../models/gen/region";
 import { RegionType } from "../models/gen/regionType";
-import { SearchViewModel } from '../models/gen/searchViewModel';
 import { EventType } from "../models/gen/eventType";
 import { Query } from '../models/query';
 

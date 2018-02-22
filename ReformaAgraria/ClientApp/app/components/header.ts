@@ -57,7 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (svm.type === 3)
             this.router.navigateByUrl('toradetail/' + svm.value);
         else {
-            let regionId = svm.value.replace(/\./g, '_');
+            let regionId = svm.value.id.replace(/\./g, '_');
             this.router.navigateByUrl('home/' + regionId);
         }
     }

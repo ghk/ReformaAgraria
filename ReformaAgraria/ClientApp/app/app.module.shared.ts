@@ -69,6 +69,7 @@ import { SearchService } from './services/gen/search';
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
 import { TranslatePipe } from './pipes/translate';
+import { EventTypePipe } from './pipes/eventType';
 
 import { defineLocale } from 'ngx-bootstrap';
 import { id } from './helpers/id';
@@ -110,7 +111,8 @@ import './styles/app.scss';
         ModalBaseLayerUploadFormComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
-        TranslatePipe     
+        TranslatePipe,
+        EventTypePipe
     ],
     entryComponents: [
         ModalToraObjectFormComponent,

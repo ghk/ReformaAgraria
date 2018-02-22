@@ -67,7 +67,7 @@ export class ModalToraMapDownloadFormComponent implements OnInit, OnDestroy {
 
     onSearchSelected(model: any) {
         let svm: SearchViewModel = model.item;
-        this.selectedRegionId = svm.value;
+        this.selectedRegionId = svm.value.id;
         this.getToraMaps();
     }
 

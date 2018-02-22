@@ -141,7 +141,6 @@ export class ToraListComponent implements OnInit, OnDestroy {
     }
 
     progressListener(progress: Progress) {
-        console.log(progress);
         this.progress = progress;
     }
 }
