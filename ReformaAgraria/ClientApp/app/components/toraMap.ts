@@ -149,7 +149,10 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     }
 
     applyOverlayBaseLayer(baseLayers: BaseLayer[]) {
+        for (var key in this.layersControl.overlays)
+            this.map.removeLayer(this.layersControl.overlays[key]);
         this.layersControl.overlays = {};
+
         baseLayers.forEach(baseLayer => {         
             let geojson = MapHelper.getGeojsonBaseLayer(baseLayer, this.baseLayerService);
             this.layersControl.overlays[baseLayer.label] = geojson;

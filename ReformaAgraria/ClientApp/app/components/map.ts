@@ -102,7 +102,10 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     applyBaseLayerOverlay(baseLayers: BaseLayer[]) {
+        for (var key in this.layersControl.overlays)
+            this.map.removeLayer(this.layersControl.overlays[key]);
         this.layersControl.overlays = {};
+        
         baseLayers.forEach(baseLayer => {
             let geojson = MapHelper.getGeojsonBaseLayer(baseLayer, this.baseLayerService)
             let innerHTML = `
