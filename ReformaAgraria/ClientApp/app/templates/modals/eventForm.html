@@ -6,7 +6,7 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="modal-body">
+<div class="modal-body"> 
     <form (ngSubmit)="onSaveEvent()">
         <div class="form-group row">
             <label for="location" class="col-sm-2 col-form-label">Lokasi</label>
@@ -29,18 +29,10 @@
             <label for="title" class="col-sm-2 col-form-label">Tipe</label>
             <div class="col-sm-10">
                 <select class="form-control" [(ngModel)]="event.fkEventTypeId" name="eventType">
-                    <option *ngFor="let eventType of (eventTypes | eventType:selectedRegion)" [ngValue]="eventType.id"
-                        [selected]="!event.fkEventTypeId && latestEventType && latestEventType.id === eventType.id">
+                    <option *ngFor="let eventType of (eventTypes | eventType:selectedRegion)" [ngValue]="eventType.id">
                         {{eventType.id}} - {{eventType.name}}
                     </option>
                 </select>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="description" class="col-sm-2 col-form-label">Deskripsi</label>
-            <div class="col-sm-10">
-                <textarea type="text" class="form-control" name="description" rows="5" [(ngModel)]="event.description">
-                </textarea>
             </div>
         </div>
         <div class="form-group row">
@@ -64,13 +56,20 @@
             </div>
         </div>       
         <div class="form-group row">
+            <label for="description" class="col-sm-2 col-form-label">Deskripsi</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control" name="description" rows="5" [(ngModel)]="event.description">
+                </textarea>
+            </div>
+        </div>      
+        <div class="form-group row" *ngIf="event.id">
             <label for="resultDescription" class="col-sm-2 col-form-label">Uraian Hasil</label>
             <div class="col-sm-10">
                 <textarea type="text" class="form-control" name="resultDescription" rows="5" [(ngModel)]="event.resultDescription">
                 </textarea>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="event.id">
             <label for="attendees" class="col-sm-2 col-form-label">Daftar Peserta</label>
             <div class="col-sm-10">
                 <textarea type="text" class="form-control" name="attendees" rows="5" [(ngModel)]="event.attendees">

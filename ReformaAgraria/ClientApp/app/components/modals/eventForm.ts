@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import { Observable, BehaviorSubject, Subscription } from "rxjs";
+import { Observable, BehaviorSubject, Subscription, Subject } from "rxjs";
 import { BsModalRef } from "ngx-bootstrap";
 import { ToastrService } from "ngx-toastr";
 import { Progress } from "angular-progress-http";
@@ -15,7 +15,9 @@ import { Event } from "../../models/gen/event";
 import { SearchViewModel } from "../../models/gen/searchViewModel";
 import { Query } from "../../models/query";
 import { Region } from "../../models/gen/region";
+import { EventTypePipe } from "../../pipes/eventType";
 
+import 'rxjs/add/operator/toPromise';
 
 @Component({
     selector: 'modal-event-form',
@@ -24,11 +26,12 @@ import { Region } from "../../models/gen/region";
 export class ModalEventFormComponent implements OnInit, OnDestroy {
     progress: Progress;
     regionSubscription: Subscription;
+    eventSubscription: Subscription;
 
     region: Region;
     event: Event = {};
+    event$: ReplaySubject<Event> = new ReplaySubject(1);
     eventTypes: EventType[];
-    latestEventType: EventType;
 
     selected: any;
     selectedRegion: Region;
@@ -45,70 +48,73 @@ export class ModalEventFormComponent implements OnInit, OnDestroy {
         private searchService: SearchService
     ) { }
 
-    ngOnInit(): void {
-        let eventTypeQuery: Query = { sort: 'id', data: { 'type': 'getAllByRegionType', 'regionType': 2 } };
-        this.eventTypeService.getAll(eventTypeQuery, null).subscribe(eventTypes => {
-            this.eventTypes = eventTypes;
-            
-            this.regionSubscription = this.sharedService.getRegion().subscribe(region => {
-                if (!this.event.fkRegionId) {
-                    this.event.fkRegionId = region.id;
-                    this.selected = region.name;
-                    this.selectedRegion = region;
-                    this.getEventByLatestEventType(region);
-                }            
-            });
+    ngOnInit(): void {       
+        this.regionSubscription = this.sharedService.getRegion().subscribe(region => {
+            this.region = region;
+            this.init();
         });
 
         this.dataSource = Observable.create((observer: any) => { observer.next(this.selected); })
             .switchMap((keywords: string) => this.searchService.searchRegion(keywords))
-            .catch((error: any) => { console.log(error); return []; });
+            .catch((error: any) => { return []; });
     }
 
     ngOnDestroy(): void {
         this.regionSubscription.unsubscribe();
+        this.eventSubscription.unsubscribe();
     }
 
-    getEventByLatestEventType(region: Region): void {
-        let eventQuery: Query = { page: 1, perPage: 1, sort: '-fkEventTypeId', data: { 'type': 'getAllByRegion', 'regionId': region.id } }
-        this.eventService.getAll(eventQuery, null).subscribe(events => {        
-            if (events.length === 0) return;    
-                    
-            for(let i = 0; i < this.eventTypes.length; i++) {
-                if (this.eventTypes[i].id == events[0].fkEventTypeId) {                    
-                    if ((i + 1) <= this.eventTypes.length - 1) {
-                        this.latestEventType = this.eventTypes[i + 1]
-                        break;
-                    }
-                }                    
+    async init() {
+        this.eventTypes = await this.eventTypeService.getAll(null, null).toPromise();
+        this.eventSubscription = this.event$.subscribe(async (event) => {
+            this.event = event;          
+            if (event == null) {
+                this.event = {};
+                this.event.fkRegionId = this.region.id;
+                this.selected = this.region.name;
+                this.selectedRegion = this.region;
+                this.getEventByLatestEventType(this.region);
             }
         });
     }
-    
+
+    async getEventByLatestEventType(region: Region) {
+        let eventQuery: Query = { page: 1, perPage: 1, sort: '-fkEventTypeId', data: { 'type': 'getAllByRegion', 'regionId': region.id } }
+        let events = await this.eventService.getAll(eventQuery, null).toPromise();
+        if (!this.event.fkEventTypeId)
+            this.event.fkEventTypeId = new EventTypePipe().transform(this.eventTypes, region)[0].id;        
+        if (events.length === 0) return;        
+        for (let i = 0; i < this.eventTypes.length; i++) {
+            if (this.eventTypes[i].id == events[0].fkEventTypeId) {
+                if ((i + 1) <= this.eventTypes.length - 1) {
+                    this.event.fkEventTypeId = this.eventTypes[i + 1].id;
+                    break;
+                }
+            }
+        }
+    }
+
     setEvent(event: Event): void {
-        if (!event)
-            return;
-        this.event = JSON.parse(JSON.stringify(event));
-        this.selected = this.event.region.name;                
+        this.event$.next(JSON.parse(JSON.stringify(event)));
     }
 
     onSearchSelected(model: any) {
-        let svm: SearchViewModel = model.item;        
+        let svm: SearchViewModel = model.item;
         this.selectedRegion = svm.value;
         this.event.fkRegionId = svm.value.id;
     }
 
-    onSaveEvent(): void {   
+    onSaveEvent(): void {
         this.eventService.createOrUpdate(this.event, null).subscribe(
             result => {
-                this.toastr.success("Event berhasil disimpan");                
+                this.toastr.success("Event berhasil disimpan");
                 this.isSaveSuccess$.next(null);
             },
             error => {
                 this.toastr.error("Ada kesalahan dalam penyimpanan");
                 this.isSaveSuccess$.next(error);
             }
-        );        
+        );
     }
 
     progressListener(progress: Progress) {

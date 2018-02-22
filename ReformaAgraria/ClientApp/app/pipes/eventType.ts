@@ -8,7 +8,6 @@ import { Region } from "../models/gen/region";
 })
 export class EventTypePipe implements PipeTransform {
     transform(items: EventType[], region: Region): EventType[] {
-        console.log(region);
         if (!items || items.length === 0 || !region)
             return items;
         return items.filter(item => item.regionType == region.type);

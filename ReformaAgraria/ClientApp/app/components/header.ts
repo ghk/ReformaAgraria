@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         this.dataSource = Observable.create((observer: any) => { observer.next(this.selected); })
             .switchMap((keywords: string) => this.searchService.search(keywords))
-            .catch((error: any) => { console.log(error); return []; });
+            .catch((error: any) => { return []; });
     }
 
     ngOnDestroy(): void {
