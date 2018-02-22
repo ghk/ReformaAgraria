@@ -1,5 +1,4 @@
 ﻿import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ColorPickerService } from 'ngx-color-picker';
 import { ToastrService } from 'ngx-toastr';
 
 import { SharedService } from "../services/shared";
@@ -10,12 +9,15 @@ import { ToraObjectService } from "../services/gen/toraObject";
 
 import { ToraMap } from "../models/gen/toraMap";
 import { BaseLayer } from '../models/gen/baseLayer';
-import { UploadBaseLayerViewModel } from "../models/gen/uploadBaseLayerViewModel";
-import { MapUtils } from '../helpers/mapUtils';
+import { MapHelper } from '../helpers/map';
 
 import * as L from 'leaflet';
 import * as $ from 'jquery';
-
+import { BsModalRef, BsModalService } from "ngx-bootstrap";
+import { ModalBaseLayerUploadFormComponent } from "./modals/baseLayerUploadForm";
+import { ModalDeleteComponent } from "./modals/delete";
+import { Subscription } from "rxjs";
+import { UploadBaseLayerViewModel } from "../models/gen/uploadBaseLayerViewModel";
 
 const DATA_SOURCES = 'data';
 const LAYERS = {
@@ -27,32 +29,29 @@ const LAYERS = {
 
 @Component({
     selector: 'ra-map',
-    templateUrl: '../templates/map.html',
+    templateUrl: '../templates/map.html'
 })
 export class MapComponent implements OnInit, OnDestroy {
+    baseLayerUploadModalRef: BsModalRef;
+    uploadSubscription: Subscription;
+    deleteModalRef: BsModalRef;
+    deleteSubscription: Subscription;
+
     map: L.Map;
-    geoJSONLayer: L.GeoJSON;
     options: any;
     center: any;
     zoom: number;
-    layers: any[] = [];
-    controlOverlayShowing: any;
-    afterInit: boolean;
-    overlays: L.Control.Layers;
-    model: any = {};
-    markers = [];
-    initialData: any[] = [];
+
+    layersControl: any = {};
+    layers: L.Layer[] = [];
     isOverlayAdded: boolean;
 
-    color: string = "#127bdc";
-
     constructor(
-        private baseLayerService: BaseLayerService,
         private toastr: ToastrService,
-        private cpService: ColorPickerService,
+        private modalService: BsModalService,
         private sharedService: SharedService,
+        private baseLayerService: BaseLayerService,
         private toraMapService: ToraMapService,
-        private toraObjectService: ToraObjectService,
         private regionService: RegionService
     ) { }
 
@@ -60,7 +59,7 @@ export class MapComponent implements OnInit, OnDestroy {
         if (!this.sharedService.region) {
             this.regionService.getById('72.1').subscribe(region => {
                 this.sharedService.setRegion(region);
-            })
+            });
         };
 
         this.center = L.latLng(-1.374581, 119.977618);
@@ -68,256 +67,121 @@ export class MapComponent implements OnInit, OnDestroy {
         this.options = {
             zoomControl: false,
             layers: [LAYERS["OpenStreetMap"]]
-        };        
+        };
+        this.layersControl.baseLayers = LAYERS;
 
-        let baseLayerQuery = {};
-        this.baseLayerService.getAll(baseLayerQuery, null).subscribe(data => {
-            this.applyOverlay(data);
-        });
-
-        let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': '72.1' } }
-        this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
-            this.applyOverlayTora(data);
-        });   
+        this.getBaseLayers();
+        this.getToraMaps();
     }
 
     ngOnDestroy() {
         this.map.remove();
+        if (this.deleteSubscription)
+            this.deleteSubscription.unsubscribe();
+        $('#map').off('click', '.overlay-action', this.onClickOverlayAction);
+    }
+    
+    onMapReady(map: L.Map): void {
+        this.map = map;
+        this.setupControlBar();
+        $('#map').on('click', '.overlay-action', this.onClickOverlayAction);
     }
 
-    applyOverlay(data: BaseLayer[]) {   
-        data.forEach(result => {
-            let geojson = this.getGeoJson(JSON.parse(result.geojson), result.color);
-            let innerHtml = `
-            <a href="javascript:void(0)">
-                <span class="oi oi-x overlay-action" id="delete" style="float:right; padding-right:10px;" data-value="${result.id}"></span>
-            </a>
-            <a href="javascript:void(0)">
-                <span class="oi oi-pencil overlay-action" id="edit" style="float:right;margin-right:10px" data-value="${result.id}"></span>
-            </a>                     
-            `;            
-            let layer = this.overlays.addOverlay(geojson, `${result.label} ${innerHtml}`);
-            this.layers.push({ id: result.id, layer: geojson });
-            this.initialData.push(result);
-        });
-
-        this.isOverlayAdded = true;
-    }
-
-    applyOverlayTora(data: ToraMap[]): void {
-        data.forEach(result => {
-            let geojson = this.getGeoJsonTora(result, '#FF0000');
+    getBaseLayers(): void {
+        let baseLayerQuery = { data: { type: 'getAllWithoutGeojson' } };
+        this.baseLayerService.getAll(baseLayerQuery, null).subscribe(data => {
+            this.applyBaseLayerOverlay(data);
         });
     }
 
-    getGeoJsonTora(data: ToraMap, currentColor): any {
-        let geoJsonOptions = {
-            style: (feature) => {
-                let color = "#000";
-                if (color !== "" && color) {
-                    color = currentColor;
-                }
-                return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
-            },            
-            onEachFeature: (feature, layer: L.FeatureGroup) => {
-                layer.bindPopup('<table class=\'table table-sm\'><thead><tr><th colspan=3 style=\'text-align:center\'>' + data.name + '</th></tr></thead>' +
-                    '<tbody><tr><td>Kabupaten</td><td>:</td><td>' + data.region.parent.parent.name + '</td></tr>' +
-                    '<tr><td>Kecamatan</td><td>:</td><td>' + data.region.parent.name + '</td></tr>' +
-                    '<tr><td>Desa</td><td>:</td><td>' + data.region.name + '</td></tr>' +
-                    '<tr><td>Luas</td><td>:</td><td>' + data.toraObject.size + ' ha</td></tr>' +
-                    '<tr><td>Jumlah Penduduk</td><td>:</td><td>' + data.toraObject.totalSubjects + '</td></tr></tbody></table>');
-
-                layer.addTo(this.map);
-            }
-        };
-        return L.geoJSON(JSON.parse(data.geojson), geoJsonOptions);
-    } 
-
-    onclickActionOverlay = (event) => {
-        $(`#${event.target.id}-modal`)['modal']("show");
-
-        let id = event.target.dataset.value;
-        let currentModel = this.initialData.find(o => o.id == parseInt(id));
-
-        this.model = Object.assign({}, currentModel);
-        this.color = currentModel.color ? currentModel.color : this.color;
-        if (event.target.id == "edit") {
-            this.model["linkDownload"] = [window.location.origin, 'baseLayer', id + ".zip"].join("/")
-        }
+    getToraMaps(): void {
+        let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': '72.1' } }
+        this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
+            this.applyToraOverlay(data);
+        });        
     }
 
-    ngAfterViewChecked() {
-        if (this.afterInit) {
-            let elements = $(`.leaflet-control-layers-expanded`)
-            for (let i = 0; i < elements.length; i++) {
-                let element = elements[i];
-                element.style.visibility = 'hidden';
-            }
-            this.afterInit = false;
-        }
+    applyBaseLayerOverlay(baseLayers: BaseLayer[]) {
+        this.layersControl.overlays = {};
+        baseLayers.forEach(baseLayer => {
+            let geojson = MapHelper.getGeojsonBaseLayer(baseLayer, this.baseLayerService)
+            let innerHTML = `
+            <span>${baseLayer.label}</span>            
+            <a href="#"><span class="oi oi-x overlay-action" id="delete" style="float:right; padding-right:10px;" data-id="${baseLayer.id}" data-label="${baseLayer.label}"></span></a>
+            <a href="#"><span class="oi oi-pencil overlay-action" id="edit" style="float:right; margin-right:10px;" data-id="${baseLayer.id}" data-label="${baseLayer.label}"></span></a>
+            `;
+            this.layersControl.overlays[innerHTML] = geojson;
+        });
+    }
 
-        if (this.isOverlayAdded) {
-            let elements = $(".overlay-action");
-            for (let i = 0; i < elements.length; i++) {
-                let element = elements[i];
-                element.addEventListener('click', this.onclickActionOverlay, false);
-            }
-            this.isOverlayAdded = false;
-        }
+    applyToraOverlay(toraMaps: ToraMap[]): void {
+        this.layers.length = 0;
+        toraMaps.forEach(toraMap => {
+            let geojson = MapHelper.getGeojsonToraMap(toraMap, '#FF0000');            
+            this.layers.push(geojson);
+        });
     }
 
     setupControlBar() {
-        L.control.zoom({position: 'bottomright'}).addTo(this.map);
+        L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
-        let button = L.Control.extend({
+        let addBaseLayerButton = L.Control.extend({
             options: {
                 position: 'topleft'
             },
             onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
-                div.innerHTML = '<button type="button" class="btn btn-outline-secondary btn-sm" style="height:35px;"><strong><i class="material-icons">library_add</i></strong></button>';
-                div.onclick = (e) => { this.model = {}; $("#form-upload")[0]["reset"](); $("#upload-modal")['modal']("show") };
-                return div;
-            }
-        });        
-        this.map.addControl(new button());
-
-        button = L.Control.extend({
-            options: {
-                position: 'topright'
-            },
-            onAdd: (map: L.Map) => {
-                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control control-right-1');
-                div.innerHTML = `<button type="button"class="btn btn-outline-secondary btn-sm" style="height:35px;"><i class="material-icons">layers</i></button>`;
-                let buttonOverlay = div.getElementsByTagName('button')[0];
-                buttonOverlay.onclick = (e) => this.toggleControlLayers(2);
+                let div = L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');               
+                div.innerHTML = `
+                <button type="button" class="btn btn-outline-secondary btn-sm" style="width:44px; height:44px;">
+                    <i class="fa fa-plus fa-2x"></i>
+                </button>`
+                div.onclick = (e) => { this.onShowUploadForm(null) };
                 return div;
             }
         });
 
-        this.map.addControl(new button());
-        this.overlays = L.control.layers(LAYERS, null, { collapsed: false }).addTo(this.map);
-        this.afterInit = true;
+        this.map.addControl(new addBaseLayerButton());
     }
 
-    toggleControlLayers(id) {
-        if (this.controlOverlayShowing) {
-            if (this.controlOverlayShowing.id != id && this.controlOverlayShowing.status === '') {
-                let element = $(`.leaflet-control-layers-expanded:nth-child(${this.controlOverlayShowing.id})`)[0];
-                element.style.visibility = 'hidden';
-            }
-        }
-
-        let status = '';
-        let element = $(`.leaflet-control-layers-expanded:nth-child(${id})`)[0];
-        if (element) {
-            status = element.style.visibility === 'hidden' ? '' : 'hidden';
-            element.style.visibility = status;
-        }
-        this.controlOverlayShowing = { id: id, status: status }
+    onClickOverlayAction = (event) => {
+        event.stopPropagation();
+        let id = event.target['dataset'].id;
+        let label = event.target['dataset'].label;
+        let model = { id: id, label: label };
+        if (event.target['id'] === 'edit')
+            this.onShowUploadForm(model);
+        if (event.target['id'] === 'delete')
+            this.onDeleteBaseLayer(model);        
+        return false;
     }
 
-    removeLayer(id): void {
-        let currentOverlay = this.layers.find(o => o.id == id);
-        let currentData = this.initialData.find(o => o.id == id);
-
-        this.overlays.removeLayer(currentOverlay.layer);
-        this.map.removeLayer(currentOverlay.layer);
-        this.layers.splice(currentOverlay, 1);
-        this.initialData.splice(currentData, 1);
-        this.isOverlayAdded = true;
-    }
-  
-    onMapReady(map: L.Map): void {
-        this.map = map;
-        this.setupControlBar();        
-    }
-
-    uploadFile() {
-        $("#upload-modal")['modal']("hide");
-        this.model['color'] = this.color;
-
-        let formData = new FormData();
-        formData.append('label', this.model.label);
-        formData.append('color', this.model.color);
-        formData.append('file', this.model.file)
-
-        this.baseLayerService.upload(formData).subscribe(
-            data => {
-                this.toastr.success("Upload File Berhasil", null);
-                this.applyOverlay([data]);
-            },
-            error => {
-                this.toastr.error("Ada kesalahan dalam penyimpanan", null);
-            }
-        );
-    }
-
-    editOverlay(model) {
-        $("#edit-modal")['modal']("hide");
-        this.model.color = this.color;
-
-        let formData = new FormData();
-        formData.append('id', model.id);
-        formData.append('label', model.label);
-        formData.append('color', model.color);
-        formData.append('file', model.file)
-
-        this.baseLayerService.upload(formData).subscribe(
-            data => {
-                this.toastr.success("Pengeditan Berhasil", null);
-                this.removeLayer(data.id);
-                this.applyOverlay([data]);
-            }, 
-            error => {
-                this.toastr.error("Ada kesalahan dalam penyimpanan", null);
-            }
-        );
-    }
-
-    deleteOverlay(model) {
-        $("#delete-modal")['modal']("hide");
-        let baselayerModel: BaseLayer = model;
-
-        this.baseLayerService.deleteById(model.id.toString()).subscribe(result => {
-            this.toastr.success("Penghapusan berhasil", null)
-            this.removeLayer(model.id);
-        })
-    }
-
-    onChangeFile(file: File) {
-        this.model.file = file;
-    }
-
-    setCenter(): void {
-        if (!this.geoJSONLayer)
-            this.setMap(true);
-        else
-            this.center = this.geoJSONLayer.getBounds().getCenter();
-    }
-
-    setMap(recenter = true): void {
-        try {
-            if (recenter)
-                this.map.setView(this.geoJSONLayer.getBounds().getCenter(), 14);
-        }
-        catch (error) {
-            console.log('Something wrong with this geojson either the structure is error or null');
-        }
-    }
-
-    getGeoJson(geoJson, currentColor): any {
-        let geoJsonOptions = {
-            style: (feature) => {
-                let color = "#000";
-                if (color !== "" && color) {
-                    color = currentColor;
+    onShowUploadForm(model: UploadBaseLayerViewModel) {
+        this.baseLayerUploadModalRef = this.modalService.show(ModalBaseLayerUploadFormComponent, { 'class': 'modal-lg' });
+        this.baseLayerUploadModalRef.content.setModel(model);
+        if (!this.uploadSubscription)
+            this.uploadSubscription = this.baseLayerUploadModalRef.content.isSaveSuccess$.subscribe(error => {
+                if (!error) {
+                    this.getBaseLayers();
                 }
-                return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
-            },           
-            onEachFeature: (feature, layer: L.FeatureGroup) => {        
-            }
-        };
-        return L.geoJSON(geoJson, geoJsonOptions);
-    }    
+                this.uploadSubscription.unsubscribe();
+                this.uploadSubscription = null;                
+            });
+    }
+
+    onDeleteBaseLayer(model: UploadBaseLayerViewModel) {
+        this.deleteModalRef = this.modalService.show(ModalDeleteComponent);
+        this.deleteModalRef.content.setModel(model);
+        this.deleteModalRef.content.setService(this.baseLayerService);
+        this.deleteModalRef.content.setLabel(model.label);
+        if (!this.deleteSubscription)
+            this.deleteSubscription = this.deleteModalRef.content.isDeleteSuccess$.subscribe(error => {
+                if (!error) {
+                    this.getBaseLayers();
+                }
+                this.deleteSubscription.unsubscribe();
+                this.deleteSubscription = null;
+                this.deleteModalRef.hide();
+            });
+    }
+
 }

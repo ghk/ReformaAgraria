@@ -155,7 +155,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         this.toraMapService.upload(formData).subscribe(
             data => {
                 this.toastr.success("Upload File Berhasil", null);
-                this.sharedService.setToraMapReloadedStatus(true);
+                this.sharedService.setReloadToraMap(true);
             },
             error => {
                 this.toastr.error("Ada kesalahan dalam upload", null);

@@ -18,6 +18,7 @@ import { ModalToraMapUploadFormComponent } from './modals/toraMapUploadForm';
 import { ModalToraMapDownloadFormComponent } from './modals/toraMapDownloadForm';
 import { BaseLayer } from '../models/gen/baseLayer';
 import { FeatureCollection, GeometryObject } from 'geojson';
+import { MapHelper } from '../helpers/map';
 
 const LAYERS = {
     "OpenStreetMap": new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
@@ -65,51 +66,39 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         };
         this.layersControl.baseLayers = LAYERS;
         
+        let baseLayerQuery = { data: { type: 'getAllWithoutGeojson' } };
+        this.baseLayerService.getAll(baseLayerQuery, null).subscribe(base => {
+            this.applyOverlayBaseLayer(base);
+        });    
+
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             this.region = region;
-            
-            let baseLayerQuery = { data: { type: 'getAllWithoutGeojson' } };
-            this.baseLayerService.getAll(baseLayerQuery, null).subscribe(base => {
-                this.applyOverlayBaseLayer(base);
-            });                    
-            
-            let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': region.id } }
-            this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
-                this.applyOverlayTora(data);
-            });     
-
+            this.getToraMaps(); 
         });
 
-        this.toraMapSubscription = this.sharedService.getToraMapReloadedStatus().subscribe(r => {
-            if (!r) 
-                return;
-
-            let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
-            this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
-                this.applyOverlayTora(data);
-                this.sharedService.setToraMapReloadedStatus(false);
-            }); 
-        })
+        this.toraMapSubscription = this.sharedService.getReloadToraMap().subscribe(reload => {
+            if (!reload) return;
+            this.getToraMaps();
+        });
     }
 
     ngOnDestroy(): void {
         this.map.remove();
         this.subscription.unsubscribe();
         this.toraMapSubscription.unsubscribe();
-    }    
+    }        
 
-    getBaseLayer(baseLayer: BaseLayer) {
-        this.baseLayerService.getById(baseLayer.id, null).subscribe(data => {
-            this.layersControl.overlays[data.label] = data.geojson;
-        });
+    getToraMaps(): void {
+        let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
+        this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
+            this.applyOverlayTora(data);
+        }); 
     }
-
-    getToraMaps(region: Region) {
-        let query = { data: { 'type': 'getAllByRegion', 'regionId': region.id } }
-        this.toraMapService.getAll(query, null).subscribe(data => {
-            this.toraMaps = data;
-        });     
-    }     
+    
+    onMapReady(map: L.Map): void {
+        this.map = map;
+        this.setupControlBar();       
+    }
 
     setupControlBar() {
         L.control.zoom({
@@ -150,7 +139,23 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         });
         this.map.addControl(new uploadButton());        
     }  
+    
+    applyOverlayTora(toraMaps: ToraMap[]) {
+        this.layers.length = 0;
+        toraMaps.forEach(toraMap => {
+            let geojson = MapHelper.getGeojsonToraMap(toraMap, '#FF0000');
+            this.layers.push(geojson);
+        });
+    }
 
+    applyOverlayBaseLayer(baseLayers: BaseLayer[]) {
+        this.layersControl.overlays = {};
+        baseLayers.forEach(baseLayer => {         
+            let geojson = MapHelper.getGeojsonBaseLayer(baseLayer, this.baseLayerService);
+            this.layersControl.overlays[baseLayer.label] = geojson;
+        });
+    }      
+    
     onShowDownloadForm(): void {
         this.modalService.show(ModalToraMapDownloadFormComponent);
     }
@@ -158,77 +163,4 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     onShowUploadForm(): void {
         this.modalService.show(ModalToraMapUploadFormComponent);
     }
-
-    onMapReady(map: L.Map): void {
-        this.map = map;
-        this.setupControlBar();       
-    }
-
-    getGeoJsonTora(data: ToraMap, currentColor): any {
-        var size = data.toraObject.size ? (data.toraObject.size / 10000).toFixed(2) + ' ha' : '-';
-        var totalSubjects = data.toraObject.totalSubjects || '-';
-
-        let geoJsonOptions = {
-            style: (feature) => {
-                let color = currentColor;
-                if (!color) {
-                    color = "#000";
-                }
-                return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
-            },     
-            onEachFeature: (feature, layer: L.FeatureGroup) => {
-                layer.bindPopup('<table class=\'table table-sm\'><thead><tr><th colspan=3 style=\'text-align:center\'><a href="/toradetail/' + data.toraObject.id + '">' + data.name + '</th></tr></thead>' +
-                    '<tbody><tr><td>Kabupaten</td><td>:</td><td><a href="/home/' + data.region.parent.parent.id.split('.').join('_') + '">' + data.region.parent.parent.name + '</a></td></tr>' +
-                    '<tr><td>Kecamatan</td><td>:</td><td><a href="/home/' + data.region.parent.id.split('.').join('_') + '">' + data.region.parent.name + '</td></tr>' +
-                    '<tr><td>Desa</td><td>:</td><td><a href="/home/' + data.region.id.split('.').join('_') + '">' + data.region.name + '</td></tr>' +
-                    '<tr><td>Luas</td><td>:</td><td>' + size + '</td></tr>' +
-                    '<tr><td>Jumlah Penggarap</td><td>:</td><td>' + totalSubjects + '</td></tr></tbody></table>');       
-            }
-        };      
-
-        return L.geoJSON(JSON.parse(data.geojson), geoJsonOptions);        
-    } 
-
-    getGeoJsonBaseLayer(baseLayer: BaseLayer): L.GeoJSON {
-        let geoJsonOptions = {
-            style: (feature) => {
-                let color = baseLayer.color;
-                if (!color) {
-                    color = "#000"
-                }
-                return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
-            },          
-            onEachFeature: (feature, layer: L.FeatureGroup) => {               
-            }
-        };
-        
-        let geojsonLayer = L.geoJSON(JSON.parse(baseLayer.geojson), geoJsonOptions);    
-        geojsonLayer.onAdd = (map: L.Map) => {
-            let geojson = geojsonLayer.toGeoJSON() as FeatureCollection<GeometryObject, any>;
-            if (geojson.features.length === 0) {
-                this.baseLayerService.getById(baseLayer.id).subscribe(bl => {                    
-                    geojsonLayer.addData(JSON.parse(bl.geojson));
-                });
-            }
-            return geojsonLayer.eachLayer(map.addLayer, map);
-        };
-
-        return geojsonLayer;
-    }
-
-    applyOverlayTora(data) {
-        this.layers.length = 0;
-        data.forEach(result => {
-            let geojson = this.getGeoJsonTora(result, '#FF0000');
-            this.layers.push(geojson);
-        });
-    }
-
-    applyOverlayBaseLayer(baseLayers: BaseLayer[]) {
-        this.layersControl['overlays'] = {};
-        baseLayers.forEach(baseLayer => {         
-            let geojson = this.getGeoJsonBaseLayer(baseLayer);
-            this.layersControl.overlays[baseLayer.label] = geojson;
-        });
-    }       
 }

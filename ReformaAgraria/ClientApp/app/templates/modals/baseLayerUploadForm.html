@@ -1,0 +1,41 @@
+<form class="form-horizontal" (ngSubmit)="onFormSubmit()">
+    <div class="modal-content" style="border-radius: 0">
+        <div class="modal-header">
+            <h5 class="modal-title">{{model.id ? 'Ubah' : 'Tambah'}}</h5>
+            <button type="button" class="close" (click)="bsModalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label class="form-control-label" for="label">Nama Layer</label>
+                    <input id="label" class="form-control" type="text" [(ngModel)]="model.label" name="label">
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="form-control-label" for="color">Warna</label>
+                    <input id="color" name="color" class="form-control" autocomplete="off" [(colorPicker)]="color" [style.background]="color"
+                        [value]="color" [cpPosition]="'bottom'" [cpOutputFormat]="'hex'" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="form-control-label" for="file">File (*.zip)</label>
+                    <input #baseLayerFile id="file" accept=".zip,.rar,.7z" class="form-control" type="file" (change)="onSelectFile($event.target.files[0])"
+                        name="file">
+                </div>                
+                <div class="form-group col-md-6" *ngIf="model.id">
+                    <a href="{{downloadLink}}" class="btn btn-link" role="button" aria-pressed="true" style="margin-top:4px;">
+                        <span class="oi oi-data-transfer-download"></span>&nbsp;Unduh file
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">
+                <i class="fa fa-save"></i>&nbsp;Batal
+            </button>
+            <button type="submit" class="btn btn-primary">                
+                <i class="fa fa-save"></i>&nbsp;Simpan
+            </button>
+        </div>
+    </div>
+</form>

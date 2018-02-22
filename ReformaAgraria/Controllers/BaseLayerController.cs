@@ -39,6 +39,13 @@ namespace ReformaAgraria.Controllers
             return base.GetAllAsync();
         }
 
+        [NotGenerated]
+        [MiddlewareFilter(typeof(CompressPipeline))]
+        public override Task<BaseLayer> GetAsync(int id)
+        {
+            return base.GetAsync(id);
+        }
+
         [HttpPost("upload")]
         public async Task<BaseLayer> Upload([FromForm]UploadBaseLayerViewModel model)
         {

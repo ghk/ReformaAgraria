@@ -21,7 +21,7 @@ import { SearchService } from '../../services/gen/search';
 })
 export class ModalToraMapUploadFormComponent implements OnInit, OnDestroy {   
     @ViewChild('toraMapFile')
-    toraMapFile: ElementRef;
+    toraMapFileRef: ElementRef;
 
     progress: Progress;
     subscription: Subscription;  
@@ -69,18 +69,18 @@ export class ModalToraMapUploadFormComponent implements OnInit, OnDestroy {
         
     onFormSubmit(): void {           
         let formData = new FormData();
-        formData.append("toraObjectId", this.model.toraObjectId.toString());
-        formData.append("file", this.model.file);
+        formData.append('toraObjectId', this.model.toraObjectId.toString());
+        formData.append('file', this.model.file);
 
         this.toraMapService.upload(formData).subscribe(
             data => {
-                this.toastr.success("Upload File Berhasil", null);
-                this.toraMapFile.nativeElement.value = "";
-                this.sharedService.setToraMapReloadedStatus(true);
+                this.toastr.success('Upload File Berhasil', null);
+                this.toraMapFileRef.nativeElement.value = '';
+                this.sharedService.setReloadToraMap(true);
                 this.isSaveSuccess$.next(null);
             },
             error => {
-                this.toastr.error("Ada kesalahan dalam upload", null);
+                this.toastr.error('Ada kesalahan dalam upload', null);
                 this.isSaveSuccess$.next(error);
             }
         );
