@@ -16,7 +16,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label" for="toraMap">Peta TORA</label>
                     <div class="col-md-9">
-                        <select class="form-control" [disabled]="!toraMaps.length === 0" [(ngModel)]="model.toraMap"
+                        <select class="form-control" [disabled]="!toraMaps.length" [(ngModel)]="model.toraMap"
                             name="toraMap">
                             <option *ngFor="let toraMap of toraMaps" [ngValue]="toraMap">{{toraMap.name}}</option>
                         </select>
