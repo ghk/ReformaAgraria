@@ -41,6 +41,7 @@ import { UserManagementComponent } from './components/userManagement';
 import { MapComponent } from './components/map';
 import { LibraryComponent } from './components/library';
 import { EventDetailComponent } from './components/eventDetail';
+import { VillageBorderMapComponent } from './components/villageBorderMap';
 
 import { ModalToraObjectFormComponent } from './components/modals/toraObjectForm';
 import { ModalToraSubjectFormComponent } from './components/modals/toraSubjectForm';
@@ -62,6 +63,7 @@ import { EventService } from './services/gen/event';
 import { EventTypeService } from './services/gen/eventType';
 import { LibraryService } from './services/gen/library';
 import { SearchService } from './services/gen/search';
+import { VillageBorderMapService } from './services/gen/villageBorderMap';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
@@ -102,6 +104,7 @@ import './styles/app.scss';
         ModalUploadToraDocumentComponent,
         ModalDeleteComponent,
         ModalEventFormComponent,
+        VillageBorderMapComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
         TranslatePipe     
@@ -170,6 +173,7 @@ import './styles/app.scss';
         EventTypeService,
         LibraryService,
         SearchService,
+        VillageBorderMapService,
         { provide: LOCALE_ID, useValue: 'id' }
     ]
 })

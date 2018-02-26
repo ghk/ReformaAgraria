@@ -39,6 +39,9 @@
     <None Remove="wwwroot\event\15\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Models\VillageBorderMap2.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Remove="appsettings.Development.json" />
     <Content Remove="appsettings.json" />
   </ItemGroup>
@@ -218,6 +221,9 @@
     </None>
     <None Update="ClientApp\app\services\gen\toraSubject.ts">
       <CustomToolNamespace>Controllers\ToraSubjectController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\services\gen\villageBorderMap.ts">
+      <CustomToolNamespace>Controllers\VillageBorderMapController.cs</CustomToolNamespace>
     </None>
   </ItemGroup>
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
