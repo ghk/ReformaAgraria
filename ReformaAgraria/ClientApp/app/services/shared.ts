@@ -1,6 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Region } from "../models/gen/region";
@@ -14,14 +14,14 @@ export class SharedService {
     private user: any;
     private region$: ReplaySubject<Region>;
     private toraSummary$: ReplaySubject<any[]>;
-    private toraMapReloadedStatus$: ReplaySubject<boolean>;
+    private reloadToraMap$: Subject<boolean>;
 
     constructor(
         private cookieService: CookieService
     ) {
         this.region$ = new ReplaySubject(1);
         this.toraSummary$ = new ReplaySubject(1);
-        this.toraMapReloadedStatus$ = new ReplaySubject(1);
+        this.reloadToraMap$ = new Subject<boolean>();
     }
 
     public getRegion() {
@@ -41,12 +41,12 @@ export class SharedService {
         this.toraSummary$.next(tora);
     }
 
-    public getToraMapReloadedStatus() {
-        return this.toraMapReloadedStatus$;
+    public getReloadToraMap() {
+        return this.reloadToraMap$;
     }
 
-    public setToraMapReloadedStatus(status: boolean) {
-        this.toraMapReloadedStatus$.next(status);
+    public setReloadToraMap(status: boolean) {
+        this.reloadToraMap$.next(status);
     }
 
     public getCurrentUser() {

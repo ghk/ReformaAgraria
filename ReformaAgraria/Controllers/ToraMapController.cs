@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MicrovacWebCore;
 using MicrovacWebCore.Exceptions;
+using MicrovacWebCore.Helpers;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -38,6 +40,13 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
         }
 
+        [NotGenerated]
+        [MiddlewareFilter(typeof(CompressPipeline))]
+        public override Task<IList<ToraMap>> GetAllAsync()
+        {
+            return base.GetAllAsync();
+        }
+
         [HttpPost("upload")]
         public async Task<ToraMap> Upload([FromForm]UploadToraMapViewModel model)
         {
@@ -49,7 +58,7 @@ namespace ReformaAgraria.Controllers
 
             if (toraMap == null)
             {
-                toraMap = new ToraMap { FkToraObjectId = model.ToraObjectId };
+                toraMap = new ToraMap { FkToraObjectId = toraObject.Id };
                 dbContext.Entry(toraMap).State = EntityState.Added;
             }
             else
@@ -57,8 +66,8 @@ namespace ReformaAgraria.Controllers
                 dbContext.Entry(toraMap).State = EntityState.Modified;
             }
 
-            toraMap.FkRegionId = model.RegionId;
-            toraMap.Name = model.ToraObjectName;
+            toraMap.FkRegionId = toraObject.FkRegionId;
+            toraMap.Name = toraObject.Name;
 
             var features = TopologyHelper.GetFeatureCollectionWgs84(model.File);
             toraMap.Geojson = TopologyHelper.GetGeojson(features);
@@ -68,7 +77,7 @@ namespace ReformaAgraria.Controllers
 
             // Copy map file to disk
             var toraMapDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "map");
-            var regionDirectoryPath = Path.Combine(toraMapDirectoryPath, model.RegionId);
+            var regionDirectoryPath = Path.Combine(toraMapDirectoryPath, toraObject.FkRegionId);
             var destinationFilePath = Path.Combine(regionDirectoryPath, toraMap.Id + ".zip");
             await IOHelper.StreamCopyAsync(destinationFilePath, model.File);
 

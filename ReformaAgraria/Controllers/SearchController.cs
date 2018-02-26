@@ -73,7 +73,7 @@ namespace ReformaAgraria.Controllers
                 var searchViewModel = new SearchViewModel()
                 {
                     Label = region.Name,
-                    Value = region.Id,
+                    Value = region,
                     Type = type
                 };
 

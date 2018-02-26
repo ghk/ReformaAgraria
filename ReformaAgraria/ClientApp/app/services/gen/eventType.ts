@@ -60,7 +60,7 @@ export class EventTypeService {
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'eventtype', id),
+            urljoin(this.serverUrl, 'eventtype', id.toString()),
             null,
             progressListener,
             null

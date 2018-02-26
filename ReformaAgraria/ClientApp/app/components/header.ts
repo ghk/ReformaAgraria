@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         this.dataSource = Observable.create((observer: any) => { observer.next(this.selected); })
             .switchMap((keywords: string) => this.searchService.search(keywords))
-            .catch((error: any) => { console.log(error); return []; });
+            .catch((error: any) => { return []; });
     }
 
     ngOnDestroy(): void {
@@ -57,7 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (svm.type === 3)
             this.router.navigateByUrl('toradetail/' + svm.value);
         else {
-            let regionId = svm.value.replace(/\./g, '_');
+            let regionId = svm.value.id.replace(/\./g, '_');
             this.router.navigateByUrl('home/' + regionId);
         }
     }

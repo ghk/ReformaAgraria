@@ -136,7 +136,7 @@
 
             neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{(.*)\}\?", "', $1, '?");            
             neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{encodeURIComponent\((.*?(?=\)))\)\}", "', encodeURIComponent($1), '");
-            neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{(.*)\}", "', $1, '");                       
+            neu = System.Text.RegularExpressions.Regex.Replace(neu, @"\$\{(.*)\}", "', $1.toString(), '");                       
             url += "'" + neu + "', ";
         }
         
@@ -289,7 +289,7 @@ export class $ServiceName $IsCrudController[implements CrudService<$GetFirstType
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, '$GetLowerFirstType', id),
+            urljoin(this.serverUrl, '$GetLowerFirstType', id.toString()),
             null,
             progressListener,
             null
@@ -342,7 +342,7 @@ export class $ServiceName $IsCrudController[implements CrudService<$GetFirstType
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, '$GetLowerFirstType', id),
+            urljoin(this.serverUrl, '$GetLowerFirstType', id.toString()),
             null,
             null,
             progressListener

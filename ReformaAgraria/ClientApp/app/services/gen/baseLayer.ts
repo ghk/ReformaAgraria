@@ -61,7 +61,7 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'baselayer', id),
+            urljoin(this.serverUrl, 'baselayer', id.toString()),
             null,
             progressListener,
             null
@@ -114,7 +114,7 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, 'baselayer', id),
+            urljoin(this.serverUrl, 'baselayer', id.toString()),
             null,
             null,
             progressListener
@@ -146,7 +146,7 @@ export class BaseLayerService implements CrudService<BaseLayer, number>{
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, 'baselayer', id),
+            urljoin(this.serverUrl, 'baselayer', id.toString()),
             null,
             progressListener,
             null,

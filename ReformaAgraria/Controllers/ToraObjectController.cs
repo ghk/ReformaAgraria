@@ -316,7 +316,6 @@ namespace ReformaAgraria.Controllers
             var toraObject = await dbContext.Set<ToraObject>().FirstOrDefaultAsync(to => to.Id == id);
             if (toraObject == null)
                 throw new NotFoundException();
-
             ToraHelper.CalculateToraObject(dbContext, toraObject);
             return Ok(new RequestResult() { Message = "Success" });
         }

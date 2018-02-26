@@ -60,7 +60,7 @@ export class ToraSubjectService implements CrudService<ToraSubject, number>{
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'torasubject', id),
+            urljoin(this.serverUrl, 'torasubject', id.toString()),
             null,
             progressListener,
             null
@@ -113,7 +113,7 @@ export class ToraSubjectService implements CrudService<ToraSubject, number>{
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, 'torasubject', id),
+            urljoin(this.serverUrl, 'torasubject', id.toString()),
             null,
             null,
             progressListener

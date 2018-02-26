@@ -43,11 +43,7 @@ export class ModalDeleteComponent implements OnInit, OnDestroy {
                 this.isDeleteSuccess$.next(error);
             }
         );
-    }
-
-    onDeclineDelete(): void {
-        this.bsModalRef.hide();
-    }
+    }   
     
     setModel(model: BaseEntity<any>): void {
         this.model = model;

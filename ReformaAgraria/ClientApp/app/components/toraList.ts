@@ -19,6 +19,7 @@ import { MaritalStatus } from '../models/gen/maritalStatus';
 import { Gender } from '../models/gen/gender';
 import { Query } from '../models/query';
 import { ToraObject } from '../models/gen/toraObject';
+import { Progress } from 'angular-progress-http';
 
 
 @Component({
@@ -42,7 +43,7 @@ export class ToraListComponent implements OnInit, OnDestroy {
     RegionalStatus = RegionalStatus;
     Status = Status;
 
-    loading: boolean = false;
+    progress: Progress;
     order: string = "region.name";
     isDesc: boolean = false;
 
@@ -57,7 +58,6 @@ export class ToraListComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.loading = true;
         this.regionSubscription = this.sharedService.getRegion().subscribe(region => {
             this.region = region;
             this.getToraObjects(region.id);
@@ -77,9 +77,8 @@ export class ToraListComponent implements OnInit, OnDestroy {
 
     getToraObjects(id): void {
         let query = { data: { 'type': 'getAllByRegion', 'regionId': id } }
-        this.toraObjectService.getAll(query, null).subscribe(data => {
+        this.toraObjectService.getAll(query, this.progressListener.bind(this)).subscribe(data => {
             this.toraObjects = data;
-            this.loading = false;
         });
     }
 
@@ -139,5 +138,9 @@ export class ToraListComponent implements OnInit, OnDestroy {
 
     convertRegionId(text) {
         return text.split('.').join('_');
+    }
+
+    progressListener(progress: Progress) {
+        this.progress = progress;
     }
 }

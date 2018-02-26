@@ -48,6 +48,9 @@ import { ModalToraSubjectFormComponent } from './components/modals/toraSubjectFo
 import { ModalUploadToraDocumentComponent } from './components/modals/uploadToraDocument';
 import { ModalDeleteComponent } from './components/modals/delete';
 import { ModalEventFormComponent } from './components/modals/eventForm';
+import { ModalToraMapUploadFormComponent } from './components/modals/toraMapUploadForm';
+import { ModalToraMapDownloadFormComponent } from './components/modals/toraMapDownloadForm';
+import { ModalBaseLayerUploadFormComponent} from './components/modals/baseLayerUploadForm';
 
 import { CookieService } from 'ngx-cookie-service';
 import { EnvironmentService } from './services/environment';
@@ -68,6 +71,7 @@ import { VillageBorderMapService } from './services/gen/villageBorderMap';
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
 import { TranslatePipe } from './pipes/translate';
+import { EventTypePipe } from './pipes/eventType';
 
 import { defineLocale } from 'ngx-bootstrap';
 import { id } from './helpers/id';
@@ -101,20 +105,27 @@ import './styles/app.scss';
         UserManagementComponent,     
         ModalToraObjectFormComponent,
         ModalToraSubjectFormComponent,
-        ModalUploadToraDocumentComponent,
+        ModalUploadToraDocumentComponent,        
         ModalDeleteComponent,
         ModalEventFormComponent,
         VillageBorderMapComponent,
+        ModalToraMapUploadFormComponent,
+        ModalToraMapDownloadFormComponent,
+        ModalBaseLayerUploadFormComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
-        TranslatePipe     
+        TranslatePipe,
+        EventTypePipe
     ],
     entryComponents: [
         ModalToraObjectFormComponent,
         ModalToraSubjectFormComponent,
         ModalUploadToraDocumentComponent,
         ModalDeleteComponent,
-        ModalEventFormComponent
+        ModalEventFormComponent,
+        ModalToraMapUploadFormComponent,
+        ModalToraMapDownloadFormComponent,
+        ModalBaseLayerUploadFormComponent
     ],
     imports: [
         LeafletModule,

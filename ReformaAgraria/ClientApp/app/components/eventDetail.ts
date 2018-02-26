@@ -17,7 +17,6 @@ import { Event } from '../models/gen/event';
 import { FormHelper } from '../helpers/form';
 import { Region } from "../models/gen/region";
 import { RegionType } from "../models/gen/regionType";
-import { SearchViewModel } from '../models/gen/searchViewModel';
 import { EventType } from "../models/gen/eventType";
 import { Query } from '../models/query';
 
@@ -76,8 +75,10 @@ export class EventDetailComponent implements OnInit, OnDestroy {
             this.event.endDate = moment.utc(this.event.endDate).local().toDate();
             this.getAttachment(id);
             this.getPhotos(id);
+
             this.regionService.getById(event.fkRegionId, null, null).subscribe(region => {
-                this.region = region;
+                this.region = region;               
+                this.sharedService.setRegion(region);
             });
         })
     }

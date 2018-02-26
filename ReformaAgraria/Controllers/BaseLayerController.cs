@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MicrovacWebCore;
+using MicrovacWebCore.Helpers;
 using ReformaAgraria.Helpers;
 using ReformaAgraria.Models;
 using ReformaAgraria.Models.ViewModels;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +30,20 @@ namespace ReformaAgraria.Controllers
         {
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
+        }
+
+        [NotGenerated]
+        [MiddlewareFilter(typeof(CompressPipeline))]
+        public override Task<IList<BaseLayer>> GetAllAsync()
+        {
+            return base.GetAllAsync();
+        }
+
+        [NotGenerated]
+        [MiddlewareFilter(typeof(CompressPipeline))]
+        public override Task<BaseLayer> GetAsync(int id)
+        {
+            return base.GetAsync(id);
         }
 
         [HttpPost("upload")]
@@ -83,6 +98,20 @@ namespace ReformaAgraria.Controllers
 
         protected override IQueryable<BaseLayer> ApplyQuery(IQueryable<BaseLayer> query)
         {
+            var type = GetQueryString<string>("type");
+
+            if (type == "getAllWithoutGeojson")
+            {
+                query = query.Select(bl => new BaseLayer
+                {
+                    Id = bl.Id,
+                    Color = bl.Color,
+                    Label = bl.Label,
+                    DateCreated = bl.DateCreated,
+                    DateModified = bl.DateModified
+                });
+            }
+
             return query;
         }
     }
