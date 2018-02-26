@@ -777,6 +777,40 @@ namespace ReformaAgraria.Migrations
                     b.ToTable("tora_submission");
                 });
 
+            modelBuilder.Entity("ReformaAgraria.Models.VillageBorderMap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnName("date_created");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnName("date_modified");
+
+                    b.Property<string>("FkRegionId")
+                        .HasColumnName("fk_region_id");
+
+                    b.Property<string>("Geojson")
+                        .HasColumnName("geojson")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name");
+
+                    b.Property<decimal>("Size")
+                        .HasColumnName("size");
+
+                    b.HasKey("Id")
+                        .HasName("pk_village_border_map");
+
+                    b.HasIndex("FkRegionId")
+                        .HasName("ix_village_border_map_fk_region_id");
+
+                    b.ToTable("village_border_map");
+                });
+
             modelBuilder.Entity("ReformaAgraria.Models.VillageProfile", b =>
                 {
                     b.Property<int>("Id")
@@ -945,6 +979,14 @@ namespace ReformaAgraria.Migrations
                         .HasForeignKey("FkToraObjectId")
                         .HasConstraintName("fk_tora_subject_tora_object_fk_tora_object_id")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ReformaAgraria.Models.VillageBorderMap", b =>
+                {
+                    b.HasOne("ReformaAgraria.Models.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("FkRegionId")
+                        .HasConstraintName("fk_village_border_map_region_fk_region_id");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.VillageProfile", b =>

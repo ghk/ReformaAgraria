@@ -31,6 +31,7 @@ namespace ReformaAgraria.Models
         public DbSet<ToraSubmission> ToraSubmission { get; set; }
         public DbSet<ActProposalDocumentCheckList> ActProposalDocumentCheckList { get; set; }
         public DbSet<VillageProfile> VillageProfile { get; set; }
+        public DbSet<VillageBorderMap> VillageBorderMap { get; set; }
         public DbSet<TipologyOfAgrarianProblem> TipologyOfAgrarianProblem { get; set; }
         public DbSet<BaseLayer> BaseLayer { get; set; }
 
