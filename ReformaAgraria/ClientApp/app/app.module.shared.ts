@@ -41,7 +41,6 @@ import { UserManagementComponent } from './components/userManagement';
 import { MapComponent } from './components/map';
 import { LibraryComponent } from './components/library';
 import { EventDetailComponent } from './components/eventDetail';
-import { VillageBorderMapComponent } from './components/villageBorderMap';
 
 import { ModalToraObjectFormComponent } from './components/modals/toraObjectForm';
 import { ModalToraSubjectFormComponent } from './components/modals/toraSubjectForm';
@@ -50,6 +49,8 @@ import { ModalDeleteComponent } from './components/modals/delete';
 import { ModalEventFormComponent } from './components/modals/eventForm';
 import { ModalToraMapUploadFormComponent } from './components/modals/toraMapUploadForm';
 import { ModalToraMapDownloadFormComponent } from './components/modals/toraMapDownloadForm';
+import { ModalVillageBorderMapUploadFormComponent } from './components/modals/villageBorderMapUploadForm';
+import { ModalVillageBorderMapDownloadFormComponent } from './components/modals/villageBorderMapDownloadForm';
 import { ModalBaseLayerUploadFormComponent} from './components/modals/baseLayerUploadForm';
 
 import { CookieService } from 'ngx-cookie-service';
@@ -108,9 +109,10 @@ import './styles/app.scss';
         ModalUploadToraDocumentComponent,        
         ModalDeleteComponent,
         ModalEventFormComponent,
-        VillageBorderMapComponent,
         ModalToraMapUploadFormComponent,
         ModalToraMapDownloadFormComponent,
+        ModalVillageBorderMapUploadFormComponent,
+        ModalVillageBorderMapDownloadFormComponent,
         ModalBaseLayerUploadFormComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
@@ -125,7 +127,9 @@ import './styles/app.scss';
         ModalEventFormComponent,
         ModalToraMapUploadFormComponent,
         ModalToraMapDownloadFormComponent,
-        ModalBaseLayerUploadFormComponent
+        ModalBaseLayerUploadFormComponent,
+        ModalVillageBorderMapUploadFormComponent,
+        ModalVillageBorderMapDownloadFormComponent
     ],
     imports: [
         LeafletModule,

@@ -4,6 +4,7 @@ import { FeatureCollection, GeometryObject } from 'geojson';
 import { BaseLayer } from '../models/gen/baseLayer';
 import { BaseLayerService } from '../services/gen/baseLayer';
 import { ToraMap } from '../models/gen/toraMap';
+import { VillageBorderMap } from '../models/gen/villageBorderMap';
 
 export class MapHelper {
 
@@ -55,6 +56,18 @@ export class MapHelper {
         };      
 
         return L.geoJSON(JSON.parse(toraMap.geojson), geoJsonOptions);        
+    }
+
+    static getGeojsonVillageBorderMap(villageBorderMap: VillageBorderMap, color: string) {
+        let geoJsonOptions = {
+            style: (feature) => {
+                if (!color)
+                    color = "#000";
+                return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
+            }
+        };
+
+        return L.geoJSON(JSON.parse(villageBorderMap.geojson), geoJsonOptions);
     }
 
     static setupStyle(configStyle) {

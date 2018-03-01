@@ -5,12 +5,14 @@ import { ToastrService } from 'ngx-toastr';
 
 import { Region } from "../models/gen/region";
 import { ToraMap } from '../models/gen/toraMap';
+import { VillageBorderMap } from '../models/gen/villageBorderMap';
 
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { ToraMapService } from '../services/gen/toraMap';
 import { ToraObjectService } from '../services/gen/toraObject';
 import { BaseLayerService } from "../services/gen/baseLayer";
+import { VillageBorderMapService } from "../services/gen/villageBorderMap";
 
 import * as L from 'leaflet';
 
@@ -19,6 +21,8 @@ import { ModalToraMapDownloadFormComponent } from './modals/toraMapDownloadForm'
 import { BaseLayer } from '../models/gen/baseLayer';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { MapHelper } from '../helpers/map';
+import { ModalVillageBorderMapUploadFormComponent } from "./modals/villageBorderMapUploadForm";
+import { ModalVillageBorderMapDownloadFormComponent } from "./modals/villageBorderMapDownloadForm";
 
 const LAYERS = {
     "OpenStreetMap": new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
@@ -37,6 +41,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
 
     subscription: Subscription;
     toraMapSubscription: Subscription;
+    villageBorderMapSubscription: Subscription;
 
     region: Region;
 
@@ -44,20 +49,23 @@ export class ToraMapComponent implements OnInit, OnDestroy {
     options: any;
     center: any;
     zoom: number;
-    layersControl: any = {};   
-    layers: L.Layer[] = [];  
-    
+    layersControl: any = {};
+    layers: L.Layer[] = [];
+    mapType: string = 'toraMap';
+
     toraMaps: ToraMap[] = [];
+    villageBorderMaps: VillageBorderMap[] = [];
 
     constructor(
         private toastr: ToastrService,
         private modalService: BsModalService,
         private sharedService: SharedService,
         private toraMapService: ToraMapService,
-        private baseLayerService: BaseLayerService
+        private baseLayerService: BaseLayerService,
+        private villageBorderMapService: VillageBorderMapService
     ) { }
 
-    ngOnInit(): void {     
+    ngOnInit(): void {
         this.center = L.latLng(-1.374581, 119.977618);
         this.zoom = 10;
         this.options = {
@@ -65,20 +73,25 @@ export class ToraMapComponent implements OnInit, OnDestroy {
             layers: [LAYERS['OpenStreetMap']]
         };
         this.layersControl.baseLayers = LAYERS;
-        
+
         let baseLayerQuery = { data: { type: 'getAllWithoutGeojson' } };
         this.baseLayerService.getAll(baseLayerQuery, null).subscribe(base => {
             this.applyOverlayBaseLayer(base);
-        });    
+        });
 
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             this.region = region;
-            this.getToraMaps(); 
+            this.getToraMaps();
         });
 
         this.toraMapSubscription = this.sharedService.getReloadToraMap().subscribe(reload => {
             if (!reload) return;
             this.getToraMaps();
+        });
+
+        this.villageBorderMapSubscription = this.sharedService.getReloadVillageBorderMap().subscribe(reload => {
+            if (!reload) return;
+            this.getVillageBorderMaps();
         });
     }
 
@@ -86,18 +99,26 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         this.map.remove();
         this.subscription.unsubscribe();
         this.toraMapSubscription.unsubscribe();
-    }        
+        this.villageBorderMapSubscription.unsubscribe();
+    }
 
     getToraMaps(): void {
         let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
         this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
             this.applyOverlayTora(data);
-        }); 
+        });
     }
-    
+
+    getVillageBorderMaps(): void {
+        let villageBorderMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
+        this.villageBorderMapService.getAll(villageBorderMapQuery, null).subscribe(data => {
+            this.applyOverlayVillageBorder(data);
+        });
+    }
+
     onMapReady(map: L.Map): void {
         this.map = map;
-        this.setupControlBar();       
+        this.setupControlBar();
     }
 
     setupControlBar() {
@@ -113,10 +134,11 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                     <button type="button" class="btn btn-outline-secondary btn-sm" style="width:44px; height:44px;">
                         <i class="fa fa-download fa-2x"></i>
                     </button>
-                `;                
-                div.onclick = (e) => { 
+                `;
+                div.onclick = (e) => {
                     this.onShowDownloadForm();
                 };
+
                 return div;
             }
         });
@@ -130,20 +152,29 @@ export class ToraMapComponent implements OnInit, OnDestroy {
                     <button type="button" class="btn btn-outline-secondary btn-sm" style="width:44px; height:44px;">
                         <i class="fa fa-upload fa-2x"></i>
                     </button>                    
-                `;                
-                div.onclick = (e) => { 
+                `;
+                div.onclick = (e) => {
                     this.onShowUploadForm();
                 };
+
                 return div;
             }
         });
-        this.map.addControl(new uploadButton());        
-    }  
-    
+        this.map.addControl(new uploadButton());
+    }
+
     applyOverlayTora(toraMaps: ToraMap[]) {
         this.layers.length = 0;
         toraMaps.forEach(toraMap => {
             let geojson = MapHelper.getGeojsonToraMap(toraMap, '#FF0000');
+            this.layers.push(geojson);
+        });
+    }
+
+    applyOverlayVillageBorder(villageBorderMaps: VillageBorderMap[]) {
+        this.layers.length = 0;
+        villageBorderMaps.forEach(villageBorderMap => {
+            let geojson = MapHelper.getGeojsonVillageBorderMap(villageBorderMap, '#F48024');
             this.layers.push(geojson);
         });
     }
@@ -153,17 +184,63 @@ export class ToraMapComponent implements OnInit, OnDestroy {
             this.map.removeLayer(this.layersControl.overlays[key]);
         this.layersControl.overlays = {};
 
-        baseLayers.forEach(baseLayer => {         
+        baseLayers.forEach(baseLayer => {
             let geojson = MapHelper.getGeojsonBaseLayer(baseLayer, this.baseLayerService);
             this.layersControl.overlays[baseLayer.label] = geojson;
         });
-    }      
-    
-    onShowDownloadForm(): void {
-        this.modalService.show(ModalToraMapDownloadFormComponent);
+    }
+
+    onTabClicked(type: string): void {
+        this.mapType = type;
+
+        if (type === 'toraMap') {
+            this.getToraMaps();
+
+            if (!$('#tabTora').hasClass('active')) {
+                $('#tabTora').addClass('active');
+            }
+            $('#tabVillageBorder').removeClass('active');
+        }
+        else {
+            this.getVillageBorderMaps();
+            if (!$('#tabVillageBorder').hasClass('active')) {
+                $('#tabVillageBorder').addClass('active');
+            }
+            $('#tabTora').removeClass('active');
+        }
     }
 
     onShowUploadForm(): void {
+        if (this.mapType === 'toraMap') {
+            this.onShowToraMapUploadForm();
+        }
+        else {
+            this.onShowVillageBorderMapUploadForm();
+        }
+    }
+    
+    onShowDownloadForm(): void {
+        if (this.mapType === 'toraMap') {
+            this.onShowToraMapDownloadForm();
+        }
+        else {
+            this.onShowVillageBorderMapDownloadForm();
+        }
+    }
+
+    onShowToraMapDownloadForm(): void {
+        this.modalService.show(ModalToraMapDownloadFormComponent);
+    }
+
+    onShowToraMapUploadForm(): void {
         this.modalService.show(ModalToraMapUploadFormComponent);
+    }
+
+    onShowVillageBorderMapUploadForm(): void {
+        this.modalService.show(ModalVillageBorderMapUploadFormComponent);
+    }
+
+    onShowVillageBorderMapDownloadForm(): void {
+        this.modalService.show(ModalVillageBorderMapDownloadFormComponent);
     }
 }

@@ -181,6 +181,9 @@
     <None Update="ClientApp\app\models\gen\uploadToraMapViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\UploadToraMapViewModel.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\uploadVillageBorderMapViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\UploadVillageBorderMapViewModel.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\userViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\UserViewModel.cs</CustomToolNamespace>
     </None>
