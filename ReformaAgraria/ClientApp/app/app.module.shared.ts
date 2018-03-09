@@ -44,6 +44,8 @@ import { EventDetailComponent } from './components/eventDetail';
 
 import { ModalToraObjectFormComponent } from './components/modals/toraObjectForm';
 import { ModalToraSubjectFormComponent } from './components/modals/toraSubjectForm';
+import { ModalPersilFormComponent } from './components/modals/persilForm';
+import { ModalPersilEditFormComponent } from './components/modals/persilEditForm';
 import { ModalUploadToraDocumentComponent } from './components/modals/uploadToraDocument';
 import { ModalDeleteComponent } from './components/modals/delete';
 import { ModalEventFormComponent } from './components/modals/eventForm';
@@ -68,6 +70,8 @@ import { EventTypeService } from './services/gen/eventType';
 import { LibraryService } from './services/gen/library';
 import { SearchService } from './services/gen/search';
 import { VillageBorderMapService } from './services/gen/villageBorderMap';
+import { SchemeService } from './services/gen/scheme';
+import { PersilService } from './services/gen/persil';
 
 import { RegionBreadcrumbPipe } from './pipes/regionBreadcrumb';
 import { EnumPipe } from './pipes/enum';
@@ -114,6 +118,8 @@ import './styles/app.scss';
         ModalVillageBorderMapUploadFormComponent,
         ModalVillageBorderMapDownloadFormComponent,
         ModalBaseLayerUploadFormComponent,
+        ModalPersilFormComponent,
+        ModalPersilEditFormComponent,
         RegionBreadcrumbPipe,
         EnumPipe,
         TranslatePipe,
@@ -129,7 +135,9 @@ import './styles/app.scss';
         ModalToraMapDownloadFormComponent,
         ModalBaseLayerUploadFormComponent,
         ModalVillageBorderMapUploadFormComponent,
-        ModalVillageBorderMapDownloadFormComponent
+        ModalVillageBorderMapDownloadFormComponent,
+        ModalPersilFormComponent,
+        ModalPersilEditFormComponent
     ],
     imports: [
         LeafletModule,
@@ -189,6 +197,8 @@ import './styles/app.scss';
         LibraryService,
         SearchService,
         VillageBorderMapService,
+        SchemeService,
+        PersilService,
         { provide: LOCALE_ID, useValue: 'id' }
     ]
 })

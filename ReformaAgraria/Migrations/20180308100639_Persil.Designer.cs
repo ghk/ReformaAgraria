@@ -11,9 +11,10 @@ using System;
 namespace ReformaAgraria.Migrations
 {
     [DbContext(typeof(ReformaAgrariaDbContext))]
-    partial class ReformaAgrariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180308100639_Persil dan Skema")]
+    partial class PersildanSkema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,12 +375,12 @@ namespace ReformaAgraria.Migrations
                     b.Property<string>("FkRegionId")
                         .HasColumnName("fk_region_id");
 
-                    b.Property<int>("FkSchemeId")
-                        .HasColumnName("fk_scheme_id");
-
                     b.Property<string>("Geojson")
                         .HasColumnName("geojson")
                         .HasColumnType("jsonb");
+
+                    b.Property<int>("Scheme")
+                        .HasColumnName("scheme");
 
                     b.Property<int>("Status")
                         .HasColumnName("status");
@@ -395,9 +396,6 @@ namespace ReformaAgraria.Migrations
 
                     b.HasIndex("FkRegionId")
                         .HasName("ix_persil_fk_region_id");
-
-                    b.HasIndex("FkSchemeId")
-                        .HasName("ix_persil_fk_scheme_id");
 
                     b.ToTable("persil");
                 });
@@ -502,30 +500,6 @@ namespace ReformaAgraria.Migrations
                         .HasName("ix_region_fk_parent_id");
 
                     b.ToTable("region");
-                });
-
-            modelBuilder.Entity("ReformaAgraria.Models.Scheme", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id");
-
-                    b.Property<DateTime?>("DateCreated")
-                        .HasColumnName("date_created");
-
-                    b.Property<DateTime?>("DateModified")
-                        .HasColumnName("date_modified");
-
-                    b.Property<string>("Details")
-                        .HasColumnName("details");
-
-                    b.Property<string>("Name")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_scheme");
-
-                    b.ToTable("scheme");
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.TipologyOfAgrarianProblem", b =>
@@ -995,12 +969,6 @@ namespace ReformaAgraria.Migrations
                         .WithMany()
                         .HasForeignKey("FkRegionId")
                         .HasConstraintName("fk_persil_region_fk_region_id");
-
-                    b.HasOne("ReformaAgraria.Models.Scheme", "Scheme")
-                        .WithMany()
-                        .HasForeignKey("FkSchemeId")
-                        .HasConstraintName("fk_persil_scheme_fk_scheme_id")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ReformaAgraria.Models.Region", b =>

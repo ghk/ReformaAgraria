@@ -178,6 +178,39 @@
                             </tbody>
                         </table>
                     </tab>
+                    <tab heading="Data Persil">
+                        <table class="table table-bordered table-striped table-responsive-sm table-sm bg-light my-3 table-subject">
+                            <caption>
+                                <button type="button" class="btn btn-primary" title="Edit" (click)="onShowPersilForm()">
+                                    <span class="oi oi-pencil" style="margin-right: 10px;"></span>Tambah Persil
+                                </button>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">Skema</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Jumlah Subjek</th>
+                                    <th scope="col">Luas (ha)</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let persil of persils; let i = index">
+                                    <td>{{persil?.id}}</td>
+                                    <td>{{persil?.scheme?.details}}</td>
+                                    <td>{{Status[persil?.status] | translate}}</td>
+                                    <td>{{persil?.totalSubject == null ? 0 : persil?.totalSubject}}</td>
+                                    <td>{{persil?.totalSize == null ? 0 : persil?.totalSize}}</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-link" title="Edit" (click)="onShowPersilEditForm(persil)">
+                                            <span class="oi oi-pencil"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </tab>
                 </tabset>
             </div>
         </div>

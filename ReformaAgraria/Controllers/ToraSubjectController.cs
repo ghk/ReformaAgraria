@@ -223,6 +223,12 @@ namespace ReformaAgraria.Controllers
                 query = query.Where(ts => ts.FkToraObjectId == regionId);
             }
 
+            if (type == "getAllByPersil")
+            {
+                var persilId = GetQueryString<int>("persilId");
+                query = query.Where(ts => ts.FkPersilId == persilId);
+            }
+           
             if (type == "getAllByToraObject")
             {
                 var toraObjectId = GetQueryString<int>("toraObjectId");

@@ -40,11 +40,14 @@
     <None Remove="wwwroot\event\15\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Migrations\20180308080958_Persil dan Skema.cs" />
+    <Compile Remove="Migrations\20180308080958_Persil dan Skema.Designer.cs" />
+    <Compile Remove="Migrations\20180308100639_Persil dan Skema.cs" />
+    <Compile Remove="Migrations\20180308100639_Persil dan Skema.Designer.cs" />
     <Compile Remove="Models\VillageBorderMap2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="appsettings.Development.json" />
-    <Content Remove="appsettings.json" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="ClientApp\app\components\crud.ts" />
@@ -124,6 +127,9 @@
     <None Update="ClientApp\app\models\gen\maritalStatus.ts">
       <CustomToolNamespace>Models\MaritalStatus.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\persil.ts">
+      <CustomToolNamespace>Models\Persil.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\proposedTreatment.ts">
       <CustomToolNamespace>Models\ProposedTreatment.cs</CustomToolNamespace>
     </None>
@@ -135,6 +141,9 @@
     </None>
     <None Update="ClientApp\app\models\gen\regionType.ts">
       <CustomToolNamespace>Models\RegionType.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\scheme.ts">
+      <CustomToolNamespace>Models\Scheme.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\searchType.ts">
       <CustomToolNamespace>Models\SearchType.cs</CustomToolNamespace>
@@ -208,8 +217,14 @@
     <None Update="ClientApp\app\services\gen\library.ts">
       <CustomToolNamespace>Controllers\LibraryController.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\services\gen\persil.ts">
+      <CustomToolNamespace>Controllers\PersilController.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\services\gen\region.ts">
       <CustomToolNamespace>Controllers\RegionController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\services\gen\scheme.ts">
+      <CustomToolNamespace>Controllers\SchemeController.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\services\gen\search.ts">
       <CustomToolNamespace>Controllers\SearchController.cs</CustomToolNamespace>

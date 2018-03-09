@@ -439,3 +439,47 @@ h1 {
         }
     }
 }
+
+.moreText {
+    visibility: visible;
+}
+
+.lessText {
+    visibility: hidden;
+}
+
+@media only screen and (max-width: 575px) {
+    .show-hide {
+        display: none;
+    }
+
+    .moreLess {
+        visibility: visible;
+    }
+
+    .moreText {
+        visibility: visible;
+    }
+
+    .lessText {
+        visibility: hidden;
+    }
+}
+
+@media only screen and (min-width: 575px) {
+    .moreLess {
+        visibility: hidden;
+    }
+
+    .moreText {
+        visibility: hidden;
+    }
+
+    .lessText {
+        visibility: hidden;
+    }
+
+    .show-hide {
+        display: block;
+    }
+}

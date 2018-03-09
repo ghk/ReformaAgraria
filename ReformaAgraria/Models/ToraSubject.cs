@@ -39,7 +39,12 @@ namespace ReformaAgraria.Models
 
         public int FkToraObjectId { get; set; }
 
+        public int? FkPersilId { get; set; }
+
         [ForeignKey("FkToraObjectId")]
         public ToraObject ToraObject { get; set; }
+
+        [ForeignKey("FkPersilId")]
+        public Persil Persil { get; set; }
     }
 }

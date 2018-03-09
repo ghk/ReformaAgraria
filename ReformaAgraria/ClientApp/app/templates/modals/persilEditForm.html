@@ -1,0 +1,159 @@
+<div class="modal-header">
+    <h4 class="modal-title">Ubah Persil</h4>
+    <button type="button" class="close" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form class="was-validated" (ngSubmit)="onFormSubmit()">
+        <div class="form-row pt-2"> 
+            <div class="form-group col-md-6">
+                <label for="status-pernikahan">Skema</label>
+                <select id="inputState" class="form-control" [(ngModel)]="persil.fkSchemeId" name="persilScheme">
+                    <option [ngValue]="null">Pilih Skema</option>
+                    <option *ngFor="let scheme of schemes" [ngValue]="scheme.id">{{scheme.details}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="persilStatus">Status</label>
+                <select id="inputState" class="form-control" [(ngModel)]="persil.status" name="persilStatus">
+                    <option [ngValue]="null">Pilih Status</option>
+                    <option [ngValue]="Status.Proposal">{{Status[Status.Proposal] | translate}}</option>
+                    <option [ngValue]="Status.Verification">{{Status[Status.Verification] | translate}}</option>
+                    <option [ngValue]="Status.Act">{{Status[Status.Act] | translate}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-12">
+                <table class="table table-bordered table-striped table-responsive-sm table-sm bg-light my-3 table-subject">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Status Pernikahan</th>
+                            <th scope="col">Alamat</th>
+                            <th scope="col">Jenis Kelamin</th>
+                            <th scope="col">Umur</th>
+                            <th scope="col">Pendidikan</th>
+                            <th scope="col">Jumlah Keluarga</th>
+                            <th scope="col">Status Tanah</th>
+                            <th scope="col">Lokasi Lahan Garapan</th>
+                            <th scope="col">Luas (ha)</th>
+                            <th scope="col">Jenis Tanaman</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let toraSubject of toraSubjects; let i = index">
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm btn-link" title="Tambah" (click)="addSubject(toraSubject, i, 'initial')">
+                                    <span class="oi oi-plus"></span>
+                                </button>
+                            </td>
+                            <td>{{toraSubject?.name}}</td>
+                            <td>{{MaritalStatus[toraSubject?.maritalStatus] | translate}}</td>
+                            <td>{{toraSubject?.address}}</td>
+                            <td>{{Gender[toraSubject?.gender] | translate}}</td>
+                            <td>{{toraSubject?.age}}</td>
+                            <td>{{EducationalAttainment[toraSubject?.educationalAttainment] | translate}}</td>
+                            <td>{{toraSubject?.totalFamilyMembers}}</td>
+                            <td>{{LandStatus[toraSubject?.landStatus] | translate}}</td>
+                            <td>{{toraSubject?.landLocation}}</td>
+                            <td>{{toraSubject?.size | number : '1.2-2'}}</td>
+                            <td>{{toraSubject?.plantTypes}}</td>
+                        </tr>
+                        <tr *ngFor="let removedSubject of removedSubjects; let i = index">
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm btn-link" title="Tambah" (click)="addSubject(removedSubject, i, '')">
+                                    <span class="oi oi-plus"></span>
+                                </button>
+                            </td>
+                            <td>{{removedSubject?.name}}</td>
+                            <td>{{MaritalStatus[removedSubject?.maritalStatus] | translate}}</td>
+                            <td>{{removedSubject?.address}}</td>
+                            <td>{{Gender[removedSubject?.gender] | translate}}</td>
+                            <td>{{removedSubject?.age}}</td>
+                            <td>{{EducationalAttainment[removedSubject?.educationalAttainment] | translate}}</td>
+                            <td>{{removedSubject?.totalFamilyMembers}}</td>
+                            <td>{{LandStatus[removedSubject?.landStatus] | translate}}</td>
+                            <td>{{removedSubject?.landLocation}}</td>
+                            <td>{{removedSubject?.size | number : '1.2-2'}}</td>
+                            <td>{{removedSubject?.plantTypes}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group col-md-12">
+                <table class="table table-bordered table-striped table-responsive-sm table-sm bg-light my-3 table-subject">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Status Pernikahan</th>
+                            <th scope="col">Alamat</th>
+                            <th scope="col">Jenis Kelamin</th>
+                            <th scope="col">Umur</th>
+                            <th scope="col">Pendidikan</th>
+                            <th scope="col">Jumlah Keluarga</th>
+                            <th scope="col">Status Tanah</th>
+                            <th scope="col">Lokasi Lahan Garapan</th>
+                            <th scope="col">Luas (ha)</th>
+                            <th scope="col">Jenis Tanaman</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let persilSubject of persilSubjects; let i = index">
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm btn-link" title="Tambah" (click)="removeSubject(persilSubject, i, 'persil')">
+                                    <span class="oi oi-minus"></span>
+                                </button>
+                            </td>
+                            <td>{{persilSubject?.name}}</td>
+                            <td>{{MaritalStatus[persilSubject?.maritalStatus] | translate}}</td>
+                            <td>{{persilSubject?.address}}</td>
+                            <td>{{Gender[persilSubject?.gender] | translate}}</td>
+                            <td>{{persilSubject?.age}}</td>
+                            <td>{{EducationalAttainment[persilSubject?.educationalAttainment] | translate}}</td>
+                            <td>{{persilSubject?.totalFamilyMembers}}</td>
+                            <td>{{LandStatus[persilSubject?.landStatus] | translate}}</td>
+                            <td>{{persilSubject?.landLocation}}</td>
+                            <td>{{persilSubject?.size | number : '1.2-2'}}</td>
+                            <td>{{persilSubject?.plantTypes}}</td>
+                        </tr>
+                        <tr *ngFor="let addedSubject of addedSubjects; let i = index">
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm btn-link" title="Tambah" (click)="removeSubject(addedSubject, i, 'added')">
+                                    <span class="oi oi-minus"></span>
+                                </button>
+                            </td>
+                            <td>{{addedSubject?.name}}</td>
+                            <td>{{MaritalStatus[addedSubject?.maritalStatus] | translate}}</td>
+                            <td>{{addedSubject?.address}}</td>
+                            <td>{{Gender[addedSubject?.gender] | translate}}</td>
+                            <td>{{addedSubject?.age}}</td>
+                            <td>{{EducationalAttainment[addedSubject?.educationalAttainment] | translate}}</td>
+                            <td>{{addedSubject?.totalFamilyMembers}}</td>
+                            <td>{{LandStatus[addedSubject?.landStatus] | translate}}</td>
+                            <td>{{addedSubject?.landLocation}}</td>
+                            <td>{{addedSubject?.size | number : '1.2-2'}}</td>
+                            <td>{{addedSubject?.plantTypes}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="Luas">Total Subjek</label>
+                <input type="text" class="form-control" id="formPersilEditsubjek" aria-describedby="subjekHelp" placeholder="Total Subjek" [(ngModel)]="persil.totalSubject"
+                       name="size" disabled>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="Luas">Total Luas</label>
+                <input type="text" class="form-control" id="formPersilEditLuas" aria-describedby="luasHelp" placeholder="Total Luas" [(ngModel)]="persil.totalSize"
+                    name="size" disabled>
+            </div>
+            <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Batal</button>
+            </div>
+        </div>
+    </form>
+</div>

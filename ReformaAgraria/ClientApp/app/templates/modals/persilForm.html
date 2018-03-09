@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h4 class="modal-title">Tambah Persil</h4>
+    <button type="button" class="close" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form class="was-validated" (ngSubmit)="onFormSubmit()">
+        <div class="form-row pt-2">    
+            <div class="form-group col-md-6">
+                <label for="status-pernikahan">Skema</label>
+                <select id="inputState" class="form-control" [(ngModel)]="persil.fkSchemeId" name="persilScheme">
+                    <option [ngValue]="null">Pilih Skema</option>
+                    <option *ngFor="let scheme of schemes" [ngValue]="scheme.id">{{scheme.details}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="persilStatus">Status</label>
+                <select id="inputState" class="form-control" [(ngModel)]="persil.status" name="persilStatus">
+                    <option [ngValue]="null">Pilih Status</option>
+                    <option [ngValue]="Status.Proposal">{{Status[Status.Proposal] | translate}}</option>
+                    <option [ngValue]="Status.Verification">{{Status[Status.Verification] | translate}}</option>
+                    <option [ngValue]="Status.Act">{{Status[Status.Act] | translate}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Batal</button>
+            </div>
+        </div>
+    </form>
+</div>

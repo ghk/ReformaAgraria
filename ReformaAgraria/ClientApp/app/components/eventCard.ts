@@ -17,6 +17,8 @@ import { RegionType } from '../models/gen/regionType';
 import { EventHelper } from '../helpers/event';
 
 import * as moment from 'moment';
+import * as $ from 'jquery';
+
 
 @Component({
     selector: 'ra-event-card',
@@ -80,6 +82,20 @@ export class EventCardComponent implements OnInit, OnDestroy {
             return true;
         }
         return false;
+    }
+
+    onShowMoreOrLess(status) {
+        if (status == 'more') {
+            $('.moreText').css("visibility", "hidden");
+            $('.lessText').css("visibility", "visible");
+            $('.show-hide').show();
+        }
+        else {
+            $('.moreText').css("visibility", "visible");
+            $('.lessText').css("visibility", "hidden");
+            $('.show-hide').hide();
+            
+        }
     }
 
     onCardClicked(event: Event) {

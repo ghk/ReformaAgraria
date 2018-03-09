@@ -9,6 +9,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { ModalToraObjectFormComponent } from './modals/toraObjectForm';
 import { ModalToraSubjectFormComponent } from './modals/toraSubjectForm';
+import { ModalPersilFormComponent } from './modals/persilForm';
+import { ModalPersilEditFormComponent } from './modals/persilEditForm';
 import { ModalDeleteComponent } from './modals/delete';
 
 import { SharedService } from '../services/shared';
@@ -16,10 +18,12 @@ import { RegionService } from '../services/gen/region';
 import { ToraObjectService } from '../services/gen/toraObject';
 import { ToraSubjectService } from '../services/gen/toraSubject';
 import { ToraMapService } from '../services/gen/toraMap';
+import { PersilService } from '../services/gen/persil';
 
 import { Region } from '../models/gen/region';
 import { ToraObject } from '../models/gen/toraObject';
 import { ToraSubject } from '../models/gen/toraSubject';
+import { Persil } from '../models/gen/persil';
 
 import { Query } from '../models/query';
 import { RegionalStatus } from '../models/gen/regionalStatus';
@@ -36,12 +40,15 @@ import { Status } from '../models/gen/status';
 export class ToraDetailComponent implements OnInit, OnDestroy {
     toraObjectModalRef: BsModalRef;
     toraSubjectModalRef: BsModalRef;
+    persilModalRef: BsModalRef;
     deleteModalRef: BsModalRef;
 
     routeSubscription: Subscription;
     toraObjectFormSubscription: Subscription;
     toraSubjectFormSubscription: Subscription;
+    persilFormSubscription: Subscription;
     deleteSubscription: Subscription;
+    regionSubscription: Subscription;
 
     RegionalStatus = RegionalStatus;
     LandStatus = LandStatus;
@@ -54,7 +61,10 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
     toraObjectId: number;
     toraObject: ToraObject;
     toraSubjects: ToraSubject[];
+    persils: Persil[];
     progress: Progress;
+
+    region: any;
 
     constructor(
         private toastr: ToastrService,
@@ -64,13 +74,17 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         private regionService: RegionService,
         private toraObjectService: ToraObjectService,
         private toraSubjectService: ToraSubjectService,
-        private toraMapService: ToraMapService
+        private toraMapService: ToraMapService,
+        private persilService: PersilService
     ) { }
 
     ngOnInit(): void {
         this.routeSubscription = this.route.params.subscribe(params => {
             this.toraObjectId = +params['id'];
-            this.getData(this.toraObjectId);
+            this.regionSubscription = this.sharedService.getRegion().subscribe(region => {
+                this.region = region;
+                this.getData(this.toraObjectId);
+            });
         });
     }
 
@@ -82,6 +96,8 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
             this.toraSubjectFormSubscription.unsubscribe();
         if (this.deleteSubscription)
             this.deleteSubscription.unsubscribe();
+        if (this.regionSubscription)
+            this.regionSubscription.unsubscribe();
     }
 
     getData(toraObjectId: number): void {
@@ -95,6 +111,13 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
             data: {
                 type: 'getAllByToraObject',
                 toraObjectId: toraObjectId
+            }
+        };
+
+        let persilQuery: Query = {
+            data: {
+                type: 'getAllByRegion',
+                regionId: this.region.id
             }
         };
 
@@ -117,6 +140,11 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
             this.toraObjectService.getSummary(toraObject.fkRegionId).subscribe(summary => {
                 this.sharedService.setToraSummary(summary);
             });
+
+            this.persilService.getAll(persilQuery, null).subscribe(persil => {
+                this.persils = persil;
+                console.log(persil);
+            })
         });
     }
 
@@ -182,6 +210,35 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
                 this.toraSubjectFormSubscription.unsubscribe();
                 this.toraSubjectFormSubscription = null;
                 this.toraSubjectModalRef.hide();
+            });
+    }
+
+    onShowPersilForm(): void {
+        this.persilModalRef = this.modalService.show(ModalPersilFormComponent);
+        if (!this.persilFormSubscription)
+            this.persilFormSubscription = this.persilModalRef.content.isSaveSuccess$.subscribe(error => {
+                if (!error) {
+                    this.getData(this.toraObject.id);
+                }
+                this.persilFormSubscription.unsubscribe();
+                this.persilFormSubscription = null;
+                this.persilModalRef.hide();
+            });
+    }
+
+    onShowPersilEditForm(persil: Persil): void {
+        this.persilModalRef = this.modalService.show(ModalPersilEditFormComponent, { 'class': 'modal-lg' });
+        this.persilModalRef.content.setPersil(persil);
+        this.persilModalRef.content.setPersilSubjects(persil.id);
+        this.persilModalRef.content.setToraSubject(this.toraSubjects);
+        if (!this.persilFormSubscription)
+            this.persilFormSubscription = this.persilModalRef.content.isSaveSuccess$.subscribe(error => {
+                if (!error) {
+                    this.getData(this.toraObject.id);
+                }
+                this.persilFormSubscription.unsubscribe();
+                this.persilFormSubscription = null;
+                this.persilModalRef.hide();
             });
     }
 

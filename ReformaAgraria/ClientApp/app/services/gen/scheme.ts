@@ -5,8 +5,7 @@ import { ProgressHttp } from 'angular-progress-http';
 import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
-import { VillageBorderMap } from '../../models/gen/villageBorderMap';
-import { UploadVillageBorderMapViewModel } from '../../models/gen/uploadVillageBorderMapViewModel';
+import { Scheme } from '../../models/gen/scheme';
 import { EnvironmentService } from '../../services/environment';
 import { CrudService } from '../../services/crud';
 import { RequestHelper } from '../../helpers/request';
@@ -14,7 +13,7 @@ import { RequestHelper } from '../../helpers/request';
 import * as urljoin from 'url-join';
 
 @Injectable()
-export class VillageBorderMapService implements CrudService<VillageBorderMap, number>{        
+export class SchemeService implements CrudService<Scheme, number>{        
 
     private serverUrl: string;
    
@@ -25,13 +24,13 @@ export class VillageBorderMapService implements CrudService<VillageBorderMap, nu
         this.serverUrl = this.environmentService.getEnvironment().serverUrl;
     }
 
-    public getAll(query?: Query, progressListener?: any): Observable<Array<VillageBorderMap>> { 
+    public getAll(query?: Query, progressListener?: any): Observable<Array<Scheme>> { 
         let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'villagebordermap'),            
+            urljoin(this.serverUrl, 'scheme'),            
             null,
             progressListener,
             null
@@ -46,7 +45,7 @@ export class VillageBorderMapService implements CrudService<VillageBorderMap, nu
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'villagebordermap', 'count'),
+            urljoin(this.serverUrl, 'scheme', 'count'),
             null,
             progressListener,
             null
@@ -55,13 +54,13 @@ export class VillageBorderMapService implements CrudService<VillageBorderMap, nu
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public getById(id: number, query?: Query, progressListener?: any): Observable<VillageBorderMap> {
+    public getById(id: number, query?: Query, progressListener?: any): Observable<Scheme> {
         let options = RequestHelper.getRequestOptions(this.cookieService, query);
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'villagebordermap', id.toString()),
+            urljoin(this.serverUrl, 'scheme', id.toString()),
             null,
             progressListener,
             null
@@ -70,7 +69,7 @@ export class VillageBorderMapService implements CrudService<VillageBorderMap, nu
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public createOrUpdate(model: VillageBorderMap, progressListener?: any): Observable<number> {
+    public createOrUpdate(model: Scheme, progressListener?: any): Observable<number> {
         if (!model['id']) {
             return this.create(model, progressListener);
         } else if (model['id']) {
@@ -78,13 +77,13 @@ export class VillageBorderMapService implements CrudService<VillageBorderMap, nu
         }
     }
 
-    public create(model: VillageBorderMap, progressListener?: any): Observable<number> {
+    public create(model: Scheme, progressListener?: any): Observable<number> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'POST',
-            urljoin(this.serverUrl, 'villagebordermap'),            
+            urljoin(this.serverUrl, 'scheme'),            
             model,
             null,
             progressListener
@@ -93,13 +92,13 @@ export class VillageBorderMapService implements CrudService<VillageBorderMap, nu
         return request.map(res => res.json()).catch(this.handleError);
     }
 
-    public update(model: VillageBorderMap, progressListener?: any): Observable<number> {
+    public update(model: Scheme, progressListener?: any): Observable<number> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'PUT',
-            urljoin(this.serverUrl, 'villagebordermap'),
+            urljoin(this.serverUrl, 'scheme'),
             model,
             null,
             progressListener
@@ -114,45 +113,13 @@ export class VillageBorderMapService implements CrudService<VillageBorderMap, nu
             this.http,
             options,
             'DELETE',
-            urljoin(this.serverUrl, 'villagebordermap', id.toString()),
+            urljoin(this.serverUrl, 'scheme', id.toString()),
             null,
             null,
             progressListener
         );
 
         return request.map(res => res.json()).catch(this.handleError);
-    }
-    
-    public upload(model: FormData, progressListener?: any): Observable<VillageBorderMap> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, null);
-        options.headers.delete('Content-Type');                
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'POST',
-            urljoin(this.serverUrl, 'villagebordermap', 'upload'),
-            model,
-            null,
-            progressListener,
-        );
-
-        return request.map(res => res.json()).catch(this.handleError);
-    }
-    
-    public download(id: number, query?: Query, progressListener?: any): Observable<any> {
-        let options = RequestHelper.getRequestOptions(this.cookieService, null);
-        options.responseType = ResponseContentType.Blob;                
-        let request = RequestHelper.getHttpRequest(
-            this.http,
-            options,
-            'GET',
-            urljoin(this.serverUrl, 'villagebordermap', 'download', id.toString()),
-            null,
-            progressListener,
-            null,
-        );
-
-        return request.catch(this.handleError)
     }
     
     private handleError(error: Response) {
