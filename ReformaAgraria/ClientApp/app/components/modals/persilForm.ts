@@ -52,6 +52,14 @@ export class ModalPersilFormComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
+    setPersilSchemeId(fkSchemeId): void {
+        if (fkSchemeId) {
+            this.persil.fkSchemeId = fkSchemeId;
+            console.log(this.persil.fkSchemeId);
+            console.log(fkSchemeId);
+        }
+    }
+
     onFormSubmit(): void {
         console.log(this.persil);
         this.persil.fkRegionId = this.region.id;

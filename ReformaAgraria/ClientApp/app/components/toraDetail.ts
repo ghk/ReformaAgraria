@@ -122,6 +122,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         };
 
         this.toraObjectService.getById(toraObjectId, toraObjectQuery, null).subscribe(toraObject => {
+            console.log(toraObject);
             if (!toraObject)
                 return;
 
@@ -215,6 +216,7 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
 
     onShowPersilForm(): void {
         this.persilModalRef = this.modalService.show(ModalPersilFormComponent);
+        this.persilModalRef.content.setPersilSchemeId(this.toraObject.fkSchemeId != null ? this.toraObject.fkSchemeId : 1);
         if (!this.persilFormSubscription)
             this.persilFormSubscription = this.persilModalRef.content.isSaveSuccess$.subscribe(error => {
                 if (!error) {

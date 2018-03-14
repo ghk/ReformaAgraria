@@ -28,17 +28,20 @@ namespace ReformaAgraria.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger<ToraObjectController> _logger;
         private readonly ILogger<ToraSubjectController> _tsLogger;
+        private readonly ILogger<SchemeController> _sLogger;
         private readonly ReformaAgrariaDbContext _context;
 
         public ToraObjectController(ReformaAgrariaDbContext dbContext,
             IHostingEnvironment hostingEnvironment,
             ILogger<ToraObjectController> logger,
-            ILogger<ToraSubjectController> tsLogger) : base(dbContext)
+            ILogger<ToraSubjectController> tsLogger,
+            ILogger<SchemeController> sLogger) : base(dbContext)
         {
             _context = dbContext;
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
             _tsLogger = tsLogger;
+            _sLogger = sLogger;
         }
 
         [HttpPost]
@@ -53,6 +56,9 @@ namespace ReformaAgraria.Controllers
         [HttpPost("upload")]
         public async Task<ToraObject> Upload([FromForm] UploadToraDocumentViewModel document)
         {
+            SchemeController sc = new SchemeController(_context, _hostingEnvironment, _sLogger);
+            var schemeModel = await sc.GetAllAsync();
+
             var toraDocumentDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "tora", "document");
             var toraDocumentFilePath = Path.Combine(toraDocumentDirectoryPath, document.RegionId, document.File.FileName);
             var regionId = document.RegionId;
@@ -126,7 +132,21 @@ namespace ReformaAgraria.Controllers
 
                                 to.LandType = worksheet.Cells[(i + 9), 4].Value != null ? worksheet.Cells[(i + 9), 4].Value.ToString().Trim() : "";
                                 to.Livelihood = worksheet.Cells[(i + 10), 4].Value != null ? worksheet.Cells[(i + 10), 4].Value.ToString().Trim() : "";
-                                to.ProposedTreatment = worksheet.Cells[(i + 11), 4].Value != null ? worksheet.Cells[(i + 11), 4].Value.ToString().Trim() : "";
+
+                                if (worksheet.Cells[(i + 11), 4].Value != null)
+                                {
+                                    foreach (var item in schemeModel)
+                                    {
+                                        if (item.Name.ToLower() == worksheet.Cells[(i + 11), 4].Value.ToString().ToLower().Trim())
+                                        {
+                                            to.FkSchemeId = item.Id;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    to.FkSchemeId = 1;
+                                }
 
                                 if (worksheet.Cells[(i + 13), 4].Value != null)
                                 {
@@ -183,6 +203,10 @@ namespace ReformaAgraria.Controllers
         public async Task<FileStreamResult> Download(int id)
         {
             var objectModel = await dbContext.Set<ToraObject>().FirstOrDefaultAsync(t => t.Id == id);
+
+            SchemeController sc = new SchemeController(_context, _hostingEnvironment, _sLogger);
+            var schemeModel = await sc.GetAllAsync();
+
             var region = await dbContext.Set<Region>()
                 .Include(r => r.Parent)
                 .Include(r => r.Parent.Parent)
@@ -216,7 +240,17 @@ namespace ReformaAgraria.Controllers
                     worksheet.Cells["D9"].Value = TranslateHelper.Translate(objectModel.RegionalStatus.ToString());
                     worksheet.Cells["D10"].Value = TranslateHelper.Translate(objectModel.LandType);
                     worksheet.Cells["D11"].Value = objectModel.Livelihood;
-                    worksheet.Cells["D12"].Value = objectModel.ProposedTreatment;
+                    if (worksheet.Cells["D12"].Value != null || worksheet.Cells["D12"].Value.ToString() != "")
+                    {
+                        foreach (var item in schemeModel)
+                        {
+                            if (item.Id == objectModel.FkSchemeId)
+                            {
+                                worksheet.Cells["D12"].Value = item.Name;
+                                break;
+                            }
+                        }
+                    }
                     worksheet.Cells["D14"].Value = TranslateHelper.Translate(objectModel.LandStatus.ToString());
                     worksheet.Cells["C16"].Value = objectModel.LandTenureHistory;
                     worksheet.Cells["D19"].Value = objectModel.ConflictChronology;
@@ -333,7 +367,7 @@ namespace ReformaAgraria.Controllers
 
             if (type == "getCompleteRegion")
             {
-                query = query.Include(to => to.Region)
+                query = query.Include(to => to.Scheme).Include(to => to.Region)
                     .Include(to => to.Region.Parent)
                     .Include(to => to.Region.Parent.Parent);
             }

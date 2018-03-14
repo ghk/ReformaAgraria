@@ -42,8 +42,13 @@ namespace ReformaAgraria.Models
 
         public string FkRegionId { get; set; }
 
+        public int FkSchemeId { get; set; }
+
         [ForeignKey("FkRegionId")]
         public Region Region { get; set; }
+
+        [ForeignKey("FkSchemeId")]
+        public Scheme Scheme { get; set; }
 
         public List<ToraSubject> ToraSubjects { get; set; }
     }

@@ -10,7 +10,7 @@
         <div class="form-row pt-2">    
             <div class="form-group col-md-6">
                 <label for="status-pernikahan">Skema</label>
-                <select id="inputState" class="form-control" [(ngModel)]="persil.fkSchemeId" name="persilScheme">
+                <select id="inputState" class="form-control" [(ngModel)]="persil.fkSchemeId" name="persilScheme" disabled>
                     <option [ngValue]="null">Pilih Skema</option>
                     <option *ngFor="let scheme of schemes" [ngValue]="scheme.id">{{scheme.details}}</option>
                 </select>

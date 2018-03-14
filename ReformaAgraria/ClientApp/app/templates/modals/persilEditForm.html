@@ -10,7 +10,7 @@
         <div class="form-row pt-2"> 
             <div class="form-group col-md-6">
                 <label for="status-pernikahan">Skema</label>
-                <select id="inputState" class="form-control" [(ngModel)]="persil.fkSchemeId" name="persilScheme">
+                <select id="inputState" class="form-control" [(ngModel)]="persil.fkSchemeId" name="persilScheme" disabled>
                     <option [ngValue]="null">Pilih Skema</option>
                     <option *ngFor="let scheme of schemes" [ngValue]="scheme.id">{{scheme.details}}</option>
                 </select>
@@ -25,64 +25,8 @@
                 </select>
             </div>
             <div class="form-group col-md-12">
-                <table class="table table-bordered table-striped table-responsive-sm table-sm bg-light my-3 table-subject">
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Nama</th>
-                            <th scope="col">Status Pernikahan</th>
-                            <th scope="col">Alamat</th>
-                            <th scope="col">Jenis Kelamin</th>
-                            <th scope="col">Umur</th>
-                            <th scope="col">Pendidikan</th>
-                            <th scope="col">Jumlah Keluarga</th>
-                            <th scope="col">Status Tanah</th>
-                            <th scope="col">Lokasi Lahan Garapan</th>
-                            <th scope="col">Luas (ha)</th>
-                            <th scope="col">Jenis Tanaman</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let toraSubject of toraSubjects; let i = index">
-                            <td class="text-center">
-                                <button type="button" class="btn btn-sm btn-link" title="Tambah" (click)="addSubject(toraSubject, i, 'initial')">
-                                    <span class="oi oi-plus"></span>
-                                </button>
-                            </td>
-                            <td>{{toraSubject?.name}}</td>
-                            <td>{{MaritalStatus[toraSubject?.maritalStatus] | translate}}</td>
-                            <td>{{toraSubject?.address}}</td>
-                            <td>{{Gender[toraSubject?.gender] | translate}}</td>
-                            <td>{{toraSubject?.age}}</td>
-                            <td>{{EducationalAttainment[toraSubject?.educationalAttainment] | translate}}</td>
-                            <td>{{toraSubject?.totalFamilyMembers}}</td>
-                            <td>{{LandStatus[toraSubject?.landStatus] | translate}}</td>
-                            <td>{{toraSubject?.landLocation}}</td>
-                            <td>{{toraSubject?.size | number : '1.2-2'}}</td>
-                            <td>{{toraSubject?.plantTypes}}</td>
-                        </tr>
-                        <tr *ngFor="let removedSubject of removedSubjects; let i = index">
-                            <td class="text-center">
-                                <button type="button" class="btn btn-sm btn-link" title="Tambah" (click)="addSubject(removedSubject, i, '')">
-                                    <span class="oi oi-plus"></span>
-                                </button>
-                            </td>
-                            <td>{{removedSubject?.name}}</td>
-                            <td>{{MaritalStatus[removedSubject?.maritalStatus] | translate}}</td>
-                            <td>{{removedSubject?.address}}</td>
-                            <td>{{Gender[removedSubject?.gender] | translate}}</td>
-                            <td>{{removedSubject?.age}}</td>
-                            <td>{{EducationalAttainment[removedSubject?.educationalAttainment] | translate}}</td>
-                            <td>{{removedSubject?.totalFamilyMembers}}</td>
-                            <td>{{LandStatus[removedSubject?.landStatus] | translate}}</td>
-                            <td>{{removedSubject?.landLocation}}</td>
-                            <td>{{removedSubject?.size | number : '1.2-2'}}</td>
-                            <td>{{removedSubject?.plantTypes}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="form-group col-md-12">
+                Detil Subjek
+                <p><small class="text-muted">Silahkan tekan tombol '-' untuk mengeluarkan subjek dari persil ini dan tekan tombol '+' di table berikutnya untuk menambahkan subjek kedalam persil ini</small></p>
                 <table class="table table-bordered table-striped table-responsive-sm table-sm bg-light my-3 table-subject">
                     <thead>
                         <tr>
@@ -139,6 +83,65 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <div class="form-group col-md-12" style="max-height:500px; overflow-y:auto;">
+                    <table class="table table-bordered table-striped table-responsive-sm table-sm bg-light my-3 table-subject">
+                        <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Nama</th>
+                                <th scope="col">Status Pernikahan</th>
+                                <th scope="col">Alamat</th>
+                                <th scope="col">Jenis Kelamin</th>
+                                <th scope="col">Umur</th>
+                                <th scope="col">Pendidikan</th>
+                                <th scope="col">Jumlah Keluarga</th>
+                                <th scope="col">Status Tanah</th>
+                                <th scope="col">Lokasi Lahan Garapan</th>
+                                <th scope="col">Luas (ha)</th>
+                                <th scope="col">Jenis Tanaman</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let toraSubject of toraSubjects; let i = index">
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-link" title="Tambah" (click)="addSubject(toraSubject, i, 'initial')">
+                                        <span class="oi oi-plus"></span>
+                                    </button>
+                                </td>
+                                <td>{{toraSubject?.name}}</td>
+                                <td>{{MaritalStatus[toraSubject?.maritalStatus] | translate}}</td>
+                                <td>{{toraSubject?.address}}</td>
+                                <td>{{Gender[toraSubject?.gender] | translate}}</td>
+                                <td>{{toraSubject?.age}}</td>
+                                <td>{{EducationalAttainment[toraSubject?.educationalAttainment] | translate}}</td>
+                                <td>{{toraSubject?.totalFamilyMembers}}</td>
+                                <td>{{LandStatus[toraSubject?.landStatus] | translate}}</td>
+                                <td>{{toraSubject?.landLocation}}</td>
+                                <td>{{toraSubject?.size | number : '1.2-2'}}</td>
+                                <td>{{toraSubject?.plantTypes}}</td>
+                            </tr>
+                            <tr *ngFor="let removedSubject of removedSubjects; let i = index">
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-link" title="Tambah" (click)="addSubject(removedSubject, i, '')">
+                                        <span class="oi oi-plus"></span>
+                                    </button>
+                                </td>
+                                <td>{{removedSubject?.name}}</td>
+                                <td>{{MaritalStatus[removedSubject?.maritalStatus] | translate}}</td>
+                                <td>{{removedSubject?.address}}</td>
+                                <td>{{Gender[removedSubject?.gender] | translate}}</td>
+                                <td>{{removedSubject?.age}}</td>
+                                <td>{{EducationalAttainment[removedSubject?.educationalAttainment] | translate}}</td>
+                                <td>{{removedSubject?.totalFamilyMembers}}</td>
+                                <td>{{LandStatus[removedSubject?.landStatus] | translate}}</td>
+                                <td>{{removedSubject?.landLocation}}</td>
+                                <td>{{removedSubject?.size | number : '1.2-2'}}</td>
+                                <td>{{removedSubject?.plantTypes}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="form-group col-md-6">
                 <label for="Luas">Total Subjek</label>

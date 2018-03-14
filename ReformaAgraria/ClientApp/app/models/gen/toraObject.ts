@@ -2,6 +2,7 @@
 import { LandStatus } from './landStatus';
 import { Status } from './status';
 import { Region } from './region';
+import { Scheme } from './scheme';
 import { ToraSubject } from './toraSubject';
 import { BaseEntity } from './baseEntity';
 
@@ -21,6 +22,8 @@ export interface ToraObject extends BaseEntity<number> {
     nonFormalAdvocacyProgress?: string;
     status?: Status;
     fkRegionId?: string;
+    fkSchemeId?: number;
     region?: Region;
+    scheme?: Scheme;
     toraSubjects?: ToraSubject[];
 }

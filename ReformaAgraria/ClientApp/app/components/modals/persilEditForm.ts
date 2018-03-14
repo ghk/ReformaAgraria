@@ -20,6 +20,8 @@ import { PersilService } from "../../services/gen/persil";
 import { ToraSubjectService } from "../../services/gen/toraSubject";
 import { SharedService } from "../../services/shared";
 
+import * as $ from 'jquery';
+
 
 @Component({
     selector: 'modal-persil-edit-form',
@@ -44,6 +46,8 @@ export class ModalPersilEditFormComponent implements OnInit, OnDestroy {
     removedSubjects: ToraSubject[] = [];
 
     subscription: Subscription;
+
+    
 
     private isSaveSuccess$: ReplaySubject<any> = new ReplaySubject(1);
 
@@ -110,6 +114,7 @@ export class ModalPersilEditFormComponent implements OnInit, OnDestroy {
             this.persil.totalSize -= toraSubject.size;
             this.persil.totalSubject -= 1;
         }
+        
     }
 
     setToraSubject(toraSubjects: ToraSubject[]): void {
