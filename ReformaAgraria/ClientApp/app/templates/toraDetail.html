@@ -193,11 +193,12 @@
                                     <th scope="col">Jumlah Subjek</th>
                                     <th scope="col">Luas (ha)</th>
                                     <th scope="col"></th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let persil of persils; let i = index">
-                                    <td>{{persil?.id}}</td>
+                                    <td>{{i + 1}}</td>
                                     <td>{{persil?.scheme?.details}}</td>
                                     <td>{{Status[persil?.status] | translate}}</td>
                                     <td>{{persil?.totalSubject == null ? 0 : persil?.totalSubject}}</td>
@@ -205,6 +206,11 @@
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-link" title="Edit" (click)="onShowPersilEditForm(persil)">
                                             <span class="oi oi-pencil"></span>
+                                        </button>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-link" title="Edit" (click)="onDeletePersil(persil)">
+                                            <span class="oi oi-trash"></span>
                                         </button>
                                     </td>
                                 </tr>

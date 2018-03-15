@@ -66,7 +66,7 @@
         <form class="form-inline mt-2 mt-md-0">
             <input [(ngModel)]="selected" [typeahead]="dataSource" [typeaheadMinLength]="3" [typeaheadWaitMs]="300" [typeaheadItemTemplate]="searchItemTemplate"
                 typeaheadOptionField="label" (typeaheadOnSelect)="onSearchSelected($event)" name="search" autocomplete="off"
-                class="typehead form-control mr-sm-2" type="text" placeholder="Cari Desa atau TORA" aria-label="Search">
+                class="typehead form-control mr-sm-2" type="text" placeholder="Cari Desa atau Objek" aria-label="Search">
             <button type="button" class="btn btn-sml btn-outline-warning my-2 my-sm-0" (click)="logout()">Logout</button>
         </form>
     </div>

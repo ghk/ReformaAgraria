@@ -362,7 +362,7 @@ namespace ReformaAgraria.Controllers
             {
                 var regionId = GetQueryString<string>("regionId");
                 if (!string.IsNullOrWhiteSpace(regionId))
-                    query = query.Where(to => to.FkRegionId == regionId);
+                    query = query.Include(to => to.Scheme).Where(to => to.FkRegionId == regionId);
             }
 
             if (type == "getCompleteRegion")

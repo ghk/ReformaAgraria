@@ -49,7 +49,7 @@
                             <td>{{object.totalSubjects ? object.totalSubjects : '-'}}</td>
                             <td>{{object.size > 0 ? (object.size / 10000 | number : '1.2-2') : '-'}}</td>
                             <td>{{LandStatus[object.landStatus] | translate}}</td>
-                            <td>{{object.proposedTreatment ? object.proposedTreatment : '-'}}</td>
+                            <td>{{object.scheme?.details}}</td>
                             <td>{{Status[object.status] | translate}}</td>
                             <td title="edit">
                                 <button type="button" class="btn btn-link">

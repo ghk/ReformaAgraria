@@ -260,6 +260,22 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
             })
     }
 
+    onDeletePersil(persil: Persil): void {
+        this.deleteModalRef = this.modalService.show(ModalDeleteComponent);
+        this.deleteModalRef.content.setModel(persil);
+        this.deleteModalRef.content.setService(this.persilService);
+        this.deleteModalRef.content.setLabel("Pesil ini");
+        if (!this.deleteSubscription)
+            this.deleteSubscription = this.deleteModalRef.content.isDeleteSuccess$.subscribe(error => {
+                if (!error) {
+                    this.getData(this.toraObject.id);
+                }
+                this.deleteSubscription.unsubscribe();
+                this.deleteSubscription = null;
+                this.deleteModalRef.hide();
+            })
+    }
+
     progressListener(progress: Progress) {
         this.progress = progress;
     }
