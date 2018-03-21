@@ -6,6 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { Query } from '../../models/query';
 import { Persil } from '../../models/gen/persil';
+import { EditPersilViewModel } from '../../models/gen/editPersilViewModel';
 import { EnvironmentService } from '../../services/environment';
 import { CrudService } from '../../services/crud';
 import { RequestHelper } from '../../helpers/request';
@@ -117,6 +118,22 @@ export class PersilService implements CrudService<Persil, number>{
             null,
             null,
             progressListener
+        );
+
+        return request.map(res => res.json()).catch(this.handleError);
+    }
+    
+    public upload(model: FormData, progressListener?: any): Observable<Persil> {
+        let options = RequestHelper.getRequestOptions(this.cookieService, null);
+        options.headers.delete('Content-Type');                
+        let request = RequestHelper.getHttpRequest(
+            this.http,
+            options,
+            'POST',
+            urljoin(this.serverUrl, 'persil', 'upload'),
+            model,
+            null,
+            progressListener,
         );
 
         return request.map(res => res.json()).catch(this.handleError);

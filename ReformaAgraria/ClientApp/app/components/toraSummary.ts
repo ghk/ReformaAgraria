@@ -8,6 +8,8 @@ import { RegionType } from '../models/gen/regionType';
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { ToraObjectService } from '../services/gen/toraObject';
+import { PersilService } from '../services/gen/persil';
+
 
 
 @Component({
@@ -20,6 +22,7 @@ export class ToraSummaryComponent implements OnInit, OnDestroy {
     RegionType: RegionType;
 
     summaries: any = [];
+    persilSummaries: any;
 
     loading: boolean = true;
     order: string = "region.name";
@@ -27,26 +30,25 @@ export class ToraSummaryComponent implements OnInit, OnDestroy {
     constructor(
         private regionService: RegionService,
         private sharedService: SharedService,
-        private toraObjectService: ToraObjectService
+        private toraObjectService: ToraObjectService,
+        private persilService: PersilService
     ) { }
 
     ngOnInit() {
         this.subscription = this.sharedService.getRegion().subscribe(region => {
             this.region = region;
-            this.getToraObjectSummary(region);
+            this.sharedService.getSummaryStatus().subscribe(status => {
+                this.toraObjectService.getSummary(region.id, status).subscribe(data => {
+                    this.summaries = data;
+                    this.sharedService.setToraSummary(data);
+                    this.loading = false;
+                })
+            })
         });
     };
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
-    }
-
-    getToraObjectSummary(region: Region) {
-        this.toraObjectService.getSummary(region.id).subscribe(data => {
-            this.summaries = data;
-            this.sharedService.setToraSummary(data);
-            this.loading = false;
-        })
     }
 
     sort(order: string) {

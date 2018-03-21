@@ -285,8 +285,8 @@ namespace ReformaAgraria.Controllers
             return File(outputStream, "application/xlsx", "tora.xlsx");
         }
 
-        [HttpGet("summary/{id}")]
-        public async Task<List<DashboardDataViewModel>> GetSummary(string id)
+        [HttpGet("summary/{id}/{status}")]
+        public async Task<List<DashboardDataViewModel>> GetSummary(string id, int status)
         {
             var results = new List<DashboardDataViewModel>();
             var region = await dbContext.Set<Region>().FirstAsync(r => r.Id == id);
@@ -308,7 +308,7 @@ namespace ReformaAgraria.Controllers
 
             foreach (var toraObject in toraObjects)
             {
-                var toraObjectIds = toraObject.Data.Select(t => t.Id);
+                var toraObjectIds = toraObject.Data.Where(x => (int)x.Status == status).Select(t => t.Id);
                 var totalToraSubjects = await dbContext.Set<ToraSubject>()
                         .Where(ts => toraObjectIds.Contains(ts.FkToraObjectId))
                         .CountAsync();
@@ -316,12 +316,22 @@ namespace ReformaAgraria.Controllers
                 var dashboardData = new DashboardDataViewModel
                 {
                     Region = children.First(c => c.Id == toraObject.Data.Key),
-                    TotalSize = toraObject.Data.Sum(t => t.Size),
-                    TotalToraObjects = toraObject.Data.Count(),
+                    TotalSize = toraObject.Data.Where(x => (int)x.Status == status).Sum(t => t.Size),
+                    TotalToraObjects = toraObject.Data.Where(x => (int)x.Status == status).Count(),
                     TotalToraSubjects = totalToraSubjects,
                     TotalProposedObjects = toraObject.Data.Where(x => (int)x.Status == 0).Count(),
                     TotalVerifiedObjects = toraObject.Data.Where(x => (int)x.Status == 1).Count(),
-                    TotalActualizedObjects = toraObject.Data.Where(x => (int)x.Status == 2).Count()
+                    TotalActualizedObjects = toraObject.Data.Where(x => (int)x.Status == 2).Count(),
+                    TotalTransmigrasi = toraObject.Data.Where(x => (int)x.Status == status).Where(x => x.FkSchemeId == 1).Count(),
+                    TotalProna = toraObject.Data.Where(x => (int)x.Status == status).Where(x => x.FkSchemeId == 2).Count(),
+                    TotalKonflik = toraObject.Data.Where(x => (int)x.Status == status).Where(x => x.FkSchemeId == 3).Count(),
+                    TotalTerlantar = toraObject.Data.Where(x => (int)x.Status == status).Where(x => x.FkSchemeId == 4).Count(),
+                    TotalPelepasan = toraObject.Data.Where(x => (int)x.Status == status).Where(x => x.FkSchemeId == 5).Count(),
+                    TotalAdat = toraObject.Data.Where(x => (int)x.Status == status).Where(x => x.FkSchemeId == 6).Count(),
+                    TotalDesa = toraObject.Data.Where(x => (int)x.Status == status).Where(x => x.FkSchemeId == 7).Count(),
+                    TotalTanamanRakyat = toraObject.Data.Where(x => (int)x.Status == status).Where(x => x.FkSchemeId == 8).Count(),
+                    TotalKemasyarakatan = toraObject.Data.Where(x => (int)x.Status == status).Where(x => x.FkSchemeId == 9).Count(),
+                    TotalKemitraan = toraObject.Data.Where(x => (int)x.Status == status).Where(x => x.FkSchemeId == 10).Count()
                 };
 
                 results.Add(dashboardData);

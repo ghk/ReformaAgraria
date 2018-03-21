@@ -14,6 +14,7 @@ import { Gender } from '../../models/gen/gender';
 import { Query } from "../../models/query";
 import { ToraObject } from "../../models/gen/toraObject";
 import { ToraSubject } from "../../models/gen/toraSubject";
+import { EditPersilViewModel } from '../../models/gen/editPersilViewModel';
 
 import { SchemeService } from "../../services/gen/scheme";
 import { PersilService } from "../../services/gen/persil";
@@ -44,6 +45,7 @@ export class ModalPersilEditFormComponent implements OnInit, OnDestroy {
     persilSubjects: ToraSubject[];
     addedSubjects: ToraSubject[] = [];
     removedSubjects: ToraSubject[] = [];
+    model: EditPersilViewModel = {};
 
     subscription: Subscription;
 
@@ -144,6 +146,13 @@ export class ModalPersilEditFormComponent implements OnInit, OnDestroy {
     }
 
     onFormSubmit(): void {
+        let formData = new FormData();
+        formData.append('persilId', this.persil.id.toString());
+        formData.append('persilStatus', this.persil.status.toString());
+        formData.append('persilTotalSubject', this.persil.totalSubject.toString());
+        formData.append('persilTotalSize', this.persil.totalSize.toString());
+        formData.append('file', this.model.file);
+
         if (this.addedSubjects.length > 0) {
             for (var i = 0; i < this.addedSubjects.length; i++) {
                 this.toraSubjectService.createOrUpdate(this.addedSubjects[i], null).subscribe(
@@ -163,16 +172,20 @@ export class ModalPersilEditFormComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.persilService.createOrUpdate(this.persil, null).subscribe(
-            success => {
-                this.toastr.success("Persil berhasil disimpan");
+        this.persilService.upload(formData).subscribe(
+            data => {
+                this.toastr.success('Persil berhasil disimpan', null);
                 this.isSaveSuccess$.next(null);
             },
             error => {
-                this.toastr.error("Ada kesalahan dalam penyimpanan");
+                this.toastr.error('Ada kesalahan dalam upload', null);
                 this.isSaveSuccess$.next(error);
             }
         );
+    }
+
+    onSelectFile(file: File) {
+        this.model.file = file;
     }
 
     getScheme() {

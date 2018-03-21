@@ -138,9 +138,11 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
                 this.toraSubjects = toraSubjects;
             });
 
-            this.toraObjectService.getSummary(toraObject.fkRegionId).subscribe(summary => {
-                this.sharedService.setToraSummary(summary);
-            });
+            this.sharedService.getSummaryStatus().subscribe(status => {
+                this.toraObjectService.getSummary(toraObject.fkRegionId, status).subscribe(summary => {
+                    this.sharedService.setToraSummary(summary);
+                });
+            })
 
             this.persilService.getAll(persilQuery, null).subscribe(persil => {
                 this.persils = persil;

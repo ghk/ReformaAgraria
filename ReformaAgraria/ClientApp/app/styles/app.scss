@@ -300,6 +300,14 @@ h1 {
     border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
 
+.active-div {
+    background-color: lightgrey;
+}
+
+.clickable-div:hover {
+    background-color: #F2F2F2;
+}
+
 .header-list-subject h2 {
     color: #FF0058;
 }

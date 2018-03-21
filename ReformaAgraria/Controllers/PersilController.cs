@@ -10,6 +10,11 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ReformaAgraria.Models.ViewModels;
+using MicrovacWebCore.Exceptions;
+using System;
+using ReformaAgraria.Helpers;
+using System.IO;
 
 namespace ReformaAgraria.Controllers
 {
@@ -29,7 +34,37 @@ namespace ReformaAgraria.Controllers
             _logger = logger;
         }
 
+        [HttpPost("upload")]
+        public async Task<Persil> Upload([FromForm]EditPersilViewModel model)
+        {
+            var persil = await dbContext.Set<Persil>().FirstOrDefaultAsync(p => p.Id == model.PersilId);
+            if (persil == null)
+                throw new NotFoundException();
 
+            dbContext.Entry(persil).State = EntityState.Modified;
+
+            persil.Status = model.PersilStatus;
+            persil.TotalSize = model.PersilTotalSize;
+            persil.TotalSubject = model.PersilTotalSubject;
+            persil.DateModified = DateTime.Now;
+
+            if (model.File != null)
+            {
+                var features = TopologyHelper.GetFeatureCollectionWgs84(model.File);
+                persil.Geojson = TopologyHelper.GetGeojson(features);
+
+                // Copy map file to disk
+                var persilDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "persil");
+                var regionDirectoryPath = Path.Combine(persilDirectoryPath, persil.FkRegionId);
+                var destinationFilePath = Path.Combine(regionDirectoryPath, persil.Id + ".zip");
+                await IOHelper.StreamCopyAsync(destinationFilePath, model.File);
+            }
+            
+            await dbContext.SaveChangesAsync();
+
+            return persil;
+        }
+        
         protected override IQueryable<Persil> ApplyQuery(IQueryable<Persil> query)
         {
             var type = GetQueryString<string>("type");

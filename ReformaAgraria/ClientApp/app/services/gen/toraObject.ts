@@ -156,14 +156,14 @@ export class ToraObjectService implements CrudService<ToraObject, number>{
         return request.catch(this.handleError)
     }
     
-    public getSummary(id: string, query?: Query, progressListener?: any): Observable<DashboardDataViewModel[]> {
+    public getSummary(id: string, status: number, query?: Query, progressListener?: any): Observable<DashboardDataViewModel[]> {
         let options = RequestHelper.getRequestOptions(this.cookieService, null);
                         
         let request = RequestHelper.getHttpRequest(
             this.http,
             options,
             'GET',
-            urljoin(this.serverUrl, 'toraobject', 'summary', encodeURIComponent(id)),
+            urljoin(this.serverUrl, 'toraobject', 'summary', encodeURIComponent(id), status.toString()),
             null,
             progressListener,
             null,

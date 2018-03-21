@@ -100,6 +100,9 @@
     <None Update="ClientApp\app\models\gen\dashboardDataViewModel.ts">
       <CustomToolNamespace>Models\ViewModels\DashboardDataViewModel.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\app\models\gen\editPersilViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\EditPersilViewModel.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\app\models\gen\educationalAttainment.ts">
       <CustomToolNamespace>Models\EducationalAttainment.cs</CustomToolNamespace>
     </None>
@@ -129,6 +132,9 @@
     </None>
     <None Update="ClientApp\app\models\gen\persil.ts">
       <CustomToolNamespace>Models\Persil.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\app\models\gen\persilSummaryViewModel.ts">
+      <CustomToolNamespace>Models\ViewModels\PersilSummaryViewModel.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\app\models\gen\proposedTreatment.ts">
       <CustomToolNamespace>Models\ProposedTreatment.cs</CustomToolNamespace>
