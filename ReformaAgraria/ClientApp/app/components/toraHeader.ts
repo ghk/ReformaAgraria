@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { PersilSummaryViewModel } from "../models/gen/persilsummaryviewmodel";
+import { PersilSummaryViewModel } from "../models/gen/persilSummaryViewModel";
 
 import { SharedService } from '../services/shared';
 import { ToraObjectService } from "../services/gen/toraObject";
