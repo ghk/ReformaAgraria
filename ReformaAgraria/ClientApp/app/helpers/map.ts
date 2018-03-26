@@ -4,6 +4,7 @@ import { FeatureCollection, GeometryObject } from 'geojson';
 import { BaseLayer } from '../models/gen/baseLayer';
 import { BaseLayerService } from '../services/gen/baseLayer';
 import { ToraMap } from '../models/gen/toraMap';
+import { Persil } from '../models/gen/persil';
 import { VillageBorderMap } from '../models/gen/villageBorderMap';
 
 export class MapHelper {
@@ -56,6 +57,29 @@ export class MapHelper {
         };      
 
         return L.geoJSON(JSON.parse(toraMap.geojson), geoJsonOptions);        
+    }
+
+    static getGeojsonPersilMap(persilMap: Persil, color: string) {
+        var size = persilMap.totalSize ? persilMap.totalSize.toFixed(2) + ' ha' : '-';
+        var totalSubjects = persilMap.totalSubject || '-';
+
+        let geoJsonOptions = {
+            style: (feature) => {
+                if (!color)
+                    color = "#000";
+                return { color: color, weight: feature.geometry.type === 'LineString' ? 3 : 1 }
+            },
+            onEachFeature: (feature, layer: L.FeatureGroup) => {
+                layer.bindPopup('<table class=\'table table-sm\'><thead><tr><th colspan=3 style=\'text-align:center\'>' + persilMap.scheme.details + '</th></tr></thead>' +
+                    '<tbody><tr><td>Kabupaten</td><td>:</td><td><a href="/home/' + persilMap.region.parent.parent.id.split('.').join('_') + '">' + persilMap.region.parent.parent.name + '</a></td></tr>' +
+                    '<tr><td>Kecamatan</td><td>:</td><td><a href="/home/' + persilMap.region.parent.id.split('.').join('_') + '">' + persilMap.region.parent.name + '</td></tr>' +
+                    '<tr><td>Desa</td><td>:</td><td><a href="/home/' + persilMap.region.id.split('.').join('_') + '">' + persilMap.region.name + '</td></tr>' +
+                    '<tr><td>Luas</td><td>:</td><td>' + size + '</td></tr>' +
+                    '<tr><td>Jumlah Penggarap</td><td>:</td><td>' + totalSubjects + '</td></tr></tbody></table>');
+            }
+        };
+
+        return L.geoJSON(JSON.parse(persilMap.geojson), geoJsonOptions);
     }
 
     static getGeojsonVillageBorderMap(villageBorderMap: VillageBorderMap, color: string) {

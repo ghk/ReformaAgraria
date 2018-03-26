@@ -74,6 +74,16 @@ namespace ReformaAgraria.Controllers
                 var regionId = GetQueryString<string>("regionId");
                 query = query.Include(s => s.Scheme).Where(p => p.FkRegionId == regionId);
             }
+            if (type == "getAllByRegionComplete")
+            {
+                var regionId = GetQueryString<string>("regionId");
+                if (!string.IsNullOrWhiteSpace(regionId))
+                {
+                    query = query.Include("Region.Parent.Parent");
+                    query = query.Include(t => t.Scheme);
+                    query = query.Where(r => r.FkRegionId.Contains(regionId));
+                }
+            }
 
             return query;
         }

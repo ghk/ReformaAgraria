@@ -5,11 +5,13 @@ import { ToastrService } from 'ngx-toastr';
 
 import { Region } from "../models/gen/region";
 import { ToraMap } from '../models/gen/toraMap';
+import { Persil } from '../models/gen/persil';
 import { VillageBorderMap } from '../models/gen/villageBorderMap';
 
 import { SharedService } from '../services/shared';
 import { RegionService } from '../services/gen/region';
 import { ToraMapService } from '../services/gen/toraMap';
+import { PersilService } from '../services/gen/persil';
 import { ToraObjectService } from '../services/gen/toraObject';
 import { BaseLayerService } from "../services/gen/baseLayer";
 import { VillageBorderMapService } from "../services/gen/villageBorderMap";
@@ -62,7 +64,8 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         private sharedService: SharedService,
         private toraMapService: ToraMapService,
         private baseLayerService: BaseLayerService,
-        private villageBorderMapService: VillageBorderMapService
+        private villageBorderMapService: VillageBorderMapService,
+        private persilService: PersilService
     ) { }
 
     ngOnInit(): void {
@@ -106,6 +109,13 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         let toraMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
         this.toraMapService.getAll(toraMapQuery, null).subscribe(data => {
             this.applyOverlayTora(data);
+        });
+    }
+
+    getPersilMaps(): void {
+        let persilMapQuery = { data: { 'type': 'getAllByRegionComplete', 'regionId': this.region.id } }
+        this.persilService.getAll(persilMapQuery, null).subscribe(data => {
+            this.applyOverlayPersil(data);
         });
     }
 
@@ -168,6 +178,17 @@ export class ToraMapComponent implements OnInit, OnDestroy {
         toraMaps.forEach(toraMap => {
             let geojson = MapHelper.getGeojsonToraMap(toraMap, '#FF0000');
             this.layers.push(geojson);
+
+            if (this.region.type == 4) {
+                this.getPersilMaps();
+            }
+        });
+    }
+
+    applyOverlayPersil(persilMaps: Persil[]) {
+        persilMaps.forEach(persilMap => {
+            let geojson = MapHelper.getGeojsonPersilMap(persilMap, '#00FF00');
+            this.layers.push(geojson);
         });
     }
 
@@ -218,7 +239,7 @@ export class ToraMapComponent implements OnInit, OnDestroy {
             this.onShowVillageBorderMapUploadForm();
         }
     }
-    
+
     onShowDownloadForm(): void {
         if (this.mapType === 'toraMap') {
             this.onShowToraMapDownloadForm();

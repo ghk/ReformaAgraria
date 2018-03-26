@@ -122,7 +122,6 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
         };
 
         this.toraObjectService.getById(toraObjectId, toraObjectQuery, null).subscribe(toraObject => {
-            console.log(toraObject);
             if (!toraObject)
                 return;
 
@@ -146,7 +145,6 @@ export class ToraDetailComponent implements OnInit, OnDestroy {
 
             this.persilService.getAll(persilQuery, null).subscribe(persil => {
                 this.persils = persil;
-                console.log(persil);
             })
         });
     }
